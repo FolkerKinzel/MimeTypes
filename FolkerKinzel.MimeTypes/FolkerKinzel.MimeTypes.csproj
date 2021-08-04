@@ -1,0 +1,90 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFrameworks>net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+    <NeutralLanguage>en</NeutralLanguage>
+    <Nullable>enable</Nullable>
+    <LangVersion>9.0</LangVersion>
+    <Authors>Folker Kinzel</Authors>
+    <Copyright>Copyright © 2021 Folker Kinzel</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIcon>Logo.png</PackageIcon>
+    <PackageVersion>1.0.0-alpha1</PackageVersion>
+    <FileVersion>1.0.0.69</FileVersion>
+    <AssemblyVersion>1.0.0.0</AssemblyVersion>
+    <Description>
+      .NET library that supports Internet Media Types ("MIME Types").
+    </Description>
+    <PackageTags>MIME C# .NET</PackageTags>
+    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/blob/master/docs/PackageReleaseNotes/1.0.0-alpha1/ReleaseNotes.md</PackageReleaseNotes>
+    <PackageIconUrl />
+    <PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/FolkerKinzel/MimeTypes.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2_0'">
+    <NoWarn>$(NoWarn);8600;8601;8602;8603;8604</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Compile Remove="alt\**" />
+    <EmbeddedResource Remove="alt\**" />
+    <None Remove="alt\**" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Intls\Cache.cs" />
+    <Compile Remove="MimeCacheFactory.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\Extension.csv" />
+    <None Remove="Resources\Mime.csv" />
+    <None Remove="Resources\MimeIdx.csv" />
+    <None Include="..\..\..\..\Nuget-Logo\Logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Extension.csv" />
+    <EmbeddedResource Include="Resources\Mime.csv" />
+    <EmbeddedResource Include="Resources\MimeIdx.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Nullable" Version="1.3.0">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="FolkerKinzel.Strings" Version="3.0.0-beta" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="FolkerKinzel.Strings" Version="3.0.0-beta" />
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.1'">
+    <PackageReference Include="FolkerKinzel.Strings" Version="3.0.0-beta" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="5.0.0" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Res.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Release copy /v /b /y &quot;$(OutDir)$(ProjectName).xml&quot; &quot;$(OutDir)de/$(ProjectName).xml&quot;&#xD;&#xA;if $(ConfigurationName) == Release if '$(TargetFramework)' == 'netstandard2.1' dotnet $(SolutionDir)IncVersion\IncVersion.dll $(ProjectDir)$(ProjectFileName) --revision" />
+  </Target>
+</Project>
