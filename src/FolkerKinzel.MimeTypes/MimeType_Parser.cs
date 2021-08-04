@@ -74,15 +74,10 @@ namespace FolkerKinzel.MimeTypes
 
             int parameterSeparatorIndex = span.IndexOf(';');
 
-            if(parameterSeparatorIndex > PARAMETERS_START_MAX_VALUE) // string too long
+            if (parameterSeparatorIndex > PARAMETERS_START_MAX_VALUE) // string too long
             {
                 goto Failed;
             }
-            //else if (parameterStartIndex < 0) // No parameters.
-            //{
-            //    parameterStartIndex = 0;
-            //}
-
 
             ReadOnlySpan<char> mediaPartSpan = parameterSeparatorIndex < 0 ? span : span.Slice(0, parameterSeparatorIndex);
             int mediaTypeSeparatorIndex = mediaPartSpan.IndexOf('/');
@@ -94,7 +89,7 @@ namespace FolkerKinzel.MimeTypes
 
             int topLevelMediaTypeLength = mediaPartSpan.Slice(0, mediaTypeSeparatorIndex).GetTrimmedLength();
 
-            if (topLevelMediaTypeLength is 0 or > MEDIA_TYPE_LENGTH_MAX_VALUE) 
+            if (topLevelMediaTypeLength is 0 or > MEDIA_TYPE_LENGTH_MAX_VALUE)
             {
                 goto Failed;
             }
@@ -132,19 +127,11 @@ Failed:
         /// </summary>
         /// <param name="fileTypeExtension">The file type extension to search for.</param>
         /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileTypeExtension"/>.</returns>
-        /// <exception cref="ArgumentNullException"><paramref name="fileTypeExtension"/> is <c>null</c>.</exception>
-        public static MimeType FromFileTypeExtension(string fileTypeExtension)
+        public static MimeType FromFileTypeExtension(string? fileTypeExtension)
         {
-            if (fileTypeExtension is null)
-            {
-                throw new ArgumentNullException(nameof(fileTypeExtension));
-            }
-            else
-            {
-                ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
-                _ = TryParse(ref memory, out MimeType inetMediaType);
-                return inetMediaType;
-            }
+            ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
+            _ = TryParse(ref memory, out MimeType inetMediaType);
+            return inetMediaType;
         }
 
         #endregion

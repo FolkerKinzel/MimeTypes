@@ -14,7 +14,7 @@ namespace MimeResourceCompiler
     public sealed class Compiler : IDisposable
     {
         private const string DEFAULT_MIME_TYPE = "application/octet-stream";
-
+        private const int LIST_CAPACITY = 2048;
         private readonly IApacheData _apacheData;
         private readonly IMimeFile _mimeFile;
         private readonly IIndexFile _indexFile;
@@ -98,7 +98,7 @@ namespace MimeResourceCompiler
         private List<Entry> CollectData()
         {
             _log.Debug("Start collecting the data.");
-            var list = new List<Entry>(2048);
+            var list = new List<Entry>(LIST_CAPACITY);
             CollectResourceFile(list, _defaultEntry);
             CollectApacheData(list);
             CollectResourceFile(list, _addendum);
@@ -141,9 +141,12 @@ namespace MimeResourceCompiler
             {
                 if (disposing)
                 {
+                    _apacheData.Dispose();
+                    _defaultEntry.Dispose();
                     _addendum.Dispose();
                     _indexFile.Dispose();
                     _mimeFile.Dispose();
+                    _extensionFile.Dispose();
                 }
 
                 _disposedValue = true;

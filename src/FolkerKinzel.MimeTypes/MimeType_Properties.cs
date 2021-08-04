@@ -1,6 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
+using System.Net.Sockets;
 using FolkerKinzel.MimeTypes.Intls;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace FolkerKinzel.MimeTypes
 {
@@ -29,7 +32,7 @@ namespace FolkerKinzel.MimeTypes
         /// <summary>
         /// Sub Type (The right part of a MIME-Type.)
         /// </summary>
-        public ReadOnlySpan<char> SubType 
+        public ReadOnlySpan<char> SubType
             => _mimeTypeString.Span.Slice((_idx >> SUB_TYPE_START_SHIFT) & SUB_TYPE_START_MAX_VALUE, (_idx >> SUB_TYPE_LENGTH_SHIFT) & SUB_TYPE_LENGTH_MAX_VALUE);
 
         /// <summary>
@@ -52,7 +55,18 @@ namespace FolkerKinzel.MimeTypes
         /// </summary>
         /// <returns>An appropriate file type extension for the <see cref="MimeType"/> instance.</returns>
         public string GetFileTypeExtension()
-            => MimeCache.GetFileTypeExtension(ToString(false));
+            => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(false));
+
+        /// <summary>
+        /// Finds an appropriate file type extension for <paramref name="mimeTypeString"/>.
+        /// </summary>
+        /// <returns>An appropriate file type extension for <paramref name="mimeTypeString"/>.</returns>
+        public static string GetFileTypeExtension(string? mimeTypeString)
+        {
+            _ = TryParse(mimeTypeString, out MimeType mimeType);
+            return mimeType.GetFileTypeExtension();
+        }
+
 
         /// <summary>
         /// Determines whether the <see cref="MediaType"/> of this instance equals "text".

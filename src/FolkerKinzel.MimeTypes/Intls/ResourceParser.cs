@@ -9,17 +9,13 @@ namespace FolkerKinzel.MimeTypes.Intls
 {
     internal static class ResourceParser
     {
-        private const string MIME_FILE_RESOURCE_NAME = "FolkerKinzel.Uris.Resources.Mime.csv";
-        private const string EXTENSION_FILE_RESOURCE_NAME = "FolkerKinzel.Uris.Resources.Extension.csv";
-
         private const char SEPARATOR = ' ';
-        private const string DEFAULT_MIME_TYPE = "application/octet-stream";
-        private const string DEFAULT_FILE_TYPE_EXTENSION = "bin";
+        
         private static readonly Lazy<ConcurrentDictionary<string, long>> _index = new(IndexFactory.CreateIndex, true);
 
         internal static string GetMimeType(string fileTypeExtension)
         {
-            using StreamReader reader = InitReader(EXTENSION_FILE_RESOURCE_NAME);
+            using StreamReader reader = ReaderFactory.InitExtensionFileReader();
 
             ReadOnlySpan<char> fileTypeExtensionSpan = fileTypeExtension.AsSpan();
             string? line;
@@ -34,7 +30,7 @@ namespace FolkerKinzel.MimeTypes.Intls
                 }
             }
 
-            return DEFAULT_MIME_TYPE;
+            return MimeCache.DEFAULT_MIME_TYPE;
         }
 
 
@@ -48,10 +44,10 @@ namespace FolkerKinzel.MimeTypes.Intls
             }
             else
             {
-                return DEFAULT_FILE_TYPE_EXTENSION;
+                return MimeCache.DEFAULT_FILE_TYPE_EXTENSION;
             }
 
-            using StreamReader reader = InitReader(MIME_FILE_RESOURCE_NAME);
+            using StreamReader reader = ReaderFactory.InitMimeFileReader();
             reader.BaseStream.Position = mediaTypeIndex.Start;
 
             ReadOnlySpan<char> mimeSpan = mimeType.AsSpan();
@@ -74,7 +70,7 @@ namespace FolkerKinzel.MimeTypes.Intls
                 }
             }
 
-            return DEFAULT_FILE_TYPE_EXTENSION;
+            return MimeCache.DEFAULT_FILE_TYPE_EXTENSION;
 
             ////////////////////////////////////
 
@@ -94,13 +90,7 @@ namespace FolkerKinzel.MimeTypes.Intls
 
         }
 
-        private static StreamReader InitReader(string resourcePath)
-        {
-            Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(resourcePath);
-            return stream is null
-                ? throw new InvalidDataException(string.Format(Res.ResourceNotFound, resourcePath))
-                : new StreamReader(stream);
-        }
+        
 
     }
 }

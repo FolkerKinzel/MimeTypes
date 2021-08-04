@@ -8,18 +8,9 @@ namespace FolkerKinzel.MimeTypes.Intls
 {
     internal static class IndexFactory
     {
-        private const string RESOURCE_NAME = "FolkerKinzel.Uris.Resources.MimeIdx.csv";
-
         internal static ConcurrentDictionary<string, long> CreateIndex()
         {
-            using Stream? stream = Assembly.GetExecutingAssembly().GetManifestResourceStream(RESOURCE_NAME);
-
-            if (stream is null)
-            {
-                throw new InvalidDataException(string.Format(Res.ResourceNotFound, RESOURCE_NAME));
-            }
-
-            using var reader = new StreamReader(stream);
+            using StreamReader reader = ReaderFactory.InitIndexFileReader();
 
             var dic = new ConcurrentDictionary<string, long>(Environment.ProcessorCount * 4, 16, StringComparer.Ordinal);
             string? line;

@@ -187,5 +187,44 @@ namespace FolkerKinzel.MimeTypes.Tests
 
             Assert.AreEqual(input, mimeType.ToString());
         }
+
+        [DataTestMethod]
+        [DataRow("text/cache-manifest", ".appcache")]
+        [DataRow("text/n3", ".n3")]
+        [DataRow("text/tab-separated-values", ".tsv")]
+        [DataRow("text/x-asm", ".s")]
+        [DataRow("video/vnd.dece.hd", ".uvh")]
+        [DataRow("image/ief", ".ief")]
+        [DataRow("image/vnd.fujixerox.edmics-rlc", ".rlc")]
+        [DataRow("application/cu-seeme", ".cu")]
+        [DataRow("audio/silk", ".sil")]
+        [DataRow("chemical/x-cdx", ".cdx")]
+        [DataRow("model/3mf", ".3mf")]
+        [DataRow("nixda/nüschgefunden", ".bin")]
+        public void GetFileTypeExtensionTest1(string mime, string expected)
+            => Assert.AreEqual(expected, MimeType.GetFileTypeExtension(mime));
+
+        [TestMethod]
+        public void GetFileTypeExtensionTest2()
+            => Assert.AreEqual(".bin", MimeType.GetFileTypeExtension(null));
+
+        [DataTestMethod]
+        [DataRow("text/cache-manifest", ".appcache")]
+        [DataRow("text/n3", ".n3")]
+        [DataRow("text/tab-separated-values", ".tsv")]
+        [DataRow("text/x-asm", ".s")]
+        [DataRow("video/vnd.dece.hd", ".uvh")]
+        [DataRow("image/ief", ".ief")]
+        [DataRow("image/vnd.fujixerox.edmics-rlc", ".rlc")]
+        [DataRow("application/cu-seeme", ".cu")]
+        [DataRow("audio/silk", ".sil")]
+        [DataRow("chemical/x-cdx", ".cdx")]
+        [DataRow("workbook/formulaone", ".vts")]
+        public void GetMimeTypeTest1(string expected, string fileTypeExtension)
+            => Assert.AreEqual(expected, MimeType.FromFileTypeExtension(fileTypeExtension).ToString());
+
+        [TestMethod]
+        public void GetMimeTypeTest2()
+            => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension(null).ToString());
     }
 }

@@ -30,6 +30,7 @@ namespace FolkerKinzel.MimeTypes.Intls
             public string MimeType { get; }
             public string Extension { get; }
 
+            [ExcludeFromCodeCoverage]
             public override string ToString() => $"{MimeType} {Extension}";
 
             //public bool Equals(Entry? other)
@@ -46,17 +47,27 @@ namespace FolkerKinzel.MimeTypes.Intls
 
         ////////////////////////////////////////////
 
-        private const int CACHE_MAX_SIZE = 32;
-        private const int CACHE_CLEANUP_SIZE = 8;
+        internal const string DEFAULT_MIME_TYPE = "application/octet-stream";
+        internal const string DEFAULT_FILE_TYPE_EXTENSION = "bin";
+
+        private const int CACHE_MAX_SIZE = 20;
+        private const int CACHE_CLEANUP_SIZE = 4;
 
         private static readonly object _lockObj = new ();
         private static List<Entry>? _mimeCache;
         private static List<Entry>? _extCache;
 
 
-        internal static string GetMimeType(string fileTypeExtension)
+        internal static string GetMimeType(string? fileTypeExtension)
         {
-            fileTypeExtension = fileTypeExtension.Replace(".", null).Replace(" ", null).ToLowerInvariant();
+            if (string.IsNullOrWhiteSpace(fileTypeExtension))
+            {
+                return DEFAULT_MIME_TYPE;
+            }
+            else
+            {
+                fileTypeExtension = fileTypeExtension.Replace(".", null).Replace(" ", null).ToLowerInvariant();
+            }
 
             return TryGetMimeTypeFromCache(fileTypeExtension, out string? mimeType)
                 ? mimeType
@@ -96,8 +107,12 @@ namespace FolkerKinzel.MimeTypes.Intls
             }
         }
 
-        internal static string GetFileTypeExtension(string mimeType)
+        internal static string GetFileTypeExtension(string? mimeType)
         {
+            if(mimeType is null)
+            {
+                return PrepareFileTypeExtension(DEFAULT_FILE_TYPE_EXTENSION);
+            }
             //mimeType = mimeType.Replace(" ", "").ToLowerInvariant();
 
             return TryGetFileTypeExtensionFromCache(mimeType, out string? fileTypeExtension)

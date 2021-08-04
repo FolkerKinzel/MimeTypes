@@ -97,9 +97,9 @@ namespace MimeResourceCompiler.Classes
         {
             _writer.Flush();
 
-            Stream mimeFileStream = _writer.BaseStream;
-            long newLength = mimeFileStream.Length - NEW_LINE.Length;
-            mimeFileStream.SetLength(newLength > 0 ? newLength : 0);
+            Stream fileStream = _writer.BaseStream;
+            long newLength = fileStream.Length - NEW_LINE.Length;
+            fileStream.SetLength(newLength > 0 ? newLength : 0);
 
             _log.Debug("Last empty row in {compiledFile} successfully truncated.", FileName);
         }

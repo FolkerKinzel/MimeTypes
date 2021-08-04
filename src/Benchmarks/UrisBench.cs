@@ -2,7 +2,6 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using BenchmarkDotNet.Attributes;
-using FolkerKinzel.MimeTypes;
 
 namespace Benchmarks
 {
@@ -12,21 +11,21 @@ namespace Benchmarks
         //private readonly StringBuilder _builder = new(16);
         //private const string TEST = "test";
 
-        private readonly DataUrl _dataUrlText1;
-        private readonly DataUrl _dataUrlText2;
+        //private readonly DataUrl _dataUrlText1;
+        //private readonly DataUrl _dataUrlText2;
 
         public UrisBench()
         {
-            const string data = "Märchenbücher";
-            const string isoEncoding = "iso-8859-1";
+            //const string data = "Märchenbücher";
+            //const string isoEncoding = "iso-8859-1";
 
 #if NETSTANDARD2_0_OR_GREATER || NET5_0_OR_GREATER
             Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 #endif
-            string s = $"data:;charset={isoEncoding};base64,{Convert.ToBase64String(Encoding.GetEncoding(isoEncoding).GetBytes(data))}";
+            //string s = $"data:;charset={isoEncoding};base64,{Convert.ToBase64String(Encoding.GetEncoding(isoEncoding).GetBytes(data))}";
 
-            _dataUrlText1 = DataUrl.Parse(s);
-            _dataUrlText2 = DataUrl.Parse(DataUrl.FromText(data));
+            //_dataUrlText1 = DataUrl.Parse(s);
+            //_dataUrlText2 = DataUrl.Parse(DataUrl.FromText(data));
         }
 
 

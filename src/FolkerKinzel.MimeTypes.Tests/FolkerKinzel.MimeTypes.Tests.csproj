@@ -25,7 +25,6 @@
   <ItemGroup>
     <Compile Remove="DataUrlTests.cs" />
     <Compile Remove="Intls\AsciiDataDecoder.cs" />
-    <Compile Remove="Intls\DataUrlExtensionTests.cs" />
     <Compile Remove="Intls\TextEncodingConverterTests.cs" />
   </ItemGroup>
 
