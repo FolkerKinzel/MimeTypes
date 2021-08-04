@@ -23,9 +23,21 @@ namespace FolkerKinzel.MimeTypes
             return AppendTo(sb).ToString();
         }
 
+        /// <summary>
+        /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2046 to a <see cref="StringBuilder"/>.
+        /// </summary>
+        /// <param name="builder">The <see cref="StringBuilder"/>.</param>
+        /// <param name="urlEncodedValues">Pass <c>true</c> to URL encode the parameter values.</param>
+        /// <returns>A reference to <paramref name="builder"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
-        internal StringBuilder AppendTo(StringBuilder builder, bool urlEncodedValues = false)
+        public StringBuilder AppendTo(StringBuilder builder, bool urlEncodedValues = false)
         {
+            if (builder is null)
+            {
+                throw new ArgumentNullException(nameof(builder));
+            }
+
             // Standard ctor
             if (IsEmpty)
             {

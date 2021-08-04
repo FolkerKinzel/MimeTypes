@@ -15,6 +15,6 @@ have a detailed explanation where the data comes from and how it is compiled.)
 The library makes extensive use of ReadOnlySpan&lt;Char&gt; and ReadOnlyMemory&lt;Char&gt; to build and examine the 
 content of MIME types without having to allocate a lot of temporary Strings.
 
-Read the [Project Reference](https://github.com/FolkerKinzel/MimeTypes/blob/master/ProjectReference/1.0.0-alpha1/FolkerKinzel.MimeTypes.Reference.en.chm) for details.
+Read the [Project Reference](https://github.com/FolkerKinzel/MimeTypes/blob/master/ProjectReference/1.0.0-alpha.1/FolkerKinzel.MimeTypes.Reference.en.chm) for details.
 
 > IMPORTANT: On some systems the content of the .CHM file is blocked. Before opening the file right click on the file icon, select Properties, and check the "Allow" checkbox (if it is present) in the lower right corner of the General tab in the Properties dialog.

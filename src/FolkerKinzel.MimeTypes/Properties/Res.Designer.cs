@@ -39,7 +39,7 @@ namespace FolkerKinzel.MimeTypes.Properties {
         internal static global::System.Resources.ResourceManager ResourceManager {
             get {
                 if (object.ReferenceEquals(resourceMan, null)) {
-                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FolkerKinzel.Uris.Properties.Res", typeof(Res).Assembly);
+                    global::System.Resources.ResourceManager temp = new global::System.Resources.ResourceManager("FolkerKinzel.MimeTypes.Properties.Res", typeof(Res).Assembly);
                     resourceMan = temp;
                 }
                 return resourceMan;
@@ -57,15 +57,6 @@ namespace FolkerKinzel.MimeTypes.Properties {
             }
             set {
                 resourceCulture = value;
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} is not a valid &quot;data&quot; URL. ähnelt.
-        /// </summary>
-        internal static string InvalidDataUrl {
-            get {
-                return ResourceManager.GetString("InvalidDataUrl", resourceCulture);
             }
         }
         

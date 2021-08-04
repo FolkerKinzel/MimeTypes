@@ -57,7 +57,7 @@ namespace FolkerKinzel.MimeTypes
         /// </summary>
         /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
-        internal bool IsText
+        public bool IsText
             => MediaType.Equals("text".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
 
@@ -67,7 +67,7 @@ namespace FolkerKinzel.MimeTypes
         /// </summary>
         /// <returns><c>true</c> if this instance is equal to "text/plain".</returns>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
-        internal bool IsTextPlain
+        public bool IsTextPlain
             => IsText && SubType.Equals("plain".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
         
