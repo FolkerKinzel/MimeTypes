@@ -1,14 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FolkerKinzel.MimeTypes.Intls;
 
 namespace FolkerKinzel.MimeTypes
 {
     public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     {
+        private const int MEDIA_TYPE_LENGTH_MAX_VALUE = sbyte.MaxValue;
+        private const int SUB_TYPE_START_MAX_VALUE = byte.MaxValue;
+        private const int SUB_TYPE_LENGTH_MAX_VALUE = byte.MaxValue;
+        private const int PARAMETERS_START_MAX_VALUE = byte.MaxValue;
+
         private readonly ReadOnlyMemory<char> _mimeTypeString;
 
         // Stores all indexes in one int.
@@ -22,12 +24,13 @@ namespace FolkerKinzel.MimeTypes
         /// <summary>
         /// Top-Level Media Type. (The left part of a MIME-Type.)
         /// </summary>
-        public ReadOnlySpan<char> MediaType => _mimeTypeString.Span.Slice(0, (_idx >> MEDIA_TYPE_LENGTH_SHIFT) & 0xFF);
+        public ReadOnlySpan<char> MediaType => _mimeTypeString.Span.Slice(0, (_idx >> MEDIA_TYPE_LENGTH_SHIFT) & MEDIA_TYPE_LENGTH_MAX_VALUE);
 
         /// <summary>
         /// Sub Type (The right part of a MIME-Type.)
         /// </summary>
-        public ReadOnlySpan<char> SubType => _mimeTypeString.Span.Slice((_idx >> SUB_TYPE_START_SHIFT) & 0xFF, (_idx >> SUB_TYPE_LENGTH_SHIFT) & 0xFF);
+        public ReadOnlySpan<char> SubType 
+            => _mimeTypeString.Span.Slice((_idx >> SUB_TYPE_START_SHIFT) & SUB_TYPE_START_MAX_VALUE, (_idx >> SUB_TYPE_LENGTH_SHIFT) & SUB_TYPE_LENGTH_MAX_VALUE);
 
         /// <summary>
         /// Parameters (Never <c>null</c>.)
@@ -70,7 +73,7 @@ namespace FolkerKinzel.MimeTypes
         public bool IsTextPlain
             => IsText && SubType.Equals("plain".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
-        
+
 
         #endregion
 

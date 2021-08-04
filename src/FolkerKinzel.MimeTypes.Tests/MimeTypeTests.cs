@@ -173,6 +173,19 @@ namespace FolkerKinzel.MimeTypes.Tests
 
         }
 
+        [TestMethod]
+        public void ParseParametersTest2()
+        {
+            const string input = "application/x-stuff;param=\"directory\\\\file.text\"";
 
+            Assert.IsTrue(MimeType.TryParse(input, out MimeType mimeType));
+            Assert.AreEqual(1, mimeType.Parameters.Count());
+            MimeTypeParameter param = mimeType.Parameters.First();
+
+            Assert.AreEqual("param", param.Key.ToString());
+            Assert.AreEqual(@"directory\file.text", param.Value.ToString());
+
+            Assert.AreEqual(input, mimeType.ToString());
+        }
     }
 }

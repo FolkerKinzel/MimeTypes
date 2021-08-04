@@ -21,7 +21,7 @@ namespace FolkerKinzel.MimeTypes
 
         private IEnumerable<MimeTypeParameter> ParseParameters()
         {
-            int parameterStartIndex = _idx & 0xFF;
+            int parameterStartIndex = _idx & PARAMETERS_START_MAX_VALUE;
 
             if (parameterStartIndex < 1)
             {

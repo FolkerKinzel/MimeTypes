@@ -111,7 +111,12 @@ namespace FolkerKinzel.MimeTypes
                     var builder = new StringBuilder(value.Length);
                     _ = builder.Append(value).Remove(builder.Length - 1, 1);
 
-                    UnMask(builder, valueStart);
+                    if (valueStart < builder.Length && builder[valueStart] == '"')
+                    {
+                        _ = builder.Remove(valueStart, 1);
+                        UnMask(builder, valueStart);
+                    }
+
 
                     ReadOnlyMemory<char> mem = builder.ToString().AsMemory();
                     return TryParse(ref mem, out parameter, out _);
@@ -119,7 +124,7 @@ namespace FolkerKinzel.MimeTypes
                 else // No masked chars - tspecials only
                 {
                     value = value.Slice(0, value.Length - 1);
-                    span = value.Span;
+                    //span = value.Span;
                     valueStart++;
                 }
             }
@@ -158,27 +163,9 @@ Failed:
 
         private static void UnMask(StringBuilder builder, int startOfValue)
         {
-            bool quotesRemoved = false;
             for (int i = startOfValue; i < builder.Length; i++)
             {
-                char c = builder[i];
-
-                if (!quotesRemoved)
-                {
-                    //if (char.IsWhiteSpace(c))
-                    //{
-                    //    _ = builder.Remove(i--, 1);
-                    //    continue;
-                    //}
-                    if (c == '"')
-                    {
-                        _ = builder.Remove(i--, 1);
-                    }
-
-                    quotesRemoved = true;
-                }
-
-                if (c == '\\')
+                if (builder[i] == '\\')
                 {
                     // after the mask char one entry can be skipped:
                     _ = builder.Remove(i, 1);

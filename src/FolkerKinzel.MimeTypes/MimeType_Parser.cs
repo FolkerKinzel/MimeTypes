@@ -72,9 +72,9 @@ namespace FolkerKinzel.MimeTypes
             value = value.TrimStart();
             ReadOnlySpan<char> span = value.Span;
 
-            int parameterStartIndex = span.IndexOf(';') + 1;
+            int parameterSeparatorIndex = span.IndexOf(';');
 
-            if(parameterStartIndex > byte.MaxValue) // string too long
+            if(parameterSeparatorIndex > PARAMETERS_START_MAX_VALUE) // string too long
             {
                 goto Failed;
             }
@@ -84,7 +84,7 @@ namespace FolkerKinzel.MimeTypes
             //}
 
 
-            ReadOnlySpan<char> mediaPartSpan = parameterStartIndex < 1 ? span : span.Slice(0, parameterStartIndex);
+            ReadOnlySpan<char> mediaPartSpan = parameterSeparatorIndex < 0 ? span : span.Slice(0, parameterSeparatorIndex);
             int mediaTypeSeparatorIndex = mediaPartSpan.IndexOf('/');
 
             if (mediaTypeSeparatorIndex < 1)
@@ -94,7 +94,7 @@ namespace FolkerKinzel.MimeTypes
 
             int topLevelMediaTypeLength = mediaPartSpan.Slice(0, mediaTypeSeparatorIndex).GetTrimmedLength();
 
-            if (topLevelMediaTypeLength is 0 or > sbyte.MaxValue)
+            if (topLevelMediaTypeLength is 0 or > MEDIA_TYPE_LENGTH_MAX_VALUE) 
             {
                 goto Failed;
             }
@@ -102,7 +102,7 @@ namespace FolkerKinzel.MimeTypes
             int subTypeStart = mediaTypeSeparatorIndex + 1;
             subTypeStart += mediaPartSpan.Slice(subTypeStart).GetTrimmedStart();
 
-            if (subTypeStart == mediaPartSpan.Length || subTypeStart > byte.MaxValue)
+            if (subTypeStart == mediaPartSpan.Length || subTypeStart > SUB_TYPE_START_MAX_VALUE)
             {
                 goto Failed;
             }
@@ -112,7 +112,7 @@ namespace FolkerKinzel.MimeTypes
             int idx = topLevelMediaTypeLength << MEDIA_TYPE_LENGTH_SHIFT;
             idx |= subTypeStart << SUB_TYPE_START_SHIFT;
             idx |= subTypeLength << SUB_TYPE_LENGTH_SHIFT;
-            idx |= parameterStartIndex;
+            idx |= parameterSeparatorIndex < 0 ? value.Length : parameterSeparatorIndex + 1;
 
             mimeType = new MimeType(
                 in value,
