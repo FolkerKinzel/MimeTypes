@@ -15,6 +15,13 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "FolkerKinzel.MimeTypes.Test
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MimeResourceCompiler", "MimeResourceCompiler\MimeResourceCompiler.csproj", "{1EA6712D-138B-4FC9-9E66-49672B16D451}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{DCF23DE2-EFEF-4628-A1A9-8D53C7A8F766}"
+	ProjectSection(SolutionItems) = preProject
+		..\README.md = ..\README.md
+		Reference.md = Reference.md
+		..\docs\PackageReleaseNotes\1.0.0-alpha1\ReleaseNotes.md = ..\docs\PackageReleaseNotes\1.0.0-alpha1\ReleaseNotes.md
+	EndProjectSection
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
