@@ -10,7 +10,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Logo.png</PackageIcon>
     <PackageVersion>1.0.0-alpha1</PackageVersion>
-    <FileVersion>1.0.0.69</FileVersion>
+    <FileVersion>1.0.0.71</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <Description>
       .NET library that supports Internet Media Types ("MIME Types").
@@ -30,8 +30,11 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Remove="alt\**" />
+    <Compile Remove="Extensions\**" />
     <EmbeddedResource Remove="alt\**" />
+    <EmbeddedResource Remove="Extensions\**" />
     <None Remove="alt\**" />
+    <None Remove="Extensions\**" />
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Intls\Cache.cs" />
