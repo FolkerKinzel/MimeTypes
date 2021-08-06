@@ -125,25 +125,9 @@ namespace FolkerKinzel.MimeTypes
                 else // No masked chars - tspecials only
                 {
                     value = value.Slice(0, value.Length - 1);
-                    //span = value.Span;
                     valueStart++;
                 }
             }
-
-
-            //ReadOnlySpan<char> valueSpan = span.Slice(valueStart);
-            //if(!quoted && valueSpan.Contains('%'))
-            //{
-            //    Encoding encoding = TextEncodingConverter.GetEncoding(span.Slice(charsetStart, charsetLength).ToString());
-            //    byte[] bytes = Encoding.ASCII.GetBytes(valueSpan.ToString());
-            //    string result = encoding.GetString(WebUtility.UrlDecodeToBytes(bytes,0, bytes.Length));
-
-            //    var sb = new StringBuilder(valueStart + result.Length);
-
-            //    ReadOnlyMemory<char> memory = sb.Append(value.Slice(0, valueStart)).Append(result).ToString().AsMemory();
-            //    return TryParse(ref memory, out parameter);
-            //}
-
 
             int idx1 = (keyLength << KEY_LENGTH_SHIFT) |
             (charsetStart << CHARSET_START_SHIFT) |

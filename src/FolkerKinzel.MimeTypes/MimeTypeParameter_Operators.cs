@@ -15,7 +15,8 @@ namespace FolkerKinzel.MimeTypes
         /// <param name="mimeTypeParameter2">The second <see cref="MimeTypeParameter"/> to compare.</param>
         /// <returns><c>true</c> if <paramref name="mimeTypeParameter1"/> and <paramref name="mimeTypeParameter2"/> are equal;
         /// otherwise, <c>false</c>.</returns>
-        public static bool operator ==(MimeTypeParameter mimeTypeParameter1, MimeTypeParameter mimeTypeParameter2) => mimeTypeParameter1.Equals(in mimeTypeParameter2);
+        public static bool operator ==(MimeTypeParameter mimeTypeParameter1, MimeTypeParameter mimeTypeParameter2)
+            => mimeTypeParameter1.Equals(in mimeTypeParameter2);
 
         /// <summary>
         /// Returns a value that indicates whether two specified <see cref="MimeTypeParameter"/> instances are not equal.
@@ -25,7 +26,8 @@ namespace FolkerKinzel.MimeTypes
         /// <returns><c>true</c> if <paramref name="mimeTypeParameter1"/> and <paramref name="mimeTypeParameter2"/> are not equal;
         /// otherwise, <c>false</c>.</returns>
         /// <returns></returns>
-        public static bool operator !=(MimeTypeParameter mimeTypeParameter1, MimeTypeParameter mimeTypeParameter2) => !mimeTypeParameter1.Equals(in mimeTypeParameter2);
+        public static bool operator !=(MimeTypeParameter mimeTypeParameter1, MimeTypeParameter mimeTypeParameter2)
+            => !mimeTypeParameter1.Equals(in mimeTypeParameter2);
 
     }
 }

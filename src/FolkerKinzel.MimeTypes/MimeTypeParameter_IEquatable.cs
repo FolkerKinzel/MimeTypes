@@ -29,8 +29,6 @@ namespace FolkerKinzel.MimeTypes
         /// current instance.</returns>
         /// <remarks>This is the most performant overload of the Equals methods but unfortunately it's not CLS compliant.
         /// Use it if you can.</remarks>
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0075:Bedingten Ausdruck vereinfachen", Justification = "<Ausstehend>")]
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
         [CLSCompliant(false)]
         public bool Equals(in MimeTypeParameter other)
             => Key.Equals(other.Key, StringComparison.OrdinalIgnoreCase)

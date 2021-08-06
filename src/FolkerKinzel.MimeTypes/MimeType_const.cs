@@ -15,10 +15,6 @@ namespace FolkerKinzel.MimeTypes
         /// </summary>
         public const int StringLength = 80;
 
-        private const int SUB_TYPE_LENGTH_SHIFT = 8;
-        private const int SUB_TYPE_START_SHIFT = 16;
-        private const int MEDIA_TYPE_LENGTH_SHIFT = 24;
-
         #endregion
     }
 }

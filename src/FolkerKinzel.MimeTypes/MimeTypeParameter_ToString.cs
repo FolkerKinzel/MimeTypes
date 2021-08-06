@@ -25,13 +25,13 @@ namespace FolkerKinzel.MimeTypes
         }
 
         /// <summary>
-        /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2046 to a <see cref="StringBuilder"/>.
+        /// Appends a <see cref="string"/> representation of this instance according to RFC 2045, RFC 2046 and RFC 2184
+        /// to a <see cref="StringBuilder"/>.
         /// </summary>
         /// <param name="builder">The <see cref="StringBuilder"/>.</param>
         /// <param name="urlEncodedValue">Pass <c>true</c> to URL encode the parameter values.</param>
         /// <returns>A reference to <paramref name="builder"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
         public StringBuilder AppendTo(StringBuilder builder, bool urlEncodedValue = false)
         {
             if (builder is null)
@@ -45,17 +45,13 @@ namespace FolkerKinzel.MimeTypes
                 return builder;
             }
 
-
             ReadOnlySpan<char> valueSpan = Value;
             ReadOnlySpan<char> keySpan = Key;
             ReadOnlySpan<char> languageSpan = Language;
 
             bool isValueAscii = valueSpan.IsAscii();
-
             bool urlEncoded = !languageSpan.IsEmpty || !isValueAscii;
-
-            // RFC 2045 Section 5.1 "tspecials"
-            bool mask = urlEncoded || valueSpan.ContainsAny(stackalloc char[] { ' ', '(', ')', '<', '>', '@', ',', ';', ':', '\\', '\"', '/', '[', '>', ']', '?', '=' });
+            bool mask = urlEncoded || valueSpan.ContainsTSpecials();
 
             if (mask)
             {
@@ -66,7 +62,14 @@ namespace FolkerKinzel.MimeTypes
 
                 if (urlEncoded)
                 {
-                    valueSpan = Uri.EscapeDataString(valueSpan.ToString()).AsSpan();
+                    try
+                    {
+                        valueSpan = Uri.EscapeDataString(valueSpan.ToString()).AsSpan();
+                    }
+                    catch(FormatException)
+                    {
+
+                    }
                     mask = false;
                 }
                 else if (valueSpan.ContainsAny(stackalloc char[] { '"', '\\' }))
@@ -100,10 +103,13 @@ namespace FolkerKinzel.MimeTypes
 
                 const string utf8 = "utf-8";
                 int charsetLength = isValueAscii ? 0 : utf8.Length;
+
+                //                                                       =
                 int neededCapacity = valueSpan.Length + keySpan.Length + 1;
 
                 if(starred)
                 {
+                    //                *                  ' '
                     neededCapacity += 1 + charsetLength + 2 + languageSpan.Length;
                 }
 
@@ -123,6 +129,7 @@ namespace FolkerKinzel.MimeTypes
             }
             else
             {
+                //                                                       =
                 int neededCapacity = valueSpan.Length + keySpan.Length + 1;
                 _ = builder.EnsureCapacity(builder.Length + neededCapacity);
 

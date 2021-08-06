@@ -28,9 +28,14 @@ namespace FolkerKinzel.MimeTypes
                 yield break;
             }
 
-            //string charset = "";
-            Encoding encoding = Encoding.UTF8;
-            string currentKey = "";
+            //Encoding asciiEncoding = Encoding.ASCII;
+            //asciiEncoding.EncoderFallback = EncoderFallback.ExceptionFallback;
+
+            //Encoding utf8Encoding = Encoding.UTF8;
+            //utf8Encoding.DecoderFallback = DecoderFallback.ExceptionFallback;
+
+            string? charset = null;
+            string? currentKey = null;
 
             StringBuilder? sb = null;
             MimeTypeParameter concatenated;
@@ -41,7 +46,6 @@ namespace FolkerKinzel.MimeTypes
                 {
                     ReadOnlySpan<char> keySpan = parameter.Key;
                     int starIndex = keySpan.IndexOf('*');
-
                     if (starIndex > 0)
                     {
                         sb ??= new StringBuilder(MimeTypeParameter.StringLength);
@@ -50,21 +54,32 @@ namespace FolkerKinzel.MimeTypes
                         if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase))
                         {
                             currentKey = keySpan.ToString();
-                            encoding = GetEncoding(parameter.Charset);
+                            charset = parameter.Charset.ToString();
 
                             if (BuildConcatenated(sb, out concatenated))
                             {
                                 yield return concatenated;
                             }
-                            _ = sb.Append(currentKey).Append('=').Append(parameter.Charset).Append('\'').Append(parameter.Language).Append('\'');
+
+                            ReadOnlySpan<char> languageSpan = parameter.Language;
+                            _ = languageSpan.IsEmpty
+                                ? sb.Append(currentKey).Remove(sb.Length - 1, 1).Append('=')
+                                : sb.Append(currentKey).Append('=').Append('\'').Append(parameter.Language).Append('\'');
                         }
 
                         // mit vorigem zusammensetzen
                         ReadOnlySpan<char> valueSpan = parameter.Value;
                         if (!quoted && valueSpan.Contains('%'))
                         {
-                            byte[] bytes = Encoding.ASCII.GetBytes(valueSpan.ToString());
-                            _ = sb.Append(encoding.GetString(WebUtility.UrlDecodeToBytes(bytes, 0, bytes.Length)));
+                            try
+                            {
+                                _ = sb.Append(UnescapeValueFromUrlEncoding(charset, valueSpan.ToString()));
+                            }
+                            catch
+                            {
+                                // This makes the parameter unreadable:
+                                _ = sb.Clear();
+                            }
                         }
                         else
                         {
@@ -79,28 +94,26 @@ namespace FolkerKinzel.MimeTypes
                             yield return concatenated;
                         }
 
-                        currentKey = "";
-                        encoding = GetEncoding(parameter.Charset);
+                        currentKey = null;
+                        ReadOnlySpan<char> charsetSpan = parameter.Charset;
+                        charset = charsetSpan.IsEmpty ? null : charsetSpan.ToString();
 
-                        if (RemoveUrlEncoding(encoding, parameter.Value, quoted, ref sb, ref parameter))
+                        if (RemoveUrlEncoding(charset, parameter.Value, quoted, ref sb, ref parameter))
                         {
                             yield return parameter;
                         }
                     }
                 }
-
-
-
             }
             while (parameterStartIndex != -1);
 
+            // The last parameter, which might be in the StringBuilder:
             if (BuildConcatenated(sb, out concatenated))
             {
                 yield return concatenated;
             }
         }
 
-        private static Encoding GetEncoding(ReadOnlySpan<char> charsetSpan) => charsetSpan.IsEmpty ? Encoding.UTF8 : TextEncodingConverter.GetEncoding(charsetSpan.ToString());
 
         private static bool BuildConcatenated(StringBuilder? sb, out MimeTypeParameter concatenated)
         {
@@ -116,17 +129,38 @@ namespace FolkerKinzel.MimeTypes
             return false;
         }
 
-        private static bool RemoveUrlEncoding(Encoding encoding, ReadOnlySpan<char> valueSpan, bool quoted, ref StringBuilder? sb, ref MimeTypeParameter parameter)
+        private static bool RemoveUrlEncoding(string? charset, ReadOnlySpan<char> valueSpan, bool quoted, ref StringBuilder? sb, ref MimeTypeParameter parameter)
         {
             if (!quoted && valueSpan.Contains('%'))
             {
-                byte[] bytes = Encoding.ASCII.GetBytes(valueSpan.ToString());
-                string result = encoding.GetString(WebUtility.UrlDecodeToBytes(bytes, 0, bytes.Length));
+                string result;
 
+                try
+                {
+                    result = UnescapeValueFromUrlEncoding(charset, valueSpan.ToString());
+                }
+                catch
+                {
+                    return false;
+                }
+
+                ReadOnlyMemory<char> memory;
+                ReadOnlySpan<char> languageSpan = parameter.Language;
                 ReadOnlySpan<char> keySpan = parameter.Key;
-                sb ??= new StringBuilder(keySpan.Length + 1 + result.Length);
 
-                ReadOnlyMemory<char> memory = sb.Append(keySpan).Append('=').Append(result).ToString().AsMemory();
+                if (languageSpan.IsEmpty)
+                {
+                    sb ??= new StringBuilder(keySpan.Length + 1 + result.Length);
+                    memory = sb.Append(keySpan).Append('=').Append(result).ToString().AsMemory();
+                }
+                else
+                {
+                    sb ??= new StringBuilder(keySpan.Length + 4 + languageSpan.Length + result.Length);
+
+                    memory =
+                        sb.Append(keySpan).Append('*').Append('=').Append('\'').Append(languageSpan).Append('\'').Append(result)
+                        .ToString().AsMemory();
+                }
 
                 return MimeTypeParameter.TryParse(ref memory, out parameter, out bool _);
             }
@@ -134,6 +168,30 @@ namespace FolkerKinzel.MimeTypes
             return true;
         }
 
+        /// <summary>
+        /// Removes URL encoding from <paramref name="value"/>.
+        /// </summary>
+        /// <param name="charset"></param>
+        /// <param name="value"></param>
+        /// <returns></returns>
+        /// <exception cref="DecoderFallbackException"></exception>
+        /// <exception cref="EncoderFallbackException"></exception>
+        private static string UnescapeValueFromUrlEncoding(string? charset, string value)
+        {
+            string result;
+
+            EncoderFallback encoderFallback = EncoderFallback.ExceptionFallback;
+            DecoderFallback decoderFallback = DecoderFallback.ExceptionFallback;
+
+            Encoding encoding = TextEncodingConverter.GetEncoding(charset, encoderFallback, decoderFallback);
+            Encoding ascii = TextEncodingConverter.GetEncoding(20127, encoderFallback, decoderFallback);
+
+            ascii.EncoderFallback = EncoderFallback.ExceptionFallback;
+            byte[] bytes = ascii.GetBytes(value);
+
+            result = encoding.GetString(WebUtility.UrlDecodeToBytes(bytes, 0, bytes.Length));
+            return result;
+        }
 
         private bool TryParseParameter(ref int parameterStartIndex, out MimeTypeParameter parameter, out bool quoted)
         {

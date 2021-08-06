@@ -53,11 +53,12 @@ namespace FolkerKinzel.MimeTypes.Tests
         [TestMethod]
         public void CloneTest1()
         {
-            Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
-            ICloneable cloneable = inetMedia.Parameters.First();
-            object o = cloneable.Clone();
-            Assert.AreEqual(cloneable, o);
-            Assert.AreEqual("charset=iso-8859-1", o.ToString());
+            Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
+            ICloneable o1 = media1;
+
+            object o2 = o1.Clone();
+
+            Assert.IsTrue(o1.Equals(o2));
         }
 
         [DataTestMethod]
@@ -156,6 +157,90 @@ namespace FolkerKinzel.MimeTypes.Tests
         }
 
         [TestMethod]
+        public void EqualsTest7()
+        {
+            Assert.IsTrue(MimeType.TryParse("text/plain; charset=iso-8859-1", out MimeType media1));
+            Assert.IsTrue(MimeType.TryParse("text/plain", out MimeType media2));
+
+            Assert.IsFalse(media1.Equals(media2));
+            Assert.IsFalse(media1.Equals(in media2));
+            Assert.IsFalse(media1.Equals(in media2, false));
+            Assert.IsTrue(media1.Equals(in media2, true));
+
+            Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
+            Assert.AreEqual(media1.GetHashCode(true), media2.GetHashCode(true));
+        }
+
+        [TestMethod]
+        public void EqualsTest8()
+        {
+            Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
+            Assert.IsTrue(MimeType.TryParse("text/plain", out MimeType media2));
+
+            Assert.IsTrue(media1.Equals(media2));
+            Assert.IsTrue(media1.Equals(in media2));
+            Assert.IsTrue(media1.Equals(in media2, false));
+            Assert.IsTrue(media1.Equals(in media2, true));
+
+            Assert.AreEqual(media1.GetHashCode(), media2.GetHashCode());
+            Assert.AreEqual(media1.GetHashCode(true), media2.GetHashCode(true));
+        }
+
+
+        [TestMethod]
+        public void EqualsTest9()
+        {
+            Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
+            object o1 = media1;
+            Assert.IsFalse(o1.Equals(42));
+        }
+
+        [TestMethod]
+        public void EqualsTest10()
+        {
+            Assert.IsTrue(MimeType.TryParse("application/octet-stream; charset=US-ASCII", out MimeType media1));
+            Assert.IsTrue(MimeType.TryParse("application/octet-stream", out MimeType media2));
+
+            Assert.IsFalse(media1.Equals(media2));
+            Assert.IsFalse(media1.Equals(in media2));
+            Assert.IsFalse(media1.Equals(in media2, false));
+            Assert.IsTrue(media1.Equals(in media2, true));
+
+            Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
+            Assert.AreEqual(media1.GetHashCode(true), media2.GetHashCode(true));
+        }
+        
+        [TestMethod]
+        public void EqualsTest11()
+        {
+            Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
+            Assert.IsTrue(MimeType.TryParse("application/octet-stream", out MimeType media2));
+
+            Assert.IsTrue(media1.IsTextPlain);
+            Assert.IsFalse(media2.IsTextPlain);
+
+            Assert.IsFalse(media1.Equals(media2));
+            Assert.IsFalse(media1.Equals(in media2));
+            Assert.IsFalse(media1.Equals(in media2, false));
+            Assert.IsFalse(media1.Equals(in media2, true));
+
+            Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
+            Assert.AreNotEqual(media1.GetHashCode(true), media2.GetHashCode(true));
+        }
+
+        [TestMethod]
+        public void RemoveUrlEncodingTest1()
+        {
+            Assert.IsTrue(MimeType.TryParse("application/octet-stream; para*=utf-8'de'Hallo%20Folker", out MimeType media1));
+
+            MimeTypeParameter para = media1.Parameters.First();
+            Assert.AreEqual(para.Value.ToString(), "Hallo Folker");
+            Assert.AreEqual(para.Language.ToString(), "de");
+            Assert.AreEqual(para.Key.ToString(), "para");
+
+        }
+
+        [TestMethod]
         public void ParseParametersTest1()
         {
             string input = "application/x-stuff;" + Environment.NewLine +
@@ -168,7 +253,6 @@ namespace FolkerKinzel.MimeTypes.Tests
             MimeTypeParameter param = mimeType.Parameters.First();
 
             Assert.AreEqual("title", param.Key.ToString());
-            Assert.AreEqual("us-ascii", param.Charset.ToString());
             Assert.AreEqual("en", param.Language.ToString());
 
         }

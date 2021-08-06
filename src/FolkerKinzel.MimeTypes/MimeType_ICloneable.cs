@@ -18,10 +18,10 @@ namespace FolkerKinzel.MimeTypes
         /// a copy of the <see cref="MimeType"/> structure: The copy is built on a separate <see cref="string"/>,
         /// which is case-normalized and only as long as needed.
         /// <note type="tip">
-        /// Use the instance method <see cref="MimeType.Clone"/> if you can to avoid the costs of boxing.
+        /// Use the instance method <see cref="MimeType.Clone"/> if you can, to avoid the costs of boxing.
         /// </note>
         /// </remarks>
-        object ICloneable.Clone() => throw new NotImplementedException();
+        object ICloneable.Clone() => Clone();
 
         /// <summary>
         /// Creates a new <see cref="MimeType"/> that is a copy of the current instance.

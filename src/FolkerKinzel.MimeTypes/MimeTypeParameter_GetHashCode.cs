@@ -12,7 +12,6 @@ namespace FolkerKinzel.MimeTypes
         /// Computes a hash code for the instance.
         /// </summary>
         /// <returns>The hash code for the instance.</returns>
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
         public override int GetHashCode()
         {
             var hash = new HashCode();

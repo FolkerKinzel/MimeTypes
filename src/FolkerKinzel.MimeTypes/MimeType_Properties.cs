@@ -13,6 +13,9 @@ namespace FolkerKinzel.MimeTypes
         private const int SUB_TYPE_START_MAX_VALUE = byte.MaxValue;
         private const int SUB_TYPE_LENGTH_MAX_VALUE = byte.MaxValue;
         private const int PARAMETERS_START_MAX_VALUE = byte.MaxValue;
+        private const int SUB_TYPE_LENGTH_SHIFT = 8;
+        private const int SUB_TYPE_START_SHIFT = 16;
+        private const int MEDIA_TYPE_LENGTH_SHIFT = 24;
 
         private readonly ReadOnlyMemory<char> _mimeTypeString;
 

@@ -39,7 +39,6 @@
   <ItemGroup>
     <Compile Remove="Intls\Cache.cs" />
     <Compile Remove="Intls\DataUrlExtension.cs" />
-    <Compile Remove="Intls\HelperExtension.cs" />
     <Compile Remove="Intls\TextEncodingConverter.cs" />
     <Compile Remove="MimeCacheFactory.cs" />
   </ItemGroup>
@@ -62,7 +61,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FolkerKinzel.Strings" Version="3.0.0" />
+    <PackageReference Include="FolkerKinzel.Strings" Version="3.1.0-alpha.1" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />

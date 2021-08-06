@@ -30,18 +30,6 @@ namespace FolkerKinzel.MimeTypes
         [CLSCompliant(false)]
         public bool Equals(in MimeType other) => Equals(in other, false);
 
-        ///// <summary>
-        ///// Determines whether this instance is equal to <paramref name="other"/> and allows to specify
-        ///// whether or not the <see cref="Parameters"/> are taken into account.
-        ///// </summary>
-        ///// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
-        ///// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account;
-        ///// <c>true</c>, otherwise.</param>
-        ///// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
-        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-        //public bool Equals(MimeType other, bool ignoreParameters) => Equals(in other, ignoreParameters);
-
         /// <summary>
         /// Determines whether this instance is equal to <paramref name="other"/> and allows to specify
         /// whether or not the <see cref="Parameters"/> are taken into account.
@@ -50,8 +38,6 @@ namespace FolkerKinzel.MimeTypes
         /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account;
         /// <c>true</c>, otherwise.</param>
         /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
-        //[CLSCompliant(false)]
         public bool Equals(in MimeType other, bool ignoreParameters)
         {
             if (!MediaType.Equals(other.MediaType, StringComparison.OrdinalIgnoreCase) ||
