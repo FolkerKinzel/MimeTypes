@@ -28,14 +28,9 @@ namespace FolkerKinzel.MimeTypes
                 yield break;
             }
 
-            //Encoding asciiEncoding = Encoding.ASCII;
-            //asciiEncoding.EncoderFallback = EncoderFallback.ExceptionFallback;
-
-            //Encoding utf8Encoding = Encoding.UTF8;
-            //utf8Encoding.DecoderFallback = DecoderFallback.ExceptionFallback;
-
             string? charset = null;
             string? currentKey = null;
+            bool skip = false;
 
             StringBuilder? sb = null;
             MimeTypeParameter concatenated;
@@ -45,6 +40,11 @@ namespace FolkerKinzel.MimeTypes
                 if (TryParseParameter(ref parameterStartIndex, out MimeTypeParameter parameter, out bool quoted))
                 {
                     ReadOnlySpan<char> keySpan = parameter.Key;
+
+                    // keySpan might have the format "key*0" if the parameter is
+                    // splitted (see RFC 2184). A trailing '*', which is an indicator that
+                    // language and/or charset information is present, has yet been eaten by
+                    // MimeTypeParameter.TryParse
                     int starIndex = keySpan.IndexOf('*');
                     if (starIndex > 0)
                     {
@@ -53,6 +53,7 @@ namespace FolkerKinzel.MimeTypes
                         keySpan = keySpan.Slice(0, starIndex + 1);
                         if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase))
                         {
+                            skip = false;
                             currentKey = keySpan.ToString();
                             charset = parameter.Charset.ToString();
 
@@ -63,11 +64,18 @@ namespace FolkerKinzel.MimeTypes
 
                             ReadOnlySpan<char> languageSpan = parameter.Language;
                             _ = languageSpan.IsEmpty
+                                // Remove the trailing '*' from currentKey:
                                 ? sb.Append(currentKey).Remove(sb.Length - 1, 1).Append('=')
+                                // The charset is not preserved because parameter.Value is passed decoded:
                                 : sb.Append(currentKey).Append('=').Append('\'').Append(parameter.Language).Append('\'');
                         }
 
-                        // mit vorigem zusammensetzen
+                        if (skip)
+                        {
+                            continue;
+                        }
+
+                        // concat with the previous:
                         ReadOnlySpan<char> valueSpan = parameter.Value;
                         if (!quoted && valueSpan.Contains('%'))
                         {
@@ -79,6 +87,7 @@ namespace FolkerKinzel.MimeTypes
                             {
                                 // This makes the parameter unreadable:
                                 _ = sb.Clear();
+                                skip = true;
                             }
                         }
                         else
@@ -94,6 +103,7 @@ namespace FolkerKinzel.MimeTypes
                             yield return concatenated;
                         }
 
+                        skip = false;
                         currentKey = null;
                         ReadOnlySpan<char> charsetSpan = parameter.Charset;
                         charset = charsetSpan.IsEmpty ? null : charsetSpan.ToString();
@@ -122,7 +132,7 @@ namespace FolkerKinzel.MimeTypes
                 ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
                 _ = sb.Clear();
 
-                return MimeTypeParameter.TryParse(ref mem, out concatenated, out _);
+                return MimeTypeParameter.TryParse(false, ref mem, out concatenated, out _);
             }
 
             concatenated = default;
@@ -148,6 +158,8 @@ namespace FolkerKinzel.MimeTypes
                 ReadOnlySpan<char> languageSpan = parameter.Language;
                 ReadOnlySpan<char> keySpan = parameter.Key;
 
+                // The charset is not needed anymore because result is always passed
+                // unescaped and unquoted:
                 if (languageSpan.IsEmpty)
                 {
                     sb ??= new StringBuilder(keySpan.Length + 1 + result.Length);
@@ -162,7 +174,7 @@ namespace FolkerKinzel.MimeTypes
                         .ToString().AsMemory();
                 }
 
-                return MimeTypeParameter.TryParse(ref memory, out parameter, out bool _);
+                return MimeTypeParameter.TryParse(false, ref memory, out parameter, out bool _);
             }
 
             return true;
@@ -209,7 +221,7 @@ namespace FolkerKinzel.MimeTypes
                 parameterStartIndex += nextParameterSeparatorIndex + 1;
             }
 
-            return MimeTypeParameter.TryParse(ref currentParameterString, out parameter, out quoted);
+            return MimeTypeParameter.TryParse(true, ref currentParameterString, out parameter, out quoted);
         }
 
 

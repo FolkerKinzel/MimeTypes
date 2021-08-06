@@ -15,7 +15,7 @@ namespace FolkerKinzel.MimeTypes
 {
     public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
     {
-        internal static bool TryParse(ref ReadOnlyMemory<char> value, out MimeTypeParameter parameter, out bool quoted)
+        internal static bool TryParse(bool firstRun, ref ReadOnlyMemory<char> value, out MimeTypeParameter parameter, out bool quoted)
         {
             quoted = false;
 
@@ -37,10 +37,10 @@ namespace FolkerKinzel.MimeTypes
 
             int valueStart = keyValueSeparatorIndex + 1;
 
-            if (valueStart == span.Length)
-            {
-                goto Failed;
-            }
+            //if (valueStart == span.Length)
+            //{
+            //    goto Failed;
+            //}
 
             valueStart += span.Slice(valueStart).GetTrimmedStart();
 
@@ -56,9 +56,11 @@ namespace FolkerKinzel.MimeTypes
             int charsetStart = 0;
             int charsetLength = 0;
 
+            // A trailing '*' in the Key indicates that charset and/or language are present (RFC 2184).
+            // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
             if (span[keyLength - 1] == '*')
             {
-                --keyLength;
+                --keyLength; // Eat the trailing '*'.
 
                 if (keyLength is 0)
                 {
@@ -74,17 +76,17 @@ namespace FolkerKinzel.MimeTypes
 
                     if (c == '\'')
                     {
-                        if (startInitialized)
-                        {
-                            languageLength = i - languageStart;
-                            valueStart = i + 1;
-                            break;
-                        }
-                        else
+                        if (!startInitialized)
                         {
                             startInitialized = true;
                             charsetLength = i - valueStart;
                             languageStart = i + 1;
+                        }
+                        else
+                        {
+                            languageLength = i - languageStart;
+                            valueStart = i + 1;
+                            break;
                         }
                     }
                 }
@@ -104,7 +106,10 @@ namespace FolkerKinzel.MimeTypes
             }
 
             // Masked Value:
-            if (span[span.Length - 1] == '"')
+            // Span cannot end with " when Url encoded because " must be URL encoded then.
+            // In the second run parameter.Value cannot be quoted anymore.
+            int spanLastIndex = span.Length - 1;
+            if (firstRun && span[spanLastIndex] == '\"' && spanLastIndex > valueStart && span[valueStart] == '\"') 
             {
                 quoted = true;
                 if (span.Slice(valueStart).Contains('\\')) // Masked chars
@@ -118,12 +123,12 @@ namespace FolkerKinzel.MimeTypes
                         UnMask(builder, valueStart);
                     }
 
-
                     ReadOnlyMemory<char> mem = builder.ToString().AsMemory();
-                    return TryParse(ref mem, out parameter, out _);
+                    return TryParse(false, ref mem, out parameter, out _);
                 }
                 else // No masked chars - tspecials only
                 {
+                    // Eat the Double-Quotes:
                     value = value.Slice(0, value.Length - 1);
                     valueStart++;
                 }

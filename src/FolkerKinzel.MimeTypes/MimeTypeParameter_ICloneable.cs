@@ -38,7 +38,7 @@ namespace FolkerKinzel.MimeTypes
             }
 
             ReadOnlyMemory<char> memory = ToString().AsMemory();
-            _ = TryParse(ref memory, out MimeTypeParameter mimeTypeParameter, out bool _);
+            _ = TryParse(true, ref memory, out MimeTypeParameter mimeTypeParameter, out bool _);
             return mimeTypeParameter;
         }
 

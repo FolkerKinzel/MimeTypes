@@ -64,7 +64,7 @@ namespace FolkerKinzel.MimeTypes.Tests
         [DataTestMethod]
         [DataRow("text/plain; charset=iso-8859-1", true, 1)]
         [DataRow("text / plain; charset=iso-8859-1;;", true, 1)]
-        [DataRow("text / plain; charset=iso-8859-1;second=;", true, 1)]
+        [DataRow("text / plain; charset=iso-8859-1;second=;", true, 2)]
         [DataRow("text / plain; charset=iso-8859-1;second=\"Second ; Value\"", true, 2)]
         public void TryParseTest1(string input, bool expected, int parametersCount)
         {
