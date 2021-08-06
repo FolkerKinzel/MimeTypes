@@ -50,7 +50,7 @@ namespace FolkerKinzel.MimeTypes
         /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account;
         /// <c>true</c>, otherwise.</param>
         /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
         //[CLSCompliant(false)]
         public bool Equals(in MimeType other, bool ignoreParameters)
         {

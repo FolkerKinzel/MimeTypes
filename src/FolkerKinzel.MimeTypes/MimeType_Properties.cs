@@ -60,6 +60,8 @@ namespace FolkerKinzel.MimeTypes
         /// <summary>
         /// Finds an appropriate file type extension for <paramref name="mimeTypeString"/>.
         /// </summary>
+        /// <param name="mimeTypeString">A <see cref="string"/> that represents an Internet Media Type ("MIME type")
+        /// according to RFC 2045, RFC 2046 and RFC 2184.</param>
         /// <returns>An appropriate file type extension for <paramref name="mimeTypeString"/>.</returns>
         public static string GetFileTypeExtension(string? mimeTypeString)
         {
@@ -67,13 +69,12 @@ namespace FolkerKinzel.MimeTypes
             return mimeType.GetFileTypeExtension();
         }
 
-
         /// <summary>
         /// Determines whether the <see cref="MediaType"/> of this instance equals "text".
         /// The comparison is case-insensitive.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
         public bool IsText
             => MediaType.Equals("text".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
@@ -83,7 +84,7 @@ namespace FolkerKinzel.MimeTypes
         /// The comparison is case-insensitive.
         /// </summary>
         /// <returns><c>true</c> if this instance is equal to "text/plain".</returns>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
         public bool IsTextPlain
             => IsText && SubType.Equals("plain".AsSpan(), StringComparison.OrdinalIgnoreCase);
 

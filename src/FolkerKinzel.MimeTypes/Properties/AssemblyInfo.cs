@@ -1,9 +1,12 @@
 using System;
+using System.Resources;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("FolkerKinzel.MimeTypes.Tests")]
 [assembly: InternalsVisibleTo("Benchmarks")]
+
+//[assembly:NeutralResourcesLanguage("en")]
 
 [assembly: CLSCompliant(true)]
 

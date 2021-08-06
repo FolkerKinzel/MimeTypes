@@ -5,6 +5,7 @@
     <LangVersion>9.0</LangVersion>
     <Nullable>enable</Nullable>
     <IsPackable>false</IsPackable>
+    <NeutralLanguage>en</NeutralLanguage>
 
     <Authors>Folker Kinzel</Authors>
     <Copyright>Copyright © 2021 Folker Kinzel</Copyright>

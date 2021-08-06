@@ -31,7 +31,7 @@ namespace FolkerKinzel.MimeTypes
         /// <param name="urlEncodedValue">Pass <c>true</c> to URL encode the parameter values.</param>
         /// <returns>A reference to <paramref name="builder"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
+        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
         public StringBuilder AppendTo(StringBuilder builder, bool urlEncodedValue = false)
         {
             if (builder is null)
