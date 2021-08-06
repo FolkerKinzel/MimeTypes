@@ -18,9 +18,9 @@ namespace FolkerKinzel.MimeTypes.Intls
         /// of the invariant culture.
         /// </summary>
         /// <param name="builder">The <see cref="StringBuilder"/> whose content is modified.</param>
-        /// <returns>A reference to <see cref="builder"/>.</returns>
+        /// <returns>A reference to <paramref name="builder"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
-        internal static StringBuilder ToLowerInvariant(this StringBuilder builder) 
+        internal static StringBuilder ToLowerInvariant(this StringBuilder builder)
             => builder is null ? throw new ArgumentNullException(nameof(builder))
                                : builder.ToLowerInvariant(0, builder.Length);
 
@@ -31,7 +31,7 @@ namespace FolkerKinzel.MimeTypes.Intls
         /// <param name="builder">The <see cref="StringBuilder"/> whose content is modified.</param>
         /// <param name="startIndex">The zero-based index in <paramref name="builder"/> where the conversion
         /// starts.</param>
-        /// <returns>A reference to <see cref="builder"/>.</returns>
+        /// <returns>A reference to <paramref name="builder"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
         internal static StringBuilder ToLowerInvariant(this StringBuilder builder, int startIndex)
             => builder is null ? throw new ArgumentNullException(nameof(builder))
@@ -45,7 +45,7 @@ namespace FolkerKinzel.MimeTypes.Intls
         /// <param name="startIndex">The zero-based index in <paramref name="builder"/> where the conversion
         /// starts.</param>
         /// <param name="count">The number of <see cref="char"/>s to convert.</param>
-        /// <returns>A reference to <see cref="builder"/>.</returns>
+        /// <returns>A reference to <paramref name="builder"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
         internal static StringBuilder ToLowerInvariant(this StringBuilder builder, int startIndex, int count)
         {
@@ -54,24 +54,20 @@ namespace FolkerKinzel.MimeTypes.Intls
                 throw new ArgumentNullException(nameof(builder));
             }
 
-            if(startIndex < 0  || startIndex > builder.Length)
+            if (startIndex < 0 || startIndex > builder.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(startIndex));
             }
 
-            if(count < 0 || startIndex + count > builder.Length)
+            if (count < 0 || (count += startIndex) > builder.Length)
             {
                 throw new ArgumentOutOfRangeException(nameof(count));
             }
 
-            count += startIndex;
             for (int i = startIndex; i < count; i++)
             {
                 char current = builder[i];
-                if(char.IsUpper(current))
-                {
-                    builder[i] = char.ToLowerInvariant(current);
-                }
+                builder[i] = char.ToLowerInvariant(current);
             }
 
             return builder;
@@ -81,7 +77,7 @@ namespace FolkerKinzel.MimeTypes.Intls
         {
             for (int i = 0; i < chars.Length; i++)
             {
-                if(span.Contains(chars[i]))
+                if (span.Contains(chars[i]))
                 {
                     return true;
                 }
@@ -94,7 +90,7 @@ namespace FolkerKinzel.MimeTypes.Intls
         {
             int length = span.Length;
 
-            for (int i = length-1; i >= 0; i--)
+            for (int i = length - 1; i >= 0; i--)
             {
                 if (char.IsWhiteSpace(span[i]))
                 {

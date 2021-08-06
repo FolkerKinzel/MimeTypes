@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.Strings;
 
 
 #if NETSTANDARD2_0 || NETSTANDARD2_1 || NET461

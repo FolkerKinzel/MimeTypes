@@ -44,10 +44,16 @@ namespace FolkerKinzel.MimeTypes
         /// </summary>
         public ReadOnlySpan<char> Value => _parameterString.Span.Slice(_idx1 & VALUE_START_MAX_VALUE);
 
+        /// <summary>
+        /// The language of <see cref="Value"/>. (IETF-Language tag.)
+        /// </summary>
         public ReadOnlySpan<char> Language => _parameterString.Span.Slice(
             (_idx2 >> LANGUAGE_START_SHIFT) & LANGUAGE_START_MAX_VALUE, (_idx2 >> LANGUAGE_LENGTH_SHIFT) & LANGUAGE_LENGTH_MAX_VALUE);
 
-        public ReadOnlySpan<char> Charset => _parameterString.Span.Slice(
+        /// <summary>
+        /// The charset in which <see cref="Value"/> is encoded.
+        /// </summary>
+        internal ReadOnlySpan<char> Charset => _parameterString.Span.Slice(
             (_idx1 >> CHARSET_START_SHIFT) & CHARSET_START_MAX_VALUE, _idx2 & CHARSET_LENGTH_MAX_VALUE);
 
         /// <summary>

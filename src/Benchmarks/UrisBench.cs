@@ -2,13 +2,16 @@
 using System.Runtime.CompilerServices;
 using System.Text;
 using BenchmarkDotNet.Attributes;
+using FolkerKinzel.MimeTypes.Intls;
 
 namespace Benchmarks
 {
     [MemoryDiagnoser]
     public class UrisBench
     {
-        //private readonly StringBuilder _builder = new(16);
+        private const string INPUT = "eeeeeeeeeeeeeeeeeeeeEEEEEEEEEEEEEEEEEEEE";
+
+        private readonly StringBuilder _builder = new(INPUT.Length);
         //private const string TEST = "test";
 
         //private readonly DataUrl _dataUrlText1;
@@ -28,6 +31,9 @@ namespace Benchmarks
             //_dataUrlText2 = DataUrl.Parse(DataUrl.FromText(data));
         }
 
+
+        //[Benchmark]
+        //public StringBuilder ToLowerBench() => _builder.Clear().Append(INPUT).ToLowerInvariant();
 
         //[Benchmark]
         //public StringBuilder AppendStackallock()
@@ -58,25 +64,25 @@ namespace Benchmarks
         //    return _dataUrlText1.Equals(_dataUrlText2);
         //}
 
-        [Benchmark]
-        public static bool ReadOnlyMemoryByValue()
-        {
-            var memory = default(ReadOnlyMemory<char>);
-            return DoReadOnlyMemoryByValue(memory);
-        }
+        //[Benchmark]
+        //public static bool ReadOnlyMemoryByValue()
+        //{
+        //    var memory = default(ReadOnlyMemory<char>);
+        //    return DoReadOnlyMemoryByValue(memory);
+        //}
 
-        [Benchmark]
-        public static bool ReadOnlyMemoryByIn()
-        {
-            var memory = default(ReadOnlyMemory<char>);
-            return DoReadOnlyMemoryByIn(ref memory);
-        }
+        //[Benchmark]
+        //public static bool ReadOnlyMemoryByIn()
+        //{
+        //    var memory = default(ReadOnlyMemory<char>);
+        //    return DoReadOnlyMemoryByIn(ref memory);
+        //}
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static bool DoReadOnlyMemoryByValue(ReadOnlyMemory<char> largeStruct) => largeStruct.IsEmpty;
+        //[MethodImpl(MethodImplOptions.NoInlining)]
+        //private static bool DoReadOnlyMemoryByValue(ReadOnlyMemory<char> largeStruct) => largeStruct.IsEmpty;
 
-        [MethodImpl(MethodImplOptions.NoInlining)]
-        private static bool DoReadOnlyMemoryByIn(ref ReadOnlyMemory<char> largeStruct) => largeStruct.IsEmpty;
+        //[MethodImpl(MethodImplOptions.NoInlining)]
+        //private static bool DoReadOnlyMemoryByIn(ref ReadOnlyMemory<char> largeStruct) => largeStruct.IsEmpty;
 
         //[Benchmark]
         //public bool DataUrlByValue()

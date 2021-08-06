@@ -9,6 +9,10 @@ namespace FolkerKinzel.MimeTypes
     public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     {
         #region const
+
+        /// <summary>
+        /// The estimated length of the <see cref="string"/> that is created when <see cref="ToString()"/> is called.
+        /// </summary>
         public const int StringLength = 80;
 
         private const int SUB_TYPE_LENGTH_SHIFT = 8;

@@ -3,6 +3,8 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
 [assembly: InternalsVisibleTo("FolkerKinzel.MimeTypes.Tests")]
+[assembly: InternalsVisibleTo("Benchmarks")]
+
 [assembly: CLSCompliant(true)]
 
 // In Projekten im SDK-Stil wie dem vorliegenden, bei dem verschiedene Assemblyattribute

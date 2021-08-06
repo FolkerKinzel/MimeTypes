@@ -1,4 +1,6 @@
 # FolkerKinzel.MimeTypes
+[![GitHub](https://img.shields.io/github/license/FolkerKinzel/MimeTypes)](https://github.com/FolkerKinzel/MimeTypes/blob/master/LICENSE)
+
 .NET library that supports Internet Media Types ("MIME Types"). 
 
 The current version of the package is a preview version. Updates of this preview version might contain breaking changes: Therefore it's not recommended to use these preview versions in productivity code.
