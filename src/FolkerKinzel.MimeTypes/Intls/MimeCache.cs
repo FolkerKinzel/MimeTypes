@@ -19,7 +19,7 @@ namespace FolkerKinzel.MimeTypes.Intls
     /// <threadsafety static="true" instance="true"/>
     internal static class MimeCache
     {
-        private class Entry //: IEquatable<Entry>
+        private class Entry
         {
             public Entry(string mimeType, string extension)
             {
@@ -32,17 +32,6 @@ namespace FolkerKinzel.MimeTypes.Intls
 
             [ExcludeFromCodeCoverage]
             public override string ToString() => $"{MimeType} {Extension}";
-
-            //public bool Equals(Entry? other)
-            // => other is not null
-            //    && StringComparer.Ordinal.Equals(MimeType, other.MimeType)
-            //    && StringComparer.Ordinal.Equals(Extension, other.Extension);
-
-            //public override bool Equals(object? obj)
-            // => Equals(obj as Entry);
-
-            //public override int GetHashCode()
-            //    => HashCode.Combine(MimeType, Extension);
         }
 
         ////////////////////////////////////////////
@@ -113,7 +102,6 @@ namespace FolkerKinzel.MimeTypes.Intls
             {
                 return PrepareFileTypeExtension(DEFAULT_FILE_TYPE_EXTENSION);
             }
-            //mimeType = mimeType.Replace(" ", "").ToLowerInvariant();
 
             return TryGetFileTypeExtensionFromCache(mimeType, out string? fileTypeExtension)
                 ? PrepareFileTypeExtension(fileTypeExtension)
@@ -161,36 +149,6 @@ namespace FolkerKinzel.MimeTypes.Intls
         //    {
         //        _mimeCache = null;
         //        _extCache = null;
-        //    }
-        //}
-
-        ///// <summary>
-        ///// Testet den vorgefüllten Cache auf Fehler.
-        ///// </summary>
-        //[EditorBrowsable(EditorBrowsableState.Never)]
-        //internal static void TestIt()
-        //{
-        //    List<Entry>? cache = InitCache();
-
-        //    string? error = cache.Select(entry => $"{entry.MimeType} {entry.Extension}").FirstOrDefault(x => x.Any(c => char.IsUpper(c)));
-
-        //    if(error is not null)
-        //    {
-        //        throw new InvalidDataException($"{nameof(FolkerKinzel.Uris.Intls)}.{nameof(MimeCache)}: The cache contains an uppercase letter at \"{error}\".");
-        //    }
-
-        //    error = cache.FirstOrDefault(entry => string.IsNullOrEmpty(entry.Extension) || entry.Extension.Contains(' ', StringComparison.Ordinal) || entry.Extension.Contains('.', StringComparison.Ordinal))?.Extension;
-
-        //    if(error is not null)
-        //    {
-        //        throw new InvalidDataException($"{nameof(FolkerKinzel.Uris.Intls)}.{nameof(MimeCache)}: The cache contains an invalid file type extension at \"{error}\".");
-        //    }
-
-        //    error = cache.FirstOrDefault(entry => entry.MimeType.Contains(' ', StringComparison.Ordinal))?.MimeType;
-
-        //    if(error is not null)
-        //    {
-        //        throw new InvalidDataException($"{nameof(FolkerKinzel.Uris.Intls)}.{nameof(MimeCache)}: The cache contains an invalid MIME type at \"{error}\".");
         //    }
         //}
 

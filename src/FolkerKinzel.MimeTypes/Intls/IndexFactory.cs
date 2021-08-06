@@ -12,7 +12,7 @@ namespace FolkerKinzel.MimeTypes.Intls
         {
             using StreamReader reader = ReaderFactory.InitIndexFileReader();
 
-            var dic = new ConcurrentDictionary<string, long>(Environment.ProcessorCount * 4, 16, StringComparer.Ordinal);
+            var dic = new ConcurrentDictionary<string, long>(Environment.ProcessorCount * 2, 16, StringComparer.Ordinal);
             string? line;
             while ((line = reader.ReadLine()) is not null)
             {
