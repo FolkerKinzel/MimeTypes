@@ -107,7 +107,7 @@ namespace FolkerKinzel.MimeTypes
 
                 if (worker.Length > lineLength)
                 {
-                    foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(in parameter, worker))
+                    foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(in parameter, worker, lineLength))
                     {
                         _ = builder.Append(';').Append(NEW_LINE);
                         insertStartIndex = builder.Length;
