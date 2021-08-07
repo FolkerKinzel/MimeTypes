@@ -53,7 +53,7 @@ namespace FolkerKinzel.MimeTypes
             bool urlEncoded = !languageSpan.IsEmpty || !isValueAscii;
 
             // See https://mimesniff.spec.whatwg.org/#serializing-a-mime-type :
-            // Empty values should be Double-Quoted
+            // Empty values should be Double-Quoted.
             bool mask = urlEncoded || (valueSpan.IsEmpty && !urlEncodedValue) || valueSpan.ContainsTSpecials();
 
             if (mask)

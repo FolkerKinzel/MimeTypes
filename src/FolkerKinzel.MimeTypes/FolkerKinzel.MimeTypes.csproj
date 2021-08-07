@@ -29,20 +29,6 @@
     <NoWarn>$(NoWarn);8600;8601;8602;8603;8604</NoWarn>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Remove="alt\**" />
-    <Compile Remove="Extensions\**" />
-    <EmbeddedResource Remove="alt\**" />
-    <EmbeddedResource Remove="Extensions\**" />
-    <None Remove="alt\**" />
-    <None Remove="Extensions\**" />
-  </ItemGroup>
-  <ItemGroup>
-    <Compile Remove="Intls\Cache.cs" />
-    <Compile Remove="Intls\DataUrlExtension.cs" />
-    <Compile Remove="Intls\TextEncodingConverter.cs" />
-    <Compile Remove="MimeCacheFactory.cs" />
-  </ItemGroup>
-  <ItemGroup>
     <None Remove="Resources\Extension.csv" />
     <None Remove="Resources\Mime.csv" />
     <None Remove="Resources\MimeIdx.csv" />
@@ -61,7 +47,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FolkerKinzel.Strings" Version="3.1.0-alpha.1" />
+    <PackageReference Include="FolkerKinzel.Strings" Version="3.1.0-alpha.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />

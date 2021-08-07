@@ -10,10 +10,20 @@ namespace FolkerKinzel.MimeTypes
     {
         #region const
 
+        private const string NEW_LINE = "\r\n";
+
         /// <summary>
         /// The estimated length of the <see cref="string"/> that is created when <see cref="ToString()"/> is called.
         /// </summary>
         public const int StringLength = 80;
+
+
+        /// <summary>
+        /// Minimum count of characters at which a line is wrapped.
+        /// </summary>
+        public const int MinimumLineLength = 64;
+
+
 
         #endregion
     }
