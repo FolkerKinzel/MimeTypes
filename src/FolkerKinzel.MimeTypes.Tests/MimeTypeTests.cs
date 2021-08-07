@@ -47,7 +47,7 @@ namespace FolkerKinzel.MimeTypes.Tests
         {
             Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
 
-            Assert.AreEqual("text/plain;charset=iso-8859-1", inetMedia.ToString());
+            Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString());
         }
 
         [TestMethod]
@@ -260,7 +260,7 @@ namespace FolkerKinzel.MimeTypes.Tests
         [TestMethod]
         public void ParseParametersTest2()
         {
-            const string input = "application/x-stuff;param=\"directory\\\\file.text\"";
+            const string input = "application/x-stuff; param=\"directory\\\\file.text\"";
 
             Assert.IsTrue(MimeType.TryParse(input, out MimeType mimeType));
             Assert.AreEqual(1, mimeType.Parameters.Count());

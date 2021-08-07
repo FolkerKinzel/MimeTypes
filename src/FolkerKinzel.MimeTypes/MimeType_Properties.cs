@@ -58,7 +58,7 @@ namespace FolkerKinzel.MimeTypes
         /// </summary>
         /// <returns>An appropriate file type extension for the <see cref="MimeType"/> instance.</returns>
         public string GetFileTypeExtension()
-            => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeTypeFormatOptions.None));
+            => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeTypeFormattingOptions.None));
 
         /// <summary>
         /// Finds an appropriate file type extension for <paramref name="mimeTypeString"/>.

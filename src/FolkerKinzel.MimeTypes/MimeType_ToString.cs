@@ -21,15 +21,19 @@ namespace FolkerKinzel.MimeTypes
         /// Creates a complete <see cref="string"/> representation of the instance (according to RFC 2045 and RFC 2046) that includes the <see cref="Parameters"/>.
         /// </summary>
         /// <returns>A complete <see cref="string"/> representation of the instance (according to RFC 2045 and RFC 2046) that includes the <see cref="Parameters"/>.</returns>
-        public override string ToString() => ToString(MimeTypeFormatOptions.Default);
+        public override string ToString() => ToString(MimeTypeFormattingOptions.Default);
 
         /// <summary>
         /// Creates a <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2046, and allows to determine, whether or not to include the
         /// <see cref="Parameters"/>.
         /// </summary>
-        /// <param name="includeParameters">Pass <c>true</c> to include the <see cref="Parameters"/>; <c>false</c>, otherwise.</param>
+        /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
+        /// <param name="lineLength">The maximum number of characters in a single line of the serialized instance
+        /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeTypeFormattingOptions.LineWrapping"/>
+        /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
+        /// <see cref="MinimumLineLength"/> is taken instead.</param>
         /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2046.</returns>
-        public string ToString(MimeTypeFormatOptions options, int lineLength = MinimumLineLength)
+        public string ToString(MimeTypeFormattingOptions options, int lineLength = MinimumLineLength)
         {
             var sb = new StringBuilder(StringLength);
             _ = AppendTo(sb, options, lineLength);
@@ -40,11 +44,14 @@ namespace FolkerKinzel.MimeTypes
         /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2046 to a <see cref="StringBuilder"/>.
         /// </summary>
         /// <param name="builder">The <see cref="StringBuilder"/>.</param>
-        /// <param name="includeParameters">Pass <c>true</c> to include the <see cref="Parameters"/>; <c>false</c>, otherwise.</param>
-        /// <param name="urlEncodedParameterValues">Pass <c>true</c> to URL encode the parameter values.</param>
+        /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
+        /// <param name="lineLength">The maximum number of characters in a single line of the serialized instance
+        /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeTypeFormattingOptions.LineWrapping"/>
+        /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
+        /// <see cref="MinimumLineLength"/> is taken instead.</param>
         /// <returns>A reference to <paramref name="builder"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
-        public StringBuilder AppendTo(StringBuilder builder, MimeTypeFormatOptions options, int lineLength = MinimumLineLength)
+        public StringBuilder AppendTo(StringBuilder builder, MimeTypeFormattingOptions options, int lineLength = MinimumLineLength)
         {
             if (builder is null)
             {
@@ -65,13 +72,13 @@ namespace FolkerKinzel.MimeTypes
             int insertStartIndex = builder.Length;
             _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(insertStartIndex);
 
-            if (options.HasFlag(MimeTypeFormatOptions.IncludeParameters))
+            if (options.HasFlag(MimeTypeFormattingOptions.IncludeParameters))
             {
-                bool urlEncodedParameterValues = options.HasFlag(MimeTypeFormatOptions.AlwaysUrlEncoded);
+                bool urlEncodedParameterValues = options.HasFlag(MimeTypeFormattingOptions.AlwaysUrlEncoded);
 
-                if (!urlEncodedParameterValues && options.HasFlag(MimeTypeFormatOptions.LineWrapping))
+                if (!urlEncodedParameterValues && options.HasFlag(MimeTypeFormattingOptions.LineWrapping))
                 {
-                    AppendWrappedParameters(builder, options, lineLength, insertStartIndex);
+                    AppendWrappedParameters(builder, options, lineLength);
                 }
                 else
                 {
@@ -82,9 +89,9 @@ namespace FolkerKinzel.MimeTypes
             return builder;
         }
 
-        private void AppendUnWrappedParameters(StringBuilder builder, MimeTypeFormatOptions options, bool urlEncodedParameterValues)
+        private void AppendUnWrappedParameters(StringBuilder builder, MimeTypeFormattingOptions options, bool urlEncodedParameterValues)
         {
-            bool appendSpace = !urlEncodedParameterValues & options.HasFlag(MimeTypeFormatOptions.WhiteSpaceBetweenParameters);
+            bool appendSpace = !urlEncodedParameterValues & options.HasFlag(MimeTypeFormattingOptions.WhiteSpaceBetweenParameters);
             foreach (MimeTypeParameter parameter in Parameters)
             {
                 _ = builder.Append(';');
@@ -96,10 +103,10 @@ namespace FolkerKinzel.MimeTypes
             }
         }
 
-        private void AppendWrappedParameters(StringBuilder builder, MimeTypeFormatOptions options, int lineLength, int insertStartIndex)
+        private void AppendWrappedParameters(StringBuilder builder, MimeTypeFormattingOptions options, int lineLength)
         {
             var worker = new StringBuilder(lineLength);
-            bool appendSpace = options.HasFlag(MimeTypeFormatOptions.WhiteSpaceBetweenParameters);
+            bool appendSpace = options.HasFlag(MimeTypeFormattingOptions.WhiteSpaceBetweenParameters);
 
             foreach (MimeTypeParameter parameter in Parameters)
             {
@@ -107,11 +114,9 @@ namespace FolkerKinzel.MimeTypes
 
                 if (worker.Length > lineLength)
                 {
-                    foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(in parameter, worker, lineLength))
+                    foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(parameter, worker, lineLength))
                     {
-                        _ = builder.Append(';').Append(NEW_LINE);
-                        insertStartIndex = builder.Length;
-                        _ = builder.Append(tmp);
+                        _ = builder.Append(';').Append(NEW_LINE).Append(tmp);
                     }
                 }
                 else
@@ -128,7 +133,6 @@ namespace FolkerKinzel.MimeTypes
                     if (neededLength > lineLength)
                     {
                         _ = builder.Append(NEW_LINE);
-                        insertStartIndex = builder.Length;
                     }
                     else if (appendSpace)
                     {

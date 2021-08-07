@@ -149,7 +149,7 @@ namespace FolkerKinzel.MimeTypes.Intls
             {
                 // only \\\\\\\\\\\\\\\\\\\\\\\\
 
-                chunkLength -= (chunkLength % 2);
+                chunkLength -= chunkLength % 2;
             }
 
             return chunkLength;
