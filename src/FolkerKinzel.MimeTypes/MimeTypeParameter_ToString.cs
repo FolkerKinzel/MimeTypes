@@ -75,7 +75,7 @@ namespace FolkerKinzel.MimeTypes
                     }
                     mask = false;
                 }
-                else if (valueSpan.ContainsAny(stackalloc char[] { '"', '\\' }))
+                else if (valueSpan.ContainsAny( '"', '\\' ))
                 {
                     var sb = new StringBuilder(valueSpan.Length * 2);
                     _ = sb.Append(valueSpan);

@@ -11,6 +11,9 @@ namespace FolkerKinzel.MimeTypes.Intls
     {
         internal static bool ContainsTSpecials(this ReadOnlySpan<char> span)
             // RFC 2045 Section 5.1 "tspecials"
-            => span.ContainsAny(stackalloc char[] { ' ', '(', ')', '<', '>', '@', ',', ';', ':', '\\', '\"', '/', '[', '>', ']', '?', '=' });
+            // Calling MemoryExtensions directly to avoid allocation.
+            // This method is much slower than string.IndexOfAny(char[]) but doesn't allocate.
+            => MemoryExtensions.IndexOfAny(span,
+                stackalloc char[] { ' ', '(', ')', '<', '>', '@', ',', ';', ':', '\\', '\"', '/', '[', '>', ']', '?', '=' }) != -1;
     }
 }
