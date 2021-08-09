@@ -15,18 +15,18 @@ namespace FolkerKinzel.MimeTypes
 {
     public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
     {
-        internal static bool TryParse(bool firstRun, ref ReadOnlyMemory<char> value, out MimeTypeParameter parameter, out bool quoted)
+        internal static bool TryParse(bool firstRun, ref ReadOnlyMemory<char> parameterString, out MimeTypeParameter parameter, out bool quoted)
         {
             quoted = false;
 
-            value = value.Trim();
+            parameterString = parameterString.Trim();
 
-            if (value.Length == 0)
+            if (parameterString.Length == 0)
             {
                 goto Failed;
             }
 
-            ReadOnlySpan<char> span = value.Span;
+            ReadOnlySpan<char> span = parameterString.Span;
 
             int keyValueSeparatorIndex = span.IndexOf('=');
 
@@ -42,7 +42,7 @@ namespace FolkerKinzel.MimeTypes
             //    goto Failed;
             //}
 
-            valueStart += span.Slice(valueStart).GetTrimmedStart();
+            //valueStart += span.Slice(valueStart).GetTrimmedStart();
 
             int keyLength = span.Slice(0, keyValueSeparatorIndex).GetTrimmedLength();
 
@@ -114,8 +114,8 @@ namespace FolkerKinzel.MimeTypes
                 quoted = true;
                 if (span.Slice(valueStart).Contains('\\')) // Masked chars
                 {
-                    var builder = new StringBuilder(value.Length);
-                    _ = builder.Append(value).Remove(builder.Length - 1, 1);
+                    var builder = new StringBuilder(parameterString.Length);
+                    _ = builder.Append(parameterString).Remove(builder.Length - 1, 1);
 
                     if (valueStart < builder.Length && builder[valueStart] == '"')
                     {
@@ -129,7 +129,7 @@ namespace FolkerKinzel.MimeTypes
                 else // No masked chars - tspecials only
                 {
                     // Eat the Double-Quotes:
-                    value = value.Slice(0, value.Length - 1);
+                    parameterString = parameterString.Slice(0, parameterString.Length - 1);
                     valueStart++;
                 }
             }
@@ -142,7 +142,7 @@ namespace FolkerKinzel.MimeTypes
             (languageStart << LANGUAGE_START_SHIFT) |
             charsetLength;
 
-            parameter = new MimeTypeParameter(in value, idx1, idx2);
+            parameter = new MimeTypeParameter(in parameterString, idx1, idx2);
 
             return true;
 ///////////////////////////////
