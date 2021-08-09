@@ -1,8 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using System.Threading.Tasks;
 using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.Strings;
 
@@ -46,119 +44,31 @@ namespace FolkerKinzel.MimeTypes
             }
 
             ReadOnlySpan<char> valueSpan = Value;
-            ReadOnlySpan<char> keySpan = Key;
-            ReadOnlySpan<char> languageSpan = Language;
 
             bool isValueAscii = valueSpan.IsAscii();
-            bool urlEncoded = !languageSpan.IsEmpty || !isValueAscii;
+            bool urlEncoded = urlEncodedValue || !Language.IsEmpty || !isValueAscii;
 
             // See https://mimesniff.spec.whatwg.org/#serializing-a-mime-type :
             // Empty values should be Double-Quoted.
-            bool mask = urlEncoded || (valueSpan.IsEmpty && !urlEncodedValue) || valueSpan.ContainsTSpecials();
+            bool containsMaskChars = false;
+            bool mask = !urlEncoded || valueSpan.IsEmpty || valueSpan.ContainsTSpecials(out containsMaskChars);
 
-            if (mask)
+            if (urlEncoded)
             {
-                if (urlEncodedValue)
-                {
-                    urlEncoded = true;
-                }
-
-                if (urlEncoded)
-                {
-                    try
-                    {
-                        valueSpan = Uri.EscapeDataString(valueSpan.ToString()).AsSpan();
-                    }
-                    catch(FormatException)
-                    {
-                        return builder;
-                    }
-                    mask = false;
-                }
-                else if (valueSpan.ContainsAny( '"', '\\' ))
-                {
-                    var sb = new StringBuilder(valueSpan.Length * 2);
-                    _ = sb.Append(valueSpan);
-                    valueSpan = Mask(sb).ToString().AsSpan();
-                }
+                MimeTypeParameterBuilder.BuildUrlEncoded(builder, in this, isValueAscii);
             }
-
-            if (mask)
+            else if (mask)
             {
-                int neededCapacity = 2 + valueSpan.Length + keySpan.Length + 1;
-                _ = builder.EnsureCapacity(builder.Length + neededCapacity);
-
-                int keyStart = builder.Length;
-                _ = builder.Append(Key).ToLowerInvariant(keyStart).Append('=');
-
-                _ = builder.Append('\"');
-
-                int valueStart = builder.Length;
-                _ = IsValueCaseSensitive
-                    ? builder.Append(valueSpan)
-                    : builder.Append(valueSpan).ToLowerInvariant(valueStart);
-
-                _ = builder.Append('\"');
-            }
-            else if (urlEncoded)
-            {
-                bool starred = !isValueAscii || !languageSpan.IsEmpty;
-
-                const string utf8 = "utf-8";
-                int charsetLength = isValueAscii ? 0 : utf8.Length;
-
-                //                                                       =
-                int neededCapacity = valueSpan.Length + keySpan.Length + 1;
-
-                if(starred)
-                {
-                    //                *                  ' '
-                    neededCapacity += 1 + charsetLength + 2 + languageSpan.Length;
-                }
-
-                _ = builder.EnsureCapacity(builder.Length + neededCapacity);
-
-                int keyStart = builder.Length;
-                _ = builder.Append(Key).ToLowerInvariant(keyStart);
-
-                _ = starred
-                    ? builder.Append('*').Append('=').Append(isValueAscii ? "" : utf8).Append('\'').Append(languageSpan).Append('\'')
-                    : builder.Append('=');
-
-                int valueStart = builder.Length;
-                _ = IsValueCaseSensitive
-                    ? builder.Append(valueSpan)
-                    : builder.Append(valueSpan).ToLowerInvariant(valueStart);
+                MimeTypeParameterBuilder.BuildMasked(builder, in this, containsMaskChars);
             }
             else
             {
-                //                                                       =
-                int neededCapacity = valueSpan.Length + keySpan.Length + 1;
-                _ = builder.EnsureCapacity(builder.Length + neededCapacity);
-
-                int keyStart = builder.Length;
-                _ = builder.Append(Key).ToLowerInvariant(keyStart).Append('=');
-
-                int valueStart = builder.Length;
-                _ = IsValueCaseSensitive
-                    ? builder.Append(valueSpan)
-                    : builder.Append(valueSpan).ToLowerInvariant(valueStart);
+                MimeTypeParameterBuilder.BuildUnmasked(builder, in this);
             }
 
             return builder;
         }
 
-        private static StringBuilder Mask(StringBuilder sb)
-        {
-            for (int i = sb.Length - 1; i >= 0; i--)
-            {
-                if (sb[i] is '"' or '\\')
-                {
-                    _ = sb.Insert(i, '\\');
-                }
-            }
 
-            return sb;
-        }
     }
 }

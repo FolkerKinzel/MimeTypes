@@ -10,6 +10,7 @@ namespace Benchmarks
     public class UrisBench
     {
         private const string INPUT = "eeeeeeeeeeeeeeeeeeeeEEEEEEEEEEEEEEEEEEEE";
+        private const string LONG_STRING = "abcdefghijklmnopqrstUVWXYZ0123456789abcdefghijklmnopqrstUVWXYZ0123456789";
 
         private readonly StringBuilder _builder = new(INPUT.Length);
         //private const string TEST = "test";
@@ -23,7 +24,7 @@ namespace Benchmarks
             //const string isoEncoding = "iso-8859-1";
 
 #if NETSTANDARD2_0_OR_GREATER || NET5_0_OR_GREATER
-            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            //Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
 #endif
             //string s = $"data:;charset={isoEncoding};base64,{Convert.ToBase64String(Encoding.GetEncoding(isoEncoding).GetBytes(data))}";
 
@@ -31,6 +32,48 @@ namespace Benchmarks
             //_dataUrlText2 = DataUrl.Parse(DataUrl.FromText(data));
         }
 
+        [Benchmark(Baseline = true)]
+        public bool ContainsTSpecials()
+        {
+            // RFC 2045 Section 5.1 "tspecials"
+            // Calling MemoryExtensions directly to avoid allocation.
+            // This method is much slower than string.IndexOfAny(char[]) but doesn't allocate.
+            ReadOnlySpan<char> span = LONG_STRING.AsSpan();
+            return MemoryExtensions.IndexOfAny(span,
+                stackalloc char[] { '(', ')', '<', '>', '@', ',', ';', ':', '\\', '\"', '/', '[', ']', '?', '=' }) != -1;
+        }
+
+        [Benchmark]
+        public bool Switch()
+        {
+            ReadOnlySpan<char> span = LONG_STRING.AsSpan();
+
+            for (int i = 0; i < span.Length; i++)
+            {
+                switch (span[i])
+                {
+                    case '(':
+                    case ')':
+                    case '<':
+                    case '>':
+                    case '@':
+                    case ',':
+                    case ';':
+                    case ':':
+                    case '\\':
+                    case '\"':
+                    case '/':
+                    case '[':
+                    case ']':
+                    case '?':
+                    case '=':
+                        return true;
+                    default:
+                        break;
+                }
+            }
+            return false;
+        }
 
         //[Benchmark]
         //public StringBuilder ToLowerBench() => _builder.Clear().Append(INPUT).ToLowerInvariant();

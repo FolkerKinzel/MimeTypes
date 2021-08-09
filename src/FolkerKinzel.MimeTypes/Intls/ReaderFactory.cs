@@ -35,7 +35,7 @@ namespace FolkerKinzel.MimeTypes.Intls
                 ? throw new InvalidDataException(string.Format(Res.ResourceNotFound, resourcePath))
                 : new StreamReader(stream);
 #else
-            return new StreamReader(stream);
+            return new StreamReader(stream!);
 #endif
         }
     }

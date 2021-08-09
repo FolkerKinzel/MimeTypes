@@ -9,11 +9,40 @@ namespace FolkerKinzel.MimeTypes.Intls
 {
     internal static class HelperExtension
     {
-        internal static bool ContainsTSpecials(this ReadOnlySpan<char> span)
+        internal static bool ContainsTSpecials(this ReadOnlySpan<char> span, out bool containsMaskChars)
+        {
+            containsMaskChars = false;
+
             // RFC 2045 Section 5.1 "tspecials"
-            // Calling MemoryExtensions directly to avoid allocation.
-            // This method is much slower than string.IndexOfAny(char[]) but doesn't allocate.
-            => MemoryExtensions.IndexOfAny(span,
-                stackalloc char[] { ' ', '(', ')', '<', '>', '@', ',', ';', ':', '\\', '\"', '/', '[', '>', ']', '?', '=' }) != -1;
+            for (int i = 0; i < span.Length; i++)
+            {
+                switch (span[i])
+                {
+                    case '(':
+                    case ')':
+                    case '<':
+                    case '>':
+                    case '@':
+                    case ',':
+                    case ';':
+                    case ':':
+
+                    case '/':
+                    case '[':
+                    case ']':
+                    case '?':
+                    case '=':
+                        return true;
+                    case '\\':
+                    case '\"':
+                        containsMaskChars = true;
+                        return true;
+                    default:
+                        break;
+                }
+            }
+            return false;
+        }
+
     }
 }
