@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using FolkerKinzel.MimeTypes.Intls;
 
 namespace FolkerKinzel.MimeTypes
 {
@@ -43,13 +44,7 @@ namespace FolkerKinzel.MimeTypes
                 return hash.ToHashCode();
             }
 
-            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-            IOrderedEnumerable<MimeTypeParameter> thisParameters =
-                IsText
-                ? Parameters.SkipWhile(UsAsciiPredicate).OrderBy(KeySelector, comparer)
-                : Parameters.OrderBy(KeySelector, comparer);
-
-            foreach (MimeTypeParameter parameter in thisParameters)
+            foreach (MimeTypeParameter parameter in Parameters.Sort(IsText))
             {
                 hash.Add(parameter);
             }

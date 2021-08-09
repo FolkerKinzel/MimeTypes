@@ -4,6 +4,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
+using FolkerKinzel.MimeTypes.Intls;
 
 namespace FolkerKinzel.MimeTypes
 {
@@ -51,22 +52,8 @@ namespace FolkerKinzel.MimeTypes
                 return true;
             }
 
-            StringComparer comparer = StringComparer.OrdinalIgnoreCase;
-            IOrderedEnumerable<MimeTypeParameter> thisParameters;
-            IOrderedEnumerable<MimeTypeParameter> otherParameters;
-
-            if (IsText)
-            {
-                thisParameters = Parameters.SkipWhile(UsAsciiPredicate).OrderBy(KeySelector, comparer);
-                otherParameters = other.Parameters.SkipWhile(UsAsciiPredicate).OrderBy(KeySelector, comparer);
-            }
-            else
-            {
-                thisParameters = Parameters.OrderBy(KeySelector, comparer);
-                otherParameters = other.Parameters.OrderBy(KeySelector, comparer);
-            }
-
-            return thisParameters.SequenceEqual(otherParameters);
+            bool isText = IsText;
+            return this.Parameters.Sort(isText).SequenceEqual(other.Parameters.Sort(isText));
         }
 
         /// <summary>
@@ -79,11 +66,7 @@ namespace FolkerKinzel.MimeTypes
         /// value is equal to that of this instance; <c>false</c>, otherwise.</returns>
         public override bool Equals(object? obj) => obj is MimeType type && Equals(in type, false);
 
-        #region private
-        private static bool UsAsciiPredicate(MimeTypeParameter x) => x.IsAsciiCharsetParameter();
-
-        private static string KeySelector(MimeTypeParameter parameter) => parameter.Key.ToString();
-        #endregion
+        
         #endregion
     }
 }

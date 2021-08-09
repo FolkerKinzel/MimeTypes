@@ -88,7 +88,7 @@ namespace FolkerKinzel.MimeTypes
         /// Determines whether this instance equals "charset=us-ascii". The comparison is case-insensitive.
         /// </summary>
         /// <returns><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</returns>
-        internal bool IsAsciiCharsetParameter()
+        internal bool IsAsciiCharsetParameter
             => IsCharsetParameter
                && Value.Equals(ASCII_CHARSET_VALUE.AsSpan(), StringComparison.OrdinalIgnoreCase);
 

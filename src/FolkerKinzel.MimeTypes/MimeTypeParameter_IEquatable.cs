@@ -36,6 +36,7 @@ namespace FolkerKinzel.MimeTypes
                     ? Value.Equals(other.Value, StringComparison.Ordinal)
                     : Value.Equals(other.Value, StringComparison.OrdinalIgnoreCase));
 
+
         /// <summary>
         /// Determines whether <paramref name="obj"/> is a <see cref="MimeTypeParameter"/> structure
         /// whose content is equal to that of the current instance.

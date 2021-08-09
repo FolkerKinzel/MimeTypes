@@ -44,5 +44,42 @@ namespace FolkerKinzel.MimeTypes.Intls
             return false;
         }
 
+
+        
+        internal static IEnumerable<MimeTypeParameter> Sort(this IEnumerable<MimeTypeParameter> parameters, bool isTextMimeType)
+        {
+            List<MimeTypeParameter>? list = null;
+
+            foreach (MimeTypeParameter parameter in parameters)
+            {
+                if (isTextMimeType && parameter.IsAsciiCharsetParameter)
+                {
+                    continue;
+                }
+
+                list ??= new List<MimeTypeParameter>(2);
+                list.Add(parameter);
+            }
+
+            if (list is null)
+            {
+                yield break;
+            }
+
+            if (list.Count == 1)
+            {
+                yield return list[0];
+                yield break;
+            }
+
+            list.Sort();
+
+            foreach (MimeTypeParameter parameter in list)
+            {
+                yield return parameter;
+            }
+        }
+
+
     }
 }
