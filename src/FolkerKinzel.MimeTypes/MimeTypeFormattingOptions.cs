@@ -34,7 +34,7 @@ namespace FolkerKinzel.MimeTypes
         LineWrapping = 1 << 2,
 
         /// <summary>
-        /// The default setting. (It is equivalent to <see cref="WhiteSpaceBetweenParameters"/>).
+        /// The default setting. (It is equivalent to <see cref="IncludeParameters"/> | <see cref="WhiteSpaceBetweenParameters"/>).
         /// </summary>
         Default = WhiteSpaceBetweenParameters | IncludeParameters,
 
