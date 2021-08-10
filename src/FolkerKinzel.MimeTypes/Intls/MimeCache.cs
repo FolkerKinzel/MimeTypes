@@ -98,14 +98,11 @@ namespace FolkerKinzel.MimeTypes.Intls
 
         internal static string GetFileTypeExtension(string? mimeType)
         {
-            if(mimeType is null)
-            {
-                return PrepareFileTypeExtension(DEFAULT_FILE_TYPE_EXTENSION);
-            }
-
-            return TryGetFileTypeExtensionFromCache(mimeType, out string? fileTypeExtension)
-                ? PrepareFileTypeExtension(fileTypeExtension)
-                : PrepareFileTypeExtension(GetFileTypeExtensionFromResources(mimeType));
+            return mimeType is null
+                ? PrepareFileTypeExtension(DEFAULT_FILE_TYPE_EXTENSION)
+                : TryGetFileTypeExtensionFromCache(mimeType, out string? fileTypeExtension)
+                        ? PrepareFileTypeExtension(fileTypeExtension)
+                        : PrepareFileTypeExtension(GetFileTypeExtensionFromResources(mimeType));
 
             //////////////////////////////////////////
 

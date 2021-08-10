@@ -92,13 +92,13 @@ video/x-ms-wvx wvx
 video/x-msvideo avi
 video/x-sgi-movie movie
 video/x-smv smv
+image/jpeg jpg
 image/fits fits
 image/bmp bmp
 image/cgm cgm
 image/g3fax g3
 image/gif gif
 image/ief ief
-image/jpeg jpeg
 image/ktx ktx
 image/png png
 image/prs.btif btif
