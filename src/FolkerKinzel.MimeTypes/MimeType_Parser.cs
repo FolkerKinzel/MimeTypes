@@ -81,6 +81,15 @@ namespace FolkerKinzel.MimeTypes
             }
 
             ReadOnlySpan<char> mediaPartSpan = parameterSeparatorIndex < 0 ? span : span.Slice(0, parameterSeparatorIndex);
+            
+            // Remove Comment:
+            // mediatype/sub.type (Comment)
+            int commentStartIndex = mediaPartSpan.IndexOf('(');
+            if(commentStartIndex != -1)
+            {
+                mediaPartSpan = mediaPartSpan.Slice(0, commentStartIndex);
+            }
+
             int mediaTypeSeparatorIndex = mediaPartSpan.IndexOf('/');
 
             if (mediaTypeSeparatorIndex < 1)
@@ -97,13 +106,12 @@ namespace FolkerKinzel.MimeTypes
 
             int subTypeStart = mediaTypeSeparatorIndex + 1;
             subTypeStart += mediaPartSpan.Slice(subTypeStart).GetTrimmedStart();
+            int subTypeLength = mediaPartSpan.Slice(subTypeStart).GetTrimmedLength();
 
-            if (subTypeStart == mediaPartSpan.Length || subTypeStart > SUB_TYPE_START_MAX_VALUE)
+            if (subTypeLength == 0 || subTypeStart > SUB_TYPE_START_MAX_VALUE)
             {
                 goto Failed;
             }
-
-            int subTypeLength = mediaPartSpan.Slice(subTypeStart).GetTrimmedLength();
 
             int idx = topLevelMediaTypeLength << MEDIA_TYPE_LENGTH_SHIFT;
             idx |= subTypeStart << SUB_TYPE_START_SHIFT;

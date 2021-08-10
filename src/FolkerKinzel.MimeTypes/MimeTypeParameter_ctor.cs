@@ -27,7 +27,7 @@ namespace FolkerKinzel.MimeTypes
     /// </para>
     /// </note>
     /// </remarks>
-    public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
+    public readonly partial struct MimeTypeParameter
     {
         /// <summary>
         /// Initializes a new <see cref="MimeTypeParameter"/> structure.

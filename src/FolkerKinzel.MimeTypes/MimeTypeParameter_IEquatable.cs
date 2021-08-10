@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace FolkerKinzel.MimeTypes
 {
-    public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
+    public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>
     {
         /// <summary>
         /// Determines if the content of <paramref name="other"/> is equal to that of the 

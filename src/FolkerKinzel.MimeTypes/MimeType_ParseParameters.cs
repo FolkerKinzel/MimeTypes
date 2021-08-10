@@ -249,6 +249,11 @@ namespace FolkerKinzel.MimeTypes
                     continue;
                 }
 
+                if(current == '(') // Start of a comment.
+                {
+                    return -1;
+                }
+
                 if (current == ';')
                 {
                     return i;

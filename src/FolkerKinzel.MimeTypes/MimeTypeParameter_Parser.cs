@@ -28,6 +28,19 @@ namespace FolkerKinzel.MimeTypes
 
             ReadOnlySpan<char> span = parameterString.Span;
 
+            // Remove comment at start:
+            if (span[0].Equals('('))
+            {
+                int commentLength = GetCommentLengthAtStart(span);
+                parameterString = parameterString.Slice(commentLength + 1).TrimStart();
+                span = parameterString.Span;
+
+                if (parameterString.Length == 0)
+                {
+                    goto Failed;
+                }
+            }
+
             int keyValueSeparatorIndex = span.IndexOf('=');
 
             if (keyValueSeparatorIndex < 1)
@@ -37,12 +50,21 @@ namespace FolkerKinzel.MimeTypes
 
             int valueStart = keyValueSeparatorIndex + 1;
 
-            //if (valueStart == span.Length)
-            //{
-            //    goto Failed;
-            //}
 
-            //valueStart += span.Slice(valueStart).GetTrimmedStart();
+            // Remove comment at End
+            // key="value(x\"x)" (Comment)
+            if (span[span.Length - 1].Equals(')'))
+            {
+                int commentStartIndex = GetCommentStartIndexAtEnd(span, valueStart);
+
+                if(commentStartIndex == -1)
+                {
+                    goto Failed;
+                }
+
+                parameterString = parameterString.Slice(0, commentStartIndex).TrimEnd();
+                span = parameterString.Span;
+            }
 
             int keyLength = span.Slice(0, keyValueSeparatorIndex).GetTrimmedLength();
 
@@ -109,7 +131,7 @@ namespace FolkerKinzel.MimeTypes
             // Span cannot end with " when Url encoded because " must be URL encoded then.
             // In the second run parameter.Value cannot be quoted anymore.
             int spanLastIndex = span.Length - 1;
-            if (firstRun && span[spanLastIndex] == '\"' && spanLastIndex > valueStart && span[valueStart] == '\"') 
+            if (firstRun && span[spanLastIndex] == '\"' && spanLastIndex > valueStart && span[valueStart] == '\"')
             {
                 quoted = true;
                 if (span.Slice(valueStart).Contains('\\')) // Masked chars
@@ -150,6 +172,58 @@ Failed:
             parameter = default;
             return false;
         }
+
+        private static int GetCommentStartIndexAtEnd(ReadOnlySpan<char> span, int valueStart)
+        {
+            bool quoted = false;
+            for (int i = valueStart; i < span.Length; i++)
+            {
+                char current = span[i];
+                if (current.Equals('\\'))
+                {
+                    i++;
+                    continue;
+                }
+
+                if (current.Equals('\"'))
+                {
+                    quoted = !quoted;
+                }
+
+                if(quoted)
+                {
+                    continue;
+                }
+
+                if(current.Equals('('))
+                {
+                    return i;
+                }
+            }
+
+            return -1;
+        }
+
+        private static int GetCommentLengthAtStart(ReadOnlySpan<char> span)
+        {
+            for (int i = 1; i < span.Length; i++)
+            {
+                char current = span[i];
+                if (current.Equals('\\'))
+                {
+                    i++;
+                    continue;
+                }
+
+                if (current.Equals(')'))
+                {
+                    return i;
+                }
+            }
+
+            return span.Length;
+        }
+
 
         private static void UnMask(StringBuilder builder, int startOfValue)
         {
