@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Threading;
 
 #if NETSTANDARD2_0 || NET461
 using FolkerKinzel.Strings.Polyfills;
@@ -14,10 +16,27 @@ using FolkerKinzel.Strings.Polyfills;
 namespace FolkerKinzel.MimeTypes.Intls
 {
     /// <summary>
-    /// Cache, zum Finden von Dateiendungen für MIME-Typen und für das Finden passender MIME-Typen für Dateiendungen.
+    /// A memory cache that's used to retrieve often used file type extensions or MIME types faster.
     /// </summary>
     /// <threadsafety static="true" instance="true"/>
-    internal static class MimeCache
+    /// <remarks>
+    /// <para>
+    /// It's an expensive operation to parse the resources for MIME types and file type extensions. To overcome this issue, a small
+    /// cache is is hold in the memory to retrieve the most frequently used MIME types and file type extensions faster.
+    /// </para>
+    /// <para>
+    /// The cache is pre-polated with some of the most frequently used file type extensions and MIME types but it "learns" with every query
+    /// and stores after some time only the data he is recently asked for. The cache doesn't exceed a given <see cref="Capacity"/>. The
+    /// default value for this is <see cref="DefaultCapacity"/>, which is currently 16, but you can enlarge the <see cref="Capacity"/>
+    /// with <see cref="EnlargeCapacity(int)"/> if your application uses more than 16 different file types.
+    /// </para>
+    /// <para>
+    /// There is no way to reduce the <see cref="Capacity"/>, but you can <see cref="Clear"/> the whole cache. After that, the next time
+    /// <see cref="MimeCache"/> is asked for data, it creates a new cache with the <see cref="DefaultCapacity"/> or a larger one, if you 
+    /// have called <see cref="EnlargeCapacity(int)"/> before.
+    /// </para>
+    /// </remarks>
+    public static class MimeCache
     {
         private class Entry
         {
@@ -39,12 +58,62 @@ namespace FolkerKinzel.MimeTypes.Intls
         internal const string DEFAULT_MIME_TYPE = "application/octet-stream";
         internal const string DEFAULT_FILE_TYPE_EXTENSION = "bin";
 
-        private const int CACHE_MAX_SIZE = 20;
+
         private const int CACHE_CLEANUP_SIZE = 4;
 
-        private static readonly object _lockObj = new ();
+        private static readonly object _lockObj = new();
         private static List<Entry>? _mimeCache;
         private static List<Entry>? _extCache;
+        private static int _capacity;
+
+        /// <summary>
+        /// The default capacity of the cache.
+        /// </summary>
+        public const int DefaultCapacity = 16;
+
+        /// <summary>
+        /// Retrieves the current capacity of the cache.
+        /// </summary>
+        public static int Capacity => _capacity;
+
+
+        /// <summary>
+        /// Enlarges the <see cref="Capacity"/> of the cache to
+        /// the specified value.
+        /// </summary>
+        /// <param name="newCapacity">The new value for <see cref="Capacity"/>. If <paramref name="newCapacity"/>
+        /// is smaller than the current value of <see cref="Capacity"/>, nothing changes.</param>
+        /// <exception cref="ArgumentOutOfRangeException"><paramref name="newCapacity"/> is smaller than <see cref="DefaultCapacity"/>.</exception>
+        public static void EnlargeCapacity(int newCapacity)
+        {
+            if (newCapacity >= DefaultCapacity)
+            {
+                lock (_lockObj)
+                {
+                    if(newCapacity > _capacity)
+                    {
+                        _capacity = newCapacity;
+                    }
+                }
+            }
+            else
+            {
+                throw new ArgumentOutOfRangeException(nameof(newCapacity));
+            }
+        }
+
+        /// <summary>
+        /// Clears the cache.
+        /// </summary>
+        public static void Clear()
+        {
+            lock (_lockObj)
+            {
+                _mimeCache = null;
+                _extCache = null;
+                _capacity = 0;
+            }
+        }
 
 
         internal static string GetMimeType(string? fileTypeExtension)
@@ -140,53 +209,55 @@ namespace FolkerKinzel.MimeTypes.Intls
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         private static string PrepareFileTypeExtension(string fileTypeExtension) => $".{fileTypeExtension}";
 
-        //internal static void Clear()
-        //{
-        //    lock (_lockObj)
-        //    {
-        //        _mimeCache = null;
-        //        _extCache = null;
-        //    }
-        //}
 
+
+        private static void SetCapacity()
+        {
+            if(_capacity == 0)
+            {
+                _capacity = DefaultCapacity;
+            }
+        }
 
         private static List<Entry> InitMimeCache()
-            => new(CACHE_MAX_SIZE)
+        {
+            SetCapacity();
+            return new(_capacity)
             {
-                new ("application/json", "json" ),
-                new ("application/pdf", "pdf"),
-                new ("application/rtf", "rtf"),
-                new ("application/xml", "xml"),
-                new ("application/zip", "zip"),
-                new ("image/gif", "gif"),
-                new ("image/jpeg", "jpg"),
-                new ("image/png", "png"),
-                new ("image/svg+xml", "svg"),
-                new ("message/rfc822", "eml"),
-                new ("text/html", "htm"),
-                new ("text/plain", "txt"),
+                new("application/json", "json"),
+                new("application/pdf", "pdf"),
+                new("application/rtf", "rtf"),
+                new("application/xml", "xml"),
+                new("application/zip", "zip"),
+                new("image/gif", "gif"),
+                new("image/jpeg", "jpg"),
+                new("image/png", "png"),
+                new("image/svg+xml", "svg"),
+                new("message/rfc822", "eml"),
+                new("text/html", "htm"),
+                new("text/plain", "txt"),
             };
-
+        }
 
         private static List<Entry> InitExtCache()
-            => new(CACHE_MAX_SIZE)
+        {
+            SetCapacity();
+            return new(_capacity)
             {
-                new ("application/json", "json" ),
-                new ("application/pdf", "pdf"),
-                new ("application/rtf", "rtf"),
-                new ("application/xml", "xml"),
-                new ("application/zip", "zip"),
-                new ("image/gif", "gif"),
-                new ("image/jpeg", "jpg"),
-                new ("image/jpeg", "jpeg"),
-                new ("image/png", "png"),
-                new ("image/svg+xml", "svg"),
-                new ("message/rfc822", "eml"),
-                new ("text/html", "htm"),
-                new ("text/html", "html"),
-                new ("text/plain", "txt"),
-                new ("text/plain", "log"),
+                new("application/json", "json"),
+                new("application/pdf", "pdf"),
+                new("application/rtf", "rtf"),
+                new("application/xml", "xml"),
+                new("application/zip", "zip"),
+                new("image/gif", "gif"),
+                new("image/jpeg", "jpg"),
+                new("image/png", "png"),
+                new("image/svg+xml", "svg"),
+                new("message/rfc822", "eml"),
+                new("text/html", "htm"),
+                new("text/plain", "txt"),
             };
+        }
 
         private static void AddEntryToExtCache(Entry entry)
         {
@@ -194,7 +265,12 @@ namespace FolkerKinzel.MimeTypes.Intls
             {
                 _extCache ??= InitExtCache();
 
-                if (_extCache.Count.Equals(CACHE_MAX_SIZE))
+                if (_extCache.Capacity < _capacity)
+                {
+                    _extCache.Capacity = _capacity;
+                }
+
+                if (_extCache.Count.Equals(_capacity))
                 {
                     _extCache.RemoveRange(0, CACHE_CLEANUP_SIZE);
                 }
@@ -211,7 +287,12 @@ namespace FolkerKinzel.MimeTypes.Intls
             {
                 _mimeCache ??= InitMimeCache();
 
-                if (_mimeCache.Count.Equals(CACHE_MAX_SIZE))
+                if (_mimeCache.Capacity < _capacity)
+                {
+                    _mimeCache.Capacity = _capacity;
+                }
+
+                if (_mimeCache.Count.Equals(_capacity))
                 {
                     _mimeCache.RemoveRange(0, CACHE_CLEANUP_SIZE);
                 }

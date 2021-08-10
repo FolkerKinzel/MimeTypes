@@ -63,21 +63,17 @@ namespace FolkerKinzel.MimeTypes.Intls
 
             if (list is null)
             {
-                yield break;
+                return Array.Empty<MimeTypeParameter>();
             }
 
             if (list.Count == 1)
             {
-                yield return list[0];
-                yield break;
+                return list;
             }
 
             list.Sort();
 
-            foreach (MimeTypeParameter parameter in list)
-            {
-                yield return parameter;
-            }
+            return list;
         }
 
 
