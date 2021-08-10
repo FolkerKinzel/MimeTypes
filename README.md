@@ -2,7 +2,7 @@
 [![NuGet](https://img.shields.io/nuget/v/FolkerKinzel.MimeTypes)](https://www.nuget.org/packages/FolkerKinzel.MimeTypes/)
 [![GitHub](https://img.shields.io/github/license/FolkerKinzel/MimeTypes)](https://github.com/FolkerKinzel/MimeTypes/blob/master/LICENSE)
 
-.NET library that supports Internet Media Types ("MIME Types").
+.NET library that supports the work with Internet Media Types ("MIME Types").
 
 The library contains:
 * `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according 
