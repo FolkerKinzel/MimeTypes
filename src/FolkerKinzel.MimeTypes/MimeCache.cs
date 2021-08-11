@@ -8,12 +8,13 @@ using System.IO;
 using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
+using FolkerKinzel.MimeTypes.Intls;
 
 #if NETSTANDARD2_0 || NET461
 using FolkerKinzel.Strings.Polyfills;
 #endif
 
-namespace FolkerKinzel.MimeTypes.Intls
+namespace FolkerKinzel.MimeTypes
 {
     /// <summary>
     /// A memory cache that's used to retrieve often used file type extensions or MIME types faster.
@@ -25,7 +26,7 @@ namespace FolkerKinzel.MimeTypes.Intls
     /// cache is is hold in the memory to retrieve the most frequently used MIME types and file type extensions faster.
     /// </para>
     /// <para>
-    /// The cache is pre-polated with some of the most frequently used file type extensions and MIME types but it "learns" with every query
+    /// The cache is pre-populated with some of the most frequently used file type extensions and MIME types but it "learns" with every query
     /// and stores after some time only the data he is recently asked for. The cache doesn't exceed a given <see cref="Capacity"/>. The
     /// default value for this is <see cref="DefaultCapacity"/>, which is currently 16, but you can enlarge the <see cref="Capacity"/>
     /// with <see cref="EnlargeCapacity(int)"/> if your application uses more than 16 different file types.
@@ -72,7 +73,7 @@ namespace FolkerKinzel.MimeTypes.Intls
         public const int DefaultCapacity = 16;
 
         /// <summary>
-        /// Retrieves the current capacity of the cache.
+        /// Gets the current capacity of the cache.
         /// </summary>
         public static int Capacity => _capacity;
 
