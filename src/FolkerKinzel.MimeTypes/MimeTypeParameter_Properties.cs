@@ -68,7 +68,7 @@ namespace FolkerKinzel.MimeTypes
 
         
         /// <summary>
-        /// Determines whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "charset". The comparison is case-insensitive.
+        /// Indicates whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "charset". The comparison is case-insensitive.
         /// </summary>
         /// <returns><c>true</c> if <see cref="Key"/> equals "charset"; otherwise, <c>false</c>.</returns>
         public bool IsCharsetParameter
@@ -76,7 +76,7 @@ namespace FolkerKinzel.MimeTypes
 
 
         /// <summary>
-        /// Determines whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "access-type". The comparison is case-insensitive.
+        /// Indicates whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "access-type". The comparison is case-insensitive.
         /// </summary>
         /// <returns><c>true</c> if <see cref="Key"/> equals "access-type"; otherwise, <c>false</c>.</returns>
         private bool IsAccessTypeParameter
@@ -85,10 +85,10 @@ namespace FolkerKinzel.MimeTypes
         private bool IsValueCaseSensitive => !(IsCharsetParameter || IsAccessTypeParameter);
 
         /// <summary>
-        /// Determines whether this instance equals "charset=us-ascii". The comparison is case-insensitive.
+        /// Indicates whether this instance equals "charset=us-ascii". The comparison is case-insensitive.
         /// </summary>
         /// <returns><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</returns>
-        internal bool IsAsciiCharsetParameter
+        public bool IsAsciiCharsetParameter
             => IsCharsetParameter
                && Value.Equals(ASCII_CHARSET_VALUE.AsSpan(), StringComparison.OrdinalIgnoreCase);
 
