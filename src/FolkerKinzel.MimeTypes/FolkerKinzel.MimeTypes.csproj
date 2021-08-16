@@ -9,8 +9,8 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Logo.png</PackageIcon>
-    <PackageVersion>1.0.0-alpha.3</PackageVersion>
-    <FileVersion>1.0.0.120</FileVersion>
+    <PackageVersion>1.0.0-alpha.5</PackageVersion>
+    <FileVersion>1.0.0.124</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <Description>
       .NET library that supports the work with Internet Media Types ("MIME Types").
@@ -50,7 +50,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FolkerKinzel.Strings" Version="3.1.0" />
+    <PackageReference Include="FolkerKinzel.Strings" Version="3.2.0-alpha.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
