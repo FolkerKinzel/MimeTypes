@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FolkerKinzel.MimeTypes
 {
-    public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
+    public readonly partial struct MimeTypeParameter
     {
         private readonly ReadOnlyMemory<char> _parameterString;
 

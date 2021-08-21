@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace FolkerKinzel.MimeTypes
 {
-    public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
+    public readonly partial struct MimeTypeParameter
     {
         /// <summary>
         /// Returns a value that indicates whether two specified <see cref="MimeTypeParameter"/> instances are equal.

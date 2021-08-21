@@ -5,7 +5,7 @@ using FolkerKinzel.Strings.Polyfills;
 
 namespace FolkerKinzel.MimeTypes
 {
-    public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
+    public readonly partial struct MimeTypeParameter
     {
         private static class MimeTypeParameterBuilder
         {

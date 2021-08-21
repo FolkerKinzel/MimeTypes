@@ -13,7 +13,7 @@ using FolkerKinzel.Strings.Polyfills;
 
 namespace FolkerKinzel.MimeTypes
 {
-    public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
+    public readonly partial struct MimeTypeParameter
     {
         internal static bool TryParse(bool firstRun, ref ReadOnlyMemory<char> parameterString, out MimeTypeParameter parameter, out bool quoted)
         {

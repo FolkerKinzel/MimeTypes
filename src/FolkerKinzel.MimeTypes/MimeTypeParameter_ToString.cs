@@ -10,7 +10,7 @@ using FolkerKinzel.Strings.Polyfills;
 
 namespace FolkerKinzel.MimeTypes
 {
-    public readonly partial struct MimeTypeParameter : IEquatable<MimeTypeParameter>, ICloneable
+    public readonly partial struct MimeTypeParameter
     {
         /// <summary>
         /// Creates a <see cref="string"/> representation of the instance.
