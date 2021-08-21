@@ -75,21 +75,20 @@ namespace FolkerKinzel.MimeTypes
 
             int languageStart = 0;
             int languageLength = 0;
-            int charsetStart = 0;
             int charsetLength = 0;
+            int keyValueOffset = 0;
 
-            // A trailing '*' in the Key indicates that charset and/or language are present (RFC 2184).
+            // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2184).
             // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
             if (span[keyLength - 1] == '*')
             {
                 --keyLength; // Eat the trailing '*'.
+                ++keyValueOffset;
 
                 if (keyLength is 0)
                 {
                     goto Failed;
                 }
-
-                charsetStart = valueStart;
 
                 bool startInitialized = false;
                 for (int i = valueStart; i < span.Length; i++)
@@ -113,18 +112,24 @@ namespace FolkerKinzel.MimeTypes
                     }
                 }
 
-                if (languageStart > LANGUAGE_START_MAX_VALUE ||
-                    languageLength > LANGUAGE_LENGTH_MAX_VALUE ||
-                    charsetStart > CHARSET_START_MAX_VALUE ||
-                    charsetLength > CHARSET_LENGTH_MAX_VALUE)
+                // If the parameter contains whitespace before the 
+                // value part, repair it:
+                if(span.Slice(0, valueStart).ContainsWhiteSpace())
                 {
-                    goto Failed;
-                }
-            }
+                    var sb = new StringBuilder(span.Length);
+                    _ = sb.Append(span.Slice(0, valueStart))
+                          .ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty)
+                          .Append(span.Slice(valueStart));
 
-            if (valueStart > VALUE_START_MAX_VALUE)
-            {
-                goto Failed;
+                    ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
+                    return TryParse(firstRun, ref mem, out parameter, out quoted);
+                }
+
+                //if (languageLength > LANGUAGE_LENGTH_MAX_VALUE ||
+                //    charsetLength > CHARSET_LENGTH_MAX_VALUE)
+                //{
+                //    goto Failed;
+                //}
             }
 
             // Masked Value:
@@ -152,19 +157,33 @@ namespace FolkerKinzel.MimeTypes
                 {
                     // Eat the Double-Quotes:
                     parameterString = parameterString.Slice(0, parameterString.Length - 1);
-                    valueStart++;
+                    keyValueOffset++;
                 }
             }
 
-            int idx1 = (keyLength << KEY_LENGTH_SHIFT) |
-            (charsetStart << CHARSET_START_SHIFT) |
-            valueStart;
+            if(keyValueOffset > KEY_VALUE_OFFSET_MAX_VALUE)
+            {
+                goto Failed;
+            }
 
-            int idx2 = (languageLength << LANGUAGE_LENGTH_SHIFT) |
-            (languageStart << LANGUAGE_START_SHIFT) |
-            charsetLength;
+            int idx = keyLength;
+            idx |= keyValueOffset << KEY_VALUE_OFFSET_SHIFT;
 
-            parameter = new MimeTypeParameter(in parameterString, idx1, idx2);
+            if(languageStart != 0)
+            {
+                if(charsetLength > CHARSET_LENGTH_MAX_VALUE ||
+                    languageLength > LANGUAGE_LENGTH_MAX_VALUE)
+                {
+                    goto Failed;
+                }
+
+                idx |= 1 << CHARSET_LANGUAGE_INDICATOR_SHIFT;
+                idx |= charsetLength << CHARSET_LENGTH_SHIFT;
+                idx |= languageLength << LANGUAGE_LENGTH_SHIFT;
+            }
+
+
+            parameter = new MimeTypeParameter(in parameterString, idx);
 
             return true;
 ///////////////////////////////

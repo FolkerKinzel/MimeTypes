@@ -33,13 +33,11 @@ namespace FolkerKinzel.MimeTypes
         /// Initializes a new <see cref="MimeTypeParameter"/> structure.
         /// </summary>
         /// <param name="parameterString">The trimmed Parameter.</param>
-        /// <param name="idx1">First Int32 that stores indexes.</param>
-        /// <param name="idx2">Second Int32 that stores indexes.</param>
-        private MimeTypeParameter(in ReadOnlyMemory<char> parameterString, int idx1, int idx2)
+        /// <param name="idx">An Int32, which stores the indexes.</param>
+        private MimeTypeParameter(in ReadOnlyMemory<char> parameterString, int idx)
         {
             this._parameterString = parameterString;
-            this._idx1 = idx1;
-            this._idx2 = idx2;
+            this._idx = idx;
         }
 
 

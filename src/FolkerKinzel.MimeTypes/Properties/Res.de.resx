@@ -117,6 +117,27 @@
   <resheader name="writer">
     <value>System.Resources.ResXResourceWriter, System.Windows.Forms, Version=4.0.0.0, Culture=neutral, PublicKeyToken=b77a5c561934e089</value>
   </resheader>
+  <data name="ContainsControlCharacter" xml:space="preserve">
+    <value>{0} enthält ein Steuerzeichen.</value>
+  </data>
+  <data name="ContainsNonAscii" xml:space="preserve">
+    <value>{0} enthält ein Zeichen, das nicht zum ASCII-Zeichensatz gehört.</value>
+  </data>
+  <data name="ContainsReservedCharacter" xml:space="preserve">
+    <value>{0} enthält ein reserviertes Zeichen.</value>
+  </data>
+  <data name="ContainsTSpecial" xml:space="preserve">
+    <value>{0} enthält ein "tspecial"-Zeichen (siehe RFC 2045).</value>
+  </data>
+  <data name="ContainsWhiteSpace" xml:space="preserve">
+    <value>{0} enthält Leerraum.</value>
+  </data>
+  <data name="EmptyString" xml:space="preserve">
+    <value>{0} ist ein leerer String.</value>
+  </data>
+  <data name="InvalidIetfLanguageTag" xml:space="preserve">
+    <value>{0} ist kein gültiger IETF Sprachbezeichner.</value>
+  </data>
   <data name="InvalidMimeType" xml:space="preserve">
     <value>{0} ist kein gültiger Internet-Medientyp.</value>
   </data>
