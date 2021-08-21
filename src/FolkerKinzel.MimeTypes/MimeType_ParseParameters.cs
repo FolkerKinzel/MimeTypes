@@ -41,16 +41,16 @@ namespace FolkerKinzel.MimeTypes
                 {
                     ReadOnlySpan<char> keySpan = parameter.Key;
 
-                    // keySpan might have the format "key*0" if the parameter is
+                    // keySpan might have the format "key*1" if the parameter is
                     // splitted (see RFC 2184). A trailing '*', which is an indicator that
                     // language and/or charset information is present, has yet been eaten by
                     // MimeTypeParameter.TryParse
-                    int starIndex = keySpan.IndexOf('*');
-                    if (starIndex > 0)
+                    if (keySpan.Length >= 2 && keySpan[keySpan.Length - 2] == '*')
                     {
                         sb ??= new StringBuilder(MimeTypeParameter.StringLength);
 
-                        keySpan = keySpan.Slice(0, starIndex + 1);
+                        keySpan = keySpan.Slice(0, keySpan.Length - 1);
+
                         if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase))
                         {
                             skip = false;
