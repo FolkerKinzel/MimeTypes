@@ -48,22 +48,15 @@ namespace FolkerKinzel.MimeTypes
             bool isValueAscii = valueSpan.IsAscii();
             bool urlEncoded = urlEncodedValue || !Language.IsEmpty || !isValueAscii;
 
-            // See https://mimesniff.spec.whatwg.org/#serializing-a-mime-type :
-            // Empty values should be Double-Quoted.
-            bool containsMaskChars = false;
-            bool mask = !urlEncoded && (valueSpan.IsEmpty || valueSpan.ContainsTSpecials(out containsMaskChars));
-
             if (urlEncoded)
             {
                 MimeTypeParameterBuilder.BuildUrlEncoded(builder, in this, isValueAscii);
             }
-            else if (mask)
-            {
-                MimeTypeParameterBuilder.BuildMasked(builder, in this, containsMaskChars);
-            }
             else
             {
-                MimeTypeParameterBuilder.BuildUnmasked(builder, in this);
+                // See https://mimesniff.spec.whatwg.org/#serializing-a-mime-type :
+                // Empty values should be Double-Quoted.
+                MimeTypeParameterBuilder.Build(builder, in this, valueSpan.IsEmpty ? TSpecialKinds.TSpecial : valueSpan.Analyze());
             }
 
             return builder;

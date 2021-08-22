@@ -14,9 +14,9 @@ namespace FolkerKinzel.MimeTypes.Tests
         [TestMethod()]
         public void MimeTypeParameterDataDictionaryTest()
         {
-            var dic = new MimeTypeParameterDataDictionary();
+            var dic = new ParameterDictionary();
 
-            dic.Add(new MimeTypeParameterData("charset", "iso"));
+            dic.Add(new ParameterModel("charset", "iso"));
             //dic.Add(new MimeTypeParameterData("Charset", "bla"));
         }
     }

@@ -140,5 +140,14 @@ namespace FolkerKinzel.MimeTypes.Properties {
                 return ResourceManager.GetString("ResourceNotFound", resourceCulture);
             }
         }
+        
+        /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The String is too long. ähnelt.
+        /// </summary>
+        internal static string StringTooLong {
+            get {
+                return ResourceManager.GetString("StringTooLong", resourceCulture);
+            }
+        }
     }
 }

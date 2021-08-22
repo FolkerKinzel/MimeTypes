@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Text;
+using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
 
@@ -17,7 +18,8 @@ namespace FolkerKinzel.MimeTypes
 
                 try
                 {
-                    valueSpan = Uri.EscapeDataString(valueSpan.ToString()).AsSpan();
+                    valueSpan = Uri.EscapeDataString(valueSpan.ToString())
+                                   .AsSpan();
                 }
                 catch (FormatException)
                 {
@@ -53,12 +55,18 @@ namespace FolkerKinzel.MimeTypes
                     : builder.Append(valueSpan).ToLowerInvariant(valueStart);
             }
 
-            internal static void BuildMasked(StringBuilder builder, in MimeTypeParameter parameter, bool containsMaskChars)
+            internal static void Build(StringBuilder builder, in MimeTypeParameter parameter, TSpecialKinds tSpecialKind)
             {
+                if(tSpecialKind == TSpecialKinds.None)
+                {
+                    BuildUnmasked(builder, in parameter);
+                    return;
+                }
+
                 ReadOnlySpan<char> valueSpan = parameter.Value;
                 ReadOnlySpan<char> keySpan = parameter.Key;
 
-                if (containsMaskChars)
+                if (tSpecialKind == TSpecialKinds.MaskChar)
                 {
                     var sb = new StringBuilder(valueSpan.Length * 2);
                     _ = sb.Append(valueSpan);
@@ -81,7 +89,7 @@ namespace FolkerKinzel.MimeTypes
                 _ = builder.Append('\"');
             }
 
-            internal static void BuildUnmasked(StringBuilder builder, in MimeTypeParameter parameter)
+            private static void BuildUnmasked(StringBuilder builder, in MimeTypeParameter parameter)
             {
                 ReadOnlySpan<char> valueSpan = parameter.Value;
                 ReadOnlySpan<char> keySpan = parameter.Key;

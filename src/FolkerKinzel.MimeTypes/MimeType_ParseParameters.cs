@@ -23,7 +23,7 @@ namespace FolkerKinzel.MimeTypes
         {
             int parameterStartIndex = _idx & PARAMETERS_START_MAX_VALUE;
 
-            if (parameterStartIndex < 1)
+            if (parameterStartIndex == 0)
             {
                 yield break;
             }

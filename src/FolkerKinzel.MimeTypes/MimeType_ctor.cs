@@ -29,8 +29,69 @@ namespace FolkerKinzel.MimeTypes
     /// </para>
     /// </note>
     /// </remarks>
-    public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
+    public readonly partial struct MimeType
     {
+        /// <summary>
+        /// Initializes a new instance of the <see cref="MimeType"/> structure.
+        /// </summary>
+        /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
+        /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
+        /// <param name="parameters">The <see cref="MimeType.Parameters"/> or <c>null</c>.</param>
+        /// <exception cref="ArgumentNullException">
+        /// <paramref name="mediaType"/> or <paramref name="subType"/> is <c>null</c>.
+        /// </exception>
+        /// <exception cref="ArgumentException">
+        /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
+        /// a <see cref="string"/> that is too long or contains characters, which are not permitted by the standard (RFC 2045).
+        /// </exception>
+        public MimeType(string mediaType, string subType, ParameterDictionary? parameters = null)
+        {
+            mediaType.ValidateKey(nameof(mediaType));
+            subType.ValidateKey(nameof(subType));
+
+            if (mediaType.Length > MEDIA_TYPE_LENGTH_MAX_VALUE)
+            {
+                throw new ArgumentException(Res.StringTooLong, nameof(mediaType));
+            }
+
+            if (mediaType.Length > SUB_TYPE_LENGTH_MAX_VALUE)
+            {
+                throw new ArgumentException(Res.StringTooLong, nameof(subType));
+            }
+
+            int capacity = mediaType.Length + subType.Length + 1;
+
+            if (parameters is not null)
+            {
+                capacity += parameters.Count * MimeTypeParameter.StringLength;
+            }
+
+            var sb = new StringBuilder(capacity);
+            _ = sb.Append(mediaType).Append('/').Append(subType);
+
+            _idx = mediaType.Length << MEDIA_TYPE_LENGTH_SHIFT;
+            _idx |= mediaType.Length + 1 << SUB_TYPE_START_SHIFT;
+            _idx |= subType.Length << SUB_TYPE_LENGTH_SHIFT;
+
+            if (parameters != null && parameters.Count != 0)
+            {
+                int parametersStart = sb.Length + 1;
+                if (parametersStart > PARAMETERS_START_MAX_VALUE)
+                {
+                    throw new ArgumentException(Res.StringTooLong);
+                }
+
+                _idx |= parametersStart;
+
+                for (int i = 0; i < parameters.Count; i++)
+                {
+                    _ = sb.Append(';').Append(new MimeTypeParameter(parameters[i]).ToString());
+                }
+            }
+        }
+
+
+
         private MimeType(in ReadOnlyMemory<char> mimeTypeString, int idx)
         {
             this._mimeTypeString = mimeTypeString;

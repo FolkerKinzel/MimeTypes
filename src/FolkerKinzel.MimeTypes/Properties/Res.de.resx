@@ -144,4 +144,7 @@
   <data name="ResourceNotFound" xml:space="preserve">
     <value>Die Ressource {0} wurde nicht gefunden.</value>
   </data>
+  <data name="StringTooLong" xml:space="preserve">
+    <value>Der String ist zu lang.</value>
+  </data>
 </root>
