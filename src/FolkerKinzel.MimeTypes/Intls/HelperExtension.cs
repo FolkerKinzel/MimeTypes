@@ -10,7 +10,7 @@ namespace FolkerKinzel.MimeTypes.Intls
 {
     internal static class HelperExtension
     {
-        internal static TSpecialKinds Analyze(this ReadOnlySpan<char> span)
+        internal static TSpecialKinds AnalyzeTSpecials(this ReadOnlySpan<char> span)
         {
             TSpecialKinds result = TSpecialKinds.None;
 

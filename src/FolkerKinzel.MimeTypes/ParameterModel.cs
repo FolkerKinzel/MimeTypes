@@ -42,7 +42,7 @@ namespace FolkerKinzel.MimeTypes
 
             Key = key;
             Value = value;
-            Language = language;
+            Language = string.IsNullOrWhiteSpace(language) ? null : language;
         }
 
         /// <summary>
@@ -64,7 +64,7 @@ namespace FolkerKinzel.MimeTypes
 
         private static void ValidateIetfLanguageTag(string? language, string paraName)
         {
-            if (string.IsNullOrEmpty(language))
+            if (language is null)
             {
                 return;
             }

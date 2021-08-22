@@ -29,6 +29,9 @@ namespace FolkerKinzel.MimeTypes
     /// </remarks>
     public readonly partial struct MimeTypeParameter
     {
+        
+
+
         /// <summary>
         /// Initializes a new <see cref="MimeTypeParameter"/> structure.
         /// </summary>

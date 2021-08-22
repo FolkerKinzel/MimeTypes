@@ -85,9 +85,14 @@ namespace FolkerKinzel.MimeTypes
 
                 for (int i = 0; i < parameters.Count; i++)
                 {
-                    _ = sb.Append(';').Append(new MimeTypeParameter(parameters[i]).ToString());
+                    _ = sb.Append(';');
+
+                    ParameterModel para = parameters[i];
+                    MimeTypeParameterBuilder.Build(sb, in para);
                 }
             }
+
+            this._mimeTypeString = sb.ToString().AsMemory();
         }
 
 

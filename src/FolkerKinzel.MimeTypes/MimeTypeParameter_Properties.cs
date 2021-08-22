@@ -109,7 +109,7 @@ namespace FolkerKinzel.MimeTypes
         private bool IsAccessTypeParameter
             => Key.Equals("access-type".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
-        private bool IsValueCaseSensitive => !(IsCharsetParameter || IsAccessTypeParameter);
+        internal bool IsValueCaseSensitive => !(IsCharsetParameter || IsAccessTypeParameter);
 
         /// <summary>
         /// Indicates whether this instance equals "charset=us-ascii". The comparison is case-insensitive.
