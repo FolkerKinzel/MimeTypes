@@ -10,7 +10,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Logo.png</PackageIcon>
     <PackageVersion>1.0.0-alpha.7</PackageVersion>
-    <FileVersion>1.0.0.134</FileVersion>
+    <FileVersion>1.0.0.135</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <Description>
       .NET library that supports the work with Internet Media Types ("MIME Types").
