@@ -46,8 +46,8 @@ namespace FolkerKinzel.MimeTypes
         /// </exception>
         public MimeType(string mediaType, string subType, ParameterDictionary? parameters = null)
         {
-            mediaType.ValidateKey(nameof(mediaType));
-            subType.ValidateKey(nameof(subType));
+            mediaType.ValidateTokenParameter(nameof(mediaType));
+            subType.ValidateTokenParameter(nameof(subType));
 
             if (mediaType.Length > MEDIA_TYPE_LENGTH_MAX_VALUE)
             {
@@ -59,31 +59,25 @@ namespace FolkerKinzel.MimeTypes
                 throw new ArgumentException(Res.StringTooLong, nameof(subType));
             }
 
+            _idx = mediaType.Length << MEDIA_TYPE_LENGTH_SHIFT;
+            _idx |= subType.Length << SUB_TYPE_LENGTH_SHIFT;
+
+            bool hasParameters = parameters is not null && parameters.Count != 0;
+
             int capacity = mediaType.Length + subType.Length + 1;
 
-            if (parameters is not null)
+            if (hasParameters)
             {
-                capacity += parameters.Count * MimeTypeParameter.StringLength;
+                _idx |= 1;
+                capacity += parameters!.Count * MimeTypeParameter.StringLength;
             }
 
             var sb = new StringBuilder(capacity);
             _ = sb.Append(mediaType).Append('/').Append(subType);
 
-            _idx = mediaType.Length << MEDIA_TYPE_LENGTH_SHIFT;
-            _idx |= mediaType.Length + 1 << SUB_TYPE_START_SHIFT;
-            _idx |= subType.Length << SUB_TYPE_LENGTH_SHIFT;
-
-            if (parameters != null && parameters.Count != 0)
+            if (hasParameters)
             {
-                int parametersStart = sb.Length + 1;
-                if (parametersStart > PARAMETERS_START_MAX_VALUE)
-                {
-                    throw new ArgumentException(Res.StringTooLong);
-                }
-
-                _idx |= parametersStart;
-
-                for (int i = 0; i < parameters.Count; i++)
+                for (int i = 0; i < parameters!.Count; i++)
                 {
                     _ = sb.Append(';');
 

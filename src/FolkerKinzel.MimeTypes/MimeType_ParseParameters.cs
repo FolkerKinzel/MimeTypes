@@ -21,12 +21,13 @@ namespace FolkerKinzel.MimeTypes
 
         private IEnumerable<MimeTypeParameter> ParseParameters()
         {
-            int parameterStartIndex = _idx & PARAMETERS_START_MAX_VALUE;
-
-            if (parameterStartIndex == 0)
+            if (!HasParameters)
             {
                 yield break;
             }
+
+            int parameterStartIndex = MediaTypeLength + SubTypeLength + 2;
+
 
             string? charset = null;
             string? currentKey = null;

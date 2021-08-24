@@ -72,51 +72,61 @@ namespace FolkerKinzel.MimeTypes
         {
             value = value.TrimStart();
             ReadOnlySpan<char> span = value.Span;
-
             int parameterSeparatorIndex = span.IndexOf(';');
-
-            if (parameterSeparatorIndex > PARAMETERS_START_MAX_VALUE) // string too long
-            {
-                goto Failed;
-            }
-
             ReadOnlySpan<char> mediaPartSpan = parameterSeparatorIndex < 0 ? span : span.Slice(0, parameterSeparatorIndex);
-            
+
             // Remove Comment:
             // mediatype/sub.type (Comment)
             int commentStartIndex = mediaPartSpan.IndexOf('(');
-            if(commentStartIndex != -1)
+            if (commentStartIndex != -1)
             {
                 mediaPartSpan = mediaPartSpan.Slice(0, commentStartIndex);
             }
 
+            mediaPartSpan = mediaPartSpan.TrimEnd();
+
+            // If the mediaPartSpan contains whitespace, repair it:
+            if (mediaPartSpan.ContainsWhiteSpace())
+            {
+                var sb = new StringBuilder(value.Length);
+                _ = sb.Append(mediaPartSpan).ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty);
+
+                if (parameterSeparatorIndex > 1)
+                {
+                    _ = sb.Append(span.Slice(parameterSeparatorIndex));
+                }
+
+                ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
+                return TryParse(ref mem, out mimeType);
+            }
+
             int mediaTypeSeparatorIndex = mediaPartSpan.IndexOf('/');
 
-            if (mediaTypeSeparatorIndex < 1)
+            if (mediaTypeSeparatorIndex < 1) // MediaType must have at least 1 character.
             {
                 goto Failed;
             }
 
-            int topLevelMediaTypeLength = mediaPartSpan.Slice(0, mediaTypeSeparatorIndex).GetTrimmedLength();
+            ReadOnlySpan<char> topLevelMediaTypeSpan = mediaPartSpan.Slice(0, mediaTypeSeparatorIndex);
 
-            if (topLevelMediaTypeLength is 0 or > MEDIA_TYPE_LENGTH_MAX_VALUE)
+            if (topLevelMediaTypeSpan.Length > MEDIA_TYPE_LENGTH_MAX_VALUE || 
+                topLevelMediaTypeSpan.ValidateToken() != TokenError.None)
             {
                 goto Failed;
             }
 
-            int subTypeStart = mediaTypeSeparatorIndex + 1;
-            subTypeStart += mediaPartSpan.Slice(subTypeStart).GetTrimmedStart();
-            int subTypeLength = mediaPartSpan.Slice(subTypeStart).GetTrimmedLength();
 
-            if (subTypeLength == 0 || subTypeStart > SUB_TYPE_START_MAX_VALUE)
+            ReadOnlySpan<char> subTypeSpan = mediaPartSpan.Slice(mediaTypeSeparatorIndex + 1);
+
+            if (subTypeSpan.Length > SUB_TYPE_LENGTH_MAX_VALUE ||
+                subTypeSpan.ValidateToken() != TokenError.None)
             {
                 goto Failed;
             }
 
-            int idx = topLevelMediaTypeLength << MEDIA_TYPE_LENGTH_SHIFT;
-            idx |= subTypeStart << SUB_TYPE_START_SHIFT;
-            idx |= subTypeLength << SUB_TYPE_LENGTH_SHIFT;
-            idx |= parameterSeparatorIndex < 0 ? value.Length : parameterSeparatorIndex + 1;
+            int idx = parameterSeparatorIndex == -1 ? 0 : 1;
+            idx |= subTypeSpan.Length << SUB_TYPE_LENGTH_SHIFT;
+            idx |= topLevelMediaTypeSpan.Length << MEDIA_TYPE_LENGTH_SHIFT;
 
             mimeType = new MimeType(
                 in value,

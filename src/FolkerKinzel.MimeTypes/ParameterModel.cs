@@ -21,12 +21,12 @@ namespace FolkerKinzel.MimeTypes
         /// </summary>
         /// <param name="key">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
-        /// <param name="language">The language of the parameter's value.</param>
+        /// <param name="language">An IETF-Language tag that indicates the language of the parameter's value.</param>
         /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">
         /// <para>
-        /// <paramref name="key"/> is <see cref="string.Empty"/> or is not a valid Mime type parameter name
-        /// according to RFC 2184
+        /// <paramref name="key"/> is <see cref="string.Empty"/> or <paramref name="key"/> is not a valid MIME type parameter name
+        /// according to RFC 2184,
         /// </para>
         /// <para>
         /// - or -
@@ -37,7 +37,7 @@ namespace FolkerKinzel.MimeTypes
         /// </exception>
         public ParameterModel(string key, string? value, string? language = null)
         {
-            key.ValidateKey(nameof(key));
+            key.ValidateTokenParameter(nameof(key));
             ValidateIetfLanguageTag(language, nameof(language));
 
             Key = key;
@@ -56,9 +56,14 @@ namespace FolkerKinzel.MimeTypes
         public string? Value { get; }
 
         /// <summary>
-        /// The language of the parameter's value.
+        /// An IETF-Language tag that indicates the language of the parameter's value.
         /// </summary>
         public string? Language { get; }
+
+        /// <summary>
+        /// <c>true</c> indicates that the instance contains no data.
+        /// </summary>
+        public bool IsEmpty => Key is null;
 
         #region private
 

@@ -16,7 +16,7 @@ namespace FolkerKinzel.MimeTypes.Intls
 
             for (int i = 0; i < span.Length; i++)
             {
-                TSpecialKinds current = span[i].Analyze();
+                TSpecialKinds current = span[i].AnalyzeTSpecialKind();
 
                 if (current == TSpecialKinds.MaskChar)
                 {
@@ -32,7 +32,7 @@ namespace FolkerKinzel.MimeTypes.Intls
         }
 
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0066:Switch-Anweisung in Ausdruck konvertieren", Justification = "<Ausstehend>")]
-        internal static TSpecialKinds Analyze(this char c)
+        private static TSpecialKinds AnalyzeTSpecialKind(this char c)
         {
             // RFC 2045 Section 5.1 "tspecials"
             switch (c)
@@ -90,47 +90,64 @@ namespace FolkerKinzel.MimeTypes.Intls
             return list;
         }
 
-        internal static void ValidateKey(this string key, string paraName)
+
+        /// <summary>
+        /// Validates a <see cref="string"/> parameter that represents a token.
+        /// </summary>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="paraName">The parameter's name.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="value"/> is not a valid token.</exception>
+        internal static void ValidateTokenParameter(this string value, string paraName)
         {
-            if (key is null)
+            if (value is null)
             {
                 throw new ArgumentNullException(paraName);
             }
 
-            if (key.Length == 0)
+            ThrowHelper.ThrowOnTokenError(value.AsSpan().ValidateToken(), paraName);
+        }
+
+
+
+        internal static TokenError ValidateToken(this ReadOnlySpan<char> token)
+        {
+            if (token.Length == 0)
             {
-                throw new ArgumentException(string.Format(Res.EmptyString, paraName), paraName);
+                return TokenError.EmptyString;
             }
 
-            for (int i = 0; i < key.Length; i++)
+            for (int i = 0; i < token.Length; i++)
             {
-                char current = key[i];
+                char current = token[i];
 
                 if (char.IsWhiteSpace(current))
                 {
-                    throw new ArgumentException(string.Format(Res.ContainsWhiteSpace, paraName), paraName);
+                    return TokenError.ContainsWhiteSpace;
                 }
 
                 if (char.IsControl(current))
                 {
-                    throw new ArgumentException(string.Format(Res.ContainsControlCharacter, paraName), paraName);
+                    return TokenError.ContainsControl;
                 }
 
-                if (current.Analyze() > TSpecialKinds.None)
+                if (current.AnalyzeTSpecialKind() > TSpecialKinds.None)
                 {
-                    throw new ArgumentException(string.Format(Res.ContainsTSpecial, paraName), paraName);
+                    return TokenError.ContainsTSpecial;
                 }
 
                 if (!current.IsAscii())
                 {
-                    throw new ArgumentException(string.Format(Res.ContainsNonAscii, paraName), paraName);
+                    return TokenError.ContainsNonAscii;
                 }
 
                 if (current is '*' or '\'' or '%')
                 {
-                    throw new ArgumentException(string.Format(Res.ContainsReservedCharacter, paraName), paraName);
+                    return TokenError.ContainsReservedCharacter;
                 }
             }
+
+            return TokenError.None;
         }
 
     }

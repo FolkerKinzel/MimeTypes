@@ -54,7 +54,7 @@ namespace FolkerKinzel.MimeTypes
         public ReadOnlySpan<char> Value => _parameterString.Span.Slice(ValueStart);
 
         /// <summary>
-        /// The language of <see cref="Value"/>. (IETF-Language tag.)
+        /// An IETF-Language tag that indicates the language of the parameter's value.
         /// </summary>
         public ReadOnlySpan<char> Language
         {
@@ -86,7 +86,7 @@ namespace FolkerKinzel.MimeTypes
         /// <summary>
         /// <c>true</c> indicates that the instance contains no data.
         /// </summary>
-        public bool IsEmpty => Key.IsEmpty;
+        public bool IsEmpty => _idx == 0;
 
         /// <summary>
         /// Returns an empty <see cref="MimeTypeParameter"/> structure.

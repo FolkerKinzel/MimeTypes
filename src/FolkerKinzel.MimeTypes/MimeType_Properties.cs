@@ -9,34 +9,37 @@ namespace FolkerKinzel.MimeTypes
 {
     public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     {
-        private const int MEDIA_TYPE_LENGTH_MAX_VALUE = sbyte.MaxValue;
-        private const int SUB_TYPE_START_MAX_VALUE = byte.MaxValue;
-        private const int SUB_TYPE_LENGTH_MAX_VALUE = byte.MaxValue;
-        private const int PARAMETERS_START_MAX_VALUE = byte.MaxValue;
-        private const int SUB_TYPE_LENGTH_SHIFT = 8;
-        private const int SUB_TYPE_START_SHIFT = 16;
-        private const int MEDIA_TYPE_LENGTH_SHIFT = 24;
+        private const int MEDIA_TYPE_LENGTH_MAX_VALUE = short.MaxValue;
+        private const int SUB_TYPE_LENGTH_MAX_VALUE = short.MaxValue;
+        private const int SUB_TYPE_LENGTH_SHIFT = 1;
+        private const int MEDIA_TYPE_LENGTH_SHIFT = 16;
 
         private readonly ReadOnlyMemory<char> _mimeTypeString;
 
         // Stores all indexes in one int.
-        // |     MediaTp Length    |  SubType Start  |  SubType Length  |  Parameters Start  |
-        // |       Byte 4          |     Byte 3      |       Byte 2     |     Byte 1         |
+        // | unused |     MediaTp Length    |  SubType Length  |  Contains Parameters  |
+        // |  1 Bit |        15 Bit         |      15 Bit      |        1 Bit          |
         private readonly int _idx;
 
 
         #region Properties
 
+        private bool HasParameters => (_idx & 1) == 1;
+
+        private int SubTypeLength => (_idx >> SUB_TYPE_LENGTH_SHIFT) & SUB_TYPE_LENGTH_MAX_VALUE;
+
+        private int MediaTypeLength => (_idx >> MEDIA_TYPE_LENGTH_SHIFT) & MEDIA_TYPE_LENGTH_MAX_VALUE;
+
         /// <summary>
         /// Top-Level Media Type. (The left part of a MIME-Type.)
         /// </summary>
-        public ReadOnlySpan<char> MediaType => _mimeTypeString.Span.Slice(0, (_idx >> MEDIA_TYPE_LENGTH_SHIFT) & MEDIA_TYPE_LENGTH_MAX_VALUE);
+        public ReadOnlySpan<char> MediaType => _mimeTypeString.Span.Slice(0, MediaTypeLength);
 
         /// <summary>
         /// Sub Type (The right part of a MIME-Type.)
         /// </summary>
         public ReadOnlySpan<char> SubType
-            => _mimeTypeString.Span.Slice((_idx >> SUB_TYPE_START_SHIFT) & SUB_TYPE_START_MAX_VALUE, (_idx >> SUB_TYPE_LENGTH_SHIFT) & SUB_TYPE_LENGTH_MAX_VALUE);
+            => IsEmpty ? ReadOnlySpan<char>.Empty : _mimeTypeString.Span.Slice(MediaTypeLength + 1, SubTypeLength);
 
         /// <summary>
         /// Parameters (Never <c>null</c>.)
@@ -46,7 +49,7 @@ namespace FolkerKinzel.MimeTypes
         /// <summary>
         /// <c>true</c> if the instance contains no data.
         /// </summary>
-        public bool IsEmpty => MediaType.IsEmpty;
+        public bool IsEmpty => _idx == 0;
 
         /// <summary>
         /// Returns a <see cref="MimeType"/> structure, which contains no data.
