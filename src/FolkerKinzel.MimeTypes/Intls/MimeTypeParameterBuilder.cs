@@ -11,7 +11,7 @@ namespace FolkerKinzel.MimeTypes.Intls
         internal static void Build(StringBuilder builder, in ParameterModel model)
         {
             string? value = model.Value;
-            bool isValueAscii = value.IsAscii();
+            bool isValueAscii = value is null || value.IsAscii();
             bool hasLanguage = model.Language is not null;
 
             bool urlEncoded = hasLanguage || !isValueAscii;
