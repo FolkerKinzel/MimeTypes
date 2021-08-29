@@ -18,13 +18,13 @@ namespace FolkerKinzel.MimeTypes
         #region ToString
 
         /// <summary>
-        /// Creates a complete <see cref="string"/> representation of the instance (according to RFC 2045 and RFC 2046) that includes the <see cref="Parameters"/>.
+        /// Creates a complete <see cref="string"/> representation of the instance (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.
         /// </summary>
-        /// <returns>A complete <see cref="string"/> representation of the instance (according to RFC 2045 and RFC 2046) that includes the <see cref="Parameters"/>.</returns>
+        /// <returns>A complete <see cref="string"/> representation of the instance (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.</returns>
         public override string ToString() => ToString(MimeTypeFormattingOptions.Default);
 
         /// <summary>
-        /// Creates a <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2046, and allows to determine, whether or not to include the
+        /// Creates a <see cref="string"/> representation of the instance, and allows to determine, whether or not to include the
         /// <see cref="Parameters"/>.
         /// </summary>
         /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
@@ -32,7 +32,7 @@ namespace FolkerKinzel.MimeTypes
         /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeTypeFormattingOptions.LineWrapping"/>
         /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
         /// <see cref="MinimumLineLength"/> is taken instead.</param>
-        /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2046.</returns>
+        /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045, RFC 2046 and RFC 2184.</returns>
         public string ToString(MimeTypeFormattingOptions options, int lineLength = MinimumLineLength)
         {
             var sb = new StringBuilder(StringLength);
@@ -123,8 +123,8 @@ namespace FolkerKinzel.MimeTypes
                 {
                     _ = builder.Append(';');
 
-                    int neededLength = worker.Length;
-
+                    int neededLength = worker.Length + builder.Length - (builder.LastIndexOf('\n') + 1);
+                    
                     if (appendSpace)
                     {
                         neededLength++;

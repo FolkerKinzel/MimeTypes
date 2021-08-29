@@ -26,27 +26,31 @@ namespace FolkerKinzel.MimeTypes.Intls
             _ = tmp.Append(parameter.Key).Append('*');
 
             int counterIdx = tmp.Length;
-            int counter = 0;
+            int counter = 1;
             _ = tmp.Append(counter);
             if (urlEncoded)
             {
                 _ = tmp.Append('*');
             }
             _ = tmp.Append('=');
-            int valueStart = tmp.Length;
+
+            int normalValueStart = tmp.Length;
+
             if (urlEncoded)
             {
-                _ = tmp.Append(parameter.Charset).Append('\'').Append(parameter.Language).Append('\'');
+                _ = tmp.Append("utf-8").Append('\'').Append(parameter.Language).Append('\'');
             }
 
-            int valLength = lineLength - valueStart;
-            if (quoted)
-            {
-                valLength -= 2;
-            }
+            int valueStart = tmp.Length;
 
             do
             {
+                int valLength = lineLength - valueStart;
+                if (quoted)
+                {
+                    valLength -= 2;
+                }
+
                 if (worker.Length == 0)
                 {
                     yield break;
@@ -57,6 +61,7 @@ namespace FolkerKinzel.MimeTypes.Intls
                 tmp[counterIdx] = (char)(counter + '0');
                 counter++;
 
+                // The rest of the last line:
                 if (valLength > worker.Length)
                 {
                     valLength = worker.Length;
@@ -100,6 +105,9 @@ namespace FolkerKinzel.MimeTypes.Intls
                     _ = tmp.Append(worker, 0, valLength);
                     _ = worker.Remove(0, valLength);
                 }
+
+                yield return tmp;
+                valueStart = normalValueStart;
 
             } while (counter < 10);
         }

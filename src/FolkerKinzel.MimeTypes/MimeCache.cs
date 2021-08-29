@@ -9,6 +9,7 @@ using System.Linq;
 using System.Runtime.CompilerServices;
 using System.Threading;
 using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.Strings;
 
 #if NETSTANDARD2_0 || NET461
 using FolkerKinzel.Strings.Polyfills;
@@ -91,7 +92,7 @@ namespace FolkerKinzel.MimeTypes
             {
                 lock (_lockObj)
                 {
-                    if(newCapacity > _capacity)
+                    if (newCapacity > _capacity)
                     {
                         _capacity = newCapacity;
                     }
@@ -116,21 +117,33 @@ namespace FolkerKinzel.MimeTypes
             }
         }
 
+        internal static string GetMimeType(string fileTypeExtension)
+            => string.IsNullOrWhiteSpace(fileTypeExtension) ? DEFAULT_MIME_TYPE : DoGetMimeType(fileTypeExtension);
 
-        internal static string GetMimeType(string? fileTypeExtension)
+
+        [SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
+        internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
         {
-            if (string.IsNullOrWhiteSpace(fileTypeExtension))
+            if (fileTypeExtension.StartsWith('.'))
+            {
+                fileTypeExtension = fileTypeExtension.Slice(1);
+            }
+
+            if (fileTypeExtension.IsWhiteSpace())
             {
                 return DEFAULT_MIME_TYPE;
             }
-            else
-            {
-                fileTypeExtension = fileTypeExtension.Replace(".", null).Replace(" ", null).ToLowerInvariant();
-            }
 
-            return TryGetMimeTypeFromCache(fileTypeExtension, out string? mimeType)
+            return DoGetMimeType(fileTypeExtension.ToString());
+        }
+
+        private static string DoGetMimeType(string extension)
+        {
+            extension = extension.Replace(".", null).Replace(" ", null).ToLowerInvariant();
+
+            return TryGetMimeTypeFromCache(extension, out string? mimeType)
                 ? mimeType
-                : GetMimeTypeFromResources(fileTypeExtension);
+                : GetMimeTypeFromResources(extension);
 
             //////////////////////////////////////////
 
@@ -214,7 +227,7 @@ namespace FolkerKinzel.MimeTypes
 
         private static void SetCapacity()
         {
-            if(_capacity == 0)
+            if (_capacity == 0)
             {
                 _capacity = DefaultCapacity;
             }

@@ -31,28 +31,29 @@ namespace FolkerKinzel.MimeTypes
         private int MediaTypeLength => (_idx >> MEDIA_TYPE_LENGTH_SHIFT) & MEDIA_TYPE_LENGTH_MAX_VALUE;
 
         /// <summary>
-        /// Top-Level Media Type. (The left part of a MIME-Type.)
+        /// Gets the Top-Level Media Type. (The left part of a MIME-Type.)
         /// </summary>
         public ReadOnlySpan<char> MediaType => _mimeTypeString.Span.Slice(0, MediaTypeLength);
 
         /// <summary>
-        /// Sub Type (The right part of a MIME-Type.)
+        /// Gets the Sub Type. (The right part of a MIME-Type.)
         /// </summary>
         public ReadOnlySpan<char> SubType
             => IsEmpty ? ReadOnlySpan<char>.Empty : _mimeTypeString.Span.Slice(MediaTypeLength + 1, SubTypeLength);
 
         /// <summary>
-        /// Parameters (Never <c>null</c>.)
+        /// Gets the parameters (Never <c>null</c>.)
         /// </summary>
         public IEnumerable<MimeTypeParameter> Parameters => ParseParameters();
 
         /// <summary>
-        /// <c>true</c> if the instance contains no data.
+        /// Indicates whether the instance contains no data.
         /// </summary>
+        /// <value><c>true</c> if the instance contains no data, otherwise false.</value>
         public bool IsEmpty => _idx == 0;
 
         /// <summary>
-        /// Returns a <see cref="MimeType"/> structure, which contains no data.
+        /// Gets an empty <see cref="MimeType"/> structure.
         /// </summary>
         public static MimeType Empty => default;
 
@@ -80,17 +81,15 @@ namespace FolkerKinzel.MimeTypes
         /// The comparison is case-insensitive.
         /// </summary>
         /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
         public bool IsText
             => MediaType.Equals("text".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
 
         /// <summary>
-        /// Determines whether this instance is equal to the MIME type "text/plain". The parameters are not taken into account.
+        /// Indicates whether this instance is equal to the MIME type "text/plain". The parameters are not taken into account.
         /// The comparison is case-insensitive.
         /// </summary>
-        /// <returns><c>true</c> if this instance is equal to "text/plain".</returns>
-        //[System.Diagnostics.CodeAnalysis.SuppressMessage("Globalization", "CA1303:Literale nicht als lokalisierte Parameter übergeben", Justification = "<Ausstehend>")]
+        /// <value><c>true</c> if this instance is equal to "text/plain".</value>
         public bool IsTextPlain
             => IsText && SubType.Equals("plain".AsSpan(), StringComparison.OrdinalIgnoreCase);
 

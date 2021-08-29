@@ -14,10 +14,10 @@ namespace FolkerKinzel.MimeTypes
     /// Encapsulates and validates the data, which is used to initialize a <see cref="MimeTypeParameter"/>
     /// structure.
     /// </summary>
-    public readonly struct ParameterModel
+    public readonly struct MimeTypeParameterModel
     {
         /// <summary>
-        /// Initializes a new <see cref="ParameterModel"/> instance.
+        /// Initializes a new <see cref="MimeTypeParameterModel"/> instance.
         /// </summary>
         /// <param name="key">The name of the parameter.</param>
         /// <param name="value">The value of the parameter.</param>
@@ -35,7 +35,7 @@ namespace FolkerKinzel.MimeTypes
         /// <paramref name="language"/> is neither <c>null</c> nor <see cref="string.Empty"/> nor a valid IETF-Language-Tag according to RFC-1766.
         /// </para>
         /// </exception>
-        public ParameterModel(string key, string? value, string? language = null)
+        public MimeTypeParameterModel(string key, string? value, string? language = null)
         {
             key.ValidateTokenParameter(nameof(key));
             ValidateIetfLanguageTag(language, nameof(language));
@@ -46,23 +46,24 @@ namespace FolkerKinzel.MimeTypes
         }
 
         /// <summary>
-        /// The name of the parameter.
+        /// Gets the name of the parameter.
         /// </summary>
         public string Key { get; }
 
         /// <summary>
-        /// The value of the parameter.
+        /// Gets the value of the parameter.
         /// </summary>
         public string? Value { get; }
 
         /// <summary>
-        /// An IETF-Language tag that indicates the language of the parameter's value.
+        /// Gets an IETF-Language tag that indicates the language of the parameter's value.
         /// </summary>
         public string? Language { get; }
 
         /// <summary>
-        /// <c>true</c> indicates that the instance contains no data.
+        /// Indicates whether the instance contains no data.
         /// </summary>
+        /// <value><c>true</c> if the instance contains no data, otherwise false.</value>
         public bool IsEmpty => Key is null;
 
         #region private

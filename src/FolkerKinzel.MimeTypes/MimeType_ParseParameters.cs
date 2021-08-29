@@ -15,7 +15,7 @@ using FolkerKinzel.Strings.Polyfills;
 
 namespace FolkerKinzel.MimeTypes
 {
-    public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
+    public readonly partial struct MimeType
     {
         #region ParseParameters
 
@@ -165,6 +165,7 @@ namespace FolkerKinzel.MimeTypes
                 {
                     sb ??= new StringBuilder(keySpan.Length + 1 + result.Length);
                     memory = sb.Append(keySpan).Append('=').Append(result).ToString().AsMemory();
+                    _ = sb.Clear();
                 }
                 else
                 {
@@ -173,6 +174,7 @@ namespace FolkerKinzel.MimeTypes
                     memory =
                         sb.Append(keySpan).Append('*').Append('=').Append('\'').Append(languageSpan).Append('\'').Append(result)
                         .ToString().AsMemory();
+                    _ = sb.Clear();
                 }
 
                 return MimeTypeParameter.TryParse(false, ref memory, out parameter, out bool _);
@@ -229,6 +231,7 @@ namespace FolkerKinzel.MimeTypes
         private static int GetNextParameterSeparatorIndex(ReadOnlySpan<char> value)
         {
             bool isInQuotes = false;
+            bool attributeValueSeparatorFound = false;
 
             for (int i = 0; i < value.Length; i++)
             {
@@ -250,15 +253,33 @@ namespace FolkerKinzel.MimeTypes
                     continue;
                 }
 
-                if(current == '(') // Start of a comment.
+                if (current == ';' && attributeValueSeparatorFound)
+                {
+                    return i;
+                }
+
+                if (current == '=')
+                {
+                    if(attributeValueSeparatorFound)
+                    {
+                        return -1;
+                    }
+
+                    attributeValueSeparatorFound = true;
+                    continue;
+                }
+
+                if(current.IsTSpecial() || !current.IsAscii() || (current.IsControl() && current != '\r' && current != '\n'))
                 {
                     return -1;
                 }
 
-                if (current == ';')
-                {
-                    return i;
-                }
+                //if(current == '(') // Start of a comment..
+                //{
+                //    return -1;
+                //}
+
+                
             }
 
             return -1;

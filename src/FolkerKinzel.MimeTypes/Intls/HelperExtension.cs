@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Runtime.CompilerServices;
 using System.Text;
 using System.Threading.Tasks;
 using FolkerKinzel.MimeTypes.Properties;
@@ -31,6 +32,50 @@ namespace FolkerKinzel.MimeTypes.Intls
             return result;
         }
 
+
+
+        /// <summary>
+        /// Validates a <see cref="string"/> parameter that represents a token.
+        /// </summary>
+        /// <param name="value">The value of the parameter.</param>
+        /// <param name="paraName">The parameter's name.</param>
+        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+        /// <exception cref="ArgumentException"><paramref name="value"/> is not a valid token.</exception>
+        internal static void ValidateTokenParameter(this string value, string paraName)
+        {
+            if (value is null)
+            {
+                throw new ArgumentNullException(paraName);
+            }
+
+            ThrowHelper.ThrowOnTokenError(value.AsSpan().ValidateToken(), paraName);
+        }
+
+
+
+        internal static TokenError ValidateToken(this ReadOnlySpan<char> token)
+        {
+            if (token.Length == 0)
+            {
+                return TokenError.EmptyString;
+            }
+
+            for (int i = 0; i < token.Length; i++)
+            {
+                TokenError error = token[i].AnalyzeTokenChar();
+
+                if (error != TokenError.None)
+                {
+                    return error;
+                }
+            }
+
+            return TokenError.None;
+        }
+
+        //[MethodImpl(MethodImplOptions.AggressiveInlining)]
+        //internal static bool IsTokenChar(this char c) => c.AnalyzeTokenChar() == TokenError.None;
+
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0066:Switch-Anweisung in Ausdruck konvertieren", Justification = "<Ausstehend>")]
         private static TSpecialKinds AnalyzeTSpecialKind(this char c)
         {
@@ -59,6 +104,11 @@ namespace FolkerKinzel.MimeTypes.Intls
                     return TSpecialKinds.None;
             }
         }
+
+
+        [MethodImpl(MethodImplOptions.AggressiveInlining)]
+        internal static bool IsTSpecial(this char c) => c.AnalyzeTSpecialKind() != TSpecialKinds.None;
+
 
         internal static IEnumerable<MimeTypeParameter> Sort(this IEnumerable<MimeTypeParameter> parameters, bool isTextMimeType)
         {
@@ -91,60 +141,32 @@ namespace FolkerKinzel.MimeTypes.Intls
         }
 
 
-        /// <summary>
-        /// Validates a <see cref="string"/> parameter that represents a token.
-        /// </summary>
-        /// <param name="value">The value of the parameter.</param>
-        /// <param name="paraName">The parameter's name.</param>
-        /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
-        /// <exception cref="ArgumentException"><paramref name="value"/> is not a valid token.</exception>
-        internal static void ValidateTokenParameter(this string value, string paraName)
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
+        private static TokenError AnalyzeTokenChar(this char c)
         {
-            if (value is null)
+            if (char.IsWhiteSpace(c))
             {
-                throw new ArgumentNullException(paraName);
+                return TokenError.ContainsWhiteSpace;
             }
 
-            ThrowHelper.ThrowOnTokenError(value.AsSpan().ValidateToken(), paraName);
-        }
-
-
-
-        internal static TokenError ValidateToken(this ReadOnlySpan<char> token)
-        {
-            if (token.Length == 0)
+            if (char.IsControl(c))
             {
-                return TokenError.EmptyString;
+                return TokenError.ContainsControl;
             }
 
-            for (int i = 0; i < token.Length; i++)
+            if (c.IsTSpecial())
             {
-                char current = token[i];
+                return TokenError.ContainsTSpecial;
+            }
 
-                if (char.IsWhiteSpace(current))
-                {
-                    return TokenError.ContainsWhiteSpace;
-                }
+            if (!c.IsAscii())
+            {
+                return TokenError.ContainsNonAscii;
+            }
 
-                if (char.IsControl(current))
-                {
-                    return TokenError.ContainsControl;
-                }
-
-                if (current.AnalyzeTSpecialKind() > TSpecialKinds.None)
-                {
-                    return TokenError.ContainsTSpecial;
-                }
-
-                if (!current.IsAscii())
-                {
-                    return TokenError.ContainsNonAscii;
-                }
-
-                if (current is '*' or '\'' or '%')
-                {
-                    return TokenError.ContainsReservedCharacter;
-                }
+            if (c is '*' or '\'' or '%')
+            {
+                return TokenError.ContainsReservedCharacter;
             }
 
             return TokenError.None;

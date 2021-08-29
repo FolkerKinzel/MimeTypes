@@ -44,17 +44,17 @@ namespace FolkerKinzel.MimeTypes
                                     : KeyLength + KeyValueOffset;
 
         /// <summary>
-        /// The <see cref="MimeTypeParameter"/>'s key.
+        /// Gets the <see cref="MimeTypeParameter"/>'s key.
         /// </summary>
         public ReadOnlySpan<char> Key => _parameterString.Span.Slice(0, KeyLength);
 
         /// <summary>
-        /// The <see cref="MimeTypeParameter"/>'s value.
+        /// Gets the <see cref="MimeTypeParameter"/>'s value.
         /// </summary>
         public ReadOnlySpan<char> Value => _parameterString.Span.Slice(ValueStart);
 
         /// <summary>
-        /// An IETF-Language tag that indicates the language of the parameter's value.
+        /// Gets an IETF-Language tag that indicates the language of the parameter's value.
         /// </summary>
         public ReadOnlySpan<char> Language
         {
@@ -69,7 +69,7 @@ namespace FolkerKinzel.MimeTypes
         }
 
         /// <summary>
-        /// The charset in which <see cref="Value"/> is encoded.
+        /// Gets the character set in which <see cref="Value"/> is encoded.
         /// </summary>
         internal ReadOnlySpan<char> Charset
         {
@@ -84,12 +84,13 @@ namespace FolkerKinzel.MimeTypes
         }
 
         /// <summary>
-        /// <c>true</c> indicates that the instance contains no data.
+        /// Indicates whether the instance contains no data.
         /// </summary>
+        /// <value><c>true</c> if the instance contains no data, otherwise false.</value>
         public bool IsEmpty => _idx == 0;
 
         /// <summary>
-        /// Returns an empty <see cref="MimeTypeParameter"/> structure.
+        /// Gets an empty <see cref="MimeTypeParameter"/> structure.
         /// </summary>
         public static MimeTypeParameter Empty => default;
 
@@ -97,7 +98,7 @@ namespace FolkerKinzel.MimeTypes
         /// <summary>
         /// Indicates whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "charset". The comparison is case-insensitive.
         /// </summary>
-        /// <returns><c>true</c> if <see cref="Key"/> equals "charset"; otherwise, <c>false</c>.</returns>
+        /// <value><c>true</c> if <see cref="Key"/> equals "charset"; otherwise, <c>false</c>.</value>
         public bool IsCharsetParameter
             => Key.Equals(CHARSET_KEY.AsSpan(), StringComparison.OrdinalIgnoreCase);
 
@@ -105,20 +106,21 @@ namespace FolkerKinzel.MimeTypes
         /// <summary>
         /// Indicates whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "access-type". The comparison is case-insensitive.
         /// </summary>
-        /// <returns><c>true</c> if <see cref="Key"/> equals "access-type"; otherwise, <c>false</c>.</returns>
+        /// <value><c>true</c> if <see cref="Key"/> equals "access-type"; otherwise, <c>false</c>.</value>
         private bool IsAccessTypeParameter
             => Key.Equals("access-type".AsSpan(), StringComparison.OrdinalIgnoreCase);
 
-        internal bool IsValueCaseSensitive => !(IsCharsetParameter || IsAccessTypeParameter);
 
         /// <summary>
         /// Indicates whether this instance equals "charset=us-ascii". The comparison is case-insensitive.
         /// </summary>
-        /// <returns><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</returns>
+        /// <value><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</value>
         public bool IsAsciiCharsetParameter
             => IsCharsetParameter
                && Value.Equals(ASCII_CHARSET_VALUE.AsSpan(), StringComparison.OrdinalIgnoreCase);
 
+
+        internal bool IsValueCaseSensitive => !(IsCharsetParameter || IsAccessTypeParameter);
 
     }
 }

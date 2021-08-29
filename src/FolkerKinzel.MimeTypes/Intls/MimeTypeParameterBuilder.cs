@@ -8,7 +8,7 @@ namespace FolkerKinzel.MimeTypes.Intls
 {
     internal static class MimeTypeParameterBuilder
     {
-        internal static void Build(StringBuilder builder, in ParameterModel model)
+        internal static void Build(StringBuilder builder, in MimeTypeParameterModel model)
         {
             string? value = model.Value;
             bool isValueAscii = value is null || value.IsAscii();

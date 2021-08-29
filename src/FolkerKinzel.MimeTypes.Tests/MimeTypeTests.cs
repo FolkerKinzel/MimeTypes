@@ -309,6 +309,6 @@ namespace FolkerKinzel.MimeTypes.Tests
 
         [TestMethod]
         public void GetMimeTypeTest2()
-            => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension(null).ToString());
+            => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension("").ToString());
     }
 }

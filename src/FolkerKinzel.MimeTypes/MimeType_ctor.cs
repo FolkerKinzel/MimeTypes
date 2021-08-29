@@ -44,7 +44,7 @@ namespace FolkerKinzel.MimeTypes
         /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
         /// a <see cref="string"/> that is too long or contains characters, which are not permitted by the standard (RFC 2045).
         /// </exception>
-        public MimeType(string mediaType, string subType, ParameterDictionary? parameters = null)
+        public MimeType(string mediaType, string subType, MimeTypeParameterModelDictionary? parameters = null)
         {
             mediaType.ValidateTokenParameter(nameof(mediaType));
             subType.ValidateTokenParameter(nameof(subType));
@@ -81,7 +81,7 @@ namespace FolkerKinzel.MimeTypes
                 {
                     _ = sb.Append(';');
 
-                    ParameterModel para = parameters[i];
+                    MimeTypeParameterModel para = parameters[i];
                     MimeTypeParameterBuilder.Build(sb, in para);
                 }
             }

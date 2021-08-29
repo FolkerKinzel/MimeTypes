@@ -83,7 +83,13 @@ namespace FolkerKinzel.MimeTypes
                 mediaPartSpan = mediaPartSpan.Slice(0, commentStartIndex);
             }
 
-            mediaPartSpan = mediaPartSpan.TrimEnd();
+            if (parameterSeparatorIndex < 0)
+            {
+                // if MimeType has Parameters it must be reallocated
+                // (see below)
+                mediaPartSpan = mediaPartSpan.TrimEnd();
+            }
+
 
             // If the mediaPartSpan contains whitespace, repair it:
             if (mediaPartSpan.ContainsWhiteSpace())
@@ -109,7 +115,7 @@ namespace FolkerKinzel.MimeTypes
 
             ReadOnlySpan<char> topLevelMediaTypeSpan = mediaPartSpan.Slice(0, mediaTypeSeparatorIndex);
 
-            if (topLevelMediaTypeSpan.Length > MEDIA_TYPE_LENGTH_MAX_VALUE || 
+            if (topLevelMediaTypeSpan.Length > MEDIA_TYPE_LENGTH_MAX_VALUE ||
                 topLevelMediaTypeSpan.ValidateToken() != TokenError.None)
             {
                 goto Failed;
@@ -146,8 +152,27 @@ Failed:
         /// </summary>
         /// <param name="fileTypeExtension">The file type extension to search for.</param>
         /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileTypeExtension"/>.</returns>
-        public static MimeType FromFileTypeExtension(string? fileTypeExtension)
+        public static MimeType FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension)
         {
+            ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
+            _ = TryParse(ref memory, out MimeType inetMediaType);
+            return inetMediaType;
+        }
+
+        /// <summary>
+        /// Creates an appropriate <see cref="MimeType"/> instance for a given
+        /// file type extension.
+        /// </summary>
+        /// <param name="fileTypeExtension">The file type extension to search for.</param>
+        /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileTypeExtension"/>.</returns>
+        /// <exception cref="ArgumentNullException"><paramref name="fileTypeExtension"/> is <c>null</c>.</exception>
+        public static MimeType FromFileTypeExtension(string fileTypeExtension)
+        {
+            if (fileTypeExtension is null)
+            {
+                throw new ArgumentNullException(nameof(fileTypeExtension));
+            }
+
             ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
             _ = TryParse(ref memory, out MimeType inetMediaType);
             return inetMediaType;

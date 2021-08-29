@@ -14,10 +14,10 @@ namespace FolkerKinzel.MimeTypes.Tests
         [TestMethod()]
         public void MimeTypeParameterDataDictionaryTest()
         {
-            var dic = new ParameterDictionary();
+            var dic = new MimeTypeParameterModelDictionary();
 
-            dic.Add(new ParameterModel("charset", "iso"));
-            //dic.Add(new MimeTypeParameterData("Charset", "bla"));
+            dic.Add(new MimeTypeParameterModel("charset", "iso"));
+            //dic.Add(new MimeTypeParameterModel("Charset", "bla"));
         }
     }
 }
