@@ -17,6 +17,12 @@ namespace FolkerKinzel.MimeTypes
         /// </summary>
         /// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
         /// <returns><c>true</c> if this the value of this instance is equal to that of <paramref name="other"/>; <c>false</c>, otherwise.</returns>
+        /// <example>
+        /// <para>
+        /// Comparing <see cref="MimeType"/> instances for equality:
+        /// </para>
+        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(MimeType other) => Equals(in other, false);
 
@@ -28,6 +34,12 @@ namespace FolkerKinzel.MimeTypes
         /// <returns><c>true</c> if this the value of this instance is equal to that of <paramref name="other"/>; <c>false</c>, otherwise.</returns>
         /// <remarks>This is the most performant overload of the Equals methods but unfortunately it's not CLS compliant.
         /// Use it if you can.</remarks>
+        /// <example>
+        /// <para>
+        /// Comparing <see cref="MimeType"/> instances for equality:
+        /// </para>
+        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// </example>
         [CLSCompliant(false)]
         public bool Equals(in MimeType other) => Equals(in other, false);
 
@@ -39,6 +51,12 @@ namespace FolkerKinzel.MimeTypes
         /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account;
         /// <c>true</c>, otherwise.</param>
         /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
+        /// <example>
+        /// <para>
+        /// Comparing <see cref="MimeType"/> instances for equality:
+        /// </para>
+        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// </example>
         public bool Equals(in MimeType other, bool ignoreParameters)
         {
             if (!MediaType.Equals(other.MediaType, StringComparison.OrdinalIgnoreCase) ||
@@ -64,9 +82,15 @@ namespace FolkerKinzel.MimeTypes
         /// <param name="obj">The <see cref="object"/> to compare with.</param>
         /// <returns><c>true</c> if <paramref name="obj"/> is a <see cref="MimeType"/> structure whose
         /// value is equal to that of this instance; <c>false</c>, otherwise.</returns>
+        /// <example>
+        /// <para>
+        /// Comparing <see cref="MimeType"/> instances for equality:
+        /// </para>
+        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// </example>
         public override bool Equals(object? obj) => obj is MimeType type && Equals(in type, false);
 
-        
+
         #endregion
     }
 }

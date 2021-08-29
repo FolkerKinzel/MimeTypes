@@ -61,6 +61,11 @@ namespace FolkerKinzel.MimeTypes
         /// Finds an appropriate file type extension for the <see cref="MimeType"/> instance.
         /// </summary>
         /// <returns>An appropriate file type extension for the <see cref="MimeType"/> instance.</returns>
+        /// <remarks>
+        /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
+        /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
+        /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+        /// </remarks>
         public string GetFileTypeExtension()
             => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeTypeFormattingOptions.None));
 
@@ -70,6 +75,18 @@ namespace FolkerKinzel.MimeTypes
         /// <param name="mimeTypeString">A <see cref="string"/> that represents an Internet Media Type ("MIME type")
         /// according to RFC 2045, RFC 2046 and RFC 2184.</param>
         /// <returns>An appropriate file type extension for <paramref name="mimeTypeString"/>.</returns>
+        /// <remarks>
+        /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
+        /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
+        /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+        /// </remarks>
+        /// <example>
+        /// <para>
+        /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
+        /// from <see cref="MimeType"/> instances:
+        /// </para>
+        /// <code language="c#" source="./../Examples/FileExtensionExample.cs"/>
+        /// </example>
         public static string GetFileTypeExtension(string? mimeTypeString)
         {
             _ = TryParse(mimeTypeString, out MimeType mimeType);

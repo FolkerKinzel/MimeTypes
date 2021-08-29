@@ -177,7 +177,7 @@ namespace FolkerKinzel.MimeTypes.Intls
                 keyLength = worker.IndexOf('\'', keyLength);
                 keyLength = worker.IndexOf('\'', keyLength + 1);
             }
-            _ = worker.Remove(0, keyLength);
+            _ = worker.Remove(0, keyLength + 1);
         }
 
         private static int ComputeMinimumLength(MimeTypeParameter parameter, bool quoted, bool urlEncoded)

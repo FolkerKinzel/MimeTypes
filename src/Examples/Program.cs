@@ -7,7 +7,8 @@ namespace Examples
         static void Main(string[] args)
         {
             //FileExtensionExample.Example();
-            BuildAndParseExample.Example();
+            //BuildAndParseExample.Example();
+            EqualityExample.Example();
         }
     }
 }

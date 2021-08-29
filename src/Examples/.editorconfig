@@ -51,7 +51,10 @@ dotnet_style_require_accessibility_modifiers = for_non_interface_members:suggest
 #Style - Modifier preferences
 
 #when this rule is set to a list of modifiers, prefer the specified ordering.
-csharp_preferred_modifier_order = static,public:suggestion
+csharp_preferred_modifier_order = public,static:suggestion
 
 # IDE0007: Impliziten Typ verwenden
 csharp_style_var_when_type_is_apparent = true
+
+# IDE0036: Modifizierer anordnen
+dotnet_diagnostic.IDE0036.severity = silent

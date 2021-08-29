@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using FolkerKinzel.MimeTypes;
 
 namespace Examples
@@ -24,11 +20,9 @@ namespace Examples
         }
     }
 }
-
 /*
 Console Output:
 
 The MIME type for ".odt" is: application/vnd.oasis.opendocument.text
 The file type extension for this MIME type is: .odt
-.
  */

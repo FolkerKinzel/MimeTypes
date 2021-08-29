@@ -152,6 +152,18 @@ Failed:
         /// </summary>
         /// <param name="fileTypeExtension">The file type extension to search for.</param>
         /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileTypeExtension"/>.</returns>
+        /// <remarks>
+        /// Internally a small memory cache is used to find often used file type extensions faster. You
+        /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
+        /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+        /// </remarks>
+        /// <example>
+        /// <para>
+        /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
+        /// from <see cref="MimeType"/> instances:
+        /// </para>
+        /// <code language="c#" source="./../Examples/FileExtensionExample.cs"/>
+        /// </example>
         public static MimeType FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension)
         {
             ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
@@ -166,6 +178,18 @@ Failed:
         /// <param name="fileTypeExtension">The file type extension to search for.</param>
         /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileTypeExtension"/>.</returns>
         /// <exception cref="ArgumentNullException"><paramref name="fileTypeExtension"/> is <c>null</c>.</exception>
+        /// <remarks>
+        /// Internally a small memory cache is used to find often used file type extensions faster. You
+        /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
+        /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+        /// </remarks>
+        /// <example>
+        /// <para>
+        /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
+        /// from <see cref="MimeType"/> instances:
+        /// </para>
+        /// <code language="c#" source="./../Examples/FileExtensionExample.cs"/>
+        /// </example>
         public static MimeType FromFileTypeExtension(string fileTypeExtension)
         {
             if (fileTypeExtension is null)
