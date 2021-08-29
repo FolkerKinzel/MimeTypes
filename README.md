@@ -170,5 +170,5 @@ namespace Examples
 
 ```
 .
-.
+
 - [Version History](https://github.com/FolkerKinzel/MimeTypes/releases)
