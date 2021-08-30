@@ -34,15 +34,15 @@ namespace FolkerKinzel.MimeTypes
     /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
     /// from <see cref="MimeType"/> instances:
     /// </para>
-    /// <code language="c#" source="./../Examples/FileExtensionExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// <para>
     /// Building and parsing <see cref="MimeType"/> instances:
     /// </para>
-    /// <code language="c#" source="./../Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// <para>
     /// Comparing <see cref="MimeType"/> instances for equality:
     /// </para>
-    /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
     public readonly partial struct MimeType
     {

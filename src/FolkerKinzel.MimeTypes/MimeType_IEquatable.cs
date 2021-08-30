@@ -21,7 +21,7 @@ namespace FolkerKinzel.MimeTypes
         /// <para>
         /// Comparing <see cref="MimeType"/> instances for equality:
         /// </para>
-        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
         /// </example>
         [MethodImpl(MethodImplOptions.AggressiveInlining)]
         public bool Equals(MimeType other) => Equals(in other, false);
@@ -38,7 +38,7 @@ namespace FolkerKinzel.MimeTypes
         /// <para>
         /// Comparing <see cref="MimeType"/> instances for equality:
         /// </para>
-        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
         /// </example>
         [CLSCompliant(false)]
         public bool Equals(in MimeType other) => Equals(in other, false);
@@ -55,7 +55,7 @@ namespace FolkerKinzel.MimeTypes
         /// <para>
         /// Comparing <see cref="MimeType"/> instances for equality:
         /// </para>
-        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
         /// </example>
         public bool Equals(in MimeType other, bool ignoreParameters)
         {
@@ -86,7 +86,7 @@ namespace FolkerKinzel.MimeTypes
         /// <para>
         /// Comparing <see cref="MimeType"/> instances for equality:
         /// </para>
-        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
         /// </example>
         public override bool Equals(object? obj) => obj is MimeType type && Equals(in type, false);
 

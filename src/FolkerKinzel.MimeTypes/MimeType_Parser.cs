@@ -162,7 +162,7 @@ Failed:
         /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
         /// from <see cref="MimeType"/> instances:
         /// </para>
-        /// <code language="c#" source="./../Examples/FileExtensionExample.cs"/>
+        /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
         /// </example>
         public static MimeType FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension)
         {
@@ -188,7 +188,7 @@ Failed:
         /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
         /// from <see cref="MimeType"/> instances:
         /// </para>
-        /// <code language="c#" source="./../Examples/FileExtensionExample.cs"/>
+        /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
         /// </example>
         public static MimeType FromFileTypeExtension(string fileTypeExtension)
         {

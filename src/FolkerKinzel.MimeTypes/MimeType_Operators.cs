@@ -22,7 +22,7 @@ namespace FolkerKinzel.MimeTypes
         /// <para>
         /// Comparing <see cref="MimeType"/> instances for equality:
         /// </para>
-        /// <code source="./../Examples/EqualityExample.cs"/>
+        /// <code source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
         /// </example>
         public static bool operator ==(MimeType mimeType1, MimeType mimeType2) => mimeType1.Equals(in mimeType2, false);
 
@@ -38,7 +38,7 @@ namespace FolkerKinzel.MimeTypes
         /// <para>
         /// Comparing <see cref="MimeType"/> instances for equality:
         /// </para>
-        /// <code language="c#" source="./../Examples/EqualityExample.cs"/>
+        /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
         /// </example>
         public static bool operator !=(MimeType mimeType1, MimeType mimeType2) => !mimeType1.Equals(in mimeType2, false);
 

@@ -85,7 +85,7 @@ namespace FolkerKinzel.MimeTypes
         /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
         /// from <see cref="MimeType"/> instances:
         /// </para>
-        /// <code language="c#" source="./../Examples/FileExtensionExample.cs"/>
+        /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
         /// </example>
         public static string GetFileTypeExtension(string? mimeTypeString)
         {
