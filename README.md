@@ -13,7 +13,8 @@ able to find an appropriate file type extension for its content. (Have a look at
 have a detailed explanation where the data comes from and how it is compiled.)
 
 The library makes extensive use of ReadOnlySpan&lt;Char&gt; and ReadOnlyMemory&lt;Char&gt; to build and examine the 
-content of MIME types without having to allocate a lot of temporary Strings.
+content of MIME types without having to allocate a lot of temporary Strings. A strong validation is built in for 
+security reasons.
 
 Read the [Project Reference](https://github.com/FolkerKinzel/MimeTypes/blob/master/ProjectReference/1.0.0-beta.1/FolkerKinzel.MimeTypes.Reference.en.chm) for details.
 

@@ -57,7 +57,8 @@ namespace FolkerKinzel.MimeTypes
         /// </exception>
         /// <exception cref="ArgumentException">
         /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
-        /// a <see cref="string"/> that is too long or contains characters, which are not permitted by the standard (RFC 2045).
+        /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
+        /// which are not permitted by the standard (RFC 2045).
         /// </exception>
         public MimeType(string mediaType, string subType, MimeTypeParameterModelDictionary? parameters = null)
         {

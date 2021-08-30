@@ -15,7 +15,7 @@ namespace FolkerKinzel.MimeTypes
         // | 2 Bit  |      8 Bit       |      8 Bit     |      1 Bit       |    1 Bit     |    12 Bit  |
         private readonly int _idx;
 
-        private const int KEY_LENGTH_MAX_VALUE = 0xFFF;
+        internal const int KEY_LENGTH_MAX_VALUE = 0xFFF;
 
         private const int KEY_VALUE_OFFSET_SHIFT = 12;
         private const int KEY_VALUE_OFFSET_MAX_VALUE = 1;
@@ -26,7 +26,7 @@ namespace FolkerKinzel.MimeTypes
         private const int CHARSET_LENGTH_MAX_VALUE = 0xFF;
 
         private const int LANGUAGE_LENGTH_SHIFT = 22;
-        private const int LANGUAGE_LENGTH_MAX_VALUE = 0xFF;
+        internal const int LANGUAGE_LENGTH_MAX_VALUE = 0xFF;
 
         // The Offset for the '='-Sign is not stored:
         private int KeyValueOffset => ((_idx >> KEY_VALUE_OFFSET_SHIFT) & KEY_VALUE_OFFSET_MAX_VALUE) + 1;

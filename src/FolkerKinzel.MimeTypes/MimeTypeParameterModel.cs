@@ -25,8 +25,20 @@ namespace FolkerKinzel.MimeTypes
         /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
         /// <exception cref="ArgumentException">
         /// <para>
-        /// <paramref name="key"/> is <see cref="string.Empty"/> or <paramref name="key"/> is not a valid MIME type parameter name
+        /// <paramref name="key"/> is <see cref="string.Empty"/>
+        /// </para>
+        /// <para>
+        /// - or -
+        /// </para>
+        /// <para>
+        /// <paramref name="key"/> is not a valid MIME type parameter name
         /// according to RFC 2184,
+        /// </para>
+        /// <para>
+        /// - or -
+        /// </para>
+        /// <para>
+        /// <paramref name="key"/> is longer than 4095 characters
         /// </para>
         /// <para>
         /// - or -
@@ -38,6 +50,12 @@ namespace FolkerKinzel.MimeTypes
         public MimeTypeParameterModel(string key, string? value, string? language = null)
         {
             key.ValidateTokenParameter(nameof(key));
+
+            if (key.Length > MimeTypeParameter.KEY_LENGTH_MAX_VALUE)
+            {
+                throw new ArgumentException(Res.StringTooLong, nameof(key));
+            }
+
             ValidateIetfLanguageTag(language, nameof(language));
 
             Key = key;
@@ -73,6 +91,11 @@ namespace FolkerKinzel.MimeTypes
             if (language is null)
             {
                 return;
+            }
+
+            if (language.Length > MimeTypeParameter.LANGUAGE_LENGTH_MAX_VALUE)
+            {
+                throw new ArgumentException(string.Format(Res.InvalidIetfLanguageTag, paraName), paraName);
             }
 
             for (int i = 0; i < language.Length; i++)

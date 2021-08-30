@@ -269,7 +269,9 @@ namespace FolkerKinzel.MimeTypes
                     continue;
                 }
 
-                if(current.IsTSpecial() || !current.IsAscii() || (current.IsControl() && current != '\r' && current != '\n'))
+                // Don't test control characters because
+                // newline characters are control characters
+                if(current.IsTSpecial() || !current.IsAscii())
                 {
                     return -1;
                 }
