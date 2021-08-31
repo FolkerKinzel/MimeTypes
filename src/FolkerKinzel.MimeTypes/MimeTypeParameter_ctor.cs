@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Diagnostics;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using FolkerKinzel.MimeTypes.Intls;
 
@@ -27,11 +28,9 @@ namespace FolkerKinzel.MimeTypes
     /// </para>
     /// </note>
     /// </remarks>
+    [StructLayout(LayoutKind.Auto)]
     public readonly partial struct MimeTypeParameter
     {
-        
-
-
         /// <summary>
         /// Initializes a new <see cref="MimeTypeParameter"/> structure.
         /// </summary>

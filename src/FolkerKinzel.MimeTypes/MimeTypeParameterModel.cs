@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using FolkerKinzel.MimeTypes.Intls;
@@ -14,6 +15,7 @@ namespace FolkerKinzel.MimeTypes
     /// Encapsulates and validates the data, which is used to initialize a <see cref="MimeTypeParameter"/>
     /// structure.
     /// </summary>
+    [StructLayout(LayoutKind.Auto)]
     public readonly struct MimeTypeParameterModel
     {
         /// <summary>

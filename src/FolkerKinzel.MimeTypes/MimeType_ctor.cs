@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Runtime.CompilerServices;
+using System.Runtime.InteropServices;
 using System.Text;
 using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.MimeTypes.Properties;
@@ -44,6 +45,7 @@ namespace FolkerKinzel.MimeTypes
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
+    [StructLayout(LayoutKind.Auto)]
     public readonly partial struct MimeType
     {
         /// <summary>
