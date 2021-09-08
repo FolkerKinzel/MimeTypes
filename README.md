@@ -16,7 +16,7 @@ The library makes extensive use of ReadOnlySpan&lt;Char&gt; and ReadOnlyMemory&l
 content of MIME types without having to allocate a lot of temporary Strings. A strong validation is built in for 
 security reasons.
 
-Read the [Project Reference](https://github.com/FolkerKinzel/MimeTypes/blob/master/ProjectReference/1.0.0-beta.1/FolkerKinzel.MimeTypes.Reference.en.chm) for details.
+Read the [Project Reference](https://github.com/FolkerKinzel/MimeTypes/blob/master/ProjectReference/1.0.0-beta.2/FolkerKinzel.MimeTypes.Reference.en.chm) for details.
 
 > IMPORTANT: On some systems the content of the .CHM file is blocked. Before opening the file right click on the file icon, select Properties, and check the "Allow" checkbox (if it is present) in the lower right corner of the General tab in the Properties dialog.
 

@@ -19,10 +19,10 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		..\README.md = ..\README.md
 		Reference.md = Reference.md
-		..\docs\PackageReleaseNotes\1.0.0-beta.1\ReleaseNotes.md = ..\docs\PackageReleaseNotes\1.0.0-beta.1\ReleaseNotes.md
+		..\docs\PackageReleaseNotes\1.0.0-beta.2\ReleaseNotes.md = ..\docs\PackageReleaseNotes\1.0.0-beta.2\ReleaseNotes.md
 	EndProjectSection
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Examples", "Examples\Examples.csproj", "{3E377407-790E-47E7-9E09-77E54B314F31}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "Examples\Examples.csproj", "{3E377407-790E-47E7-9E09-77E54B314F31}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
