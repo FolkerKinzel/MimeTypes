@@ -3,5 +3,6 @@
 - Added .NET 6.0 support.
 - Resource update.
 - Dependency update.
+
 .
 - [Version History](https://github.com/FolkerKinzel/MimeTypes/releases)
