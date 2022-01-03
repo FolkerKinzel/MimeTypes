@@ -11,7 +11,7 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Logo.png</PackageIcon>
     <PackageVersion>1.0.0-beta.3</PackageVersion>
-    <FileVersion>1.0.0.181</FileVersion>
+    <FileVersion>1.0.0.184</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <Description>
       .NET library that supports the work with Internet Media Types ("MIME Types").
