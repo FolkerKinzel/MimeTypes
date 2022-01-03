@@ -1,13 +1,12 @@
-﻿using System;
-using FolkerKinzel.MimeTypes;
+﻿using FolkerKinzel.MimeTypes;
 
-namespace Examples
+namespace Examples;
+
+public static class BuildAndParseExample
 {
-    public static class BuildAndParseExample
+    public static void Example()
     {
-        public static void Example()
-        {
-            var dic = new MimeTypeParameterModelDictionary()
+        var dic = new MimeTypeParameterModelDictionary()
             {
                 new MimeTypeParameterModel("first-parameter",
                 "This is a very long parameter, which will be wrapped according to RFC 2184." +
@@ -16,26 +15,25 @@ namespace Examples
                 new MimeTypeParameterModel("second-parameter", "Parameter with  \\, = and \".")
             };
 
-            var mimeType1 = new MimeType("application", "x-stuff", dic);
-            string s = mimeType1.ToString(MimeTypeFormattingOptions.LineWrapping | MimeTypeFormattingOptions.Default);
-            Console.WriteLine(s);
+        var mimeType1 = new MimeType("application", "x-stuff", dic);
+        string s = mimeType1.ToString(MimeTypeFormattingOptions.LineWrapping | MimeTypeFormattingOptions.Default);
+        Console.WriteLine(s);
 
-            var mimeType2 = MimeType.Parse(s);
+        var mimeType2 = MimeType.Parse(s);
 
+        Console.WriteLine();
+        Console.WriteLine($"Media Type: {mimeType2.MediaType.ToString()}");
+        Console.WriteLine($"Sub Type:   {mimeType2.SubType.ToString()}");
+
+        int parameterCounter = 1;
+        foreach (MimeTypeParameter parameter in mimeType2.Parameters)
+        {
             Console.WriteLine();
-            Console.WriteLine($"Media Type: {mimeType2.MediaType.ToString()}");
-            Console.WriteLine($"Sub Type:   {mimeType2.SubType.ToString()}");
-
-            int parameterCounter = 1;
-            foreach (MimeTypeParameter parameter in mimeType2.Parameters)
-            {
-                Console.WriteLine();
-                Console.WriteLine($"Parameter {parameterCounter++}:");
-                Console.WriteLine("============");
-                Console.WriteLine($"Key:      {parameter.Key.ToString()}");
-                Console.WriteLine($"Value:    {parameter.Value.ToString()}");
-                Console.WriteLine($"Language: {parameter.Language.ToString()}");
-            }
+            Console.WriteLine($"Parameter {parameterCounter++}:");
+            Console.WriteLine("============");
+            Console.WriteLine($"Key:      {parameter.Key.ToString()}");
+            Console.WriteLine($"Value:    {parameter.Value.ToString()}");
+            Console.WriteLine($"Language: {parameter.Language.ToString()}");
         }
     }
 }

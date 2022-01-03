@@ -1,13 +1,12 @@
-﻿namespace MimeResourceCompiler
+﻿namespace MimeResourceCompiler;
+
+/// <summary>
+/// Represents the output directory.
+/// </summary>
+public interface IOutputDirectory
 {
     /// <summary>
-    /// Represents the output directory.
+    /// Absolute path of the output directory.
     /// </summary>
-    public interface IOutputDirectory
-    {
-        /// <summary>
-        /// Absolute path of the output directory.
-        /// </summary>
-        string FullName { get; }
-    }
+    string FullName { get; }
 }

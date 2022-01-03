@@ -28,7 +28,7 @@
     </TransformComponentArguments>
     <DocumentationSources>
       <DocumentationSource sourceFile="..\FolkerKinzel.MimeTypes\FolkerKinzel.MimeTypes.csproj" />
-      <DocumentationSource sourceFile="..\FolkerKinzel.MimeTypes\bin\Release\net5.0\de\FolkerKinzel.MimeTypes.xml" />
+      <DocumentationSource sourceFile="..\FolkerKinzel.MimeTypes\bin\Release\net6.0\de\FolkerKinzel.MimeTypes.xml" />
     </DocumentationSources>
     <HelpFileFormat>HtmlHelp1</HelpFileFormat>
     <SyntaxFilters>Standard</SyntaxFilters>

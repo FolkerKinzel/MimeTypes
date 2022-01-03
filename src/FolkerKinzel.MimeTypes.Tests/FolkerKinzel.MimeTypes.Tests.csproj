@@ -1,9 +1,10 @@
 <Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netcoreapp3.1;net4.8</TargetFrameworks>
-    <LangVersion>9.0</LangVersion>
+    <TargetFrameworks>net6.0;net5.0;netcoreapp3.1;netcoreapp2.1;net461</TargetFrameworks>
+    <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
+	  <ImplicitUsings>enable</ImplicitUsings>
     <IsPackable>false</IsPackable>
     <NeutralLanguage>en</NeutralLanguage>
 
@@ -14,13 +15,17 @@
     <PackageIcon>Logo.png</PackageIcon>
   </PropertyGroup>
 
+	<ItemGroup>
+		<Using Remove="System.Net.Http"/>
+	</ItemGroup>
+
   <ItemGroup>
     <Compile Remove="Extensions\**" />
-    <Compile Remove="reports\html\**" />
+    <Compile Remove="reports\**" />
     <EmbeddedResource Remove="Extensions\**" />
-    <EmbeddedResource Remove="reports\html\**" />
+    <EmbeddedResource Remove="reports\**" />
     <None Remove="Extensions\**" />
-    <None Remove="reports\html\**" />
+    <None Remove="reports\**" />
   </ItemGroup>
 
   <ItemGroup>
@@ -64,11 +69,11 @@
   </ItemGroup>
 
 
-  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net5.0'">
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net6.0'">
     <Exec Command="echo $(ProjectDir) &gt; &quot;$(ProjectDir)\Resources\ProjDir.txt&quot;" />
   </Target>
 
-  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(TargetFramework)' == 'net5.0'">
+  <Target Name="PreBuild" BeforeTargets="PreBuildEvent" Condition="'$(TargetFramework)' == 'net6.0'">
     <Exec Command="@echo Project Directory: $(ProjectDir)" />
   </Target>
 

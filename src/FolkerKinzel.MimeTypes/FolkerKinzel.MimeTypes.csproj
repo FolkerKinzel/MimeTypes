@@ -1,22 +1,23 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>net6.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <NeutralLanguage>en</NeutralLanguage>
+    <LangVersion>10.0</LangVersion>
     <Nullable>enable</Nullable>
-    <LangVersion>9.0</LangVersion>
+    <ImplicitUsings>enable</ImplicitUsings>
     <Authors>Folker Kinzel</Authors>
     <Copyright>Copyright © 2021 Folker Kinzel</Copyright>
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Logo.png</PackageIcon>
-    <PackageVersion>1.0.0-beta.2</PackageVersion>
-    <FileVersion>1.0.0.173</FileVersion>
+    <PackageVersion>1.0.0-beta.3</PackageVersion>
+    <FileVersion>1.0.0.181</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <Description>
       .NET library that supports the work with Internet Media Types ("MIME Types").
     </Description>
     <PackageTags>MIME Media C# .NET</PackageTags>
-    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/blob/master/docs/PackageReleaseNotes/1.0.0-beta.2/ReleaseNotes.md</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/blob/master/docs/PackageReleaseNotes/1.0.0-beta.3/ReleaseNotes.md</PackageReleaseNotes>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>
     <RepositoryUrl>https://github.com/FolkerKinzel/MimeTypes.git</RepositoryUrl>
@@ -28,6 +29,12 @@
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0'">
     <NoWarn>$(NoWarn);8600;8601;8602;8603;8604</NoWarn>
   </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Net.Http" />
+    <Using Include="System.Runtime.CompilerServices" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="System.Diagnostics" />
+  </ItemGroup>
   <ItemGroup>
     <Compile Remove="Intls\UnitTestGenerator.cs" />
   </ItemGroup>
@@ -50,7 +57,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FolkerKinzel.Strings" Version="3.2.0" />
+    <PackageReference Include="FolkerKinzel.Strings" Version="4.1.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />

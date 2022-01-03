@@ -1,13 +1,12 @@
-﻿namespace FolkerKinzel.MimeTypes.Intls
+﻿namespace FolkerKinzel.MimeTypes.Intls;
+
+internal enum TokenError
 {
-    internal enum TokenError
-    {
-        None,
-        EmptyString,
-        ContainsWhiteSpace,
-        ContainsControl,
-        ContainsTSpecial,
-        ContainsNonAscii,
-        ContainsReservedCharacter
-    }
+    None,
+    EmptyString,
+    ContainsWhiteSpace,
+    ContainsControl,
+    ContainsTSpecial,
+    ContainsNonAscii,
+    ContainsReservedCharacter
 }

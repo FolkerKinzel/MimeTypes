@@ -12,12 +12,11 @@ namespace FolkerKinzel.MimeTypes.Tests
     public class MimeTypeParameterDataDictionaryTests
     {
         [TestMethod()]
-        public void MimeTypeParameterDataDictionaryTest()
-        {
-            var dic = new MimeTypeParameterModelDictionary();
-
-            dic.Add(new MimeTypeParameterModel("charset", "iso"));
+        public void MimeTypeParameterDataDictionaryTest() 
+            => _ = new MimeTypeParameterModelDictionary
+            {
+                new MimeTypeParameterModel("charset", "iso")
             //dic.Add(new MimeTypeParameterModel("Charset", "bla"));
-        }
+            };
     }
 }

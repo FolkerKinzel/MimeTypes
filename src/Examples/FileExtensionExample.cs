@@ -1,23 +1,20 @@
-﻿using System;
-using System.IO;
-using FolkerKinzel.MimeTypes;
+﻿using FolkerKinzel.MimeTypes;
 
-namespace Examples
+namespace Examples;
+
+public static class FileExtensionExample
 {
-    public static class FileExtensionExample
+    public static void Example()
     {
-        public static void Example()
-        {
-            const string path = @"C:\Users\Tester\Desktop\Interesting Text.odt";
+        const string path = @"C:\Users\Tester\Desktop\Interesting Text.odt";
 
-            string extension = Path.GetExtension(path);
-            MimeType mimeType = MimeType.FromFileTypeExtension(extension);
+        string extension = Path.GetExtension(path);
+        MimeType mimeType = MimeType.FromFileTypeExtension(extension);
 
-            Console.Write($"The MIME type for \"{extension}\" is: ");
-            Console.WriteLine(mimeType);
-            Console.Write("The file type extension for this MIME type is: ");
-            Console.WriteLine(mimeType.GetFileTypeExtension());
-        }
+        Console.Write($"The MIME type for \"{extension}\" is: ");
+        Console.WriteLine(mimeType);
+        Console.Write("The file type extension for this MIME type is: ");
+        Console.WriteLine(mimeType.GetFileTypeExtension());
     }
 }
 /*
