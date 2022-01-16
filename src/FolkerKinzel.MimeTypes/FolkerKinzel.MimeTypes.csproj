@@ -23,6 +23,10 @@
     <RepositoryUrl>https://github.com/FolkerKinzel/MimeTypes.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
   </PropertyGroup>
+	<PropertyGroup>
+		<IncludeSymbols>true</IncludeSymbols>
+		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
+	</PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
   </PropertyGroup>
