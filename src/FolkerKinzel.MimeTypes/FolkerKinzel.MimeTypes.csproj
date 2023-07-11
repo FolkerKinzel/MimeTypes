@@ -10,13 +10,12 @@
     <PackageLicenseExpression>MIT</PackageLicenseExpression>
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Logo.png</PackageIcon>
+    <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
     <PackageVersion>1.0.0</PackageVersion>
-    <FileVersion>1.0.0.210</FileVersion>
+    <FileVersion>1.0.0.211</FileVersion>
     <AssemblyVersion>1.0.0.0</AssemblyVersion>
     <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-    <Description>
-      .NET library that supports the work with Internet Media Types ("MIME Types").
-    </Description>
+    <Description>.NET library that supports the work with Internet Media Types ("MIME Types").</Description>
     <PackageTags>MIME Media C# .NET</PackageTags>
     <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v1.0.0</PackageReleaseNotes>
     <PackageIconUrl />
@@ -54,6 +53,10 @@
     <None Include="..\..\..\..\Nuget-Logo\Logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
+    </None>
+    <None Include="md\NugetReadme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
     </None>
   </ItemGroup>
   <ItemGroup>
