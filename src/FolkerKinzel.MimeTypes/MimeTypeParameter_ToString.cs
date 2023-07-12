@@ -39,24 +39,6 @@ public readonly partial struct MimeTypeParameter
         }
 
         return MimeTypeParameterBuilder.Build(builder, in this, urlEncodedValue);
-
-        //ReadOnlySpan<char> valueSpan = Value;
-
-        //bool isValueAscii = valueSpan.IsAscii();
-        //bool urlEncoded = urlEncodedValue || !Language.IsEmpty || !isValueAscii;
-
-        //if (urlEncoded)
-        //{
-        //    MimeTypeParameterBuilder.BuildUrlEncoded(builder, in this, isValueAscii);
-        //}
-        //else
-        //{
-        //    // See https://mimesniff.spec.whatwg.org/#serializing-a-mime-type :
-        //    // Empty values should be Double-Quoted.
-        //    MimeTypeParameterBuilder.BuildQuoted(builder, in this, valueSpan.IsEmpty ? TSpecialKinds.TSpecial : valueSpan.Analyze());
-        //}
-
-        //return builder;
     }
 
 

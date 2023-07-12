@@ -8,6 +8,8 @@ internal static class MimeTypeParameterBuilder
 {
     internal static void Build(StringBuilder builder, in MimeTypeParameterModel model)
     {
+        Debug.Assert(builder is not null);
+
         string? value = model.Value;
         bool isValueAscii = value is null || value.IsAscii();
         bool hasLanguage = model.Language is not null;
@@ -15,7 +17,7 @@ internal static class MimeTypeParameterBuilder
         bool urlEncoded = hasLanguage || !isValueAscii;
 
 
-        if (urlEncoded && value is not null)
+        if (urlEncoded && value != null)
         {
             try
             {
@@ -29,18 +31,13 @@ internal static class MimeTypeParameterBuilder
 
         _ = builder.Append(model.Key);
 
-        if (hasLanguage || !isValueAscii)
+        if (urlEncoded)
         {
             _ = builder.Append('*').Append('=').Append(isValueAscii ? "" : "utf-8").Append('\'').Append(model.Language).Append('\'').Append(value);
             return;
         }
-        else if (urlEncoded)
-        {
-            _ = builder.Append('=').Append(value);
-            return;
-        }
 
-        TSpecialKinds tSpecialKind = value is null ? TSpecialKinds.TSpecial : value.AsSpan().AnalyzeTSpecials();
+        TSpecialKinds tSpecialKind = string.IsNullOrEmpty(value) ? TSpecialKinds.TSpecial : value.AsSpan().AnalyzeTSpecials();
 
         if (tSpecialKind == TSpecialKinds.MaskChar)
         {
@@ -93,7 +90,7 @@ internal static class MimeTypeParameterBuilder
             valueSpan = Uri.EscapeDataString(valueSpan.ToString())
                            .AsSpan();
         }
-        catch (FormatException)
+        catch
         {
             return builder;
         }
@@ -103,7 +100,7 @@ internal static class MimeTypeParameterBuilder
         const string utf8 = "utf-8";
         int charsetLength = isValueAscii ? 0 : utf8.Length;
 
-        //                                                       =
+        //                                                     =
         int neededCapacity = valueSpan.Length + keySpan.Length + 1;
 
         if (starred)
@@ -126,6 +123,7 @@ internal static class MimeTypeParameterBuilder
                 ? builder.Append(valueSpan)
                 : builder.Append(valueSpan).ToLowerInvariant(valueStart);
     }
+
 
     private static StringBuilder BuildQuoted(StringBuilder builder, in MimeTypeParameter parameter, TSpecialKinds tSpecialKind)
     {
@@ -155,6 +153,7 @@ internal static class MimeTypeParameterBuilder
         return builder.Append('\"');
     }
 
+
     private static StringBuilder BuildUnQuoted(StringBuilder builder, in MimeTypeParameter parameter)
     {
         ReadOnlySpan<char> valueSpan = parameter.Value;
@@ -172,6 +171,7 @@ internal static class MimeTypeParameterBuilder
                 ? builder.Append(valueSpan)
                 : builder.Append(valueSpan).ToLowerInvariant(valueStart);
     }
+
 
     private static StringBuilder Mask(StringBuilder sb)
     {
