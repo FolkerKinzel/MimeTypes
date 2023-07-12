@@ -166,7 +166,7 @@ internal static class MimeTypeParameterBuilder
                                                      bool starred)
     {
         return starred
-            ? builder.Append('*').Append('=').Append(isValueAscii ? "" : UTF_8).Append('\'').Append(languageSpan).Append('\'')
+            ? builder.Append('*').Append('=').Append(isValueAscii ? "" : UTF_8).Append('\'').Append(languageSpan).Append('\'').AppendValueUnQuoted(valueSpan, true)
             : builder.Append('=').AppendValueUnQuoted(valueSpan, true);
     }
 

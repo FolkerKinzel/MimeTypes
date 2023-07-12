@@ -325,6 +325,7 @@ public class MimeTypeTests
 
         Assert.AreEqual("title", param.Key.ToString());
         Assert.AreEqual("en", param.Language.ToString());
+        Assert.IsTrue(param.Value.EndsWith("isn't it!".AsSpan()));
 
     }
 
