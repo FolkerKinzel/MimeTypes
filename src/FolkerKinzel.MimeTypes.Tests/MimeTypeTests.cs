@@ -13,6 +13,50 @@ namespace FolkerKinzel.MimeTypes.Tests;
 [TestClass()]
 public class MimeTypeTests
 {
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void MimeTypeTest1() => _ = new MimeType(null!, "subtype");
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void MimeTypeTest2() => _ = new MimeType("type", null!);
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void MimeTypeTest3() => _ = new MimeType("", "subtype");
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void MimeTypeTest4() => _ = new MimeType("type", "");
+
+    [DataTestMethod]
+    [DataRow("?")]
+    [DataRow("*")]
+    [DataRow("%")]
+    [DataRow(" ")]
+    [DataRow("ö")]
+    [DataRow("\0")]
+    [ExpectedException(typeof(ArgumentException))]
+    public void MimeTypeTest5(string type) => _ = new MimeType(type, "");
+
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void MimeTypeTest6() => _ = new MimeType(new string('a', short.MaxValue + 1), "subtype");
+
+    [TestMethod]
+    public void MimeTypeTest7()
+    {
+        var dic = new MimeTypeParameterModelDictionary()
+        {
+            new MimeTypeParameterModel( "para", "@" )
+        };
+
+        var mime = new MimeType("application", "was", dic);
+        string s = mime.ToString();
+        StringAssert.Contains(s, "\"@\"");
+    }
+
     [TestMethod()]
     [ExpectedException(typeof(ArgumentNullException))]
     public void ParseTest1()

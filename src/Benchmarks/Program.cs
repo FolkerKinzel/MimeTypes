@@ -10,8 +10,8 @@ namespace Benchmarks
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Nicht verwendete Parameter entfernen", Justification = "<Ausstehend>")]
         private static void Main(string[] args)
         {
-            Summary summary = BenchmarkRunner.Run<UrisBench>(
-                ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
+            Summary summary = BenchmarkRunner.Run<StructVsClassBench>();
+                //ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
         }
     }
 }
