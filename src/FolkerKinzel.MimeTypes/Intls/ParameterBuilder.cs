@@ -5,7 +5,7 @@ using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
-internal static class MimeTypeParameterBuilder
+internal static class ParameterBuilder
 {
     private const string UTF_8 = "utf-8";
     internal static void Build(StringBuilder builder, in MimeTypeParameterModel model)
@@ -50,7 +50,7 @@ internal static class MimeTypeParameterBuilder
                 _ = builder.Append('=').Append('\"').Append(valueSpan).Append('\"');
                 break;
             default:
-                _ = AppendValueUrlEncoded(builder, isValueAscii, valueSpan, languageSpan, true, starred);
+                _ = AppendValueUrlEncoded(builder, isValueAscii, valueSpan, languageSpan, starred);
                 break;
         }
     }
@@ -83,7 +83,6 @@ internal static class MimeTypeParameterBuilder
         ReadOnlySpan<char> keySpan = parameter.Key;
         ReadOnlySpan<char> valueSpan = parameter.Value;
         ReadOnlySpan<char> languageSpan = parameter.Language;
-        bool isValueCaseSensitive = parameter.IsValueCaseSensitive;
 
         try
         {
@@ -97,7 +96,7 @@ internal static class MimeTypeParameterBuilder
 
         bool starred = !isValueAscii || !languageSpan.IsEmpty;
         _ = builder.EnsureCapacity(builder.Length + GetNeededCapacity(keySpan.Length, valueSpan.Length, languageSpan.Length, isValueAscii, starred));
-        return builder.BuildKey(keySpan).Remove(builder.Length - 1, 1).AppendValueUrlEncoded(isValueAscii, valueSpan, languageSpan, isValueCaseSensitive, starred);
+        return builder.BuildKey(keySpan).Remove(builder.Length - 1, 1).AppendValueUrlEncoded(isValueAscii, valueSpan, languageSpan, starred);
 
         ///////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -162,7 +161,6 @@ internal static class MimeTypeParameterBuilder
                                                      bool isValueAscii,
                                                      ReadOnlySpan<char> valueSpan,
                                                      ReadOnlySpan<char> languageSpan,
-                                                     bool isValueCaseSensitive,
                                                      bool starred)
     {
         return starred

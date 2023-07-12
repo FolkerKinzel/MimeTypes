@@ -23,8 +23,23 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         }
 
         ReadOnlyMemory<char> memory = value.AsMemory();
+        return ParseInternal(ref memory);
+    }
 
-        return TryParse(ref memory, out MimeType mediaType)
+    /// <summary>
+    /// Parses a <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> as <see cref="MimeType"/>.
+    /// </summary>
+    /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse.</param>
+    /// <returns>The <see cref="MimeType"/> instance, which <paramref name="value"/> represents.</returns>
+    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static MimeType Parse(ReadOnlyMemory<char> value) =>
+        ParseInternal(ref value);
+
+
+    private static MimeType ParseInternal(ref ReadOnlyMemory<char> value)
+    {
+        return TryParseInternal(ref value, out MimeType mediaType)
                 ? mediaType
                 : throw new ArgumentException(string.Format(Res.InvalidMimeType, nameof(value)), nameof(value));
     }
@@ -46,20 +61,22 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         }
 
         ReadOnlyMemory<char> memory = value.AsMemory();
-
-        return TryParse(ref memory, out mimeType);
+        return TryParseInternal(ref memory, out mimeType);
     }
 
     /// <summary>
     /// Tries to parse a <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> as <see cref="MimeType"/>.
     /// </summary>
-    /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse. The method might replace the 
-    /// passed instance with a smaller one. Make a copy of the argument in the calling method if this is 
-    /// not desirable.</param>
+    /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse.</param>
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
     /// <see cref="MimeType"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeType"/>; otherwise, <c>false</c>.</returns>
-    public static bool TryParse(ref ReadOnlyMemory<char> value, out MimeType mimeType)
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static bool TryParse(ReadOnlyMemory<char> value, out MimeType mimeType) =>
+        TryParseInternal(ref value, out mimeType);
+
+
+    private static bool TryParseInternal(ref ReadOnlyMemory<char> value, out MimeType mimeType)
     {
         value = value.TrimStart();
         ReadOnlySpan<char> span = value.Span;
@@ -94,7 +111,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
             }
 
             ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
-            return TryParse(ref mem, out mimeType);
+            return TryParseInternal(ref mem, out mimeType);
         }
 
         int mediaTypeSeparatorIndex = mediaPartSpan.IndexOf('/');
@@ -159,7 +176,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     public static MimeType FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension)
     {
         ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
-        _ = TryParse(ref memory, out MimeType inetMediaType);
+        _ = TryParseInternal(ref memory, out MimeType inetMediaType);
         return inetMediaType;
     }
 
@@ -191,7 +208,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         }
 
         ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
-        _ = TryParse(ref memory, out MimeType inetMediaType);
+        _ = TryParseInternal(ref memory, out MimeType inetMediaType);
         return inetMediaType;
     }
 

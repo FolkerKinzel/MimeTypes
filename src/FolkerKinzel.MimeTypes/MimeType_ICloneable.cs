@@ -32,7 +32,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         }
 
         ReadOnlyMemory<char> memory = ToString().AsMemory();
-        _ = TryParse(ref memory, out MimeType mimeType);
+        _ = TryParseInternal(ref memory, out MimeType mimeType);
 
         return mimeType;
     }

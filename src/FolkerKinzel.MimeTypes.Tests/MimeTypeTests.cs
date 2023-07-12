@@ -60,7 +60,7 @@ public class MimeTypeTests
     [TestMethod()]
     [ExpectedException(typeof(ArgumentNullException))]
     public void ParseTest1()
-        => _ = MimeType.Parse(null!);
+        => _ = MimeType.Parse((string?)null!);
 
     [TestMethod()]
     [ExpectedException(typeof(ArgumentException))]
@@ -385,7 +385,7 @@ public class MimeTypeTests
 
 
     [TestMethod]
-    public void BuildAndParseTest()
+    public void BuildAndParseTest1()
     {
         const string mediaType = "application";
         const string subType = "x-stuff";
@@ -412,5 +412,31 @@ public class MimeTypeTests
         Assert.AreEqual(subType, mimeType2.SubType.ToString(), false);
 
         Assert.AreEqual(2, mimeType2.Parameters.Count());
+    }
+
+    [TestMethod]
+    public void BuildAndParseTest2()
+    {
+        const string mediaType = "application";
+        const string subType = "x-stuff";
+        const string paraKey = "key";
+        string paraValue = "a b c " + new string('a', 100);
+
+        string mimeString = $"{mediaType}/{subType};{paraKey}=\"{paraValue}\"";
+
+
+        var mimeType1 = MimeType.Parse(mimeString);
+        string s = mimeType1.ToString(MimeTypeFormattingOptions.LineWrapping | MimeTypeFormattingOptions.Default, 10);
+
+        Assert.IsNotNull(s);
+        Assert.AreNotEqual(0, s.Length);
+        Assert.AreNotEqual(1, s.GetLinesCount());
+
+        var mimeType2 = MimeType.Parse(s);
+
+        Assert.AreEqual(mediaType, mimeType2.MediaType.ToString(), false);
+        Assert.AreEqual(subType, mimeType2.SubType.ToString(), false);
+
+        Assert.AreEqual(1, mimeType2.Parameters.Count());
     }
 }

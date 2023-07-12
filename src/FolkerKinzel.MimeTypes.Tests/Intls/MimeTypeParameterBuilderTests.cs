@@ -19,7 +19,7 @@ public class MimeTypeParameterBuilderTests
         const string nonAscii = "ä";
         const string ascii = "para";
 
-        MimeTypeParameterBuilder.Build(sb, new MimeTypeParameterModel(ascii, nonAscii));
+        ParameterBuilder.Build(sb, new MimeTypeParameterModel(ascii, nonAscii));
         Assert.AreNotEqual(0, sb.Length);
         string s = sb.ToString();
         Assert.IsTrue(s.Contains(ascii));

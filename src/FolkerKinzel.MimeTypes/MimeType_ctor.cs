@@ -92,7 +92,7 @@ public readonly partial struct MimeType
                 _ = sb.Append(';');
 
                 MimeTypeParameterModel para = parameters[i];
-                MimeTypeParameterBuilder.Build(sb, in para);
+                ParameterBuilder.Build(sb, in para);
             }
         }
 
