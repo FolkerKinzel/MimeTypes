@@ -1,21 +1,12 @@
-﻿namespace FolkerKinzel.MimeTypes;
+﻿using FolkerKinzel.MimeTypes.Intls;
+
+namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Implements <see cref="IEqualityComparer{T}"/> to compare <see cref="MimeType"/> instances
-/// for equality.
+/// Represents a <see cref="MimeType"/> comparison operation that uses specific comparison rules.
 /// </summary>
-public class MimeTypeEqualityComparer : IEqualityComparer<MimeType>
+public abstract class MimeTypeEqualityComparer : IEqualityComparer<MimeType>
 {
-    private readonly bool _ignoreParameters;
-
-    /// <summary>
-    /// Initializes a new <see cref="MimeTypeEqualityComparer"/> object and allows to specify
-    /// whether or not the <see cref="MimeType.Parameters"/> shall be ignored in the comparison.
-    /// </summary>
-    /// <param name="ignoreParameters">Pass in <c>true</c> to let the <see cref="MimeType.Parameters"/> be
-    /// ignored in the comparison. The default value is <c>false</c>.</param>
-    public MimeTypeEqualityComparer(bool ignoreParameters = false) => this._ignoreParameters = ignoreParameters;
-
     /// <summary>
     /// Compares two <see cref="MimeType"/> instances for equality.
     /// </summary>
@@ -23,12 +14,24 @@ public class MimeTypeEqualityComparer : IEqualityComparer<MimeType>
     /// <param name="y">The second <see cref="MimeType"/> instance.</param>
     /// <returns><c>true</c> if <paramref name="x"/> and <paramref name="y"/> are
     /// equal, otherwise <c>false</c>.</returns>
-    public bool Equals(MimeType x, MimeType y) => x.Equals(y, _ignoreParameters);
+    public abstract bool Equals(MimeType x, MimeType y);
 
     /// <summary>
     /// Generates a hash code for the <see cref="MimeType"/> instance.
     /// </summary>
     /// <param name="obj">The <see cref="MimeType"/> instance to generate a hash code for.</param>
     /// <returns>The hash code.</returns>
-    public int GetHashCode([DisallowNull] MimeType obj) => obj.GetHashCode(_ignoreParameters);
+    public abstract int GetHashCode([DisallowNull] MimeType obj);
+
+    /// <summary>
+    /// Gets the <see cref="MimeTypeEqualityComparer"/> object (Singleton) that performs a default comparison of <see cref="MimeType"/> structs
+    /// that takes the <see cref="MimeType.Parameters"/> into account.
+    /// </summary>
+    public static MimeTypeEqualityComparer Default { get; } = new MimeTypeEqualityComparerDefault();
+
+    /// <summary>
+    /// Gets the <see cref="MimeTypeEqualityComparer"/> object (Singleton) that performs a comparison of <see cref="MimeType"/> structs
+    /// that ignores the <see cref="MimeType.Parameters"/>.
+    /// </summary>
+    public static MimeTypeEqualityComparer IgnoreParameters { get; } = new MimeTypeEqualityComparerIgnoreParameters();
 }
