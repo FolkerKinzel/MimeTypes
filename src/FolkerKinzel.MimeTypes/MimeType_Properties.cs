@@ -1,4 +1,6 @@
-﻿namespace FolkerKinzel.MimeTypes;
+﻿using FolkerKinzel.Strings.Polyfills;
+
+namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
@@ -90,7 +92,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </summary>
     /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
     public bool IsText
-        => MediaType.Equals("text".AsSpan(), StringComparison.OrdinalIgnoreCase);
+        => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
 
 
     /// <summary>
@@ -99,6 +101,6 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </summary>
     /// <value><c>true</c> if this instance is equal to "text/plain".</value>
     public bool IsTextPlain
-        => IsText && SubType.Equals("plain".AsSpan(), StringComparison.OrdinalIgnoreCase);
+        => IsText && SubType.Equals("plain", StringComparison.OrdinalIgnoreCase);
 
 }

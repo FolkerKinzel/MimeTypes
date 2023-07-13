@@ -420,7 +420,7 @@ public class MimeTypeTests
         const string mediaType = "application";
         const string subType = "x-stuff";
         const string paraKey = "key";
-        string paraValue = "a b c " + new string('a', 100);
+        string paraValue = "a@b@c " + new string('a', 100);
 
         string mimeString = $"{mediaType}/{subType};{paraKey}=\"{paraValue}\"";
 

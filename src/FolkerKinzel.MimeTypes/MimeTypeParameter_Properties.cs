@@ -1,4 +1,5 @@
-﻿namespace FolkerKinzel.MimeTypes;
+﻿using FolkerKinzel.Strings.Polyfills;
+namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeTypeParameter
 {
@@ -94,7 +95,7 @@ public readonly partial struct MimeTypeParameter
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "charset"; otherwise, <c>false</c>.</value>
     public bool IsCharsetParameter
-        => Key.Equals(CHARSET_KEY.AsSpan(), StringComparison.OrdinalIgnoreCase);
+        => Key.Equals(CHARSET_KEY, StringComparison.OrdinalIgnoreCase);
 
 
     /// <summary>
@@ -102,7 +103,7 @@ public readonly partial struct MimeTypeParameter
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "access-type"; otherwise, <c>false</c>.</value>
     private bool IsAccessTypeParameter
-        => Key.Equals("access-type".AsSpan(), StringComparison.OrdinalIgnoreCase);
+        => Key.Equals("access-type", StringComparison.OrdinalIgnoreCase);
 
 
     /// <summary>
@@ -111,7 +112,7 @@ public readonly partial struct MimeTypeParameter
     /// <value><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</value>
     public bool IsAsciiCharsetParameter
         => IsCharsetParameter
-           && Value.Equals(ASCII_CHARSET_VALUE.AsSpan(), StringComparison.OrdinalIgnoreCase);
+           && Value.Equals(ASCII_CHARSET_VALUE, StringComparison.OrdinalIgnoreCase);
 
 
     internal bool IsValueCaseSensitive => !(IsCharsetParameter || IsAccessTypeParameter);

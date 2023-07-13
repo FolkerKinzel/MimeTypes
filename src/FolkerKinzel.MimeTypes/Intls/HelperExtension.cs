@@ -79,7 +79,6 @@ internal static class HelperExtension
             case ',':
             case ';':
             case ':':
-
             case '/':
             case '[':
             case ']':
