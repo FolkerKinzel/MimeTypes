@@ -41,19 +41,17 @@ public readonly partial struct MimeTypeParameter
         ReadOnlySpan<char> span = parameterString.Span;
 
         int keyValueSeparatorIndex = span.IndexOf(SEPARATOR);
-        int valueStart = keyValueSeparatorIndex + 1;
-
         int keyLength = span.Slice(0, keyValueSeparatorIndex).GetTrimmedLength();
-
         if (keyLength is 0 or > KEY_LENGTH_MAX_VALUE)
         {
             return false;
         }
-
+        int keyValueOffset = 0;
+        int charsetLength = 0;
         int languageStart = 0;
         int languageLength = 0;
-        int charsetLength = 0;
-        int keyValueOffset = 0;
+        int valueStart = keyValueSeparatorIndex + 1;
+
 
         // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2184).
         // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
@@ -99,6 +97,7 @@ public readonly partial struct MimeTypeParameter
         parameter = new MimeTypeParameter(in parameterString, idx);
         return true;
 
+        /////////////////////////////////////////////////////////////////////////////////////
 
         static void ProcessQuotedAndMaskedValue(int valueStart, ref ReadOnlyMemory<char> parameterString)
         {
@@ -178,11 +177,4 @@ public readonly partial struct MimeTypeParameter
         }
     }
 
-
-    
-
-    
-
-
-    
 }
