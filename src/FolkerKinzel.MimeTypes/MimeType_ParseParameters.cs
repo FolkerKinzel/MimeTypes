@@ -168,7 +168,7 @@ public readonly partial struct MimeType
                 _ = sb.Clear();
             }
 
-            return MimeTypeParameter.TryParse(false, ref memory, out parameter, out bool _);
+            return MimeTypeParameter.TryParse(false, ref memory, out parameter, out _);
         }
 
         return true;

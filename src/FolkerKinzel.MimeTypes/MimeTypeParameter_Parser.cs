@@ -1,88 +1,53 @@
-﻿using FolkerKinzel.Strings;
+﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
+using System;
+using System.Diagnostics.Contracts;
+using System.Runtime.InteropServices;
 using System.Text;
 
 namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeTypeParameter
 {
-    private const char SEPARATOR = '=';
+    internal const char SEPARATOR = '=';
 
+    /// <summary>
+    /// Tries to parse a read-only character memory as <see cref="MimeTypeParameter"/>.
+    /// </summary>
+    /// <param name="firstRun"><c>true</c> if the method runs the first time on <paramref name="parameterString"/>. If the parameter is split 
+    /// across multiple lines, the method has to be called twice. Changes to <paramref name="parameterString"/> are only applied in the first run.</param>
+    /// <param name="parameterString"></param>
+    /// <param name="parameter">When the method returns <c>true</c> the parameter holds the parsed <see cref="MimeTypeParameter"/>.</param>
+    /// <param name="quoted">When the method returns, indicates whether the parameter value is in double quotes. On the first run this is important to
+    /// know to indicate whether Url encoding should be removed or not. <see cref="MimeType.ParseParameters"/></param>
+    /// <returns><c>true</c> if <paramref name="parameterString"/> could be parsed as <see cref="MimeTypeParameter"/>.</returns>
     internal static bool TryParse(bool firstRun, ref ReadOnlyMemory<char> parameterString, out MimeTypeParameter parameter, out bool quoted)
     {
         quoted = false;
+        parameter = default;
 
-        parameterString = parameterString.Trim();
 
-        if (parameterString.Length == 0)
+        if (firstRun)
         {
-            goto Failed;
+            var sanitizer = new MimeTypeParameterSanitizer();
+        
+            if(!sanitizer.RepairParameterString(ref parameterString))
+            {
+                return false;
+            }
         }
 
         ReadOnlySpan<char> span = parameterString.Span;
 
         int keyValueSeparatorIndex = span.IndexOf(SEPARATOR);
-
-        if (keyValueSeparatorIndex < 1)
-        {
-            goto Failed;
-        }
-
-        // If the parameter contains whitespace before the 
-        // value part or after the key, repair it:
-        int idxBeforeKeyValueSeparator = keyValueSeparatorIndex - 1;
-        int idxAfterKeyValueSeparator = keyValueSeparatorIndex + 1;
-        if (span[idxBeforeKeyValueSeparator].IsWhiteSpace() || 
-           (span.Length > idxAfterKeyValueSeparator && span[idxAfterKeyValueSeparator].IsWhiteSpace()))
-        {
-            var sb = new StringBuilder(span.Length);
-            _ = sb.Append(span.Slice(0, keyValueSeparatorIndex).TrimEnd())
-                  .Append('=')
-                  .Append(span.Slice(idxAfterKeyValueSeparator).TrimStart());
-
-            parameterString = sb.ToString().AsMemory();
-            span = parameterString.Span;
-            keyValueSeparatorIndex = span.IndexOf(SEPARATOR);
-        }
-
-        // Remove comment at start:
-        if (span[0].Equals('('))
-        {
-            int commentLength = GetCommentLengthAtStart(span);
-            parameterString = parameterString.Slice(commentLength + 1).TrimStart();
-            span = parameterString.Span;
-
-            if (parameterString.Length == 0)
-            {
-                goto Failed;
-            }
-
-            keyValueSeparatorIndex = span.IndexOf(SEPARATOR);
-        }
-
         int valueStart = keyValueSeparatorIndex + 1;
-
-
-        // Remove comment at End
-        // key="value(x\"x)" (Comment)
-        if (span[span.Length - 1].Equals(')'))
-        {
-            int commentStartIndex = GetCommentStartIndexAtEnd(span, valueStart);
-
-            if (commentStartIndex == -1)
-            {
-                goto Failed;
-            }
-
-            parameterString = parameterString.Slice(0, commentStartIndex).TrimEnd();
-            span = parameterString.Span;
-        }
 
         int keyLength = span.Slice(0, keyValueSeparatorIndex).GetTrimmedLength();
 
         if (keyLength is 0 or > KEY_LENGTH_MAX_VALUE)
         {
-            goto Failed;
+            return false;
         }
 
         int languageStart = 0;
@@ -99,9 +64,81 @@ public readonly partial struct MimeTypeParameter
 
             if (keyLength is 0)
             {
-                goto Failed;
+                return false;
             }
 
+            InitCharsetAndLanguageIdx(span, valueStart, ref charsetLength, ref languageStart, ref languageLength);
+        }
+        else
+        {
+            // Masked Value:
+            // Span cannot end with " when Url encoded because " must be URL encoded then.
+            // In the second run parameter.Value cannot be quoted anymore.
+            int spanLastIndex = span.Length - 1;
+            if (firstRun && span[spanLastIndex] == '\"' && spanLastIndex > valueStart && span[valueStart] == '\"')
+            {
+                quoted = true;
+                if (span.Slice(valueStart).Contains('\\')) // Masked chars
+                {
+                    ProcessQuotedAndMaskedValue(valueStart, ref parameterString);
+                }
+                else // No masked chars - tspecials only
+                {
+                    ProcessQuotedValue(ref parameterString, ref keyValueOffset);
+                }
+            }
+        }
+
+        if (keyValueOffset > KEY_VALUE_OFFSET_MAX_VALUE || charsetLength > CHARSET_LENGTH_MAX_VALUE || languageLength > LANGUAGE_LENGTH_MAX_VALUE)
+        {
+            return false;
+        }
+
+        int idx = InitIdx(keyLength, keyValueOffset, charsetLength, languageStart, languageLength);
+
+        parameter = new MimeTypeParameter(in parameterString, idx);
+        return true;
+
+
+        static void ProcessQuotedAndMaskedValue(int valueStart, ref ReadOnlyMemory<char> parameterString)
+        {
+            var builder = new StringBuilder(parameterString.Length);
+            _ = builder.Append(parameterString).Remove(builder.Length - 1, 1);
+
+            if (valueStart < builder.Length && builder[valueStart] == '"')
+            {
+                _ = builder.Remove(valueStart, 1);
+                UnMask(builder, valueStart);
+            }
+
+            parameterString = builder.ToString().AsMemory();
+
+            //////////////////////////////////////////////
+
+            static void UnMask(StringBuilder builder, int startOfValue)
+            {
+                for (int i = startOfValue; i < builder.Length; i++)
+                {
+                    if (builder[i] == '\\')
+                    {
+                        // after the mask char one entry can be skipped:
+                        _ = builder.Remove(i, 1);
+                    }
+                }
+            }
+        }
+
+        static void ProcessQuotedValue(ref ReadOnlyMemory<char> parameterString, ref int keyValueOffset)
+        {
+            // Eat the Double-Quotes:
+            parameterString = parameterString.Slice(0, parameterString.Length - 1);
+            keyValueOffset++;
+        }
+
+        
+
+        static void InitCharsetAndLanguageIdx(ReadOnlySpan<char> span, int valueStart, ref int charsetLength, ref int languageStart, ref int languageLength)
+        {
             bool startInitialized = false;
             for (int i = valueStart; i < span.Length; i++)
             {
@@ -118,137 +155,34 @@ public readonly partial struct MimeTypeParameter
                     else
                     {
                         languageLength = i - languageStart;
-                        valueStart = i + 1;
                         break;
                     }
                 }
             }
         }
-        else
+
+
+        static int InitIdx(int keyLength, int keyValueOffset, int charsetLength, int languageStart, int languageLength)
         {
-            // Masked Value:
-            // Span cannot end with " when Url encoded because " must be URL encoded then.
-            // In the second run parameter.Value cannot be quoted anymore.
-            int spanLastIndex = span.Length - 1;
-            if (firstRun && span[spanLastIndex] == '\"' && spanLastIndex > valueStart && span[valueStart] == '\"')
+            int idx = keyLength;
+            idx |= keyValueOffset << KEY_VALUE_OFFSET_SHIFT;
+
+            if (languageStart != 0)
             {
-                quoted = true;
-                if (span.Slice(valueStart).Contains('\\')) // Masked chars
-                {
-                    var builder = new StringBuilder(parameterString.Length);
-                    _ = builder.Append(parameterString).Remove(builder.Length - 1, 1);
-
-                    if (valueStart < builder.Length && builder[valueStart] == '"')
-                    {
-                        _ = builder.Remove(valueStart, 1);
-                        UnMask(builder, valueStart);
-                    }
-
-                    ReadOnlyMemory<char> mem = builder.ToString().AsMemory();
-                    return TryParse(false, ref mem, out parameter, out _);
-                }
-                else // No masked chars - tspecials only
-                {
-                    // Eat the Double-Quotes:
-                    parameterString = parameterString.Slice(0, parameterString.Length - 1);
-                    keyValueOffset++;
-                }
-            }
-        }
-
-        if (keyValueOffset > KEY_VALUE_OFFSET_MAX_VALUE)
-        {
-            goto Failed;
-        }
-
-        int idx = keyLength;
-        idx |= keyValueOffset << KEY_VALUE_OFFSET_SHIFT;
-
-        if (languageStart != 0)
-        {
-            if (charsetLength > CHARSET_LENGTH_MAX_VALUE ||
-                languageLength > LANGUAGE_LENGTH_MAX_VALUE)
-            {
-                goto Failed;
+                idx |= 1 << CHARSET_LANGUAGE_INDICATOR_SHIFT;
+                idx |= charsetLength << CHARSET_LENGTH_SHIFT;
+                idx |= languageLength << LANGUAGE_LENGTH_SHIFT;
             }
 
-            idx |= 1 << CHARSET_LANGUAGE_INDICATOR_SHIFT;
-            idx |= charsetLength << CHARSET_LENGTH_SHIFT;
-            idx |= languageLength << LANGUAGE_LENGTH_SHIFT;
-        }
-
-
-        parameter = new MimeTypeParameter(in parameterString, idx);
-
-        return true;
-    ///////////////////////////////
-    Failed:
-        parameter = default;
-        return false;
-    }
-
-
-    private static int GetCommentStartIndexAtEnd(ReadOnlySpan<char> span, int valueStart)
-    {
-        bool quoted = false;
-        for (int i = valueStart; i < span.Length; i++)
-        {
-            char current = span[i];
-            if (current.Equals('\\'))
-            {
-                i++;
-                continue;
-            }
-
-            if (current.Equals('\"'))
-            {
-                quoted = !quoted;
-            }
-
-            if (quoted)
-            {
-                continue;
-            }
-
-            if (current.Equals('('))
-            {
-                return i;
-            }
-        }
-
-        return -1;
-    }
-
-    private static int GetCommentLengthAtStart(ReadOnlySpan<char> span)
-    {
-        for (int i = 1; i < span.Length; i++)
-        {
-            char current = span[i];
-            if (current.Equals('\\'))
-            {
-                i++;
-                continue;
-            }
-
-            if (current.Equals(')'))
-            {
-                return i;
-            }
-        }
-
-        return span.Length;
-    }
-
-
-    private static void UnMask(StringBuilder builder, int startOfValue)
-    {
-        for (int i = startOfValue; i < builder.Length; i++)
-        {
-            if (builder[i] == '\\')
-            {
-                // after the mask char one entry can be skipped:
-                _ = builder.Remove(i, 1);
-            }
+            return idx;
         }
     }
+
+
+    
+
+    
+
+
+    
 }

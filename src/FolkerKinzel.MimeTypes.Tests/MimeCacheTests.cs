@@ -8,10 +8,11 @@ public class MimeCacheTests
     [TestMethod]
     public void CapacityTest1()
     {
-        Assert.AreEqual(0,MimeCache.Capacity);
-        MimeCache.EnlargeCapacity(100);
-        Assert.AreNotEqual(0, MimeCache.Capacity);
-
+        Assert.AreEqual(MimeCache.DefaultCapacity, MimeCache.Capacity);
+        MimeCache.EnlargeCapacity(MimeCache.Capacity + 100);
+        Assert.IsTrue(MimeCache.Capacity > MimeCache.DefaultCapacity);
+        MimeCache.EnlargeCapacity(MimeCache.DefaultCapacity);
+        Assert.IsTrue(MimeCache.Capacity > MimeCache.DefaultCapacity);
     }
 
 }
