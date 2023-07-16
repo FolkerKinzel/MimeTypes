@@ -5,6 +5,7 @@ namespace FolkerKinzel.MimeTypes;
 /// <summary>
 /// Represents a <see cref="MimeType"/> comparison operation that uses specific comparison rules.
 /// </summary>
+/// <threadsafety static="true" instance="true"/>
 public abstract class MimeTypeEqualityComparer : IEqualityComparer<MimeType>
 {
     /// <summary>
