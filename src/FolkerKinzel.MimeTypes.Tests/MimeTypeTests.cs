@@ -118,7 +118,7 @@ public class MimeTypeTests
         //int size = Marshal.SizeOf(ReadOnlyMemory<char>.Empty);
         //size = Marshal.SizeOf(mediaType);
 
-        MimeTypeParameter[]? arr = mediaType.Parameters.ToArray();
+        MimeTypeParameter[]? arr = mediaType.GetParameters().ToArray();
 
         Assert.AreEqual(parametersCount, arr.Length);
     }
@@ -304,7 +304,7 @@ public class MimeTypeTests
     {
         Assert.IsTrue(MimeType.TryParse("application/octet-stream; para*=utf-8'de'Hallo%20Folker", out MimeType media1));
 
-        MimeTypeParameter para = media1.Parameters.First();
+        MimeTypeParameter para = media1.GetParameters().First();
         Assert.AreEqual(para.Value.ToString(), "Hallo Folker");
         Assert.AreEqual(para.Language.ToString(), "de");
         Assert.AreEqual(para.Key.ToString(), "para");
@@ -320,8 +320,8 @@ public class MimeTypeTests
                         "title*3=\"isn't it!\"";
 
         Assert.IsTrue(MimeType.TryParse(input, out MimeType mimeType));
-        Assert.AreEqual(1, mimeType.Parameters.Count());
-        MimeTypeParameter param = mimeType.Parameters.First();
+        Assert.AreEqual(1, mimeType.GetParameters().Count());
+        MimeTypeParameter param = mimeType.GetParameters().First();
 
         Assert.AreEqual("title", param.Key.ToString());
         Assert.AreEqual("en", param.Language.ToString());
@@ -335,8 +335,8 @@ public class MimeTypeTests
         const string input = "application/x-stuff; param=\"directory\\\\file.text\"";
 
         Assert.IsTrue(MimeType.TryParse(input, out MimeType mimeType));
-        Assert.AreEqual(1, mimeType.Parameters.Count());
-        MimeTypeParameter param = mimeType.Parameters.First();
+        Assert.AreEqual(1, mimeType.GetParameters().Count());
+        MimeTypeParameter param = mimeType.GetParameters().First();
 
         Assert.AreEqual("param", param.Key.ToString());
         Assert.AreEqual(@"directory\file.text", param.Value.ToString());
@@ -411,7 +411,7 @@ public class MimeTypeTests
         Assert.AreEqual(mediaType, mimeType2.MediaType.ToString(), false);
         Assert.AreEqual(subType, mimeType2.SubType.ToString(), false);
 
-        Assert.AreEqual(2, mimeType2.Parameters.Count());
+        Assert.AreEqual(2, mimeType2.GetParameters().Count());
     }
 
     [TestMethod]
@@ -437,6 +437,6 @@ public class MimeTypeTests
         Assert.AreEqual(mediaType, mimeType2.MediaType.ToString(), false);
         Assert.AreEqual(subType, mimeType2.SubType.ToString(), false);
 
-        Assert.AreEqual(1, mimeType2.Parameters.Count());
+        Assert.AreEqual(1, mimeType2.GetParameters().Count());
     }
 }

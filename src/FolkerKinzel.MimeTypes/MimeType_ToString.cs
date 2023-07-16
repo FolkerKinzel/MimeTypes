@@ -8,14 +8,14 @@ namespace FolkerKinzel.MimeTypes;
 public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
     /// <summary>
-    /// Creates a complete <see cref="string"/> representation of the instance (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.
+    /// Creates a complete <see cref="string"/> representation of the instance (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="GetParameters"/>.
     /// </summary>
-    /// <returns>A complete <see cref="string"/> representation of the instance (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.</returns>
+    /// <returns>A complete <see cref="string"/> representation of the instance (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="GetParameters"/>.</returns>
     public override string ToString() => ToString(MimeTypeFormattingOptions.Default);
 
     /// <summary>
     /// Creates a <see cref="string"/> representation of the instance, and allows to determine, whether or not to include the
-    /// <see cref="Parameters"/>.
+    /// <see cref="GetParameters"/>.
     /// </summary>
     /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
     /// <param name="lineLength">The maximum number of characters in a single line of the serialized instance
@@ -82,7 +82,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     private void AppendUnWrappedParameters(StringBuilder builder, MimeTypeFormattingOptions options, bool urlEncodedParameterValues)
     {
         bool appendSpace = !urlEncodedParameterValues & options.HasFlag(MimeTypeFormattingOptions.WhiteSpaceBetweenParameters);
-        foreach (MimeTypeParameter parameter in Parameters)
+        foreach (MimeTypeParameter parameter in GetParameters())
         {
             _ = builder.Append(';');
             if (appendSpace)
@@ -98,7 +98,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         var worker = new StringBuilder(lineLength);
         bool appendSpace = options.HasFlag(MimeTypeFormattingOptions.WhiteSpaceBetweenParameters);
 
-        foreach (MimeTypeParameter parameter in Parameters)
+        foreach (MimeTypeParameter parameter in GetParameters())
         {
             _ = parameter.AppendTo(worker.Clear(), false);
 

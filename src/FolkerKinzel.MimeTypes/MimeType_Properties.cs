@@ -35,9 +35,13 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         => IsEmpty ? ReadOnlySpan<char>.Empty : _mimeTypeString.Span.Slice(MediaTypeLength + 1, SubTypeLength);
 
     /// <summary>
-    /// Gets the parameters (Never <c>null</c>.)
+    /// Gets the parameters.
     /// </summary>
-    public IEnumerable<MimeTypeParameter> Parameters => ParseParameters();
+    /// <returns>The collection of parameters of the <see cref="MimeType"/>.</returns>
+    /// <remarks>Iterating through the <see cref="MimeTypeParameter"/>s can be an expensive operation
+    /// under certain circumstances. Consider to call <see cref="Enumerable.ToArray{TSource}(IEnumerable{TSource})"/>
+    /// on the return value, if you need it more than once.</remarks>
+    public IEnumerable<MimeTypeParameter> GetParameters() => ParseParameters();
 
     /// <summary>
     /// Indicates whether the instance contains no data.

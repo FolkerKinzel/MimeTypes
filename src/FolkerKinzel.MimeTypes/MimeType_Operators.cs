@@ -4,7 +4,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
     /// <summary>
     /// Returns a value that indicates whether two specified <see cref="MimeType"/> instances are equal.
-    /// The <see cref="Parameters"/> are taken into account.
+    /// The <see cref="GetParameters"/> are taken into account.
     /// </summary>
     /// <param name="mimeType1">The first <see cref="MimeType"/> to compare.</param>
     /// <param name="mimeType2">The second <see cref="MimeType"/> to compare.</param>
@@ -21,7 +21,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
     /// <summary>
     /// Returns a value that indicates whether two specified <see cref="MimeType"/> instances are not equal.
-    /// The <see cref="Parameters"/> are taken into account.
+    /// The <see cref="GetParameters"/> are taken into account.
     /// </summary>
     /// <param name="mimeType1">The first <see cref="MimeType"/> to compare.</param>
     /// <param name="mimeType2">The second <see cref="MimeType"/> to compare.</param>

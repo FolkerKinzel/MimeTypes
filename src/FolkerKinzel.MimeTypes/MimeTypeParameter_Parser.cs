@@ -40,8 +40,9 @@ public readonly partial struct MimeTypeParameter
                   .Append('=')
                   .Append(span.Slice(idxAfterKeyValueSeparator).TrimStart());
 
-            ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
-            return TryParse(firstRun, ref mem, out parameter, out quoted);
+            parameterString = sb.ToString().AsMemory();
+            span = parameterString.Span;
+            keyValueSeparatorIndex = span.IndexOf(SEPARATOR);
         }
 
         // Remove comment at start:
