@@ -6,6 +6,8 @@ namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeTypeParameter
 {
+    private const char SEPARATOR = '=';
+
     internal static bool TryParse(bool firstRun, ref ReadOnlyMemory<char> parameterString, out MimeTypeParameter parameter, out bool quoted)
     {
         quoted = false;
@@ -19,6 +21,29 @@ public readonly partial struct MimeTypeParameter
 
         ReadOnlySpan<char> span = parameterString.Span;
 
+        int keyValueSeparatorIndex = span.IndexOf(SEPARATOR);
+
+        if (keyValueSeparatorIndex < 1)
+        {
+            goto Failed;
+        }
+
+        // If the parameter contains whitespace before the 
+        // value part or after the key, repair it:
+        int idxBeforeKeyValueSeparator = keyValueSeparatorIndex - 1;
+        int idxAfterKeyValueSeparator = keyValueSeparatorIndex + 1;
+        if (span[idxBeforeKeyValueSeparator].IsWhiteSpace() || 
+           (span.Length > idxAfterKeyValueSeparator && span[idxAfterKeyValueSeparator].IsWhiteSpace()))
+        {
+            var sb = new StringBuilder(span.Length);
+            _ = sb.Append(span.Slice(0, keyValueSeparatorIndex).TrimEnd())
+                  .Append('=')
+                  .Append(span.Slice(idxAfterKeyValueSeparator).TrimStart());
+
+            ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
+            return TryParse(firstRun, ref mem, out parameter, out quoted);
+        }
+
         // Remove comment at start:
         if (span[0].Equals('('))
         {
@@ -30,13 +55,8 @@ public readonly partial struct MimeTypeParameter
             {
                 goto Failed;
             }
-        }
 
-        int keyValueSeparatorIndex = span.IndexOf('=');
-
-        if (keyValueSeparatorIndex < 1)
-        {
-            goto Failed;
+            keyValueSeparatorIndex = span.IndexOf(SEPARATOR);
         }
 
         int valueStart = keyValueSeparatorIndex + 1;
@@ -102,53 +122,36 @@ public readonly partial struct MimeTypeParameter
                     }
                 }
             }
-
-            // If the parameter contains whitespace before the 
-            // value part, repair it:
-            if (span.Slice(0, valueStart).ContainsWhiteSpace())
-            {
-                var sb = new StringBuilder(span.Length);
-                _ = sb.Append(span.Slice(0, valueStart))
-                      .ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty)
-                      .Append(span.Slice(valueStart));
-
-                ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
-                return TryParse(firstRun, ref mem, out parameter, out quoted);
-            }
-
-            //if (languageLength > LANGUAGE_LENGTH_MAX_VALUE ||
-            //    charsetLength > CHARSET_LENGTH_MAX_VALUE)
-            //{
-            //    goto Failed;
-            //}
         }
-
-        // Masked Value:
-        // Span cannot end with " when Url encoded because " must be URL encoded then.
-        // In the second run parameter.Value cannot be quoted anymore.
-        int spanLastIndex = span.Length - 1;
-        if (firstRun && span[spanLastIndex] == '\"' && spanLastIndex > valueStart && span[valueStart] == '\"')
+        else
         {
-            quoted = true;
-            if (span.Slice(valueStart).Contains('\\')) // Masked chars
+            // Masked Value:
+            // Span cannot end with " when Url encoded because " must be URL encoded then.
+            // In the second run parameter.Value cannot be quoted anymore.
+            int spanLastIndex = span.Length - 1;
+            if (firstRun && span[spanLastIndex] == '\"' && spanLastIndex > valueStart && span[valueStart] == '\"')
             {
-                var builder = new StringBuilder(parameterString.Length);
-                _ = builder.Append(parameterString).Remove(builder.Length - 1, 1);
-
-                if (valueStart < builder.Length && builder[valueStart] == '"')
+                quoted = true;
+                if (span.Slice(valueStart).Contains('\\')) // Masked chars
                 {
-                    _ = builder.Remove(valueStart, 1);
-                    UnMask(builder, valueStart);
-                }
+                    var builder = new StringBuilder(parameterString.Length);
+                    _ = builder.Append(parameterString).Remove(builder.Length - 1, 1);
 
-                ReadOnlyMemory<char> mem = builder.ToString().AsMemory();
-                return TryParse(false, ref mem, out parameter, out _);
-            }
-            else // No masked chars - tspecials only
-            {
-                // Eat the Double-Quotes:
-                parameterString = parameterString.Slice(0, parameterString.Length - 1);
-                keyValueOffset++;
+                    if (valueStart < builder.Length && builder[valueStart] == '"')
+                    {
+                        _ = builder.Remove(valueStart, 1);
+                        UnMask(builder, valueStart);
+                    }
+
+                    ReadOnlyMemory<char> mem = builder.ToString().AsMemory();
+                    return TryParse(false, ref mem, out parameter, out _);
+                }
+                else // No masked chars - tspecials only
+                {
+                    // Eat the Double-Quotes:
+                    parameterString = parameterString.Slice(0, parameterString.Length - 1);
+                    keyValueOffset++;
+                }
             }
         }
 
@@ -182,6 +185,7 @@ public readonly partial struct MimeTypeParameter
         parameter = default;
         return false;
     }
+
 
     private static int GetCommentStartIndexAtEnd(ReadOnlySpan<char> span, int valueStart)
     {

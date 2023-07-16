@@ -6,6 +6,7 @@ text/calendar ifb
 text/css css
 text/csv csv
 text/html html
+text/javascript mjs
 text/n3 n3
 text/plain txt
 text/plain text
@@ -446,6 +447,7 @@ application/vnd.fujixerox.docuworks.binder xbd
 application/vnd.fuzzysheet fzs
 application/vnd.genomatix.tuxedo txd
 application/vnd.geogebra.file ggb
+application/vnd.geogebra.slides ggs
 application/vnd.geogebra.tool ggt
 application/vnd.geometry-explorer gex
 application/vnd.geometry-explorer gre
@@ -749,6 +751,7 @@ application/vnd.zul zir
 application/vnd.zul zirz
 application/vnd.zzazz.deck+xml zaz
 application/voicexml+xml vxml
+application/wasm wasm
 application/widget wgt
 application/winhlp hlp
 application/wsdl+xml wsdl

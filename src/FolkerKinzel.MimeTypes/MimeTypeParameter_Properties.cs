@@ -4,8 +4,9 @@ namespace FolkerKinzel.MimeTypes;
 public readonly partial struct MimeTypeParameter
 {
     private readonly ReadOnlyMemory<char> _parameterString;
-
-    // Stores all indexes in one Int32:
+    //                                                             Indicates a '*' at the end
+    //                                                               of the key or '"' at the 
+    // Stores all indexes in one Int32:                                 start of value:
     // | unused |  Language Length | Charset Length | Chars. Indicator | KeyValueOffs | Key Length |
     // | 2 Bit  |      8 Bit       |      8 Bit     |      1 Bit       |    1 Bit     |    12 Bit  |
     private readonly int _idx;
@@ -23,7 +24,7 @@ public readonly partial struct MimeTypeParameter
     private const int LANGUAGE_LENGTH_SHIFT = 22;
     internal const int LANGUAGE_LENGTH_MAX_VALUE = 0xFF;
 
-    // The Offset for the '='-Sign is not stored:
+    // The Offset for the '='-Sign is not stored:         *                                         =
     private int KeyValueOffset => ((_idx >> KEY_VALUE_OFFSET_SHIFT) & KEY_VALUE_OFFSET_MAX_VALUE) + 1;
     private int KeyLength => _idx & KEY_LENGTH_MAX_VALUE;
     private bool ContainsLanguageAndCharset => ((_idx >> CHARSET_LANGUAGE_INDICATOR_SHIFT) & 1) == 1;

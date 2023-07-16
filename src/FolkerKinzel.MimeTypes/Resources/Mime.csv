@@ -188,7 +188,6 @@ application/ipfix ipfix
 application/java-archive jar
 application/java-serialized-object ser
 application/java-vm class
-application/javascript js
 application/json json
 application/jsonml+json jsonml
 application/lost+xml lostxml
@@ -364,6 +363,7 @@ application/vnd.fujixerox.docuworks.binder xbd
 application/vnd.fuzzysheet fzs
 application/vnd.genomatix.tuxedo txd
 application/vnd.geogebra.file ggb
+application/vnd.geogebra.slides ggs
 application/vnd.geogebra.tool ggt
 application/vnd.geometry-explorer gex
 application/vnd.geonext gxt
@@ -624,6 +624,7 @@ application/vnd.yellowriver-custom-menu cmp
 application/vnd.zul zir
 application/vnd.zzazz.deck+xml zaz
 application/voicexml+xml vxml
+application/wasm wasm
 application/widget wgt
 application/winhlp hlp
 application/wsdl+xml wsdl
@@ -791,6 +792,7 @@ application/fits fits
 application/bat bat
 application/x-bat bat
 application/x-msdos-program bat
+application/javascript js
 application/x-ecmascript js
 application/x-javascript js
 audio/adpcm adp

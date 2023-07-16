@@ -1,6 +1,7 @@
 ﻿using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
 using System.Data.Common;
+using System.Reflection;
 using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
@@ -22,11 +23,11 @@ internal static class ParameterBuilder
 
         if (starred && hasValue)
         {
-            try
+            if (TryEncodeUrl(model.Value!, out string? encoded))
             {
-                valueSpan = Uri.EscapeDataString(model.Value!).AsSpan();
+                valueSpan = encoded.AsSpan();
             }
-            catch
+            else
             {
                 return;
             }
@@ -77,15 +78,11 @@ internal static class ParameterBuilder
         ReadOnlySpan<char> valueSpan = parameter.Value;
         ReadOnlySpan<char> languageSpan = parameter.Language;
 
-        try
-        {
-            valueSpan = Uri.EscapeDataString(valueSpan.ToString())
-                           .AsSpan();
-        }
-        catch
+        if (!TryEncodeUrl(valueSpan.ToString(), out string? encoded))
         {
             return builder;
         }
+        valueSpan = encoded.AsSpan();
 
         bool starred = !isValueAscii || !languageSpan.IsEmpty;
         _ = builder.EnsureCapacity(builder.Length + GetNeededCapacity(keySpan.Length, valueSpan.Length, languageSpan.Length, isValueAscii, starred));
@@ -200,5 +197,21 @@ internal static class ParameterBuilder
         }
 
         return sb;
+    }
+
+
+    [ExcludeFromCodeCoverage]
+    private static bool TryEncodeUrl(string input, [NotNullWhen(true)] out string? output)
+    {
+        try
+        {
+            output = Uri.EscapeDataString(input);
+        }
+        catch
+        {
+            output = null;
+            return false;
+        }
+        return true;
     }
 }
