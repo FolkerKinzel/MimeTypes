@@ -32,8 +32,8 @@ internal ref struct ParameterIndexes
         CharsetLength <= CHARSET_LENGTH_MAX_VALUE &&
         LanguageLength <= LANGUAGE_LENGTH_MAX_VALUE;
 
-    internal readonly bool VerifyKeyLength() => KeyLength is not (0 or > KEY_LENGTH_MAX_VALUE);
 
+    internal readonly bool VerifyKeyLength() => KeyLength is not (0 or > KEY_LENGTH_MAX_VALUE);
 
 
     /// <summary>
@@ -66,5 +66,4 @@ internal ref struct ParameterIndexes
         return Span[spanLastIndex] == '\"' && spanLastIndex > ValuePartStart && Span[ValuePartStart] == '\"';
     }
 
-    
 }
