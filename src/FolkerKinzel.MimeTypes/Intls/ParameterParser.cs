@@ -91,7 +91,7 @@ internal static class ParameterParser
 
     private static void GetNextParameterMemory(ref ReadOnlyMemory<char> remainingParameters, out ReadOnlyMemory<char> nextParameter)
     {
-        int nextParameterSeparatorIndex = ParameterReader.GetNextParameterSeparatorIndex(remainingParameters.Span);
+        int nextParameterSeparatorIndex = ParameterRawReader.GetNextParameterSeparatorIndex(remainingParameters.Span);
 
         if (nextParameterSeparatorIndex < 0) // last parameter
         {

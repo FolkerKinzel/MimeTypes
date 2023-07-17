@@ -76,7 +76,7 @@ internal ref struct ParameterSanitizer
         int idxBeforeKeyValueSeparator = keyValueSeparatorIndex - 1;
         int idxAfterKeyValueSeparator = keyValueSeparatorIndex + 1;
         if (_span[idxBeforeKeyValueSeparator].IsWhiteSpace() ||
-           _span.Length > idxAfterKeyValueSeparator && _span[idxAfterKeyValueSeparator].IsWhiteSpace())
+           (_span.Length > idxAfterKeyValueSeparator && _span[idxAfterKeyValueSeparator].IsWhiteSpace()))
         {
             var sb = new StringBuilder(_span.Length);
             _ = sb.Append(_span.Slice(0, keyValueSeparatorIndex).TrimEnd())

@@ -4,7 +4,7 @@ using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
-internal static class ParameterReader
+internal static class ParameterRawReader
 {
     internal static int GetNextParameterSeparatorIndex(ReadOnlySpan<char> value)
     {
@@ -47,12 +47,13 @@ internal static class ParameterReader
                 continue;
             }
 
-            // Don't test control characters because
-            // newline characters are control characters
-            if (current.IsTSpecial() || !current.IsAscii())
-            {
-                return -1;
-            }
+            // Uncomment for a thorough validation:
+            //// Don't test control characters because
+            //// newline characters are control characters
+            //if (current.IsTSpecial() || !current.IsAscii())
+            //{
+            //    return -1;
+            //}
 
         }
 
