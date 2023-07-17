@@ -21,7 +21,6 @@ internal ref struct ParameterIndexes
     public int LanguageStart;
     public int LanguageLength;
     public int ValuePartStart;
-
     public readonly ReadOnlySpan<char> Span;
 
     public ParameterIndexes(ReadOnlySpan<char> span) => Span = span;
