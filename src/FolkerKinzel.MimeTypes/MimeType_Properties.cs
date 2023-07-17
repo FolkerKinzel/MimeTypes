@@ -1,18 +1,16 @@
-﻿using FolkerKinzel.Strings.Polyfills;
+﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.Strings.Polyfills;
 
 namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
-    
-
     private readonly ReadOnlyMemory<char> _mimeTypeString;
 
     // Stores all indexes in one int.
     // | unused |     MediaTp Length    |  SubType Length  |  Contains Parameters  |
     // |  1 Bit |        15 Bit         |      15 Bit      |        1 Bit          |
     private readonly int _idx;
-
 
     private bool HasParameters => (_idx & 1) == 1;
 
@@ -38,7 +36,11 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <remarks>Iterating through the <see cref="MimeTypeParameter"/>s can be an expensive operation
     /// under certain circumstances. Consider to call <see cref="Enumerable.ToArray{TSource}(IEnumerable{TSource})"/>
     /// on the return value, if you need it more than once.</remarks>
-    public IEnumerable<MimeTypeParameter> GetParameters() => ParseParameters();
+    public IEnumerable<MimeTypeParameter> GetParameters() => 
+        HasParameters
+        ? ParameterParser.ParseParameters(_mimeTypeString.Slice(MediaTypeLength + SubTypeLength + 2))
+        : Array.Empty<MimeTypeParameter>();
+
 
     /// <summary>
     /// Indicates whether the instance contains no data.

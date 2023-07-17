@@ -12,34 +12,25 @@ public readonly partial struct MimeTypeParameter
     [StructLayout(LayoutKind.Auto)]
     private ref struct Indexes
     {
-        //private const int KEY_VALUE_OFFSET_MAX_VALUE = MimeTypeParameter.KEY_VALUE_OFFSET_MAX_VALUE;
-        //private const int CHARSET_LENGTH_MAX_VALUE = MimeTypeParameter.CHARSET_LENGTH_MAX_VALUE;
-        //private const int LANGUAGE_LENGTH_MAX_VALUE = MimeTypeParameter.LANGUAGE_LENGTH_MAX_VALUE;
-
-        public int keyLength;
-        public int keyValueOffset;
-        public int charsetLength;
-        public int languageStart;
-        public int languageLength;
-        public int valuePartStart;
+        public int KeyLength;
+        public int KeyValueOffset;
+        public int CharsetLength;
+        public int LanguageStart;
+        public int LanguageLength;
+        public int ValuePartStart;
         public ReadOnlySpan<char> span;
 
 
-        internal bool Verify()
-        {
-            if (keyValueOffset > KEY_VALUE_OFFSET_MAX_VALUE || charsetLength > CHARSET_LENGTH_MAX_VALUE || languageLength > LANGUAGE_LENGTH_MAX_VALUE)
-            {
-                return false;
-            }
-            return true;
-        }
+        internal readonly bool Verify() => KeyValueOffset <= KEY_VALUE_OFFSET_MAX_VALUE &&
+                                           CharsetLength <= CHARSET_LENGTH_MAX_VALUE &&
+                                           LanguageLength <= LANGUAGE_LENGTH_MAX_VALUE;
 
-        internal bool VerifyKeyLength() => keyLength is not (0 or > KEY_LENGTH_MAX_VALUE);
+        internal readonly bool VerifyKeyLength() => KeyLength is not (0 or > KEY_LENGTH_MAX_VALUE);
 
         internal void InitCharsetAndLanguage()
         {
             bool inLanguagePart = false;
-            for (int i = valuePartStart; i < span.Length; i++)
+            for (int i = ValuePartStart; i < span.Length; i++)
             {
                 char c = span[i];
 
@@ -47,12 +38,12 @@ public readonly partial struct MimeTypeParameter
                 {
                     if (!inLanguagePart)
                     {
-                        charsetLength = i - valuePartStart;
-                        languageStart = i + 1;
+                        CharsetLength = i - ValuePartStart;
+                        LanguageStart = i + 1;
                     }
                     else
                     {
-                        languageLength = i - languageStart;
+                        LanguageLength = i - LanguageStart;
                         break;
                     }
 

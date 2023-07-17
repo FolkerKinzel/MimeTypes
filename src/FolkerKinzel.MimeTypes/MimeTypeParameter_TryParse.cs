@@ -39,22 +39,22 @@ public readonly partial struct MimeTypeParameter
         idx.span = parameterString.Span;
 
         int keyValueSeparatorIndex = idx.span.IndexOf(SEPARATOR);
-        idx.keyLength = idx.span.Slice(0, keyValueSeparatorIndex).GetTrimmedLength();
+        idx.KeyLength = idx.span.Slice(0, keyValueSeparatorIndex).GetTrimmedLength();
         if (!idx.VerifyKeyLength())
         {
             return false;
         }
         
-        idx.valuePartStart = keyValueSeparatorIndex + 1;
+        idx.ValuePartStart = keyValueSeparatorIndex + 1;
 
         // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2184).
         // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
-        if (idx.span[idx.keyLength - 1] == '*')
+        if (idx.span[idx.KeyLength - 1] == '*')
         {
-            --idx.keyLength; // Eat the trailing '*'.
-            ++idx.keyValueOffset;
+            --idx.KeyLength; // Eat the trailing '*'.
+            ++idx.KeyValueOffset;
 
-            if (idx.keyLength is 0)
+            if (idx.KeyLength is 0)
             {
                 return false;
             }
@@ -75,15 +75,15 @@ public readonly partial struct MimeTypeParameter
             // Span cannot end with " when Url encoded because " must be URL encoded then.
             // In the second run parameter.Value cannot be quoted anymore.
             int spanLastIndex = idx.span.Length - 1;
-            if (firstRun && idx.span[spanLastIndex] == '\"' && spanLastIndex > idx.valuePartStart && idx.span[idx.valuePartStart] == '\"')
+            if (firstRun && idx.span[spanLastIndex] == '\"' && spanLastIndex > idx.ValuePartStart && idx.span[idx.ValuePartStart] == '\"')
             {
-                if (idx.span.Slice(idx.valuePartStart).Contains('\\')) // Masked chars
+                if (idx.span.Slice(idx.ValuePartStart).Contains('\\')) // Masked chars
                 {
-                    ProcessQuotedAndMaskedValue(idx.valuePartStart, ref parameterString);
+                    ProcessQuotedAndMaskedValue(idx.ValuePartStart, ref parameterString);
                 }
                 else // No masked chars - tspecials only
                 {
-                    ProcessQuotedValue(ref parameterString, ref idx.keyValueOffset);
+                    ProcessQuotedValue(ref parameterString, ref idx.KeyValueOffset);
                 }
             }
         }
@@ -107,14 +107,14 @@ public readonly partial struct MimeTypeParameter
 
         static int InitParameterIdx(in Indexes idx)
         {
-            int parameterIdx = idx.keyLength;
-            parameterIdx |= idx.keyValueOffset << KEY_VALUE_OFFSET_SHIFT;
+            int parameterIdx = idx.KeyLength;
+            parameterIdx |= idx.KeyValueOffset << KEY_VALUE_OFFSET_SHIFT;
 
-            if (idx.languageStart != 0)
+            if (idx.LanguageStart != 0)
             {
                 parameterIdx |= 1 << CHARSET_LANGUAGE_INDICATOR_SHIFT;
-                parameterIdx |= idx.charsetLength << CHARSET_LENGTH_SHIFT;
-                parameterIdx |= idx.languageLength << LANGUAGE_LENGTH_SHIFT;
+                parameterIdx |= idx.CharsetLength << CHARSET_LENGTH_SHIFT;
+                parameterIdx |= idx.LanguageLength << LANGUAGE_LENGTH_SHIFT;
             }
 
             return parameterIdx;
@@ -123,12 +123,12 @@ public readonly partial struct MimeTypeParameter
 
     private static bool TryDecodeUrl(in Indexes idx, ref ReadOnlyMemory<char> parameterString)
     {
-        int valueStart = idx.languageStart + idx.languageLength + 2;
+        int valueStart = idx.LanguageStart + idx.LanguageLength + 2;
         var valueSpan = idx.span.Slice(valueStart);
 
         if (valueSpan.Contains('%'))
         {
-            var charsetSpan = idx.span.Slice(idx.valuePartStart, idx.charsetLength);
+            var charsetSpan = idx.span.Slice(idx.ValuePartStart, idx.CharsetLength);
             if (!UrlEncoding.TryDecode(valueSpan.ToString(), charsetSpan, out string? decoded))
             {
                 return false;
