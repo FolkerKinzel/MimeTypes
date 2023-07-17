@@ -37,7 +37,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
         // if MimeType has Parameters it must be reallocated
         // (see below)
-        mediaPartSpan = mediaPartSpan.TrimEnd();
+        if (!hasParameters)
+        {
+            mediaPartSpan = mediaPartSpan.TrimEnd();
+        }
 
         // If the mediaPartSpan contains whitespace, repair it:
         if ((hasParameters && hasComment) || mediaPartSpan.ContainsWhiteSpace())
