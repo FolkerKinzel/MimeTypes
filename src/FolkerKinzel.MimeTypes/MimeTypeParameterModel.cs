@@ -52,27 +52,31 @@ public readonly struct MimeTypeParameterModel
             throw new ArgumentException(Res.StringTooLong, nameof(key));
         }
 
-        ValidateIetfLanguageTag(language, nameof(language));
+        ValidateLanguageParameter(language, nameof(language));
 
         Key = key;
         Value = value;
         Language = string.IsNullOrWhiteSpace(language) ? null : language;
     }
 
+
     /// <summary>
     /// Gets the name of the parameter.
     /// </summary>
     public string Key { get; }
+
 
     /// <summary>
     /// Gets the value of the parameter.
     /// </summary>
     public string? Value { get; }
 
+
     /// <summary>
     /// Gets an IETF-Language tag that indicates the language of the parameter's value.
     /// </summary>
     public string? Language { get; }
+
 
     /// <summary>
     /// Indicates whether the instance contains no data.
@@ -81,7 +85,7 @@ public readonly struct MimeTypeParameterModel
     public bool IsEmpty => Key is null;
 
 
-    private static void ValidateIetfLanguageTag(string? language, string paraName)
+    private static void ValidateLanguageParameter(string? language, string paraName)
     {
         if (language is null)
         {

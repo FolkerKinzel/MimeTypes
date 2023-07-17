@@ -38,7 +38,7 @@ public readonly partial struct MimeTypeParameter
             return builder;
         }
 
-        return ParameterBuilder.Build(builder, in this, urlEncodedValue);
+        return builder.Append(in this, urlEncodedValue);
     }
 
 

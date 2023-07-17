@@ -17,6 +17,7 @@ public abstract class MimeTypeEqualityComparer : IEqualityComparer<MimeType>
     /// equal, otherwise <c>false</c>.</returns>
     public abstract bool Equals(MimeType x, MimeType y);
 
+
     /// <summary>
     /// Generates a hash code for the <see cref="MimeType"/> instance.
     /// </summary>
@@ -24,11 +25,13 @@ public abstract class MimeTypeEqualityComparer : IEqualityComparer<MimeType>
     /// <returns>The hash code.</returns>
     public abstract int GetHashCode([DisallowNull] MimeType obj);
 
+
     /// <summary>
     /// Gets the <see cref="MimeTypeEqualityComparer"/> object (Singleton) that performs a default comparison of <see cref="MimeType"/> structs
     /// that takes the <see cref="MimeType.Parameters"/> into account.
     /// </summary>
     public static MimeTypeEqualityComparer Default { get; } = new MimeTypeEqualityComparerDefault();
+
 
     /// <summary>
     /// Gets the <see cref="MimeTypeEqualityComparer"/> object (Singleton) that performs a comparison of <see cref="MimeType"/> structs

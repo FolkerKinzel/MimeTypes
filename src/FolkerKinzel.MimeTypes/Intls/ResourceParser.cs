@@ -2,11 +2,15 @@
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
+/// <summary>
+/// Parses MIME types and file type extensions from the resources.
+/// </summary>
 internal static class ResourceParser
 {
     private const char SEPARATOR = ' ';
 
     private static readonly Lazy<ConcurrentDictionary<string, long>> _index = new(IndexFactory.CreateIndex, true);
+
 
     internal static string GetMimeType(string fileTypeExtension)
     {

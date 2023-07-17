@@ -8,14 +8,17 @@ namespace FolkerKinzel.MimeTypes;
 public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
     /// <summary>
-    /// Creates a complete <see cref="string"/> representation of the instance (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.
+    /// Creates a complete <see cref="string"/> representation of the instance 
+    /// (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.
     /// </summary>
-    /// <returns>A complete <see cref="string"/> representation of the instance (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.</returns>
+    /// <returns>A complete <see cref="string"/> representation of the instance 
+    /// (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.</returns>
     public override string ToString() => ToString(MimeTypeFormattingOptions.Default);
 
+
     /// <summary>
-    /// Creates a <see cref="string"/> representation of the instance, and allows to determine, whether or not to include the
-    /// <see cref="Parameters"/>.
+    /// Creates a <see cref="string"/> representation of the instance, and allows to determine, whether or not 
+    /// to include the <see cref="Parameters"/>.
     /// </summary>
     /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
     /// <param name="lineLength">The maximum number of characters in a single line of the serialized instance
@@ -30,8 +33,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         return sb.ToString();
     }
 
+
     /// <summary>
-    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2046 to a <see cref="StringBuilder"/>.
+    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2046 to a 
+    /// <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>
     /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
@@ -79,6 +84,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         return builder;
     }
 
+
     private void AppendUnWrappedParameters(StringBuilder builder, MimeTypeFormattingOptions options, bool urlEncodedParameterValues)
     {
         bool appendSpace = !urlEncodedParameterValues & options.HasFlag(MimeTypeFormattingOptions.WhiteSpaceBetweenParameters);
@@ -92,6 +98,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
             _ = parameter.AppendTo(builder, urlEncodedParameterValues);
         }
     }
+
 
     private void AppendWrappedParameters(StringBuilder builder, MimeTypeFormattingOptions options, int lineLength)
     {

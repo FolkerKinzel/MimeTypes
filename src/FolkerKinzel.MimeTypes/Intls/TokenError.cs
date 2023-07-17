@@ -1,5 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes.Intls;
 
+
 internal enum TokenError
 {
     None,

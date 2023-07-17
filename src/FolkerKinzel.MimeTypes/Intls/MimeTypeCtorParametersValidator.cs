@@ -7,6 +7,7 @@ internal static class MimeTypeCtorParametersValidator
     private const int MEDIA_TYPE_LENGTH_MAX_VALUE = MimeType.MEDIA_TYPE_LENGTH_MAX_VALUE;
     private const int SUB_TYPE_LENGTH_MAX_VALUE = MimeType.SUB_TYPE_LENGTH_MAX_VALUE;
 
+
     /// <summary>Validates <paramref name="mediaType"/> and <paramref name="subType"/>.</summary>
     /// <param name="mediaType"></param>
     /// <param name="subType"></param>
@@ -18,7 +19,6 @@ internal static class MimeTypeCtorParametersValidator
     /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
     /// which are not permitted by the standard (RFC 2045).
     /// </exception>
-
     internal static void Validate(string mediaType, string subType)
     {
         mediaType.ValidateTokenParameter(nameof(mediaType));

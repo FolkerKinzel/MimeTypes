@@ -38,6 +38,7 @@ public static class MimeCache
         public string MimeType { get; }
         public string Extension { get; }
 
+
         [ExcludeFromCodeCoverage]
         public override string ToString() => $"{MimeType} {Extension}";
     }
@@ -55,10 +56,12 @@ public static class MimeCache
     private static List<Entry>? _extCache;
     private static int _capacity;
 
+
     /// <summary>
     /// The default capacity of the cache.
     /// </summary>
     public const int DefaultCapacity = 16;
+
 
     /// <summary>
     /// Gets the current capacity of the cache.
@@ -67,8 +70,7 @@ public static class MimeCache
 
 
     /// <summary>
-    /// Enlarges the <see cref="Capacity"/> of the cache to
-    /// the specified value.
+    /// Enlarges the <see cref="Capacity"/> of the cache to the specified value.
     /// </summary>
     /// <param name="newCapacity">The new value for <see cref="Capacity"/>. If <paramref name="newCapacity"/>
     /// is smaller than the current value of <see cref="Capacity"/>, nothing changes.</param>
@@ -91,6 +93,7 @@ public static class MimeCache
         }
     }
 
+
     /// <summary>
     /// Clears the cache.
     /// </summary>
@@ -103,6 +106,7 @@ public static class MimeCache
             _capacity = 0;
         }
     }
+
 
     internal static string GetMimeType(string fileTypeExtension)
         => string.IsNullOrWhiteSpace(fileTypeExtension) ? DEFAULT_MIME_TYPE : DoGetMimeType(fileTypeExtension);
@@ -123,6 +127,7 @@ public static class MimeCache
 
         return DoGetMimeType(fileTypeExtension.ToString());
     }
+
 
     private static string DoGetMimeType(string extension)
     {
@@ -166,6 +171,7 @@ public static class MimeCache
         }
     }
 
+
     internal static string GetFileTypeExtension(string? mimeType)
     {
         return mimeType is null
@@ -198,6 +204,7 @@ public static class MimeCache
 
             return false;
         }
+        //////////////////////////////////////////////////////////////////
 
         static string GetFileTypeExtensionFromResources(string mimeType)
         {
@@ -207,9 +214,9 @@ public static class MimeCache
         }
     }
 
+
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     private static string PrepareFileTypeExtension(string fileTypeExtension) => $".{fileTypeExtension}";
-
 
 
     private static void SetCapacity()
@@ -219,6 +226,7 @@ public static class MimeCache
             _capacity = DefaultCapacity;
         }
     }
+
 
     private static List<Entry> InitMimeCache()
     {
@@ -239,6 +247,7 @@ public static class MimeCache
             new("text/plain", "txt"),
         };
     }
+
 
     private static List<Entry> InitExtCache()
     {

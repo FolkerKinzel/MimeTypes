@@ -1,5 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes.Intls;
 
+
 [Flags]
 internal enum TSpecialKinds
 {

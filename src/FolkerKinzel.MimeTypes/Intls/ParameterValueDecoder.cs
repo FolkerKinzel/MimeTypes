@@ -5,6 +5,10 @@ using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
+/// <summary>
+/// Helper class that supports the parsing of <see cref="MimeTypeParameter"/> objects
+/// in bringing URL encoded or masked or quoted parameter values in a readable form.
+/// </summary>
 internal static class ParameterValueDecoder
 {
     internal static bool TryDecodeValue(bool firstRun, ref ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)

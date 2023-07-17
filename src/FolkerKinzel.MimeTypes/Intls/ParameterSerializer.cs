@@ -6,10 +6,21 @@ using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
-internal static class ParameterBuilder
+/// <summary>
+/// Serializes <see cref="MimeTypeParameterModel"/> and <see cref="MimeTypeParameter"/> 
+/// objects as character sequence an appends this to a <see cref="StringBuilder"/>.
+/// </summary>
+internal static class ParameterSerializer
 {
     private const string UTF_8 = "utf-8";
-    internal static void Build(StringBuilder builder, in MimeTypeParameterModel model)
+
+    /// <summary>
+    /// Appends a RFC 2184 serialized <see cref="MimeTypeParameterModel"/>
+    /// to a <see cref="StringBuilder"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="model"></param>
+    internal static void Append(StringBuilder builder, in MimeTypeParameterModel model)
     {
         Debug.Assert(builder is not null);
 
@@ -23,14 +34,11 @@ internal static class ParameterBuilder
 
         if (starred && hasValue)
         {
-            if (TryEncodeUrl(model.Value!, out string? encoded))
-            {
-                valueSpan = encoded.AsSpan();
-            }
-            else
+            if (!UrlEncoding.TryEncode(model.Value!, out string? encoded))
             {
                 return;
             }
+            valueSpan = encoded.AsSpan();
         }
 
         TSpecialKinds tSpecialKind = starred ? TSpecialKinds.None
@@ -50,7 +58,15 @@ internal static class ParameterBuilder
     }
 
 
-    internal static StringBuilder Build(StringBuilder builder, in MimeTypeParameter parameter, bool urlEncodedValue)
+    /// <summary>
+    /// Appends a serialized <see cref="MimeTypeParameter"/> oject to a <see cref="StringBuilder"/>
+    /// and allows to choose whether the value should be URL encoded in any case.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="parameter"></param>
+    /// <param name="urlEncodedValue"></param>
+    /// <returns><paramref name="builder"/></returns>
+    internal static StringBuilder Append(this StringBuilder builder, in MimeTypeParameter parameter, bool urlEncodedValue)
     {
         ReadOnlySpan<char> valueSpan = parameter.Value;
 
@@ -78,7 +94,7 @@ internal static class ParameterBuilder
         ReadOnlySpan<char> valueSpan = parameter.Value;
         ReadOnlySpan<char> languageSpan = parameter.Language;
 
-        if (!TryEncodeUrl(valueSpan.ToString(), out string? encoded))
+        if (!UrlEncoding.TryEncode(valueSpan.ToString(), out string? encoded))
         {
             return builder;
         }
@@ -107,6 +123,7 @@ internal static class ParameterBuilder
             return neededCapacity;
         }
     }
+
 
     private static StringBuilder BuildQuoted(this StringBuilder builder, in MimeTypeParameter parameter, TSpecialKinds tSpecialKind)
     {
@@ -137,11 +154,13 @@ internal static class ParameterBuilder
         return builder.BuildKey(keySpan).AppendValueUnQuoted(valueSpan, parameter.IsValueCaseSensitive);
     }
 
+
     private static StringBuilder BuildKey(this StringBuilder builder, ReadOnlySpan<char> keySpan)
     {
         int keyStart = builder.Length;
         return builder.Append(keySpan).ToLowerInvariant(keyStart).Append('=');
     }
+
 
     private static StringBuilder AppendValueUrlEncoded(this StringBuilder builder,
                                                      bool isValueAscii,
@@ -153,6 +172,7 @@ internal static class ParameterBuilder
             ? builder.Append('*').Append('=').Append(isValueAscii ? "" : UTF_8).Append('\'').Append(languageSpan).Append('\'').AppendValueUnQuoted(valueSpan, true)
             : builder.Append('=').AppendValueUnQuoted(valueSpan, true);
     }
+
 
     private static StringBuilder AppendValueQuoted(this StringBuilder builder, ReadOnlySpan<char> valueSpan, bool isValueCaseSensitive) =>
         builder.Append('\"').AppendValueUnQuoted(valueSpan, isValueCaseSensitive).Append('\"');
@@ -199,19 +219,5 @@ internal static class ParameterBuilder
         return sb;
     }
 
-
-    [ExcludeFromCodeCoverage]
-    private static bool TryEncodeUrl(string input, [NotNullWhen(true)] out string? output)
-    {
-        try
-        {
-            output = Uri.EscapeDataString(input);
-        }
-        catch
-        {
-            output = null;
-            return false;
-        }
-        return true;
-    }
+    
 }

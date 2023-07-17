@@ -3,13 +3,12 @@ namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeTypeParameter
 {
-    private readonly ReadOnlyMemory<char> _parameterString;
-    //                                                             Indicates a '*' at the end
-    //                                                               of the key or '"' at the 
-    // Stores all indexes in one Int32:                                 start of value:
-    // | unused |  Language Length | Charset Length | Chars. Indicator | KeyValueOffs | Key Length |
-    // | 2 Bit  |      8 Bit       |      8 Bit     |      1 Bit       |    1 Bit     |    12 Bit  |
-    private readonly int _idx;
+    internal const int STRING_LENGTH = 32;
+
+    private const string CHARSET_KEY = "charset";
+    private const string ASCII_CHARSET_VALUE = "us-ascii";
+
+    internal const char SEPARATOR = '=';
 
     internal const int KEY_LENGTH_MAX_VALUE = 0xFFF;
 
@@ -24,30 +23,48 @@ public readonly partial struct MimeTypeParameter
     private const int LANGUAGE_LENGTH_SHIFT = 22;
     internal const int LANGUAGE_LENGTH_MAX_VALUE = 0xFF;
 
+
+    private readonly ReadOnlyMemory<char> _parameterString;
+
+    //                                                             Indicates a '*' at the end
+    //                                                               of the key or '"' at the 
+    // Stores all indexes in one Int32:                                 start of value:
+    // | unused |  Language Length | Charset Length | Chars. Indicator | KeyValueOffs | Key Length |
+    // | 2 Bit  |      8 Bit       |      8 Bit     |      1 Bit       |    1 Bit     |    12 Bit  |
+    private readonly int _idx;
+
+
     // The Offset for the '='-Sign is not stored:         *                                         =
     private int KeyValueOffset => ((_idx >> KEY_VALUE_OFFSET_SHIFT) & KEY_VALUE_OFFSET_MAX_VALUE) + 1;
+
     private int KeyLength => _idx & KEY_LENGTH_MAX_VALUE;
+
     private bool ContainsLanguageAndCharset => ((_idx >> CHARSET_LANGUAGE_INDICATOR_SHIFT) & 1) == 1;
 
     private int CharSetStart => KeyLength + KeyValueOffset;
+
     private int CharSetLength => (_idx >> CHARSET_LENGTH_SHIFT) & CHARSET_LENGTH_MAX_VALUE;
 
     private int LanguageStart => KeyLength + KeyValueOffset + CharSetLength + 1;
+
     private int LanguageLength => (_idx >> LANGUAGE_LENGTH_SHIFT) & LANGUAGE_LENGTH_MAX_VALUE;
 
     private int ValueStart => ContainsLanguageAndCharset
                                 ? KeyLength + KeyValueOffset + CharSetLength + LanguageLength + 2
                                 : KeyLength + KeyValueOffset;
 
+
     /// <summary>
     /// Gets the <see cref="MimeTypeParameter"/>'s key.
     /// </summary>
     public ReadOnlySpan<char> Key => _parameterString.Span.Slice(0, KeyLength);
 
+
     /// <summary>
     /// Gets the <see cref="MimeTypeParameter"/>'s value.
     /// </summary>
     public ReadOnlySpan<char> Value => _parameterString.Span.Slice(ValueStart);
+
 
     /// <summary>
     /// Gets an IETF-Language tag that indicates the language of the parameter's value.
@@ -64,6 +81,7 @@ public readonly partial struct MimeTypeParameter
         }
     }
 
+
     /// <summary>
     /// Gets the character set in which <see cref="Value"/> is encoded.
     /// </summary>
@@ -79,11 +97,13 @@ public readonly partial struct MimeTypeParameter
         }
     }
 
+
     /// <summary>
     /// Indicates whether the instance contains no data.
     /// </summary>
     /// <value><c>true</c> if the instance contains no data, otherwise false.</value>
     public bool IsEmpty => _idx == 0;
+
 
     /// <summary>
     /// Gets an empty <see cref="MimeTypeParameter"/> structure.

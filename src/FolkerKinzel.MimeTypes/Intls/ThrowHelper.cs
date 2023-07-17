@@ -2,6 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
+
 internal static class ThrowHelper
 {
     internal static void ThrowOnTokenError(TokenError error, string paraName)

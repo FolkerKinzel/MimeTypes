@@ -15,6 +15,7 @@ public readonly partial struct MimeTypeParameter : ICloneable
     /// </remarks>
     object ICloneable.Clone() => Clone();
 
+
     /// <summary>
     /// Creates a new <see cref="MimeTypeParameter"/> that is a copy of the current instance.
     /// </summary>

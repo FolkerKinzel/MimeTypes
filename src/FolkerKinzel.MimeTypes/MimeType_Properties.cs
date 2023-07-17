@@ -49,10 +49,12 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <value><c>true</c> if the instance contains no data, otherwise false.</value>
     public bool IsEmpty => _idx == 0;
 
+
     /// <summary>
     /// Gets an empty <see cref="MimeType"/> structure.
     /// </summary>
     public static MimeType Empty => default;
+
 
     /// <summary>
     /// Finds an appropriate file type extension for the <see cref="MimeType"/> instance.
@@ -65,6 +67,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </remarks>
     public string GetFileTypeExtension()
         => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeTypeFormattingOptions.None));
+
 
     /// <summary>
     /// Finds an appropriate file type extension for <paramref name="mimeTypeString"/>.
@@ -89,6 +92,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         _ = TryParse(mimeTypeString, out MimeType mimeType);
         return mimeType.GetFileTypeExtension();
     }
+
 
     /// <summary>
     /// Determines whether the <see cref="MediaType"/> of this instance equals "text".

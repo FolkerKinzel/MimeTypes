@@ -12,6 +12,7 @@ public readonly partial struct MimeTypeParameter
     public static bool operator ==(MimeTypeParameter mimeTypeParameter1, MimeTypeParameter mimeTypeParameter2)
         => mimeTypeParameter1.Equals(in mimeTypeParameter2);
 
+
     /// <summary>
     /// Returns a value that indicates whether two specified <see cref="MimeTypeParameter"/> instances are not equal.
     /// </summary>

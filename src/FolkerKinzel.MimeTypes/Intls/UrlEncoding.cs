@@ -4,8 +4,25 @@ using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
+
 internal static class UrlEncoding
 {
+    [ExcludeFromCodeCoverage]
+    internal static bool TryEncode(string input, [NotNullWhen(true)] out string? output)
+    {
+        Debug.Assert(input != null);
+        try
+        {
+            output = Uri.EscapeDataString(input);
+        }
+        catch
+        {
+            output = null;
+            return false;
+        }
+        return true;
+    }
+
     internal static bool TryDecode(string value, ReadOnlySpan<char> charSet, [NotNullWhen(true)] out string? decoded)
     {
         try

@@ -25,6 +25,7 @@ internal static class ParameterSplitter
         int counterIdx = tmp.Length;
         int counter = 1;
         _ = tmp.Append(counter);
+
         if (urlEncoded)
         {
             _ = tmp.Append('*');
@@ -43,6 +44,7 @@ internal static class ParameterSplitter
         do
         {
             int valLength = lineLength - valueStart;
+
             if (quoted)
             {
                 valLength -= 2;
