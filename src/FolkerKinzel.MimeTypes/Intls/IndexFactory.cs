@@ -20,18 +20,10 @@ internal static class IndexFactory
             string mediaType = line.Substring(0, separatorIndex1);
 
             ++separatorIndex1;
-#if NETSTANDARD2_0 || NET461
-                int start = int.Parse(line.Substring(separatorIndex1, separatorIndex2 - separatorIndex1));
-#else
-            int start = int.Parse(line.AsSpan(separatorIndex1, separatorIndex2 - separatorIndex1));
-#endif
-            ++separatorIndex2;
+            int start = _Int.Parse(line.AsSpan(separatorIndex1, separatorIndex2 - separatorIndex1));
 
-#if NETSTANDARD2_0 || NET461
-                int count = int.Parse(line.Substring(separatorIndex2));
-#else
-            int count = int.Parse(line.AsSpan(separatorIndex2));
-#endif
+            ++separatorIndex2;
+            int count = _Int.Parse(line.AsSpan(separatorIndex2));
 
             dic.TryAdd(mediaType, PackIndex(start, count));
         }

@@ -88,8 +88,6 @@ public readonly partial struct MimeType
 
         this._mimeTypeString = sb.ToString().AsMemory();
     }
-
-
  
 
     private MimeType(in ReadOnlyMemory<char> mimeTypeString, int idx)
