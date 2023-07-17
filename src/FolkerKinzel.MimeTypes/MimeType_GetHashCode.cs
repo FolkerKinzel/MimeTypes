@@ -5,7 +5,7 @@ namespace FolkerKinzel.MimeTypes;
 public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
     /// <summary>
-    /// Creates a hash code for this instance, which takes the <see cref="GetParameters"/> into account.
+    /// Creates a hash code for this instance, which takes the <see cref="Parameters"/> into account.
     /// </summary>
     /// <returns>The hash code.</returns>
     public override int GetHashCode() => GetHashCode(false);
@@ -13,9 +13,9 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
     /// <summary>
     /// Creates a hash code for this instance and allows to specify whether or not
-    /// the <see cref="GetParameters"/> are taken into account.
+    /// the <see cref="Parameters"/> are taken into account.
     /// </summary>
-    /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="GetParameters"/> into account; <c>true</c>, otherwise.</param>
+    /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account; <c>true</c>, otherwise.</param>
     /// <returns>The hash code.</returns>
     public int GetHashCode(bool ignoreParameters)
     {
@@ -38,7 +38,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
             return hash.ToHashCode();
         }
 
-        foreach (MimeTypeParameter parameter in GetParameters().Sort(IsText))
+        foreach (MimeTypeParameter parameter in Parameters().Sort(IsText))
         {
             hash.Add(parameter);
         }

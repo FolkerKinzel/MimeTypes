@@ -12,7 +12,7 @@ public enum MimeTypeFormattingOptions
     None = 0,
 
     /// <summary>
-    /// Select this option, to have the <see cref="MimeType.GetParameters"/> in the serialized <see cref="string"/>.
+    /// Select this option, to have the <see cref="MimeType.Parameters"/> in the serialized <see cref="string"/>.
     /// </summary>
     IncludeParameters = 1,
 

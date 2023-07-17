@@ -187,7 +187,7 @@ internal static class ParameterSplitter
         }
         else if (urlEncoded)
         {
-            minimumLength += 3 + parameter.Charset.Length + parameter.Language.Length; // *''
+            minimumLength += 3 + parameter.CharSet.Length + parameter.Language.Length; // *''
         }
 
         return minimumLength;

@@ -33,10 +33,11 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// Gets the parameters.
     /// </summary>
     /// <returns>The collection of parameters of the <see cref="MimeType"/>.</returns>
-    /// <remarks>Iterating through the <see cref="MimeTypeParameter"/>s can be an expensive operation
-    /// under certain circumstances. Consider to call <see cref="Enumerable.ToArray{TSource}(IEnumerable{TSource})"/>
-    /// on the return value, if you need it more than once.</remarks>
-    public IEnumerable<MimeTypeParameter> GetParameters() => 
+    /// <remarks>
+    /// <note type="tip">Iterating through the <see cref="MimeTypeParameter"/>s can be an expensive operation
+    /// in some cases. Consider to call <see cref="Enumerable.ToArray{TSource}(IEnumerable{TSource})"/>
+    /// on the return value if you need it more than once.</note></remarks>
+    public IEnumerable<MimeTypeParameter> Parameters() => 
         HasParameters
         ? ParameterParser.ParseParameters(_mimeTypeString.Slice(MediaTypeLength + SubTypeLength + 2))
         : Array.Empty<MimeTypeParameter>();

@@ -46,7 +46,7 @@ public readonly partial struct MimeType
     /// </summary>
     /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
     /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
-    /// <param name="parameters">The <see cref="MimeType.GetParameters"/> or <c>null</c>.</param>
+    /// <param name="parameters">The <see cref="MimeType.Parameters"/> or <c>null</c>.</param>
     /// <exception cref="ArgumentNullException">
     /// <paramref name="mediaType"/> or <paramref name="subType"/> is <c>null</c>.
     /// </exception>

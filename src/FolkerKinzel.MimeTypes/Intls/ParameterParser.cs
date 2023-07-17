@@ -40,7 +40,7 @@ internal static class ParameterParser
                             yield return currentParameter;
                         }
 
-                        _ = sb.Append(currentKey).Append('=').Append(parameter.Charset).Append('\'').Append(parameter.Language).Append('\'');
+                        _ = sb.Append(currentKey).Append('=').Append(parameter.CharSet).Append('\'').Append(parameter.Language).Append('\'');
                     }
 
                     // concat with the previous:

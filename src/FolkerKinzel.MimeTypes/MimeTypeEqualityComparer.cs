@@ -26,13 +26,13 @@ public abstract class MimeTypeEqualityComparer : IEqualityComparer<MimeType>
 
     /// <summary>
     /// Gets the <see cref="MimeTypeEqualityComparer"/> object (Singleton) that performs a default comparison of <see cref="MimeType"/> structs
-    /// that takes the <see cref="MimeType.GetParameters"/> into account.
+    /// that takes the <see cref="MimeType.Parameters"/> into account.
     /// </summary>
     public static MimeTypeEqualityComparer Default { get; } = new MimeTypeEqualityComparerDefault();
 
     /// <summary>
     /// Gets the <see cref="MimeTypeEqualityComparer"/> object (Singleton) that performs a comparison of <see cref="MimeType"/> structs
-    /// that ignores the <see cref="MimeType.GetParameters"/>.
+    /// that ignores the <see cref="MimeType.Parameters"/>.
     /// </summary>
     public static MimeTypeEqualityComparer IgnoreParameters { get; } = new MimeTypeEqualityComparerIgnoreParameters();
 }

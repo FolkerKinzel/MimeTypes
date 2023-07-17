@@ -9,7 +9,10 @@
 - [x] **Breaking Change:** Make `MimeTypeEqualityComparer` an abstract class that provides two singletons: `MimeTypeEqualityComparer.Default` and `MimeTypeEqualityComparer.IgnoreParameters`.
 - [x] Implement `MimeType.Parse(ReadOnlyMemory<char>)`.
 - [x] **Breaking Change:** Refactor `MimeType.TryParse(ref ReadOnlyMemory<char>, out MimeType)` to `MimeType.TryParse(ReadOnlyMemory<char>, out MimeType)` in order to make a copy of `ReadOnlyMemory<char>`.
-- [x] **Breaking Change:** Rename `MimeType.Parameters` to `MimeType.GetParameters()` and make it a method in order to show that iteratin through the parameters can be an expensive operation under certain circumstances.
+- [x] **Breaking Change:** Make `MimeType.Parameters` a method in order to show that iterating through the parameters can be an expensive operation under certain circumstances.
+- [x] **Breaking Change:** Rename `MimeTypeParameter.Charset` to `MimeTypeParameter.CharSet`.
+- [x] **Breaking Change:** Rename `MimeTypeParameter.IsCharsetParameter` to `MimeTypeParameter.IsCharSetParameter`.
+- [x] **Breaking Change:** Rename `MimeTypeParameter.IsAsciiCharsetParameter` to `MimeTypeParameter.IsAsciiCharSetParameter`.
 
 ### 1.0.0-beta.4
 - [x] Higher code coverage.

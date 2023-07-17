@@ -14,7 +14,7 @@ public class MimeTypeParameterTests
     public void CloneTest1()
     {
         Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
-        ICloneable cloneable = inetMedia.GetParameters().First();
+        ICloneable cloneable = inetMedia.Parameters().First();
         object o = cloneable.Clone();
         Assert.AreEqual(cloneable, o);
         Assert.AreEqual("charset=iso-8859-1", o.ToString());
@@ -24,7 +24,7 @@ public class MimeTypeParameterTests
     public void EqualsTest1()
     {
         Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
-        object o1 = media1.GetParameters().First();
+        object o1 = media1.Parameters().First();
         Assert.IsFalse(o1.Equals(42));
     }
 
@@ -38,7 +38,7 @@ public class MimeTypeParameterTests
 
         var mime = MimeType.Parse(longMessage);
 
-        foreach (MimeTypeParameter param in mime.GetParameters()) 
+        foreach (MimeTypeParameter param in mime.Parameters()) 
         {
             ReadOnlySpan<char> key = param.Key;
             ReadOnlySpan<char> value = param.Value;

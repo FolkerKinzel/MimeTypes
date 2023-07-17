@@ -104,7 +104,7 @@ internal static class HelperExtension
 
         foreach (MimeTypeParameter parameter in parameters)
         {
-            if (isTextMimeType && parameter.IsAsciiCharsetParameter)
+            if (isTextMimeType && parameter.IsAsciiCharSetParameter)
             {
                 continue;
             }

@@ -6,7 +6,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
     #region IEquatable
     /// <summary>
-    /// Determines whether the value of this instance is equal to the value of <paramref name="other"/>. The <see cref="GetParameters"/>
+    /// Determines whether the value of this instance is equal to the value of <paramref name="other"/>. The <see cref="Parameters"/>
     /// are taken into account.
     /// </summary>
     /// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
@@ -22,7 +22,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
 
     /// <summary>
-    /// Determines whether the value of this instance is equal to the value of <paramref name="other"/>. The <see cref="GetParameters"/>
+    /// Determines whether the value of this instance is equal to the value of <paramref name="other"/>. The <see cref="Parameters"/>
     /// are taken into account.
     /// </summary>
     /// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
@@ -41,10 +41,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
     /// <summary>
     /// Determines whether this instance is equal to <paramref name="other"/> and allows to specify
-    /// whether or not the <see cref="GetParameters"/> are taken into account.
+    /// whether or not the <see cref="Parameters"/> are taken into account.
     /// </summary>
     /// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
-    /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="GetParameters"/> into account;
+    /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account;
     /// <c>true</c>, otherwise.</param>
     /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
     /// <example>
@@ -67,13 +67,13 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         }
 
         bool isText = IsText;
-        return this.GetParameters().Sort(isText).SequenceEqual(other.GetParameters().Sort(isText));
+        return this.Parameters().Sort(isText).SequenceEqual(other.Parameters().Sort(isText));
     }
 
 
     /// <summary>
     /// Determines whether <paramref name="obj"/> is a <see cref="MimeType"/> structure whose
-    /// value is equal to that of this instance. The <see cref="GetParameters"/>
+    /// value is equal to that of this instance. The <see cref="Parameters"/>
     /// are taken into account.
     /// </summary>
     /// <param name="obj">The <see cref="object"/> to compare with.</param>

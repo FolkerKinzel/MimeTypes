@@ -29,14 +29,14 @@ public readonly partial struct MimeTypeParameter
     private int KeyLength => _idx & KEY_LENGTH_MAX_VALUE;
     private bool ContainsLanguageAndCharset => ((_idx >> CHARSET_LANGUAGE_INDICATOR_SHIFT) & 1) == 1;
 
-    private int CharsetStart => KeyLength + KeyValueOffset;
-    private int CharsetLength => (_idx >> CHARSET_LENGTH_SHIFT) & CHARSET_LENGTH_MAX_VALUE;
+    private int CharSetStart => KeyLength + KeyValueOffset;
+    private int CharSetLength => (_idx >> CHARSET_LENGTH_SHIFT) & CHARSET_LENGTH_MAX_VALUE;
 
-    private int LanguageStart => KeyLength + KeyValueOffset + CharsetLength + 1;
+    private int LanguageStart => KeyLength + KeyValueOffset + CharSetLength + 1;
     private int LanguageLength => (_idx >> LANGUAGE_LENGTH_SHIFT) & LANGUAGE_LENGTH_MAX_VALUE;
 
     private int ValueStart => ContainsLanguageAndCharset
-                                ? KeyLength + KeyValueOffset + CharsetLength + LanguageLength + 2
+                                ? KeyLength + KeyValueOffset + CharSetLength + LanguageLength + 2
                                 : KeyLength + KeyValueOffset;
 
     /// <summary>
@@ -67,15 +67,15 @@ public readonly partial struct MimeTypeParameter
     /// <summary>
     /// Gets the character set in which <see cref="Value"/> is encoded.
     /// </summary>
-    internal ReadOnlySpan<char> Charset
+    internal ReadOnlySpan<char> CharSet
     {
         get
         {
-            int charsetLength = CharsetLength;
+            int charsetLength = CharSetLength;
 
             return charsetLength == 0
                 ? ReadOnlySpan<char>.Empty
-                : _parameterString.Span.Slice(CharsetStart, charsetLength);
+                : _parameterString.Span.Slice(CharSetStart, charsetLength);
         }
     }
 
@@ -95,7 +95,7 @@ public readonly partial struct MimeTypeParameter
     /// Indicates whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "charset". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "charset"; otherwise, <c>false</c>.</value>
-    public bool IsCharsetParameter
+    public bool IsCharSetParameter
         => Key.Equals(CHARSET_KEY, StringComparison.OrdinalIgnoreCase);
 
 
@@ -111,11 +111,11 @@ public readonly partial struct MimeTypeParameter
     /// Indicates whether this instance equals "charset=us-ascii". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</value>
-    public bool IsAsciiCharsetParameter
-        => IsCharsetParameter
+    public bool IsAsciiCharSetParameter
+        => IsCharSetParameter
            && Value.Equals(ASCII_CHARSET_VALUE, StringComparison.OrdinalIgnoreCase);
 
 
-    internal bool IsValueCaseSensitive => !(IsCharsetParameter || IsAccessTypeParameter);
+    internal bool IsValueCaseSensitive => !(IsCharSetParameter || IsAccessTypeParameter);
 
 }
