@@ -21,12 +21,10 @@ internal ref struct ParameterIndexes
     public int LanguageStart;
     public int LanguageLength;
     public int ValuePartStart;
-    public bool? starred;
 
     public readonly ReadOnlySpan<char> Span;
 
     public ParameterIndexes(ReadOnlySpan<char> span) => Span = span;
-
 
     internal readonly bool Verify() => 
         VerifyKeyLength() &&
@@ -36,16 +34,13 @@ internal ref struct ParameterIndexes
 
     internal readonly bool VerifyKeyLength() => KeyLength is not (0 or > KEY_LENGTH_MAX_VALUE);
 
-    internal void InitUrlEncodedOffsets()
-    {
-        --KeyLength; // Eat the trailing '*'.
-        ++KeyValueOffset;
-        InitCharsetAndLanguage();
-    }
+
 
     /// <summary>
-    /// Indicates whether the parameter key end with '*'.
+    /// Indicates whether the parameter key ends with '*' (and is probably URL encoded).
     /// </summary>
+    /// <returns><c>true</c> if the parameter key ends with '*', otherwise false. The return value 
+    /// dependens on the state of <see cref="KeyLength"/>.</returns>
     /// <remarks>
     /// <para>
     /// A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2184)
@@ -53,44 +48,23 @@ internal ref struct ParameterIndexes
     /// If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
     /// </para>
     /// <para>
-    /// The method memorizes its first answer and returns <c>true</c> in a second call even if the trailing
-    /// '*' has been removed.
+    /// <note type="caution">
+    /// The method is stateless: Its return value depends on the conditions under which the method is called.
+    /// </note>
     /// </para>
     /// </remarks>
-    internal bool IsValueUrlEncoded()
-    {
-        starred ??= KeyLength > 0 && Span[KeyLength - 1] == '*';
-        return starred.Value;
-    }
+    internal readonly bool IsValueUrlEncoded() => KeyLength > 0 && Span[KeyLength - 1] == '*';
 
+
+    /// <summary>
+    /// Indicates whether the parameter value is enclosed with double quotes.
+    /// </summary>
+    /// <returns><c>true</c> if the parameter key is enclosed with double quotes, otherwise false.</returns>
     internal readonly bool IsValueQuoted()
     {
         int spanLastIndex = Span.Length - 1;
         return Span[spanLastIndex] == '\"' && spanLastIndex > ValuePartStart && Span[ValuePartStart] == '\"';
     }
 
-    private void InitCharsetAndLanguage()
-    {
-        bool inLanguagePart = false;
-        for (int i = ValuePartStart; i < Span.Length; i++)
-        {
-            char c = Span[i];
-
-            if (c == '\'')
-            {
-                if (!inLanguagePart)
-                {
-                    CharsetLength = i - ValuePartStart;
-                    LanguageStart = i + 1;
-                }
-                else
-                {
-                    LanguageLength = i - LanguageStart;
-                    break;
-                }
-
-                inLanguagePart = !inLanguagePart;
-            }
-        }
-    }
+    
 }

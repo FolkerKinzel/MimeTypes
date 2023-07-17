@@ -1,5 +1,6 @@
 ﻿using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
+using System;
 using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
@@ -12,7 +13,7 @@ internal static class ParameterValueDecoder
         // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
         if (idx.IsValueUrlEncoded())
         {
-            idx.InitUrlEncodedOffsets();
+            InitUrlEncodedOffsets(ref idx);
 
             if (firstRun && !TryDecodeUrl(in idx, ref parameterString))
             {
@@ -80,6 +81,39 @@ internal static class ParameterValueDecoder
                 {
                     // after the mask char one entry can be skipped:
                     _ = builder.Remove(i, 1);
+                }
+            }
+        }
+    }
+
+
+    private static void InitUrlEncodedOffsets(ref ParameterIndexes idx)
+    {
+        --idx.KeyLength; // Eat the trailing '*'.
+        ++idx.KeyValueOffset;
+        InitCharsetAndLanguage(ref idx);
+
+        static void InitCharsetAndLanguage(ref ParameterIndexes idx)
+        {
+            bool inLanguage = false;
+            for (int i = idx.ValuePartStart; i < idx.Span.Length; i++)
+            {
+                char c = idx.Span[i];
+
+                if (c == '\'')
+                {
+                    if (!inLanguage)
+                    {
+                        idx.CharsetLength = i - idx.ValuePartStart;
+                        idx.LanguageStart = i + 1;
+                    }
+                    else
+                    {
+                        idx.LanguageLength = i - idx.LanguageStart;
+                        break;
+                    }
+
+                    inLanguage = !inLanguage;
                 }
             }
         }
