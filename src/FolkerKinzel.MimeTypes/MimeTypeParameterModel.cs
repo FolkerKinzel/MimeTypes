@@ -88,19 +88,9 @@ public readonly struct MimeTypeParameterModel
             return;
         }
 
-        if (language.Length > MimeTypeParameter.LANGUAGE_LENGTH_MAX_VALUE)
+        if (!IetfLanguageTag.Validate(language))
         {
             throw new ArgumentException(string.Format(Res.InvalidIetfLanguageTag, paraName), paraName);
-        }
-
-        for (int i = 0; i < language.Length; i++)
-        {
-            char current = language[i];
-
-            if (!(char.IsLetter(current) || current == '-') || !current.IsAscii())
-            {
-                throw new ArgumentException(string.Format(Res.InvalidIetfLanguageTag, paraName), paraName);
-            }
         }
     }
 
