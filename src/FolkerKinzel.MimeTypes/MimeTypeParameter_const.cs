@@ -6,4 +6,7 @@ public readonly partial struct MimeTypeParameter
 
     private const string CHARSET_KEY = "charset";
     private const string ASCII_CHARSET_VALUE = "us-ascii";
+
+    internal const char SEPARATOR = '=';
+
 }

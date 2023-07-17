@@ -6,7 +6,7 @@ using System.Text;
 namespace FolkerKinzel.MimeTypes.Intls;
 
 [StructLayout(LayoutKind.Auto)]
-internal ref struct MimeTypeParameterSanitizer
+internal ref struct ParameterSanitizer
 {
     private const char SEPARATOR = MimeTypeParameter.SEPARATOR;
 

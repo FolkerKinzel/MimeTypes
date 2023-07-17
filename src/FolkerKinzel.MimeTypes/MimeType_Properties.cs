@@ -4,10 +4,7 @@ namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
-    private const int MEDIA_TYPE_LENGTH_MAX_VALUE = short.MaxValue;
-    private const int SUB_TYPE_LENGTH_MAX_VALUE = short.MaxValue;
-    private const int SUB_TYPE_LENGTH_SHIFT = 1;
-    private const int MEDIA_TYPE_LENGTH_SHIFT = 16;
+    
 
     private readonly ReadOnlyMemory<char> _mimeTypeString;
 

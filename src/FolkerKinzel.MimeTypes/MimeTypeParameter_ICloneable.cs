@@ -31,7 +31,7 @@ public readonly partial struct MimeTypeParameter : ICloneable
         }
 
         ReadOnlyMemory<char> memory = ToString().AsMemory();
-        _ = TryParse(true, ref memory, out MimeTypeParameter mimeTypeParameter, out bool _);
+        _ = TryParse(true, ref memory, out MimeTypeParameter mimeTypeParameter);
         return mimeTypeParameter;
     }
 

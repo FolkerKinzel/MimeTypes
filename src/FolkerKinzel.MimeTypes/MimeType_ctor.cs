@@ -1,5 +1,6 @@
 ﻿using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.MimeTypes.Properties;
+using System;
 using System.Runtime.InteropServices;
 using System.Text;
 
@@ -56,18 +57,7 @@ public readonly partial struct MimeType
     /// </exception>
     public MimeType(string mediaType, string subType, MimeTypeParameterModelDictionary? parameters = null)
     {
-        mediaType.ValidateTokenParameter(nameof(mediaType));
-        subType.ValidateTokenParameter(nameof(subType));
-
-        if (mediaType.Length > MEDIA_TYPE_LENGTH_MAX_VALUE)
-        {
-            throw new ArgumentException(Res.StringTooLong, nameof(mediaType));
-        }
-
-        if (mediaType.Length > SUB_TYPE_LENGTH_MAX_VALUE)
-        {
-            throw new ArgumentException(Res.StringTooLong, nameof(subType));
-        }
+        MimeTypeCtorParametersValidator.Validate(mediaType, subType);
 
         _idx = mediaType.Length << MEDIA_TYPE_LENGTH_SHIFT;
         _idx |= subType.Length << SUB_TYPE_LENGTH_SHIFT;
@@ -99,6 +89,8 @@ public readonly partial struct MimeType
         this._mimeTypeString = sb.ToString().AsMemory();
     }
 
+
+ 
 
     private MimeType(in ReadOnlyMemory<char> mimeTypeString, int idx)
     {
