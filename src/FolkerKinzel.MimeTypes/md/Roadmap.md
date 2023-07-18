@@ -18,6 +18,8 @@
 - [x] **Breaking Change:** Rename the parameter name `urlEncodedValue` in `MimeTypeParameter.AppendTo(...)` to `alwaysUrlEncoded`.
 - [x] **Breaking Change:** `MimeType.AppendTo(...)` returns `void` now.
 - [x] **Breaking Change:** `MimeTypeParameter.AppendTo(...)` returns `void` now.
+- [x] **Breaking Change:** `MimeCache.EnlargeCapacity()` doesn't throw `ArgumentOutOfRangeException` anymore.
+
 - [x] Implement an overload `MimeTypeParameter.ToString(bool)`;
 - [x] Make the second parameter of `MimeType.AppendTo(...)` optional.
 

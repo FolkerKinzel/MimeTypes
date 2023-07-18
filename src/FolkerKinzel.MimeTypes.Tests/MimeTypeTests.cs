@@ -113,6 +113,28 @@ public class MimeTypeTests
         Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
         MimeTypeParameter[] arr = mime.Parameters().ToArray();
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
+
+        string s = mime.ToString();
+        Assert.IsNotNull(s);
+        Assert.AreNotEqual(0, s.Length);
+    }
+
+
+    [TestMethod]
+    public void TryParseTest3()
+    {
+        string mimeString = """
+            application/x-stuff;k=val1;
+            key2*1=abc;
+            key2*2=def
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
+
+        string s = mime.ToString(MimeTypeFormattingOptions.IncludeParameters);
+        Assert.IsNotNull(s);
+        Assert.AreNotEqual(0, s.Length);
     }
 
 

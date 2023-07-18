@@ -74,7 +74,6 @@ public static class MimeCache
     /// </summary>
     /// <param name="newCapacity">The new value for <see cref="Capacity"/>. If <paramref name="newCapacity"/>
     /// is smaller than the current value of <see cref="Capacity"/>, nothing changes.</param>
-    /// <exception cref="ArgumentOutOfRangeException"><paramref name="newCapacity"/> is smaller than <see cref="DefaultCapacity"/>.</exception>
     public static void EnlargeCapacity(int newCapacity)
     {
         if (newCapacity >= DefaultCapacity)
@@ -86,10 +85,6 @@ public static class MimeCache
                     _capacity = newCapacity;
                 }
             }
-        }
-        else
-        {
-            throw new ArgumentOutOfRangeException(nameof(newCapacity));
         }
     }
 

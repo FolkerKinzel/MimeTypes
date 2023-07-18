@@ -31,7 +31,7 @@ public class ParameterModelTests
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeParameterModelTest4() => _ = new ParameterModel(new string('a', 5000), "something");
+    public void MimeTypeParameterModelTest6() => _ = new ParameterModel(new string('a', 5000), "something");
 
     [TestMethod]
     public void IsEmptyTest1() => Assert.IsTrue(new ParameterModel().IsEmpty);
