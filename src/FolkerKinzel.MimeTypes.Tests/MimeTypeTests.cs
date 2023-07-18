@@ -7,6 +7,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Runtime.InteropServices;
 using System.Text.RegularExpressions;
+using System.Diagnostics;
+using FolkerKinzel.Strings.Polyfills;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 
@@ -417,6 +419,7 @@ public class MimeTypeTests
     [TestMethod]
     public void BuildAndParseTest2()
     {
+        Debug.WriteLine('\uFFFD');
         const string mediaType = "application";
         const string subType = "x-stuff";
         const string paraKey = "key";
@@ -438,5 +441,34 @@ public class MimeTypeTests
         Assert.AreEqual(subType, mimeType2.SubType.ToString(), false);
 
         Assert.AreEqual(1, mimeType2.Parameters().Count());
+    }
+
+    [TestMethod]
+    public void ParseTest3()
+    {
+        string mimeString = """
+            application/x-stuff;
+            key1*1=123;
+            key1*2=456;
+            key2*1=abc;
+            key2*2=def
+            """;
+        var mime = MimeType.Parse(mimeString.AsMemory());
+        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        Assert.AreEqual(2, arr.Length);
+        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
+    }
+
+    [TestMethod]
+    public void TryParseTest2()
+    {
+        string mimeString = """
+            application/x-stuff;k=val1;
+            key2*1=abc;
+            key2*2=def
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
     }
 }

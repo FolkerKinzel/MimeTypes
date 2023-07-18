@@ -1,8 +1,4 @@
-﻿using FolkerKinzel.Strings;
-using System.Runtime.InteropServices;
-using System.Text;
-
-namespace FolkerKinzel.MimeTypes.Intls;
+﻿namespace FolkerKinzel.MimeTypes.Intls;
 
 internal static class ParameterRawReader
 {

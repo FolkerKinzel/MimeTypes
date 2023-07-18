@@ -31,11 +31,11 @@ internal static class ParameterParser
 
                     keySpan = keySpan.Slice(0, keySpan.Length - 1); // key*
 
-                    if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase))
+                    if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase)) // next parameter
                     {
                         currentKey = keySpan.ToString();
 
-                        if (TryParseParameter(sb, out currentParameter))
+                        if (TryParseParameter(sb, out currentParameter)) // return previous splitted parameter that might be in the StringBuilder
                         {
                             yield return currentParameter;
                         }
@@ -46,9 +46,9 @@ internal static class ParameterParser
                     // concat with the previous:
                     _ = sb.Append(parameter.Value);
                 }
-                else // got a splitted parameter
+                else // not splitted; NOTE: This MUST be a different parameter than the previous because key*1 and key must be different keys.
                 {
-                    if (TryParseParameter(sb, out currentParameter))
+                    if (TryParseParameter(sb, out currentParameter)) // return previous splitted parameter that might be in the StringBuilder
                     {
                         yield return currentParameter;
                     }
