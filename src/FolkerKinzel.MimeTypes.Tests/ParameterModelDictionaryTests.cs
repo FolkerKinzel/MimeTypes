@@ -9,13 +9,13 @@ using System.Threading.Tasks;
 namespace FolkerKinzel.MimeTypes.Tests
 {
     [TestClass()]
-    public class MimeTypeParameterDataDictionaryTests
+    public class ParameterModelDictionaryTests
     {
         [TestMethod()]
         public void MimeTypeParameterDataDictionaryTest() 
-            => _ = new MimeTypeParameterModelDictionary
+            => _ = new ParameterModelDictionary
             {
-                new MimeTypeParameterModel("charset", "iso")
+                new ParameterModel("charset", "iso")
             //dic.Add(new MimeTypeParameterModel("Charset", "bla"));
             };
     }

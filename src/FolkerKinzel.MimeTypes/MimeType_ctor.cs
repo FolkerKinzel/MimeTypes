@@ -55,7 +55,7 @@ public readonly partial struct MimeType
     /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
     /// which are not permitted by the standard (RFC 2045).
     /// </exception>
-    public MimeType(string mediaType, string subType, MimeTypeParameterModelDictionary? parameters = null)
+    public MimeType(string mediaType, string subType, ParameterModelDictionary? parameters = null)
     {
         MimeTypeCtorParametersValidator.Validate(mediaType, subType);
 
@@ -81,7 +81,7 @@ public readonly partial struct MimeType
             {
                 _ = sb.Append(';');
 
-                MimeTypeParameterModel para = parameters[i];
+                ParameterModel para = parameters[i];
                 ParameterSerializer.Append(sb, in para);
             }
         }

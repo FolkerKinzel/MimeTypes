@@ -46,7 +46,7 @@ internal static class ParameterParser
                     // concat with the previous:
                     _ = sb.Append(parameter.Value);
                 }
-                else // not splitted; NOTE: This MUST be a different parameter than the previous because key*1 and key must be different keys.
+                else // not splitted; NOTE: This MUST be a different parameter than the previous because "key*1" and "key" are different keys.
                 {
                     if (TryParseParameter(sb, out currentParameter)) // return previous splitted parameter that might be in the StringBuilder
                     {

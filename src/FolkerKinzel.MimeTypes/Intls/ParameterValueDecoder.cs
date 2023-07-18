@@ -15,7 +15,7 @@ internal static class ParameterValueDecoder
     {
         // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2184).
         // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
-        if (idx.IsValueUrlEncoded())
+        if (idx.ContainsCharSetAndLanguage())
         {
             InitUrlEncodedOffsets(ref idx);
 
@@ -38,13 +38,20 @@ internal static class ParameterValueDecoder
                 ProcessQuotedValue(ref parameterString, ref idx.KeyValueOffset);
             }
         }
+        else // might be URL encoded
+        {
+            if (firstRun && !TryDecodeUrl(in idx, ref parameterString))
+            {
+                return false;
+            }
+        }
 
         return true;
     }
 
     private static bool TryDecodeUrl(in ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)
     {
-        int valueStart = idx.LanguageStart + idx.LanguageLength + 2;
+        int valueStart = idx.GetValueStart();
         var valueSpan = idx.Span.Slice(valueStart);
 
         if (valueSpan.Contains('%'))

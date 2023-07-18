@@ -46,4 +46,11 @@ public class MimeTypeParameterTests
 
         string s = mime.ToString();
     }
+
+    [TestMethod]
+    public void TryParseTest1()
+    {
+        ReadOnlyMemory<char> mem = "key:value".AsMemory();
+        Assert.IsFalse(MimeTypeParameter.TryParse(true, ref mem, out _));
+    }
 }

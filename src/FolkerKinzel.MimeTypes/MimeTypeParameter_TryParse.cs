@@ -23,26 +23,36 @@ public readonly partial struct MimeTypeParameter
     {
         parameter = default;
 
+        ParameterIndexes idx; 
+
         if (firstRun)
         {
             var sanitizer = new ParameterSanitizer();
+            
+            if (!sanitizer.RepairParameterString(ref parameterString, out int keyLength))
+            {
+                return false;
+            }
 
-            if (!sanitizer.RepairParameterString(ref parameterString))
+            idx = new ParameterIndexes(parameterString.Span)
+            {
+                KeyLength = keyLength
+            };
+        }
+        else
+        {
+            idx = new ParameterIndexes(parameterString.Span);
+            idx.KeyLength = idx.Span.IndexOf(SEPARATOR);
+            Debug.Assert(!idx.Span.Slice(0, idx.KeyLength).ContainsWhiteSpace());
+
+            if (idx.KeyLength < 1)
             {
                 return false;
             }
         }
+        
 
-        var idx = new ParameterIndexes(parameterString.Span);
-
-        int keyValueSeparatorIndex = idx.Span.IndexOf(SEPARATOR);
-        if (keyValueSeparatorIndex < 1)
-        {
-            return false; 
-        }
-        idx.KeyLength = idx.Span.Slice(0, keyValueSeparatorIndex).GetTrimmedLength();
-        idx.ValuePartStart = keyValueSeparatorIndex + 1;
-
+        // Don't change the order of this statement: TryDecodeValue changes idx!
         if(!ParameterValueDecoder.TryDecodeValue(firstRun, ref idx, ref parameterString) || !idx.Verify())
         {
             return false;

@@ -13,63 +13,61 @@ internal ref struct ParameterSanitizer
     private ReadOnlySpan<char> _span;
     private ReadOnlyMemory<char> _parameterString;
 
-
-    internal bool RepairParameterString(ref ReadOnlyMemory<char> parameterString)
+    internal bool RepairParameterString(ref ReadOnlyMemory<char> parameterString, out int keyLength)
     {
         _parameterString = parameterString;
         _parameterString = _parameterString.Trim();
-        _span = _parameterString.Span;
-
+        keyLength = 0;
 
         if (_parameterString.Length == 0)
         {
-            goto Fail;
+            return false;
         }
 
-        int keyValueSeparatorIndex = _span.IndexOf(SEPARATOR);
+        keyLength = UpdateKeyLength();
 
-        if (keyValueSeparatorIndex < 1)
+        if (keyLength < 1)
         {
-            goto Fail;
+            return false;
         }
 
         // If the parameter contains whitespace before the 
         // value part or after the key, repair it:
-        keyValueSeparatorIndex = RemoveWhiteSpaceBetweenKeyAndValue(keyValueSeparatorIndex);
-
+        keyLength = RemoveWhiteSpaceBetweenKeyAndValue(keyLength);
 
         // Remove comment at start:
         if (_span[0].Equals('('))
         {
-            RemoveCommentAtStart();
-            keyValueSeparatorIndex = _span.IndexOf(SEPARATOR);
+            keyLength = RemoveCommentAtStart();
         }
 
-        int valueStart = keyValueSeparatorIndex + 1;
-
-        if (valueStart == 0) // '=' in the comment
+        if (keyLength < 1) // (Comment)=Value
         {
-            goto Fail;
+            return false;
         }
 
         // Remove comment at End
         // key="value(x\"x)" (Comment)
         if (_span[_span.Length - 1].Equals(')'))
         {
-            if (!RemoveCommentAtTheEnd(valueStart))
+            if (!RemoveCommentAtTheEnd(keyLength + 1))
             {
-                goto Fail;
+                return false;
             }
+            // Don't use _span after that: It's not
+            // up to date!
         }
 
         parameterString = _parameterString;
         return true;
-
-    Fail:
-        parameterString = default;
-        return false;
     }
 
+    private int UpdateKeyLength()
+    {
+        _span = _parameterString.Span;
+        int keyLength = _span.IndexOf(SEPARATOR);
+        return keyLength;
+    }
 
     private int RemoveWhiteSpaceBetweenKeyAndValue(int keyValueSeparatorIndex)
     {
@@ -84,18 +82,23 @@ internal ref struct ParameterSanitizer
                   .Append(_span.Slice(idxAfterKeyValueSeparator).TrimStart());
 
             _parameterString = sb.ToString().AsMemory();
-            _span = _parameterString.Span;
-            keyValueSeparatorIndex = _span.IndexOf(SEPARATOR);
+            keyValueSeparatorIndex = UpdateKeyLength();
         }
         return keyValueSeparatorIndex;
     }
 
 
-    private void RemoveCommentAtStart()
+    private int RemoveCommentAtStart()
     {
         int commentLength = GetCommentLengthAtStart(_span);
+
+        if(commentLength > _span.Length - 2)
+        {
+            return -1;
+        }
+
         _parameterString = _parameterString.Slice(commentLength + 1).TrimStart();
-        _span = _parameterString.Span;
+        return UpdateKeyLength();
 
         ///////////////////////////////////////////////////////////
 
@@ -121,11 +124,19 @@ internal ref struct ParameterSanitizer
     }
 
 
+    /// <summary>
+    /// Removes a comment at the end.
+    /// </summary>
+    /// <param name="valueStart"></param>
+    /// <returns><c>true</c> if success.</returns>
+    /// <remarks>
+    /// IMPORTANT: This method does not update _span!
+    /// </remarks>
     private bool RemoveCommentAtTheEnd(int valueStart)
     {
         int commentStartIndex = GetCommentStartIndexAtEnd(_span, valueStart);
 
-        if (commentStartIndex == -1)
+        if (commentStartIndex == -1) // ')' at the end of Value
         {
             return false;
         }

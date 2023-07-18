@@ -10,10 +10,10 @@ namespace FolkerKinzel.MimeTypes;
 /// structure.
 /// </summary>
 [StructLayout(LayoutKind.Auto)]
-public readonly struct MimeTypeParameterModel
+public readonly struct ParameterModel
 {
     /// <summary>
-    /// Initializes a new <see cref="MimeTypeParameterModel"/> instance.
+    /// Initializes a new <see cref="ParameterModel"/> instance.
     /// </summary>
     /// <param name="key">The name of the parameter.</param>
     /// <param name="value">The value of the parameter.</param>
@@ -43,7 +43,7 @@ public readonly struct MimeTypeParameterModel
     /// <paramref name="language"/> is neither <c>null</c> nor <see cref="string.Empty"/> nor a valid IETF-Language-Tag according to RFC-1766.
     /// </para>
     /// </exception>
-    public MimeTypeParameterModel(string key, string? value, string? language = null)
+    public ParameterModel(string key, string? value, string? language = null)
     {
         key.ValidateTokenParameter(nameof(key));
 

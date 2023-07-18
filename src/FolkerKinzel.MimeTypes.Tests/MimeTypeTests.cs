@@ -49,9 +49,9 @@ public class MimeTypeTests
     [TestMethod]
     public void MimeTypeTest7()
     {
-        var dic = new MimeTypeParameterModelDictionary()
+        var dic = new ParameterModelDictionary()
         {
-            new MimeTypeParameterModel( "para", "@" )
+            new ParameterModel( "para", "@" )
         };
 
         var mime = new MimeType("application", "was", dic);
@@ -392,13 +392,13 @@ public class MimeTypeTests
         const string mediaType = "application";
         const string subType = "x-stuff";
 
-        var dic = new MimeTypeParameterModelDictionary()
+        var dic = new ParameterModelDictionary()
         {
-            new MimeTypeParameterModel("first-parameter",
+            new ParameterModel("first-parameter",
             "This is a very long parameter, which will be wrapped according to RFC 2184." +
             Environment.NewLine +
             "It contains also a few Non-ASCII-Characters: \u00E4\u00D6\u00DF.", "en"),
-            new MimeTypeParameterModel("second-parameter", "Parameter with  \\, = and \".")
+            new ParameterModel("second-parameter", "Parameter with  \\, = and \".")
         };
 
         var mimeType1 = new MimeType(mediaType, subType, dic);

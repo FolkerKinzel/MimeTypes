@@ -12,7 +12,7 @@ namespace FolkerKinzel.MimeTypes.Intls.Tests;
 public class IetfLanguageTagTests
 {
     [TestMethod]
-    public void MyTestMethod() => Assert.IsFalse(IetfLanguageTag.Validate("   "));
+    public void ValidateTest1() => Assert.IsFalse(IetfLanguageTag.Validate("   "));
 }
 
 

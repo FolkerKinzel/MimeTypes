@@ -15,9 +15,9 @@ public class MimeTypeEqualityComparerTests
     [TestMethod()]
     public void MimeTypeEqualityComparerTest1()
     {
-        var dic = new MimeTypeParameterModelDictionary()
+        var dic = new ParameterModelDictionary()
         {
-            new MimeTypeParameterModel("para1", "the value")
+            new ParameterModel("para1", "the value")
         };
         var mime1 = new MimeType("image", "png", dic);
         var mime2 = new MimeType("image", "png");

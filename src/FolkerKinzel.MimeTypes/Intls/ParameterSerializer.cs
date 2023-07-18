@@ -1,13 +1,11 @@
 ﻿using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
-using System.Data.Common;
-using System.Reflection;
 using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
 /// <summary>
-/// Serializes <see cref="MimeTypeParameterModel"/> and <see cref="MimeTypeParameter"/> 
+/// Serializes <see cref="ParameterModel"/> and <see cref="MimeTypeParameter"/> 
 /// objects as character sequence an appends this to a <see cref="StringBuilder"/>.
 /// </summary>
 internal static class ParameterSerializer
@@ -15,12 +13,12 @@ internal static class ParameterSerializer
     private const string UTF_8 = "utf-8";
 
     /// <summary>
-    /// Appends a RFC 2184 serialized <see cref="MimeTypeParameterModel"/>
+    /// Appends a RFC 2184 serialized <see cref="ParameterModel"/>
     /// to a <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="model"></param>
-    internal static void Append(StringBuilder builder, in MimeTypeParameterModel model)
+    internal static void Append(StringBuilder builder, in ParameterModel model)
     {
         Debug.Assert(builder is not null);
 
@@ -64,14 +62,14 @@ internal static class ParameterSerializer
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="parameter"></param>
-    /// <param name="urlEncodedValue"></param>
+    /// <param name="alwaysUrlEncoded"></param>
     /// <returns><paramref name="builder"/></returns>
-    internal static StringBuilder Append(this StringBuilder builder, in MimeTypeParameter parameter, bool urlEncodedValue)
+    internal static StringBuilder Append(this StringBuilder builder, in MimeTypeParameter parameter, bool alwaysUrlEncoded)
     {
         ReadOnlySpan<char> valueSpan = parameter.Value;
 
         bool isValueAscii = valueSpan.IsAscii();
-        bool urlEncoded = urlEncodedValue || !parameter.Language.IsEmpty || !isValueAscii;
+        bool urlEncoded = alwaysUrlEncoded || !parameter.Language.IsEmpty || !isValueAscii;
 
         if (urlEncoded)
         {

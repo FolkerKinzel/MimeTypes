@@ -1,7 +1,7 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
 
-### 2.0.0
+### 2.0.0-beta.1
 - [x] .NET 7 support
 - [x] Dependency update
 - [x] Data update.
@@ -13,6 +13,11 @@
 - [x] **Breaking Change:** Rename `MimeTypeParameter.Charset` to `MimeTypeParameter.CharSet`.
 - [x] **Breaking Change:** Rename `MimeTypeParameter.IsCharsetParameter` to `MimeTypeParameter.IsCharSetParameter`.
 - [x] **Breaking Change:** Rename `MimeTypeParameter.IsAsciiCharsetParameter` to `MimeTypeParameter.IsAsciiCharSetParameter`.
+- [x] **Breaking Change:** Rename `MimeTypeParameterModel` to `ParameterModel`.
+- [x] **Breaking Change:** Rename `MimeTypeParameterModelDictionary` to `ParameterModelDictionary`.
+- [x] **Breaking Change:** Rename the parameter name `urlEncodedValue` in `MimeTypeParameter.AppendTo(...)` to `alwaysUrlEncoded`.
+- [x] Implement an overload `MimeTypeParameter.ToString(bool)`;
+
 
 ### 1.0.0-beta.4
 - [x] Higher code coverage.
