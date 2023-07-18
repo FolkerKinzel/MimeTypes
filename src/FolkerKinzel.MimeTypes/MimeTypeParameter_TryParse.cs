@@ -1,10 +1,6 @@
 ﻿using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
-using System;
-using System.Diagnostics.Contracts;
-using System.Runtime.InteropServices;
-using System.Text;
 
 namespace FolkerKinzel.MimeTypes;
 
@@ -39,48 +35,23 @@ public readonly partial struct MimeTypeParameter
                 KeyLength = keyLength
             };
         }
-        else
+        else // 2nd run: Splitted parameters have to be parsed twice
         {
             idx = new ParameterIndexes(parameterString.Span);
             idx.KeyLength = idx.Span.IndexOf(SEPARATOR);
-            Debug.Assert(!idx.Span.Slice(0, idx.KeyLength).ContainsWhiteSpace());
 
-            if (idx.KeyLength < 1)
-            {
-                return false;
-            }
+            Debug.Assert(idx.KeyLength > 0); // with KeyLength == 0 it can't be part of a splitted parameter
+            Debug.Assert(!idx.Span.Slice(0, idx.KeyLength).ContainsWhiteSpace()); // removed in the first run
         }
-        
 
         // Don't change the order of this statement: TryDecodeValue changes idx!
-        if(!ParameterValueDecoder.TryDecodeValue(firstRun, ref idx, ref parameterString) || !idx.Verify())
+        if (!ParameterValueDecoder.TryDecodeValue(firstRun, ref idx, ref parameterString) || !idx.Verify())
         {
             return false;
         }
 
-        int parameterIdx = InitParameterIdx(in idx);
-
-        parameter = new MimeTypeParameter(in parameterString, parameterIdx);
-        return true;
-
-        /////////////////////////////////////////////////////////////////////////////////////
-
-        static int InitParameterIdx(in ParameterIndexes idx)
-        {
-            int parameterIdx = idx.KeyLength;
-            parameterIdx |= idx.KeyValueOffset << KEY_VALUE_OFFSET_SHIFT;
-
-            if (idx.LanguageStart != 0)
-            {
-                parameterIdx |= 1 << CHARSET_LANGUAGE_INDICATOR_SHIFT;
-                parameterIdx |= idx.CharsetLength << CHARSET_LENGTH_SHIFT;
-                parameterIdx |= idx.LanguageLength << LANGUAGE_LENGTH_SHIFT;
-            }
-
-            return parameterIdx;
-        }
+        parameter = new MimeTypeParameter(in parameterString, idx.InitCtorIdx());
+        return true;    
     }
-
- 
 
 }

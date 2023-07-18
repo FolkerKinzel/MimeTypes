@@ -29,7 +29,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     public string ToString(MimeTypeFormattingOptions options, int lineLength = MinimumLineLength)
     {
         var sb = new StringBuilder(StringLength);
-        _ = AppendTo(sb, options, lineLength);
+        AppendTo(sb, options, lineLength);
         return sb.ToString();
     }
 
@@ -44,9 +44,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeTypeFormattingOptions.LineWrapping"/>
     /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
-    /// <returns>A reference to <paramref name="builder"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
-    public StringBuilder AppendTo(StringBuilder builder, MimeTypeFormattingOptions options, int lineLength = MinimumLineLength)
+    public void AppendTo(StringBuilder builder,
+                                  MimeTypeFormattingOptions options = MimeTypeFormattingOptions.Default,
+                                  int lineLength = MinimumLineLength)
     {
         if (builder is null)
         {
@@ -55,7 +56,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
         if (IsEmpty)
         {
-            return builder;
+            return;
         }
 
         if (--lineLength < MinimumLineLength)
@@ -80,8 +81,6 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
                 AppendUnWrappedParameters(builder, options, urlEncodedParameterValues);
             }
         }
-
-        return builder;
     }
 
 
@@ -95,7 +94,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
             {
                 _ = builder.Append(' ');
             }
-            _ = parameter.AppendTo(builder, urlEncodedParameterValues);
+            parameter.AppendTo(builder, urlEncodedParameterValues);
         }
     }
 
@@ -107,7 +106,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
         foreach (MimeTypeParameter parameter in Parameters())
         {
-            _ = parameter.AppendTo(worker.Clear(), false);
+            parameter.AppendTo(worker.Clear(), false);
 
             if (worker.Length > lineLength)
             {

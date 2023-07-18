@@ -7,10 +7,6 @@ namespace FolkerKinzel.MimeTypes.Intls;
 internal ref struct ParameterIndexes
 {
     private const int SEPARATOR_LENGTH = 1;
-    private const int KEY_LENGTH_MAX_VALUE = MimeTypeParameter.KEY_LENGTH_MAX_VALUE;
-    private const int KEY_VALUE_OFFSET_MAX_VALUE = MimeTypeParameter.KEY_VALUE_OFFSET_MAX_VALUE;
-    private const int CHARSET_LENGTH_MAX_VALUE = MimeTypeParameter.CHARSET_LENGTH_MAX_VALUE;
-    private const int LANGUAGE_LENGTH_MAX_VALUE = MimeTypeParameter.LANGUAGE_LENGTH_MAX_VALUE;
 
     internal int KeyLength;
     internal int KeyValueOffset;
@@ -31,12 +27,12 @@ internal ref struct ParameterIndexes
 
     internal readonly bool Verify() => 
         VerifyKeyLength() &&
-        KeyValueOffset <= KEY_VALUE_OFFSET_MAX_VALUE &&
-        CharsetLength <= CHARSET_LENGTH_MAX_VALUE &&
-        LanguageLength <= LANGUAGE_LENGTH_MAX_VALUE;
+        KeyValueOffset <= MimeTypeParameter.KEY_VALUE_OFFSET_MAX_VALUE &&
+        CharsetLength <= MimeTypeParameter.CHARSET_LENGTH_MAX_VALUE &&
+        LanguageLength <= MimeTypeParameter.LANGUAGE_LENGTH_MAX_VALUE;
 
 
-    internal readonly bool VerifyKeyLength() => KeyLength is not (0 or > KEY_LENGTH_MAX_VALUE);
+    internal readonly bool VerifyKeyLength() => KeyLength is not (0 or > MimeTypeParameter.KEY_LENGTH_MAX_VALUE);
 
 
     /// <summary>
@@ -77,6 +73,19 @@ internal ref struct ParameterIndexes
         return LanguageStart + LanguageLength + (LanguageStart == 0 ? 0 : 1);
     }
 
+    internal readonly int InitCtorIdx()
+    {
+        int parameterIdx = KeyLength;
+        parameterIdx |= KeyValueOffset << MimeTypeParameter.KEY_VALUE_OFFSET_SHIFT;
 
+        if (LanguageStart != 0)
+        {
+            parameterIdx |= 1 << MimeTypeParameter.CHARSET_LANGUAGE_INDICATOR_SHIFT;
+            parameterIdx |= CharsetLength << MimeTypeParameter.CHARSET_LENGTH_SHIFT;
+            parameterIdx |= LanguageLength << MimeTypeParameter.LANGUAGE_LENGTH_SHIFT;
+        }
+
+        return parameterIdx;
+    }
 
 }

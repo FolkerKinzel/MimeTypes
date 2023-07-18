@@ -73,6 +73,18 @@ public class ParameterSerializerTests
         ParameterSerializer.Append(sb, in para, false);
         StringAssert.Contains(sb.ToString(), "key*=");
     }
+
+    [TestMethod]
+    public void AppendTest7()
+    {
+        const string bla = "charset=\"BLA\\\"BLA\"";
+        ReadOnlyMemory<char> mem = bla.AsMemory();
+        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para);
+
+        var sb = new StringBuilder();
+        ParameterSerializer.Append(sb, in para, false);
+        StringAssert.Contains(sb.ToString(), bla.ToLowerInvariant());
+    }
 }
 
 

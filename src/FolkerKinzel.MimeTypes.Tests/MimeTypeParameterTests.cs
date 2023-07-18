@@ -53,4 +53,18 @@ public class MimeTypeParameterTests
         ReadOnlyMemory<char> mem = "key:value".AsMemory();
         Assert.IsFalse(MimeTypeParameter.TryParse(true, ref mem, out _));
     }
+
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void AppendToTest1() => MimeTypeParameter.Empty.AppendTo(null!);
+
+
+    [TestMethod]
+    public void AppendToTest2()
+    {
+        var sb = new StringBuilder();
+        MimeTypeParameter.Empty.AppendTo(sb);
+        Assert.AreEqual(0, sb.Length);
+    }
 }

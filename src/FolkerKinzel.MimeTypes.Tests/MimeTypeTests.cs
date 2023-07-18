@@ -68,44 +68,20 @@ public class MimeTypeTests
     [ExpectedException(typeof(ArgumentException))]
     public void ParseTest2() => _ = MimeType.Parse(" \t \r\n");
 
-
-    [TestMethod()]
-    public void ToStringTest1()
-    {
-        string result = new MimeType().ToString();
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(0, result.Length);
-    }
-
-    [TestMethod()]
-    public void ToStringTest2()
-    {
-        const string input = "text/plain";
-        Assert.IsTrue(MimeType.TryParse(input, out MimeType media));
-        string result = media.ToString();
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(input, result);
-    }
-
     [TestMethod]
-    public void ToStringTest3()
+    public void ParseTest3()
     {
-        Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
-
-        Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString());
-    }
-
-    [TestMethod]
-    public void CloneTest1()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
-        ICloneable o1 = media1;
-
-        object o2 = o1.Clone();
-
-        Assert.IsTrue(o1.Equals(o2));
+        string mimeString = """
+            application/x-stuff;
+            key1*1=123;
+            key1*2=456;
+            key2*1=abc;
+            key2*2=def
+            """;
+        var mime = MimeType.Parse(mimeString.AsMemory());
+        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        Assert.AreEqual(2, arr.Length);
+        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
     }
 
     [DataTestMethod]
@@ -124,6 +100,74 @@ public class MimeTypeTests
 
         Assert.AreEqual(parametersCount, arr.Length);
     }
+
+
+    [TestMethod]
+    public void TryParseTest2()
+    {
+        string mimeString = """
+            application/x-stuff;k=val1;
+            key2*1=abc;
+            key2*2=def
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
+    }
+
+
+    [TestMethod()]
+    public void ToStringTest1()
+    {
+        string result = new MimeType().ToString();
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(0, result.Length);
+    }
+
+
+    [TestMethod()]
+    public void ToStringTest2()
+    {
+        const string input = "text/plain";
+        Assert.IsTrue(MimeType.TryParse(input, out MimeType media));
+        string result = media.ToString();
+
+        Assert.IsNotNull(result);
+        Assert.AreEqual(input, result);
+    }
+
+
+    [TestMethod]
+    public void ToStringTest3()
+    {
+        Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
+
+        Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString());
+    }
+
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void AppendToTest1()
+    {
+        Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
+        inetMedia.AppendTo(null!);
+    }
+
+
+    [TestMethod]
+    public void CloneTest1()
+    {
+        Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
+        ICloneable o1 = media1;
+
+        object o2 = o1.Clone();
+
+        Assert.IsTrue(o1.Equals(o2));
+    }
+
+    
 
     [TestMethod]
     public void EqualsTest1()
@@ -443,32 +487,6 @@ public class MimeTypeTests
         Assert.AreEqual(1, mimeType2.Parameters().Count());
     }
 
-    [TestMethod]
-    public void ParseTest3()
-    {
-        string mimeString = """
-            application/x-stuff;
-            key1*1=123;
-            key1*2=456;
-            key2*1=abc;
-            key2*2=def
-            """;
-        var mime = MimeType.Parse(mimeString.AsMemory());
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
-        Assert.AreEqual(2, arr.Length);
-        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
-    }
+    
 
-    [TestMethod]
-    public void TryParseTest2()
-    {
-        string mimeString = """
-            application/x-stuff;k=val1;
-            key2*1=abc;
-            key2*2=def
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
-        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
-    }
 }

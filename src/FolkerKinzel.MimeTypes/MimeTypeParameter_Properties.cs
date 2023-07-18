@@ -12,15 +12,15 @@ public readonly partial struct MimeTypeParameter
 
     internal const int KEY_LENGTH_MAX_VALUE = 0xFFF;
 
-    private const int KEY_VALUE_OFFSET_SHIFT = 12;
+    internal const int KEY_VALUE_OFFSET_SHIFT = 12;
     internal const int KEY_VALUE_OFFSET_MAX_VALUE = 1;
 
-    private const int CHARSET_LANGUAGE_INDICATOR_SHIFT = 13;
+    internal const int CHARSET_LANGUAGE_INDICATOR_SHIFT = 13;
 
-    private const int CHARSET_LENGTH_SHIFT = 14;
+    internal const int CHARSET_LENGTH_SHIFT = 14;
     internal const int CHARSET_LENGTH_MAX_VALUE = 0xFF;
 
-    private const int LANGUAGE_LENGTH_SHIFT = 22;
+    internal const int LANGUAGE_LENGTH_SHIFT = 22;
     internal const int LANGUAGE_LENGTH_MAX_VALUE = 0xFF;
 
     private const int SINGLE_QUOTES_COUNT = 2;

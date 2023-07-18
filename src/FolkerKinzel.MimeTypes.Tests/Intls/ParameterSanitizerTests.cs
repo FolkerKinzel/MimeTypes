@@ -31,6 +31,15 @@ public class ParameterSanitizerTests
 
         Assert.IsFalse(sani.RepairParameterString(ref value, out _));
     }
+
+    [TestMethod]
+    public void RepairParameterStringTest4()
+    {
+        var value = "key=va\\(lue)".AsMemory();
+        var sani = new ParameterSanitizer();
+
+        Assert.IsFalse(sani.RepairParameterString(ref value, out _));
+    }
 }
 
 

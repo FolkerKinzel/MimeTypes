@@ -16,7 +16,10 @@
 - [x] **Breaking Change:** Rename `MimeTypeParameterModel` to `ParameterModel`.
 - [x] **Breaking Change:** Rename `MimeTypeParameterModelDictionary` to `ParameterModelDictionary`.
 - [x] **Breaking Change:** Rename the parameter name `urlEncodedValue` in `MimeTypeParameter.AppendTo(...)` to `alwaysUrlEncoded`.
+- [x] **Breaking Change:** `MimeType.AppendTo(...)` returns `void` now.
+- [x] **Breaking Change:** `MimeTypeParameter.AppendTo(...)` returns `void` now.
 - [x] Implement an overload `MimeTypeParameter.ToString(bool)`;
+- [x] Make the second parameter of `MimeType.AppendTo(...)` optional.
 
 
 ### 1.0.0-beta.4

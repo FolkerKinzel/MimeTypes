@@ -9,11 +9,8 @@ public readonly partial struct MimeTypeParameter
     /// Creates a <see cref="string"/> representation of the instance.
     /// </summary>
     /// <returns>A <see cref="string"/> representation of the instance.</returns>
-    public override string ToString()
-    {
-        var sb = new StringBuilder(STRING_LENGTH);
-        return AppendTo(sb).ToString();
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public override string ToString() => ToString(false);
 
 
     /// <summary>
@@ -26,7 +23,8 @@ public readonly partial struct MimeTypeParameter
     public string ToString(bool alwaysUrlEncoded)
     {
         var sb = new StringBuilder(STRING_LENGTH);
-        return AppendTo(sb, alwaysUrlEncoded).ToString();
+        AppendTo(sb, alwaysUrlEncoded);
+        return sb.ToString();
     }
 
 
@@ -38,10 +36,9 @@ public readonly partial struct MimeTypeParameter
     /// <param name="alwaysUrlEncoded">Pass <c>true</c> to URL encode the <see cref="Value"/>s if they contain forbidden characters (instead
     /// of wrapping them with double quotes and masking the forbidden characters with '\'). Without this option URL encoding is always used 
     /// when a <see cref="Language"/> is specified or when the <see cref="Value"/> contains Non-ASCII characters.</param>
-    /// <returns>A reference to <paramref name="builder"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
-    public StringBuilder AppendTo(StringBuilder builder, bool alwaysUrlEncoded = false)
+    public void AppendTo(StringBuilder builder, bool alwaysUrlEncoded = false)
     {
         if (builder is null)
         {
@@ -51,10 +48,10 @@ public readonly partial struct MimeTypeParameter
         // Standard ctor
         if (IsEmpty)
         {
-            return builder;
+            return;
         }
 
-        return builder.Append(in this, alwaysUrlEncoded);
+        _ = builder.Append(in this, alwaysUrlEncoded);
     }
 
 
