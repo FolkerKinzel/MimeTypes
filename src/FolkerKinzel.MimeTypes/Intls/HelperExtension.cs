@@ -1,10 +1,15 @@
 ﻿using FolkerKinzel.Strings;
+using System.Reflection;
 
 namespace FolkerKinzel.MimeTypes.Intls;
 
 
 internal static class HelperExtension
 {
+    internal static int DigitsCount(this int input) =>
+        input == 0 ? 1 : (int)Math.Floor(Math.Log10(input) + 1);
+
+
     internal static TSpecialKinds AnalyzeTSpecials(this ReadOnlySpan<char> span)
     {
         TSpecialKinds result = TSpecialKinds.None;

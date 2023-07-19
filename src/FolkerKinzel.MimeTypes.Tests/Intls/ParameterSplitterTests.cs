@@ -37,7 +37,6 @@ public class ParameterSplitterTests
         Assert.IsTrue(MimeType.TryParse(s, out mime));
         para = mime.Parameters().First();
         Assert.AreEqual(value, para.Value.ToString(), false);
-
     }
 }
 

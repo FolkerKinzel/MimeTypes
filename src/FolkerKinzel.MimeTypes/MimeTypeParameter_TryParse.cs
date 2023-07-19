@@ -46,7 +46,7 @@ public readonly partial struct MimeTypeParameter
         }
 
         // Splitted parameters can't be decoded. They have to be concatenated first:
-        if ((!idx.IsSplitted()) && (!ParameterValueDecoder.TryDecodeValue(in idx, ref parameterString)))
+        if (!idx.IsSplitted() && !ParameterValueDecoder.TryDecodeValue(in idx, ref parameterString))
         {
             return false;
         }

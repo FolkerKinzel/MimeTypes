@@ -124,7 +124,7 @@ internal readonly ref struct ParameterIndexes
     /// <returns><c>true</c> if the parameter key is enclosed with double quotes, otherwise false.</returns>
     internal readonly bool IsValueQuoted;
 
-    internal readonly bool IsSplitted() => KeyLength >= 2 && Span[KeyLength - 2] == '*';
+    internal readonly bool IsSplitted() => Span.Slice(0, KeyLength).IsParameterSplitted();
 
     /// <summary>
     /// Verifies the indexes.

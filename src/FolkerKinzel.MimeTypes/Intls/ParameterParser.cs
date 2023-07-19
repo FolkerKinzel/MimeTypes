@@ -25,11 +25,11 @@ internal static class ParameterParser
                 // splitted (see RFC 2184). A trailing '*', which is an indicator that
                 // language and/or charset information is present, has yet been eaten by
                 // MimeTypeParameter.TryParse
-                if (keySpan.Length >= 2 && keySpan[keySpan.Length - 2] == '*')
+                if (keySpan.IsParameterSplitted())
                 {
                     sb ??= new StringBuilder(MimeTypeParameter.STRING_LENGTH);
 
-                    keySpan = keySpan.Slice(0, keySpan.Length - 1); // key*
+                    keySpan = keySpan.Slice(0, keySpan.GetStarIndex() + 1); // key*
 
                     if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase)) // next parameter
                     {
