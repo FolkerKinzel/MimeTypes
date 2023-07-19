@@ -45,9 +45,9 @@ public class ParameterSplitterTests
     {
         string s = """
                    application/x-stuff;
-                   key*0=\"Masked \\\"1\\\"\";
-                   key*1=\"Masked \\\"2\\\"\";
-                   key*2=\"Masked \\\"3\\\"\";
+                   key*0="Masked \"1\" ";
+                   key*1="Masked \"2\" ";
+                   key*2="Masked \"3\" ";
                    """;
         Assert.IsTrue(MimeType.TryParse(s, out MimeType mime));
         var para = mime.Parameters().First();
