@@ -16,7 +16,7 @@ public static class BuildAndParseExample
             };
 
         var mimeType1 = new MimeType("application", "x-stuff", dic);
-        string s = mimeType1.ToString(MimeTypeFormattingOptions.LineWrapping | MimeTypeFormattingOptions.Default);
+        string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default);
         Console.WriteLine(s);
 
         var mimeType2 = MimeType.Parse(s);

@@ -19,6 +19,7 @@
 - [x] **Breaking Change:** `MimeType.AppendTo(...)` returns `void` now.
 - [x] **Breaking Change:** `MimeTypeParameter.AppendTo(...)` returns `void` now.
 - [x] **Breaking Change:** `MimeCache.EnlargeCapacity()` doesn't throw `ArgumentOutOfRangeException` anymore.
+- [x] **Breaking Change:** Rename `MimeTypeFormattingOptions` to `FormattingOptions`.
 
 - [x] Implement an overload `MimeTypeParameter.ToString(bool)`;
 - [x] Make the second parameter of `MimeType.AppendTo(...)` optional.

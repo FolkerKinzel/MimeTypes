@@ -132,7 +132,7 @@ public class MimeTypeTests
         MimeTypeParameter[] arr = mime.Parameters().ToArray();
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
 
-        string s = mime.ToString(MimeTypeFormattingOptions.IncludeParameters);
+        string s = mime.ToString(FormattingOptions.IncludeParameters);
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);
     }
@@ -468,7 +468,7 @@ public class MimeTypeTests
         };
 
         var mimeType1 = new MimeType(mediaType, subType, dic);
-        string s = mimeType1.ToString(MimeTypeFormattingOptions.LineWrapping | MimeTypeFormattingOptions.Default);
+        string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default);
 
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);
@@ -495,7 +495,7 @@ public class MimeTypeTests
 
 
         var mimeType1 = MimeType.Parse(mimeString);
-        string s = mimeType1.ToString(MimeTypeFormattingOptions.LineWrapping | MimeTypeFormattingOptions.Default, 10);
+        string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default, 10);
 
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);

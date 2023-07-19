@@ -26,12 +26,14 @@ internal static class ParameterValueDecoder
         }
         else if (firstRun && idx.IsValueQuoted())
         {
+            int valuePartStart = idx.ValuePartStart();
+
             // Quoted Value:
             // Span cannot end with " when Url encoded because " must be URL encoded then.
             // In the second run parameter.Value cannot be quoted anymore.
-            if (idx.Span.Slice(idx.ValuePartStart).Contains('\\')) // Masked chars
+            if (idx.Span.Slice(valuePartStart).Contains('\\')) // Masked chars
             {
-                ProcessQuotedAndMaskedValue(idx.ValuePartStart, ref parameterString);
+                ProcessQuotedAndMaskedValue(valuePartStart, ref parameterString);
             }
             else // No masked chars - tspecials only
             {
@@ -49,6 +51,7 @@ internal static class ParameterValueDecoder
         return true;
     }
 
+
     private static bool TryDecodeUrl(in ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)
     {
         int valueStart = idx.GetValueStart();
@@ -56,7 +59,7 @@ internal static class ParameterValueDecoder
 
         if (valueSpan.Contains('%'))
         {
-            var charsetSpan = idx.Span.Slice(idx.ValuePartStart, idx.CharsetLength);
+            var charsetSpan = idx.Span.Slice(idx.ValuePartStart(), idx.CharsetLength);
             if (!UrlEncoding.TryDecode(valueSpan.ToString(), charsetSpan, out string? decoded))
             {
                 return false;
@@ -68,6 +71,7 @@ internal static class ParameterValueDecoder
         }
         return true;
     }
+
 
     private static void ProcessQuotedAndMaskedValue(int valueStart, ref ReadOnlyMemory<char> parameterString)
     {
@@ -106,8 +110,9 @@ internal static class ParameterValueDecoder
 
         static void InitCharsetAndLanguage(ref ParameterIndexes idx)
         {
+            int valuePartStart = idx.ValuePartStart();
             bool inLanguage = false;
-            for (int i = idx.ValuePartStart; i < idx.Span.Length; i++)
+            for (int i = valuePartStart; i < idx.Span.Length; i++)
             {
                 char c = idx.Span[i];
 
@@ -115,7 +120,7 @@ internal static class ParameterValueDecoder
                 {
                     if (!inLanguage)
                     {
-                        idx.CharsetLength = i - idx.ValuePartStart;
+                        idx.CharsetLength = i - valuePartStart;
                         idx.LanguageStart = i + 1;
                     }
                     else

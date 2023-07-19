@@ -66,7 +66,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
     public string GetFileTypeExtension()
-        => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeTypeFormattingOptions.None));
+        => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(FormattingOptions.None));
 
 
     /// <summary>

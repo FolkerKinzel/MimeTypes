@@ -13,7 +13,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </summary>
     /// <returns>A complete <see cref="string"/> representation of the instance 
     /// (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.</returns>
-    public override string ToString() => ToString(MimeTypeFormattingOptions.Default);
+    public override string ToString() => ToString(FormattingOptions.Default);
 
 
     /// <summary>
@@ -22,11 +22,11 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </summary>
     /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
     /// <param name="lineLength">The maximum number of characters in a single line of the serialized instance
-    /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeTypeFormattingOptions.LineWrapping"/>
+    /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="FormattingOptions.LineWrapping"/>
     /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045, RFC 2046 and RFC 2184.</returns>
-    public string ToString(MimeTypeFormattingOptions options, int lineLength = MinimumLineLength)
+    public string ToString(FormattingOptions options, int lineLength = MinimumLineLength)
     {
         var sb = new StringBuilder(StringLength);
         AppendTo(sb, options, lineLength);
@@ -41,12 +41,12 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>
     /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
     /// <param name="lineLength">The maximum number of characters in a single line of the serialized instance
-    /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeTypeFormattingOptions.LineWrapping"/>
+    /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="FormattingOptions.LineWrapping"/>
     /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
     public void AppendTo(StringBuilder builder,
-                                  MimeTypeFormattingOptions options = MimeTypeFormattingOptions.Default,
+                                  FormattingOptions options = FormattingOptions.Default,
                                   int lineLength = MinimumLineLength)
     {
         if (builder is null)
@@ -68,11 +68,11 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         int insertStartIndex = builder.Length;
         _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(insertStartIndex);
 
-        if (options.HasFlag(MimeTypeFormattingOptions.IncludeParameters))
+        if (options.HasFlag(FormattingOptions.IncludeParameters))
         {
-            bool urlEncodedParameterValues = options.HasFlag(MimeTypeFormattingOptions.AlwaysUrlEncoded);
+            bool urlEncodedParameterValues = options.HasFlag(FormattingOptions.AlwaysUrlEncoded);
 
-            if (!urlEncodedParameterValues && options.HasFlag(MimeTypeFormattingOptions.LineWrapping))
+            if (!urlEncodedParameterValues && options.HasFlag(FormattingOptions.LineWrapping))
             {
                 AppendWrappedParameters(builder, options, lineLength);
             }
@@ -84,9 +84,9 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     }
 
 
-    private void AppendUnWrappedParameters(StringBuilder builder, MimeTypeFormattingOptions options, bool urlEncodedParameterValues)
+    private void AppendUnWrappedParameters(StringBuilder builder, FormattingOptions options, bool urlEncodedParameterValues)
     {
-        bool appendSpace = !urlEncodedParameterValues & options.HasFlag(MimeTypeFormattingOptions.WhiteSpaceBetweenParameters);
+        bool appendSpace = !urlEncodedParameterValues & options.HasFlag(FormattingOptions.WhiteSpaceBetweenParameters);
         foreach (MimeTypeParameter parameter in Parameters())
         {
             _ = builder.Append(';');
@@ -99,10 +99,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     }
 
 
-    private void AppendWrappedParameters(StringBuilder builder, MimeTypeFormattingOptions options, int lineLength)
+    private void AppendWrappedParameters(StringBuilder builder, FormattingOptions options, int lineLength)
     {
         var worker = new StringBuilder(lineLength);
-        bool appendSpace = options.HasFlag(MimeTypeFormattingOptions.WhiteSpaceBetweenParameters);
+        bool appendSpace = options.HasFlag(FormattingOptions.WhiteSpaceBetweenParameters);
 
         foreach (MimeTypeParameter parameter in Parameters())
         {

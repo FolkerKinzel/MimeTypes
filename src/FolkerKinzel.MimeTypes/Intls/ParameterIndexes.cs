@@ -13,8 +13,22 @@ internal ref struct ParameterIndexes
     internal int CharsetLength;
     internal int LanguageStart;
     internal int LanguageLength;
+
+    /// <summary>
+    /// Gets the index where the parameter value starts.
+    /// </summary>
+    /// <returns>The index where the parameter value starts.</returns>
+    /// <remarks>
+    /// <note type="caution">
+    /// The method is stateless: Its return value depends on the values of
+    /// <see cref="KeyLength"/> and <see cref="KeyValueOffset"/> !!!
+    /// </note>
+    /// </remarks>
+    internal readonly int ValuePartStart() => KeyLength + KeyValueOffset + SEPARATOR_LENGTH;
     //                                                                        =
-    internal readonly int ValuePartStart => KeyLength + KeyValueOffset + SEPARATOR_LENGTH;
+
+
+
     internal readonly ReadOnlySpan<char> Span;
 
 
@@ -61,8 +75,9 @@ internal ref struct ParameterIndexes
     /// <returns><c>true</c> if the parameter key is enclosed with double quotes, otherwise false.</returns>
     internal readonly bool IsValueQuoted()
     {
+        int valuePartStart = ValuePartStart();
         int spanLastIndex = Span.Length - 1;
-        return Span[spanLastIndex] == '\"' && spanLastIndex > ValuePartStart && Span[ValuePartStart] == '\"';
+        return Span[spanLastIndex] == '\"' && spanLastIndex > valuePartStart && Span[valuePartStart] == '\"';
     }
 
 

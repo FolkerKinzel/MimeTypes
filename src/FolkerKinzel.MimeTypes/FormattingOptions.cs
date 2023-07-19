@@ -4,7 +4,7 @@
 /// Options for formatting a <see cref="MimeType"/> as <see cref="string"/>. The flags can be combined.
 /// </summary>
 [Flags]
-public enum MimeTypeFormattingOptions
+public enum FormattingOptions
 {
     /// <summary>
     /// No options are selected.
