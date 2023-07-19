@@ -189,6 +189,13 @@ public class MimeTypeTests
         Assert.IsTrue(o1.Equals(o2));
     }
 
+    [TestMethod]
+    public void CloneTest2()
+    {
+        var o = (MimeType)MimeType.Empty.Clone();
+        Assert.IsTrue(o.IsEmpty);
+    }
+
     
 
     [TestMethod]
@@ -443,13 +450,21 @@ public class MimeTypeTests
     [DataRow("audio/silk", ".sil")]
     [DataRow("chemical/x-cdx", ".cdx")]
     [DataRow("workbook/formulaone", ".vts")]
-    public void GetMimeTypeTest1(string expected, string fileTypeExtension)
+    public void FromFileTypeExtensionTest1(string expected, string fileTypeExtension)
         => Assert.AreEqual(expected, MimeType.FromFileTypeExtension(fileTypeExtension).ToString());
 
     [TestMethod]
-    public void GetMimeTypeTest2()
+    public void FromFileTypeExtensionTest2()
         => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension("").ToString());
 
+    [TestMethod]
+    public void FromFileTypeExtensionTest3()
+        => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension("".AsSpan()).ToString());
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void FromFileTypeExtensionTest4()
+        => _ = MimeType.FromFileTypeExtension((string)null!);
 
     [TestMethod]
     public void BuildAndParseTest1()

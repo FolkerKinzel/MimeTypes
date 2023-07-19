@@ -5,7 +5,7 @@
 - [x] .NET 7 support
 - [x] Dependency update
 - [x] Data update.
-- [x] Higher code coverage.
+- [x] High code coverage.
 - [x] **Breaking Change:** Make `MimeTypeEqualityComparer` an abstract class that provides two singletons: `MimeTypeEqualityComparer.Default` and `MimeTypeEqualityComparer.IgnoreParameters`.
 - [x] Implement `MimeType.Parse(ReadOnlyMemory<char>)`.
 - [x] **Breaking Change:** Refactor `MimeType.TryParse(ref ReadOnlyMemory<char>, out MimeType)` to `MimeType.TryParse(ReadOnlyMemory<char>, out MimeType)` in order to make a copy of `ReadOnlyMemory<char>`.
