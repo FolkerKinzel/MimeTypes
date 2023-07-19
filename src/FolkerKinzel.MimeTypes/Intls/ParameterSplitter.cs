@@ -77,17 +77,11 @@ internal static class ParameterSplitter
             _ = tmp.Append(ParameterSerializer.UTF_8).Append('\'').Append(parameter.Language).Append('\'');
         }
 
-        int valueStart = tmp.Length - COUNTER_INITIAL_LENGTH;
-
+        int valueStart = tmp.Length;
+        int valLength;
         do
         {
-            Debug.Assert(worker.Length != 0);
-            RemoveCurrentValue(tmp, counter, valueStart);
-
-            UpdateCounterIdx(tmp, counterIdx, ref counter);
-
-            valueStart += counter.DigitsCount();
-            int valLength = lineLength - valueStart;
+            valLength = lineLength - valueStart;
 
             if (quoted)
             {
@@ -114,28 +108,36 @@ internal static class ParameterSplitter
             }
 
             yield return tmp;
-            valueStart = normalValueStart;
 
-        } while (worker.Length != 0);
+            if(worker.Length == 0)
+            {
+                yield break;
+            }
+
+            RemoveCurrentValue(tmp, counter, normalValueStart);
+            UpdateCounter(tmp, counterIdx, ref counter);
+
+            valueStart = normalValueStart + counter.DigitsCount();
+
+        } while (valLength > 5); // Security: if counter gets too large valLength could become negative
     }
 
     private static void RemoveCurrentValue(StringBuilder tmp, int counter, int valueStart)
     {
-        valueStart = valueStart + counter.DigitsCount();
+        valueStart += counter.DigitsCount();
         _ = tmp.Remove(valueStart, tmp.Length - valueStart);
     }
 
-    private static void UpdateCounterIdx(StringBuilder tmp, int counterIdx, ref int counter)
+    private static void UpdateCounter(StringBuilder tmp, int counterIdx, ref int counter)
     {
         tmp.Remove(counterIdx, counter.DigitsCount());
-        int digit = ++counter;
-
+        int i = ++counter;
         do
         {
-            tmp.Insert(counterIdx, (char)((digit % 10) + '0'));
-            digit /= 10;
+            tmp.Insert(counterIdx, (char)((i % 10) + '0'));
+            i /= 10;
         }
-        while(digit != 0);
+        while(i != 0);
     }
 
 

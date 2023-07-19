@@ -38,6 +38,27 @@ public class ParameterSplitterTests
         para = mime.Parameters().First();
         Assert.AreEqual(value, para.Value.ToString(), false);
     }
+
+
+    [TestMethod]
+    public void SplitParameterTest3()
+    {
+        string s = """
+                   application/x-stuff;
+                   key*0=\"Masked \\\"1\\\"\";
+                   key*1=\"Masked \\\"2\\\"\";
+                   key*2=\"Masked \\\"3\\\"\";
+                   """;
+        Assert.IsTrue(MimeType.TryParse(s, out MimeType mime));
+        var para = mime.Parameters().First();
+        //Assert.AreEqual(value, para.Value.ToString(), false);
+
+        s = mime.ToString(FormattingOptions.IncludeParameters | FormattingOptions.LineWrapping);
+
+        Assert.IsTrue(MimeType.TryParse(s, out mime));
+        para = mime.Parameters().First();
+        //Assert.AreEqual(value, para.Value.ToString(), false);
+    }
 }
 
 
