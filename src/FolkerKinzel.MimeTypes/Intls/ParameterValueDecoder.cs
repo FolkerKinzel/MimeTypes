@@ -11,38 +11,44 @@ namespace FolkerKinzel.MimeTypes.Intls;
 /// </summary>
 internal static class ParameterValueDecoder
 {
-    internal static bool TryDecodeValue(bool firstRun, ref ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)
+    /// <summary>
+    /// Removes characters from <paramref name="parameterString"/> that are not thought for human
+    /// reading.
+    /// </summary>
+    /// <param name="idx"></param>
+    /// <param name="parameterString">The <see cref="char"/> memory to change.</param>
+    /// <returns><c>true</c> if successful, otherwise <c>false</c>.</returns>
+    /// <remarks>
+    /// <note type="important">
+    /// This method may only be called once on <paramref name="parameterString"/> !
+    /// </note>
+    /// </remarks>
+    internal static bool TryDecodeValue(in ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)
     {
         // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2184).
         // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
-        if (idx.ContainsCharSetAndLanguage())
+        if (idx.IsStarred && !TryDecodeUrl(in idx, ref parameterString))
         {
-            InitUrlEncodedOffsets(ref idx);
-
-            if (firstRun && !TryDecodeUrl(in idx, ref parameterString))
-            {
-                return false;
-            }
+            return false;
         }
-        else if (firstRun && idx.IsValueQuoted())
+        else if (idx.IsValueQuoted)
         {
-            int valuePartStart = idx.ValuePartStart();
-
             // Quoted Value:
             // Span cannot end with " when Url encoded because " must be URL encoded then.
             // In the second run parameter.Value cannot be quoted anymore.
-            if (idx.Span.Slice(valuePartStart).Contains('\\')) // Masked chars
+            if (idx.Span.Slice(idx.ValuePartStart).Contains('\\')) // Masked chars
             {
-                ProcessQuotedAndMaskedValue(valuePartStart, ref parameterString);
+                ProcessQuotedAndMaskedValue(idx.ValuePartStart, ref parameterString);
             }
             else // No masked chars - tspecials only
             {
-                ProcessQuotedValue(ref parameterString, ref idx.KeyValueOffset);
+                // Eat the trailing Double-Quotes (the leading double quotes are eaten by PramameterIndexes:
+                parameterString = parameterString.Slice(0, parameterString.Length - 1);
             }
         }
         else // might be URL encoded
         {
-            if (firstRun && !TryDecodeUrl(in idx, ref parameterString))
+            if (!TryDecodeUrl(in idx, ref parameterString))
             {
                 return false;
             }
@@ -54,12 +60,12 @@ internal static class ParameterValueDecoder
 
     private static bool TryDecodeUrl(in ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)
     {
-        int valueStart = idx.GetValueStart();
+        int valueStart = idx.ValueStart;
         var valueSpan = idx.Span.Slice(valueStart);
 
         if (valueSpan.Contains('%'))
         {
-            var charsetSpan = idx.Span.Slice(idx.ValuePartStart(), idx.CharsetLength);
+            var charsetSpan = idx.Span.Slice(idx.ValuePartStart, idx.CharsetLength);
             if (!UrlEncoding.TryDecode(valueSpan.ToString(), charsetSpan, out string? decoded))
             {
                 return false;
@@ -76,14 +82,12 @@ internal static class ParameterValueDecoder
     private static void ProcessQuotedAndMaskedValue(int valueStart, ref ReadOnlyMemory<char> parameterString)
     {
         var builder = new StringBuilder(parameterString.Length);
+
+        // Remove the trailing double quote. The leading '"' MUST remain in
+        // the builder it is eaten by the indexes
         _ = builder.Append(parameterString).Remove(builder.Length - 1, 1);
 
-        if (valueStart < builder.Length && builder[valueStart] == '"')
-        {
-            _ = builder.Remove(valueStart, 1);
-            UnMask(builder, valueStart);
-        }
-
+        UnMask(builder, valueStart);
         parameterString = builder.ToString().AsMemory();
 
         //////////////////////////////////////////////
@@ -99,46 +103,5 @@ internal static class ParameterValueDecoder
                 }
             }
         }
-    }
-
-
-    private static void InitUrlEncodedOffsets(ref ParameterIndexes idx)
-    {
-        --idx.KeyLength; // Eat the trailing '*'.
-        ++idx.KeyValueOffset;
-        InitCharsetAndLanguage(ref idx);
-
-        static void InitCharsetAndLanguage(ref ParameterIndexes idx)
-        {
-            int valuePartStart = idx.ValuePartStart();
-            bool inLanguage = false;
-            for (int i = valuePartStart; i < idx.Span.Length; i++)
-            {
-                char c = idx.Span[i];
-
-                if (c == '\'')
-                {
-                    if (!inLanguage)
-                    {
-                        idx.CharsetLength = i - valuePartStart;
-                        idx.LanguageStart = i + 1;
-                    }
-                    else
-                    {
-                        idx.LanguageLength = i - idx.LanguageStart;
-                        break;
-                    }
-
-                    inLanguage = !inLanguage;
-                }
-            }
-        }
-    }
-
-    private static void ProcessQuotedValue(ref ReadOnlyMemory<char> parameterString, ref int keyValueOffset)
-    {
-        // Eat the Double-Quotes:
-        parameterString = parameterString.Slice(0, parameterString.Length - 1);
-        keyValueOffset++;
     }
 }

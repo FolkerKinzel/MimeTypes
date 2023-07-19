@@ -30,27 +30,28 @@ public readonly partial struct MimeTypeParameter
                 return false;
             }
 
-            idx = new ParameterIndexes(parameterString.Span)
-            {
-                KeyLength = keyLength
-            };
+            idx = new ParameterIndexes(parameterString.Span);
         }
         else // 2nd run: Splitted parameters have to be parsed twice
         {
             idx = new ParameterIndexes(parameterString.Span);
-            idx.KeyLength = idx.Span.IndexOf(SEPARATOR);
 
             Debug.Assert(idx.KeyLength > 0); // with KeyLength == 0 it can't be part of a splitted parameter
             Debug.Assert(!idx.Span.Slice(0, idx.KeyLength).ContainsWhiteSpace()); // removed in the first run
         }
 
-        // Don't change the order of this statement: TryDecodeValue changes idx!
-        if (!ParameterValueDecoder.TryDecodeValue(firstRun, ref idx, ref parameterString) || !idx.Verify())
+        if(!idx.Verify())
         {
             return false;
         }
 
-        parameter = new MimeTypeParameter(in parameterString, idx.InitCtorIdx());
+        // Splitted parameters can't be decoded. They have to be concatenated first:
+        if ((!idx.IsSplitted()) && (!ParameterValueDecoder.TryDecodeValue(in idx, ref parameterString)))
+        {
+            return false;
+        }
+
+        parameter = new MimeTypeParameter(in parameterString, idx.InitMimeTypeParameterCtorIdx());
         return true;    
     }
 

@@ -67,4 +67,20 @@ public class MimeTypeParameterTests
         MimeTypeParameter.Empty.AppendTo(sb);
         Assert.AreEqual(0, sb.Length);
     }
+
+
+    [TestMethod]
+    public void CharsetTest1()
+    {
+        string input = "key*=utf-8'de'" + Uri.EscapeDataString("äääääääääh");
+        var mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter parameter));
+        Assert.AreEqual("utf-8", parameter.CharSet.ToString());
+        Assert.AreEqual("de", parameter.Language.ToString());
+
+    }
+
+
+
+
 }

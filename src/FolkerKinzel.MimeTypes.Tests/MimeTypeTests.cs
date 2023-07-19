@@ -376,7 +376,6 @@ public class MimeTypeTests
         Assert.AreEqual(para.Value.ToString(), "Hallo Folker");
         Assert.AreEqual(para.Language.ToString(), "de");
         Assert.AreEqual(para.Key.ToString(), "para");
-
     }
 
     [TestMethod]

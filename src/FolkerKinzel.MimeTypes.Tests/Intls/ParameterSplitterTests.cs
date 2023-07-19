@@ -20,6 +20,25 @@ public class ParameterSplitterTests
             s += sb.ToString() + Environment.NewLine;
         }
     }
+
+
+    [TestMethod]
+    public void SplitParameterTest2() 
+    {
+        const string value = "äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää";
+        string s = "application/x-stuff;key*=utf-8'de'" + Uri.UnescapeDataString(value);
+        
+        Assert.IsTrue(MimeType.TryParse(s, out MimeType mime));
+        var para = mime.Parameters().First();
+        Assert.AreEqual(value, para.Value.ToString(), false);
+
+        s = mime.ToString(FormattingOptions.IncludeParameters |FormattingOptions.LineWrapping);
+
+        Assert.IsTrue(MimeType.TryParse(s, out mime));
+        para = mime.Parameters().First();
+        Assert.AreEqual(value, para.Value.ToString(), false);
+
+    }
 }
 
 

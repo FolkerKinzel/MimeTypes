@@ -10,7 +10,7 @@ namespace FolkerKinzel.MimeTypes.Intls;
 /// </summary>
 internal static class ParameterSerializer
 {
-    private const string UTF_8 = "utf-8";
+    internal const string UTF_8 = "utf-8";
 
     /// <summary>
     /// Appends a RFC 2184 serialized <see cref="ParameterModel"/>
