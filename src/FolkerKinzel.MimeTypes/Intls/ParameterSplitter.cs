@@ -8,6 +8,7 @@ internal static class ParameterSplitter
 {
     internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameter parameter, StringBuilder worker, int lineLength)
     {
+        Debug.Assert(worker.Length > 0);
         bool quoted = worker[worker.Length - 1] == '"';
         bool urlEncoded = !quoted && worker.Contains('%');
 
@@ -165,18 +166,18 @@ internal static class ParameterSplitter
 
     private static void PrepareWorker(StringBuilder worker, bool quoted, bool urlEncoded)
     {
-        int keyLength = worker.IndexOf('=') + 1;
+        int startOfValue = worker.IndexOf('=') + 1;
         if (quoted)
         {
-            keyLength++; // ="
+            startOfValue++; // ="
             _ = worker.Remove(worker.Length - 1, 1);
         }
         else if (urlEncoded)
         {
-            keyLength = worker.IndexOf('\'', keyLength);
-            keyLength = worker.IndexOf('\'', keyLength + 1);
+            startOfValue = worker.IndexOf('\'', startOfValue);
+            startOfValue = worker.IndexOf('\'', startOfValue + 1) + 1;
         }
-        _ = worker.Remove(0, keyLength + 1);
+        _ = worker.Remove(0, startOfValue);
     }
 
     private static int ComputeMinimumLength(MimeTypeParameter parameter, bool quoted, bool urlEncoded)
