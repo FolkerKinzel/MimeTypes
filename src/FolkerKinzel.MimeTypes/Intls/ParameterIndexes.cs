@@ -16,7 +16,6 @@ internal readonly ref struct ParameterIndexes
     /// ctor
     /// </summary>
     /// <param name="span"></param>
-    /// <param name="keyLength"></param>
     internal ParameterIndexes(ReadOnlySpan<char> span)
     {
         Span = span;
@@ -85,7 +84,6 @@ internal readonly ref struct ParameterIndexes
     /// Gets the length of the CharSet part.
     /// </summary>
     /// <returns>The length of the CharSet part.</returns>
-    /// <remarks>
     internal readonly int CharsetLength;
 
     /// <summary>

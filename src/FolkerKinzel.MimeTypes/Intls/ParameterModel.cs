@@ -43,10 +43,7 @@ internal class ParameterModel
     /// </exception>
     internal ParameterModel(string key, string? value, string? language = null)
     {
-        if(key is null)
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
+        
 
         key.ValidateTokenParameter(nameof(key));
 

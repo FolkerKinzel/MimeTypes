@@ -13,6 +13,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </summary>
     /// <returns>A complete <see cref="string"/> representation of the instance 
     /// (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.</returns>
+    /// <example>
+    /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
+    /// </example>
     public override string ToString() => ToString(FormattingOptions.Default);
 
 
@@ -26,6 +30,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045, RFC 2046 and RFC 2184.</returns>
+    /// <example>
+    /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
+    /// </example>
     public string ToString(FormattingOptions options, int lineLength = MinimumLineLength)
     {
         var sb = new StringBuilder(StringLength);

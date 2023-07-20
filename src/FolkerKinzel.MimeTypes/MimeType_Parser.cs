@@ -15,6 +15,12 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <returns>The <see cref="MimeType"/> instance, which <paramref name="value"/> represents.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
+    /// <example>
+    /// <para>
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     public static MimeType Parse(string value)
     {
         if (value is null)
@@ -33,6 +39,8 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse.</param>
     /// <returns>The <see cref="MimeType"/> instance, which <paramref name="value"/> represents.</returns>
     /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
+    /// <seealso cref="Parse(string)"/>
+    /// <seealso cref="TryParse(ReadOnlyMemory{char}, out MimeType)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeType Parse(ReadOnlyMemory<char> value) =>
         ParseInternal(ref value);

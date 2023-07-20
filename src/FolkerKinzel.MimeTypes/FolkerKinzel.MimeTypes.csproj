@@ -1,101 +1,101 @@
 <Project Sdk="Microsoft.NET.Sdk">
-	<PropertyGroup>
-		<TargetFrameworks>net7.0;net6.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
-		<NeutralLanguage>en</NeutralLanguage>
-		<LangVersion>11.0</LangVersion>
-		<Nullable>enable</Nullable>
-		<ImplicitUsings>enable</ImplicitUsings>
-		<Authors>Folker Kinzel</Authors>
-		<Copyright>Copyright © 2021 Folker Kinzel</Copyright>
-		<PackageLicenseExpression>MIT</PackageLicenseExpression>
-		<PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
-		<PackageIcon>Logo.png</PackageIcon>
-		<PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
-		<PackageVersion>2.0.0-beta.1</PackageVersion>
-		<FileVersion>2.0.0.0</FileVersion>
-		<AssemblyVersion>2.0.0.0</AssemblyVersion>
-		<Description>.NET library that supports the work with Internet Media Types ("MIME Types").</Description>
-		<PackageTags>MIME Media C# .NET</PackageTags>
-		<PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v1.0.0</PackageReleaseNotes>
-		<PackageIconUrl />
-		<PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>
-		<RepositoryUrl>https://github.com/FolkerKinzel/MimeTypes.git</RepositoryUrl>
-		<RepositoryType>git</RepositoryType>
-	</PropertyGroup>
-	<PropertyGroup>
-		<!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
-		<PublishRepositoryUrl>true</PublishRepositoryUrl>
-		<!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
-		<EmbedUntrackedSources>true</EmbedUntrackedSources>
-		<IncludeSymbols>true</IncludeSymbols>
-		<SymbolPackageFormat>snupkg</SymbolPackageFormat>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(Configuration)'=='Release'">
-		<GenerateDocumentationFile>true</GenerateDocumentationFile>
-		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
-	</PropertyGroup>
-	<PropertyGroup Condition="'$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0'">
-		<NoWarn>$(NoWarn);8600;8601;8602;8603;8604</NoWarn>
-	</PropertyGroup>
-	<ItemGroup>
-		<Using Remove="System.Net.Http" />
-		<Using Include="System.Runtime.CompilerServices" />
-		<Using Include="System.Diagnostics.CodeAnalysis" />
-		<Using Include="System.Diagnostics" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Remove="Intls\UnitTestGenerator.cs" />
-	</ItemGroup>
-	<ItemGroup>
-		<None Remove="Resources\Extension.csv" />
-		<None Remove="Resources\Mime.csv" />
-		<None Remove="Resources\MimeIdx.csv" />
-		<None Include="..\..\..\..\Nuget-Logo\Logo.png">
-			<Pack>True</Pack>
-			<PackagePath></PackagePath>
-		</None>
-		<None Include="md\NugetReadme.md">
-			<Pack>True</Pack>
-			<PackagePath>\</PackagePath>
-		</None>
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Include="Resources\Extension.csv" />
-		<EmbeddedResource Include="Resources\Mime.csv" />
-		<EmbeddedResource Include="Resources\MimeIdx.csv" />
-	</ItemGroup>
-	<ItemGroup>
-		<PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="Nullable" Version="1.3.1">
-			<PrivateAssets>all</PrivateAssets>
-			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-		</PackageReference>
-		<PackageReference Include="FolkerKinzel.Strings" Version="5.2.0" />
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'net461'">
-		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-		<PackageReference Include="System.ValueTuple" Version="4.5.0" />
-	</ItemGroup>
-	<ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
-		<PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
-	</ItemGroup>
-	<ItemGroup>
-		<Compile Update="Properties\Res.Designer.cs">
-			<DesignTime>True</DesignTime>
-			<AutoGen>True</AutoGen>
-			<DependentUpon>Res.resx</DependentUpon>
-		</Compile>
-	</ItemGroup>
-	<ItemGroup>
-		<EmbeddedResource Update="Properties\Res.resx">
-			<Generator>ResXFileCodeGenerator</Generator>
-			<LastGenOutput>Res.Designer.cs</LastGenOutput>
-		</EmbeddedResource>
-	</ItemGroup>
-	<Target Name="PostBuild" AfterTargets="PostBuildEvent">
-		<Exec Command="if $(ConfigurationName) == Release if '$(TargetFramework)' == 'netstandard2.1' dotnet $(SolutionDir)IncVersion\IncVersion.dll $(ProjectDir)$(ProjectFileName) --revision" />
-	</Target>
+  <PropertyGroup>
+    <TargetFrameworks>net7.0;net6.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+    <NeutralLanguage>en</NeutralLanguage>
+    <LangVersion>11.0</LangVersion>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Authors>Folker Kinzel</Authors>
+    <Copyright>Copyright © 2021 Folker Kinzel</Copyright>
+    <PackageLicenseExpression>MIT</PackageLicenseExpression>
+    <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
+    <PackageIcon>Logo.png</PackageIcon>
+    <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
+    <PackageVersion>2.0.0-beta.1</PackageVersion>
+    <FileVersion>2.0.0.4</FileVersion>
+    <AssemblyVersion>2.0.0.0</AssemblyVersion>
+    <Description>.NET library that supports the work with Internet Media Types ("MIME Types").</Description>
+    <PackageTags>MIME Media C# .NET</PackageTags>
+    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v1.0.0</PackageReleaseNotes>
+    <PackageIconUrl />
+    <PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/FolkerKinzel/MimeTypes.git</RepositoryUrl>
+    <RepositoryType>git</RepositoryType>
+  </PropertyGroup>
+  <PropertyGroup>
+    <!-- Optional: Publish the repository URL in the built .nupkg (in the NuSpec <Repository> element) -->
+    <PublishRepositoryUrl>true</PublishRepositoryUrl>
+    <!-- Optional: Embed source files that are not tracked by the source control manager in the PDB -->
+    <EmbedUntrackedSources>true</EmbedUntrackedSources>
+    <IncludeSymbols>true</IncludeSymbols>
+    <SymbolPackageFormat>snupkg</SymbolPackageFormat>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)'=='Release'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0'">
+    <NoWarn>$(NoWarn);8600;8601;8602;8603;8604</NoWarn>
+  </PropertyGroup>
+  <ItemGroup>
+    <Using Remove="System.Net.Http" />
+    <Using Include="System.Runtime.CompilerServices" />
+    <Using Include="System.Diagnostics.CodeAnalysis" />
+    <Using Include="System.Diagnostics" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Remove="Intls\UnitTestGenerator.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Remove="Resources\Extension.csv" />
+    <None Remove="Resources\Mime.csv" />
+    <None Remove="Resources\MimeIdx.csv" />
+    <None Include="..\..\..\..\Nuget-Logo\Logo.png">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
+    <None Include="md\NugetReadme.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="Resources\Extension.csv" />
+    <EmbeddedResource Include="Resources\Mime.csv" />
+    <EmbeddedResource Include="Resources\MimeIdx.csv" />
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="1.1.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="Nullable" Version="1.3.1">
+      <PrivateAssets>all</PrivateAssets>
+      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+    </PackageReference>
+    <PackageReference Include="FolkerKinzel.Strings" Version="5.2.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.5.0" />
+  </ItemGroup>
+  <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
+    <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Update="Properties\Res.Designer.cs">
+      <DesignTime>True</DesignTime>
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Res.resx</DependentUpon>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Update="Properties\Res.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Res.Designer.cs</LastGenOutput>
+    </EmbeddedResource>
+  </ItemGroup>
+  <Target Name="PostBuild" AfterTargets="PostBuildEvent">
+    <Exec Command="if $(ConfigurationName) == Release if '$(TargetFramework)' == 'netstandard2.1' dotnet $(SolutionDir)IncVersion\IncVersion.dll $(ProjectDir)$(ProjectFileName) --revision" />
+  </Target>
 </Project>

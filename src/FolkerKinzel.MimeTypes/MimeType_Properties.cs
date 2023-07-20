@@ -37,6 +37,12 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <note type="tip">Iterating through the <see cref="MimeTypeParameter"/>s can be an expensive operation
     /// in some cases. Consider to call <see cref="Enumerable.ToArray{TSource}(IEnumerable{TSource})"/>
     /// on the return value if you need it more than once.</note></remarks>
+    /// <example>
+    /// <para>
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     public IEnumerable<MimeTypeParameter> Parameters() => 
         HasParameters
         ? ParameterParser.ParseParameters(_mimeTypeString.Slice(MediaTypeLength + SubTypeLength + 2))
@@ -65,6 +71,12 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
+    /// <example>
+    /// <para>
+    /// Get a <see cref="MimeType"/> instance from a file type extension and vice versa:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
+    /// </example>
     public string GetFileTypeExtension()
         => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(FormattingOptions.None));
 

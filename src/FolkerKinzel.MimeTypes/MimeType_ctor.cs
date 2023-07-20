@@ -25,14 +25,15 @@ namespace FolkerKinzel.MimeTypes;
 /// </remarks>
 /// <example>
 /// <para>
-/// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
-/// from <see cref="MimeType"/> instances:
+/// Get a <see cref="MimeType"/> instance from a file type extension and vice versa:
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
 /// <para>
-/// Building and parsing <see cref="MimeType"/> instances:
+/// Build, serialize, and parse a <see cref="MimeType"/> instance:
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+/// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
 /// <para>
 /// Comparing <see cref="MimeType"/> instances for equality:
 /// </para>
@@ -57,7 +58,6 @@ public readonly partial struct MimeType
     {
         Debug.Assert(mediaType != null);
         Debug.Assert(subType != null);
-        MimeTypeCtorParametersValidator.Validate(mediaType, subType);
 
         _idx = mediaType.Length << MEDIA_TYPE_LENGTH_SHIFT;
         _idx |= subType.Length << SUB_TYPE_LENGTH_SHIFT;

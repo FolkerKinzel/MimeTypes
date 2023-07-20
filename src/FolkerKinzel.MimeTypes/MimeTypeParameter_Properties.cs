@@ -60,18 +60,36 @@ public readonly partial struct MimeTypeParameter
     /// <summary>
     /// Gets the <see cref="MimeTypeParameter"/>'s key.
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     public ReadOnlySpan<char> Key => _parameterString.Span.Slice(0, KeyLength);
 
 
     /// <summary>
     /// Gets the <see cref="MimeTypeParameter"/>'s value.
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     public ReadOnlySpan<char> Value => _parameterString.Span.Slice(ValueStart);
 
 
     /// <summary>
     /// Gets an IETF-Language tag that indicates the language of the parameter's value.
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     public ReadOnlySpan<char> Language
     {
         get

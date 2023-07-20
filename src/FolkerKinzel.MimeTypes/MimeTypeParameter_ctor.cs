@@ -19,6 +19,14 @@ namespace FolkerKinzel.MimeTypes;
 /// </para>
 /// </note>
 /// </remarks>
+/// <example>
+/// <para>
+/// Build, serialize, and parse a <see cref="MimeType"/> instance:
+/// </para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+/// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
+/// </example>
 [StructLayout(LayoutKind.Auto)]
 public readonly partial struct MimeTypeParameter
 {

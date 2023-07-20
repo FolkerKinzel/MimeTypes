@@ -11,6 +11,7 @@ internal static class MimeTypeCtorParametersValidator
     /// <summary>Validates <paramref name="mediaType"/> and <paramref name="subType"/>.</summary>
     /// <param name="mediaType"></param>
     /// <param name="subType"></param>
+    /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> or <paramref name="subType"/> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException">
     /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
     /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
@@ -18,9 +19,6 @@ internal static class MimeTypeCtorParametersValidator
     /// </exception>
     internal static void Validate(string mediaType, string subType)
     {
-        Debug.Assert(mediaType != null);
-        Debug.Assert(subType != null);
-
         mediaType.ValidateTokenParameter(nameof(mediaType));
         subType.ValidateTokenParameter(nameof(subType));
         ThrowOnTooLongMediaType(mediaType);

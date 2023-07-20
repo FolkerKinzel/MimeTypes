@@ -17,6 +17,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </summary>
     /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account; <c>true</c>, otherwise.</param>
     /// <returns>The hash code.</returns>
+    /// <seealso cref="MimeTypeParameter"/>
     public int GetHashCode(bool ignoreParameters)
     {
         var hash = new HashCode();

@@ -11,6 +11,16 @@ using static System.Net.Mime.MediaTypeNames;
 
 namespace FolkerKinzel.MimeTypes;
 
+/// <summary>
+/// Fluent API to create <see cref="MimeType"/> instances.
+/// </summary>
+/// <example>
+/// <para>
+/// Build, serialize, and parse a <see cref="MimeType"/> instance:
+/// </para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+/// </example>
+/// <seealso cref="MimeType"/>
 public class MimeTypeBuilder
 {
     private ParameterModelDictionary? _dic;
@@ -24,11 +34,18 @@ public class MimeTypeBuilder
     /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
     /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> 
     /// or <paramref name="subType"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
+    /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
+    /// which are not permitted by the standard (RFC 2045).
+    /// </exception>
     private MimeTypeBuilder(string mediaType, string subType)
     {
         _mediaType = mediaType ?? throw new ArgumentNullException(nameof(mediaType));
         _subType = subType ?? throw new ArgumentNullException(nameof(subType));
+        MimeTypeCtorParametersValidator.Validate(mediaType, subType);
     }
+
 
     /// <summary>
     /// Creates a new <see cref="MimeTypeBuilder"/> object.
@@ -39,7 +56,20 @@ public class MimeTypeBuilder
     /// 
     /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> 
     /// or <paramref name="subType"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
+    /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
+    /// which are not permitted by the standard (RFC 2045).
+    /// </exception>
+    /// <example>
+    /// <para>
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
+    /// <seealso cref="MimeType"/>
     public static MimeTypeBuilder Create(string mediaType, string subType) => new MimeTypeBuilder(mediaType, subType);
+
 
     /// <summary>
     /// Adds a <see cref="MimeTypeParameter"/> to the <see cref="MimeType"/> instance to create.
@@ -79,6 +109,13 @@ public class MimeTypeBuilder
     /// <paramref name="language"/> is neither <c>null</c> nor <see cref="string.Empty"/> nor a valid IETF-Language-Tag according to RFC-1766.
     /// </para>
     /// </exception>
+    /// <example>
+    /// <para>
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
+    /// <seealso cref="MimeTypeParameter"/>
     public MimeTypeBuilder AppendParameter(string key, string? value, string? language = null)
     {
         _dic ??= new ParameterModelDictionary();
@@ -94,6 +131,7 @@ public class MimeTypeBuilder
     /// Removes all <see cref="MimeTypeParameter"/>s.
     /// </summary>
     /// <returns>A reference to the <see cref="MimeTypeBuilder"/> instance on which the method was called.</returns>
+    /// <seealso cref="MimeTypeParameter"/>
     public MimeTypeBuilder ClearParameters()
     {
         _dic?.Clear();
@@ -104,18 +142,12 @@ public class MimeTypeBuilder
     /// Builds the <see cref="MimeType"/>.
     /// </summary>
     /// <returns>The new <see cref="MimeType"/> instance.</returns>
-    /// <exception cref="ArgumentException">
-    /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
-    /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
-    /// which are not permitted by the standard (RFC 2045).
-    /// </exception>
+    /// <example>
+    /// <para>
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
+    /// <seealso cref="MimeType"/>
     public MimeType Build() => new MimeType(_mediaType, _subType, _dic);
-
-
-    ///// <summary>
-    ///// Indicates whether the struct contains data.
-    ///// </summary>
-    ///// <value><c>true</c> if the struct contains data, otherwise <c>false</c>.</value>
-    //public bool IsEmpty => _mediaType is null;
-
 }
