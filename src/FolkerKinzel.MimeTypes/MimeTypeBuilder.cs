@@ -20,15 +20,26 @@ public class MimeTypeBuilder
     /// <summary>
     /// Initializes a new <see cref="MimeTypeBuilder"/> object.
     /// </summary>
-    /// <param name="mediaType"></param>
-    /// <param name="subType"></param>
+    /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
+    /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
     /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> 
     /// or <paramref name="subType"/> is <c>null</c>.</exception>
-    public MimeTypeBuilder(string mediaType, string subType)
+    private MimeTypeBuilder(string mediaType, string subType)
     {
         _mediaType = mediaType ?? throw new ArgumentNullException(nameof(mediaType));
         _subType = subType ?? throw new ArgumentNullException(nameof(subType));
     }
+
+    /// <summary>
+    /// Creates a new <see cref="MimeTypeBuilder"/> object.
+    /// </summary>
+    /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
+    /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
+    /// <returns>A reference to the <see cref="MimeTypeBuilder"/> that is created.</returns>
+    /// 
+    /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> 
+    /// or <paramref name="subType"/> is <c>null</c>.</exception>
+    public static MimeTypeBuilder Create(string mediaType, string subType) => new MimeTypeBuilder(mediaType, subType);
 
     /// <summary>
     /// Adds a <see cref="MimeTypeParameter"/> to the <see cref="MimeType"/> instance to create.
@@ -36,6 +47,8 @@ public class MimeTypeBuilder
     /// <param name="key">The name of the parameter.</param>
     /// <param name="value">The value of the parameter.</param>
     /// <param name="language">An IETF-Language tag that indicates the language of the parameter's value.</param>
+    /// <returns>A reference to the <see cref="MimeTypeBuilder"/> instance on which the method was called.</returns>
+    /// 
     /// <remarks>
     /// The <paramref name="key"/> of a parameter must be unique inside of a <see cref="MimeType"/>. It's compared 
     /// case insensitive. If this method is called several times with equal keys, the last wins.
@@ -66,8 +79,7 @@ public class MimeTypeBuilder
     /// <paramref name="language"/> is neither <c>null</c> nor <see cref="string.Empty"/> nor a valid IETF-Language-Tag according to RFC-1766.
     /// </para>
     /// </exception>
-    /// <returns>A reference to the <see cref="MimeTypeBuilder"/> instance on which the method was called.</returns>
-    public MimeTypeBuilder AddParameter(string key, string? value, string? language = null)
+    public MimeTypeBuilder AppendParameter(string key, string? value, string? language = null)
     {
         _dic ??= new ParameterModelDictionary();
         var model = new ParameterModel(key, value, language);
@@ -92,6 +104,11 @@ public class MimeTypeBuilder
     /// Builds the <see cref="MimeType"/>.
     /// </summary>
     /// <returns>The new <see cref="MimeType"/> instance.</returns>
+    /// <exception cref="ArgumentException">
+    /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
+    /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
+    /// which are not permitted by the standard (RFC 2045).
+    /// </exception>
     public MimeType Build() => new MimeType(_mediaType, _subType, _dic);
 
 

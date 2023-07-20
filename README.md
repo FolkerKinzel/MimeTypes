@@ -3,25 +3,31 @@
 [![GitHub](https://img.shields.io/github/license/FolkerKinzel/MimeTypes)](https://github.com/FolkerKinzel/MimeTypes/blob/master/LICENSE)
 
 #### .NET library that supports the work with Internet Media Types ("MIME Types").
+[Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v2.0.0-beta.1)
 
 The library contains:
-* `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according 
-to RFC 2045, RFC 2046 and RFC 2184. The struct can be created automatically from a file type 
-extension or parsed from a `String` or a `ReadOnlyMemory<Char>`. It is 
-able to find an appropriate file type extension for its content. (Have a look at
- [MimeResourceCompiler](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/MimeResourceCompiler/Program.cs) that is part of the repository to
-have a detailed explanation where the data comes from and how it is compiled.)
+The library contains:
+- `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2184. The struct can be created automatically from a file type extension or parsed from a Internet Media Type `String` or `ReadOnlyMemory<Char>`.
+- The `MimeType` struct is able 
+  - to retrieve an appropriate file type extension for its content automatically,
+  - to convert its content as an Internet Media Type string according to the standards,
+  - to compare its content with other Internet Media Types for equality.
+- The class `MimeTypeBuilder` offers a fluent API to build `MimeType` instances from scratch.
+- The `FormattingOptions` enum allow a featured string serialization.
 
-The library makes extensive use of ReadOnlySpan&lt;Char&gt; and ReadOnlyMemory&lt;Char&gt; to build and examine the 
-content of MIME types without having to allocate a lot of temporary Strings. A strong validation is built in for 
-security reasons.
-
-Read the [Project Reference](https://github.com/FolkerKinzel/MimeTypes/blob/master/ProjectReference/1.0.0-beta.3/FolkerKinzel.MimeTypes.Reference.en.chm) for details.
+The library is designed to support performance and small heap allocation. 
+(Have a look at [MimeResourceCompiler](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/MimeResourceCompiler/Program.cs) 
+that is part of the repository to
+have a detailed explanation where the data of the file type extensions comes from and how it is compiled.)
 
 
 ### Examples
-Getting `MimeType` instances by parsing file type extensions and getting appropriate file type extensions
-from `MimeType` instances:
+1. [Get a `MimeType` instance from a file type extensions and vice versa](#example1)
+2. [Build, Serialize, and Parse a `MimeType` instance](#example2)
+3. [Format a `MimeType` instance into a standards-compliant string using several options](#example3)
+4. [Compare `MimeType` instances](#example4)
+
+#### <a name="example1">1.</a> Get a `MimeType` instance from a file type extensions and vice versa:
 ```csharp
 using FolkerKinzel.MimeTypes;
 
@@ -51,8 +57,14 @@ The file type extension for this MIME type is: .odt
 ```
 .
 
-Building and parsing `MimeType` instances:
+#### <a name="example2">2.</a> Build, Serialize, and Parse a `MimeType` instance:
 ```csharp
+using FolkerKinzel.MimeTypes;
+
+namespace Examples;
+
+public static class BuildAndParseExample
+{
 using FolkerKinzel.MimeTypes;
 
 namespace Examples;
@@ -61,17 +73,18 @@ public static class BuildAndParseExample
 {
     public static void Example()
     {
-        var dic = new MimeTypeParameterModelDictionary()
-            {
-                new MimeTypeParameterModel("first-parameter",
-                "This is a very long parameter, which will be wrapped according to RFC 2184." +
-                Environment.NewLine +
-                "It contains also a few Non-ASCII-Characters: \u00E4\u00D6\u00DF.", "en"),
-                new MimeTypeParameterModel("second-parameter", "Parameter with  \\, = and \".")
-            };
+        const string longParameterValue = """
+        This is a very long parameter, which will be wrapped according to RFC 2184.
+        It contains also a few Non-ASCII-Characters: ‰ˆﬂ.
+        """;
 
-        var mimeType1 = new MimeType("application", "x-stuff", dic);
-        string s = mimeType1.ToString(MimeTypeFormattingOptions.LineWrapping | MimeTypeFormattingOptions.Default);
+        MimeType mimeType1 = 
+            MimeTypeBuilder.Create("application", "x-stuff")
+                           .AppendParameter("first-parameter", longParameterValue, "en")
+                           .AppendParameter("second-parameter", "Parameter with  \\, = and \".")
+                           .Build();
+
+        string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default);
         Console.WriteLine(s);
 
         var mimeType2 = MimeType.Parse(s);
@@ -81,14 +94,15 @@ public static class BuildAndParseExample
         Console.WriteLine($"Sub Type:   {mimeType2.SubType.ToString()}");
 
         int parameterCounter = 1;
-        foreach (MimeTypeParameter parameter in mimeType2.Parameters)
+        foreach (MimeTypeParameter parameter in mimeType2.Parameters())
         {
             Console.WriteLine();
             Console.WriteLine($"Parameter {parameterCounter++}:");
             Console.WriteLine("============");
-            Console.WriteLine($"Key:      {parameter.Key.ToString()}");
-            Console.WriteLine($"Value:    {parameter.Value.ToString()}");
-            Console.WriteLine($"Language: {parameter.Language.ToString()}");
+            Console.WriteLine($"Key:      {parameter.Key}");
+            Console.WriteLine($"Language: {parameter.Language}");
+            Console.WriteLine("Value:");
+            Console.WriteLine(parameter.Value.ToString());
         }
     }
 }
@@ -96,11 +110,11 @@ public static class BuildAndParseExample
 Console Output:
 
 application/x-stuff;
-first-parameter*1*=utf-8'en'This%20is%20a%20very%20long%20param;
-first-parameter*2*=eter%2C%20which%20will%20be%20wrapped%20acco;
-first-parameter*3*=rding%20to%20RFC%202184.%0D%0AIt%20contains;
-first-parameter*4*=%20also%20a%20few%20Non-ASCII-Characters%3A;
-first-parameter*5*=%20%C3%A4%C3%96%C3%9F.;
+first-parameter*0*=utf-8'en'This%20is%20a%20very%20long%20param;
+first-parameter*1*=eter%2C%20which%20will%20be%20wrapped%20acco;
+first-parameter*2*=rding%20to%20RFC%202184.%0D%0AIt%20contains%;
+first-parameter*3*=20also%20a%20few%20Non-ASCII-Characters%3A%2;
+first-parameter*4*=0%C3%A4%C3%B6%C3%9F.;
 second-parameter="Parameter with  \\, = and \"."
 
 Media Type: application
@@ -109,20 +123,31 @@ Sub Type:   x-stuff
 Parameter 1:
 ============
 Key:      first-parameter
-Value:    This is a very long parameter, which will be wrapped according to RFC 2184.
-It contains also a few Non-ASCII-Characters: ‰÷ﬂ.
 Language: en
+Value:
+This is a very long parameter, which will be wrapped according to RFC 2184.
+It contains also a few Non-ASCII-Characters: ‰ˆﬂ.
 
 Parameter 2:
 ============
 Key:      second-parameter
-Value:    Parameter with  \, = and ".
 Language:
-*/
+Value:
+Parameter with  \, = and ".
+ */
+
 ```
 .
-    
-Comparing `MimeType` instances for equality:
+
+#### <a name="example3">3.</a> Format a `MimeType` instance into a standards-compliant string using several options:
+```csharp
+
+```
+
+.
+#### <a name="example4">4.</a> Compare `MimeType` instances for equality:
+
+
 ```csharp
 using FolkerKinzel.MimeTypes;
 

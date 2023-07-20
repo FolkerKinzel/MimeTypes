@@ -6,12 +6,17 @@ public static class BuildAndParseExample
 {
     public static void Example()
     {
-        MimeType mimeType1 = new MimeTypeBuilder("application", "x-stuff")
-            .AddParameter("first-parameter",
-                "This is a very long parameter, which will be wrapped according to RFC 2184." +
-                Environment.NewLine +
-                "It contains also a few Non-ASCII-Characters: \u00E4\u00D6\u00DF.", "en")
-            .AddParameter("second-parameter", "Parameter with  \\, = and \".").Build();
+        const string longParameterValue = """
+        This is a very long parameter, which will be wrapped according to RFC 2184.
+        It contains also a few Non-ASCII-Characters: äöß.
+        """;
+
+        MimeType mimeType1 = 
+            MimeTypeBuilder.Create("application", "x-stuff")
+                           .AppendParameter("first-parameter", longParameterValue, "en")
+                           .AppendParameter("second-parameter", "Parameter with  \\, = and \".")
+                           .Build();
+
         string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default);
         Console.WriteLine(s);
 
@@ -27,21 +32,21 @@ public static class BuildAndParseExample
             Console.WriteLine();
             Console.WriteLine($"Parameter {parameterCounter++}:");
             Console.WriteLine("============");
-            Console.WriteLine($"Key:      {parameter.Key.ToString()}");
-            Console.WriteLine($"Value:    {parameter.Value.ToString()}");
-            Console.WriteLine($"Language: {parameter.Language.ToString()}");
+            Console.WriteLine($"Key:      {parameter.Key}");
+            Console.WriteLine($"Language: {parameter.Language}");
+            Console.WriteLine("Value:");
+            Console.WriteLine(parameter.Value.ToString());
         }
     }
 }
 /*
 Console Output:
 
-application/x-stuff;
-first-parameter*1*=utf-8'en'This%20is%20a%20very%20long%20param;
-first-parameter*2*=eter%2C%20which%20will%20be%20wrapped%20acco;
-first-parameter*3*=rding%20to%20RFC%202184.%0D%0AIt%20contains;
-first-parameter*4*=%20also%20a%20few%20Non-ASCII-Characters%3A;
-first-parameter*5*=%20%C3%A4%C3%96%C3%9F.;
+first-parameter*0*=utf-8'en'This%20is%20a%20very%20long%20param;
+first-parameter*1*=eter%2C%20which%20will%20be%20wrapped%20acco;
+first-parameter*2*=rding%20to%20RFC%202184.%0D%0AIt%20contains%;
+first-parameter*3*=20also%20a%20few%20Non-ASCII-Characters%3A%2;
+first-parameter*4*=0%C3%A4%C3%B6%C3%9F.;
 second-parameter="Parameter with  \\, = and \"."
 
 Media Type: application
@@ -50,13 +55,15 @@ Sub Type:   x-stuff
 Parameter 1:
 ============
 Key:      first-parameter
-Value:    This is a very long parameter, which will be wrapped according to RFC 2184.
-It contains also a few Non-ASCII-Characters: äÖß.
 Language: en
+Value:
+This is a very long parameter, which will be wrapped according to RFC 2184.
+It contains also a few Non-ASCII-Characters: äöß.
 
 Parameter 2:
 ============
 Key:      second-parameter
-Value:    Parameter with  \, = and ".
 Language:
+Value:
+Parameter with  \, = and ".
  */

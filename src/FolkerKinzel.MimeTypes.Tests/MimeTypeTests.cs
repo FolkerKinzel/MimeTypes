@@ -34,7 +34,7 @@ public class MimeTypeTests
     [TestMethod]
     public void MimeTypeTest7()
     {
-        MimeType mime = new MimeTypeBuilder("application", "was").AddParameter("para", "@").Build();
+        MimeType mime = new MimeTypeBuilder("application", "was").AppendParameter("para", "@").Build();
         string s = mime.ToString();
         StringAssert.Contains(s, "\"@\"");
     }

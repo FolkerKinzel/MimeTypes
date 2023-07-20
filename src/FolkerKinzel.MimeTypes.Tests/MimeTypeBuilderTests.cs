@@ -16,9 +16,9 @@ public class MimeTypeBuilderTests
     [DataRow("media", null)]
     [DataRow(null, null)]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void MimeTypeBuilderTest1(string? nedia, string? sub)
+    public void CreateTest1(string? nedia, string? sub)
     {
-        _ = new MimeTypeBuilder(nedia!, sub!);
+        _ = MimeTypeBuilder.Create(nedia!, sub!);
     }
 
     //[TestMethod]
@@ -39,9 +39,9 @@ public class MimeTypeBuilderTests
     [TestMethod()]
     public void ClearParametersTest1()
     {
-        MimeTypeBuilder builder = new MimeTypeBuilder("text", "xml")
-                   .AddParameter("charset", "utf-8")
-                   .AddParameter("charset", "UTF-8");
+        MimeTypeBuilder builder = MimeTypeBuilder.Create("text", "xml")
+                   .AppendParameter("charset", "utf-8")
+                   .AppendParameter("charset", "UTF-8");
 
         MimeType mime = builder.Build();
         Assert.AreEqual(1, mime.Parameters().Count());
@@ -53,7 +53,7 @@ public class MimeTypeBuilderTests
     [TestMethod()]
     public void ClearParametersTest2()
     {
-        MimeTypeBuilder builder = new MimeTypeBuilder("text", "xml").ClearParameters();
+        MimeTypeBuilder builder = MimeTypeBuilder.Create("text", "xml").ClearParameters();
         Assert.IsNotNull(builder);
     }
 
