@@ -1,10 +1,9 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
-### 2.0.0
+### 2.0.0-beta.3
 - [ ] Higher Code Coverage
 - [ ] Refactor ParameterSplitter
-- [x] Mark ParameterModel as `sealed`
-- [x] Mark MimeTypeBuilder as `sealed`
+- [ ] Faster validation of token names
 
 ### 2.0.0-beta.2
 - [x] Mark ParameterModel as `sealed`
