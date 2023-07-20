@@ -10,11 +10,11 @@ public class MimeTypeTests
 {
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest3() => _ = new MimeType("", "subtype");
+    public void MimeTypeTest3() => _ = MimeTypeBuilder.Create("", "subtype");
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest4() => _ = new MimeType("type", "");
+    public void MimeTypeTest4() => _ = MimeTypeBuilder.Create("type", "");
 
     [DataTestMethod]
     [DataRow("?")]
@@ -24,12 +24,12 @@ public class MimeTypeTests
     [DataRow("ö")]
     [DataRow("\0")]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest5(string type) => _ = new MimeType(type, "");
+    public void MimeTypeTest5(string type) => _ = MimeTypeBuilder.Create(type, "");
 
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest6() => _ = new MimeType(new string('a', short.MaxValue + 1), "subtype");
+    public void MimeTypeTest6() => _ = MimeTypeBuilder.Create(new string('a', short.MaxValue + 1), "subtype");
 
     [TestMethod]
     public void MimeTypeTest7()

@@ -12,11 +12,11 @@
     <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
     <PackageVersion>2.0.0-beta.1</PackageVersion>
-    <FileVersion>2.0.0.4</FileVersion>
+    <FileVersion>2.0.0.9</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Description>.NET library that supports the work with Internet Media Types ("MIME Types").</Description>
     <PackageTags>MIME Media C# .NET</PackageTags>
-    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v1.0.0</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v2.0.0-beta.1</PackageReleaseNotes>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>
     <RepositoryUrl>https://github.com/FolkerKinzel/MimeTypes.git</RepositoryUrl>

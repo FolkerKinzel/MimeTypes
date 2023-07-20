@@ -68,7 +68,8 @@ public class MimeTypeBuilder
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     /// <seealso cref="MimeType"/>
-    public static MimeTypeBuilder Create(string mediaType, string subType) => new MimeTypeBuilder(mediaType, subType);
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static MimeTypeBuilder Create(string mediaType, string subType) => new(mediaType, subType);
 
 
     /// <summary>
