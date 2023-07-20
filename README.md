@@ -6,18 +6,16 @@
 [Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v2.0.0-beta.1)
 
 The library contains:
-- `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2184. The struct can be created automatically from a file type extension or parsed from a Internet Media Type `String` or `ReadOnlyMemory<Char>`.
+- `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2184. The struct can be created automatically from a file type extension or parsed from an Internet Media Type string or `ReadOnlyMemory<Char>`.
 - The `MimeType` struct is able 
   - to retrieve an appropriate file type extension for its content automatically,
   - to convert its content as an Internet Media Type string according to the standards,
   - to compare its content with other Internet Media Types for equality.
 - The class `MimeTypeBuilder` offers a fluent API to build `MimeType` instances from scratch.
-- The `FormattingOptions` enum allow a featured string serialization.
+- The `FormattingOptions` enum allows a featured string serialization of `MimeType` instances.
 
-The library is designed to support performance and small heap allocation. 
-(Have a look at [MimeResourceCompiler](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/MimeResourceCompiler/Program.cs) 
-that is part of the repository to
-have a detailed explanation where the data of the file type extensions comes from and how it is compiled.)
+The library is designed to support performance and small heap allocation. To have a a detailed explanation where the data for the file type extension parser comes from and how it is compiled, have a look at [MimeResourceCompiler](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/MimeResourceCompiler/Program.cs) 
+that is part of this repository.
 
 
 ### Examples
