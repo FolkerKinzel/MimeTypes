@@ -6,10 +6,10 @@
 [Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v2.0.0-beta.1)
 
 The library contains:
-- `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2184. The struct can be created automatically from a file type extension or parsed from an Internet Media Type string or `ReadOnlyMemory<Char>`.
+- `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2184. The struct can be created automatically from a file type extension or parsed from an Internet Media Type string or a `ReadOnlyMemory<Char>`.
 - The `MimeType` struct is able 
   - to retrieve an appropriate file type extension for its content automatically,
-  - to convert its content as an Internet Media Type string according to the standards,
+  - to serialize its content as an Internet Media Type string according to the standards,
   - to compare its content with other Internet Media Types for equality.
 - The class `MimeTypeBuilder` offers a fluent API to build `MimeType` instances from scratch.
 - The `FormattingOptions` enum allows a featured string serialization of `MimeType` instances.
@@ -19,12 +19,12 @@ that is part of this repository.
 
 
 ### Examples
-1. [Get a `MimeType` instance from a file type extensions and vice versa](#example1)
+1. [Get a `MimeType` instance from a file type extension and vice versa](#example1)
 2. [Build, Serialize, and Parse a `MimeType` instance](#example2)
 3. [Format a `MimeType` instance into a standards-compliant string using several options](#example3)
 4. [Compare `MimeType` instances](#example4)
 
-#### <a name="example1">1.</a> Get a `MimeType` instance from a file type extensions and vice versa:
+#### <a name="example1">1.</a> Get a `MimeType` instance from a file type extension and vice versa:
 ```csharp
 using FolkerKinzel.MimeTypes;
 
@@ -62,17 +62,11 @@ namespace Examples;
 
 public static class BuildAndParseExample
 {
-using FolkerKinzel.MimeTypes;
-
-namespace Examples;
-
-public static class BuildAndParseExample
-{
     public static void Example()
     {
         const string longParameterValue = """
-        This is a very long parameter, which will be wrapped according to RFC 2184.
-        It contains also a few Non-ASCII-Characters: äöß.
+        This is a very long parameter that will be wrapped according to RFC 2184.
+        It also contains a few Non-ASCII-Characters: äöß.
         """;
 
         MimeType mimeType1 = 
@@ -108,10 +102,10 @@ Console Output:
 
 application/x-stuff;
 first-parameter*0*=utf-8'en'This%20is%20a%20very%20long%20param;
-first-parameter*1*=eter%2C%20which%20will%20be%20wrapped%20acco;
-first-parameter*2*=rding%20to%20RFC%202184.%0D%0AIt%20contains%;
-first-parameter*3*=20also%20a%20few%20Non-ASCII-Characters%3A%2;
-first-parameter*4*=0%C3%A4%C3%B6%C3%9F.;
+first-parameter*1*=eter%20that%20will%20be%20wrapped%20accordin;
+first-parameter*2*=g%20to%20RFC%202184.%0D%0AIt%20also%20contai;
+first-parameter*3*=ns%20a%20few%20Non-ASCII-Characters%3A%20%C3;
+first-parameter*4*=%A4%C3%B6%C3%9F.;
 second-parameter="Parameter with  \\, = and \"."
 
 Media Type: application
@@ -122,8 +116,8 @@ Parameter 1:
 Key:      first-parameter
 Language: en
 Value:
-This is a very long parameter, which will be wrapped according to RFC 2184.
-It contains also a few Non-ASCII-Characters: äöß.
+This is a very long parameter that will be wrapped according to RFC 2184.
+It also contains a few Non-ASCII-Characters: äöß.
 
 Parameter 2:
 ============
@@ -132,7 +126,6 @@ Language:
 Value:
 Parameter with  \, = and ".
  */
-
 ```
 .
 

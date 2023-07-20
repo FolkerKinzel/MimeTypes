@@ -4,9 +4,9 @@ internal class Program
 {
     private static void Main(string[] args)
     {
-        FormattingOptionsExample.Example();
+        //FormattingOptionsExample.Example();
         //FileExtensionExample.Example();
-        //BuildAndParseExample.Example();
+        BuildAndParseExample.Example();
         //EqualityExample.Example();
     }
 }
