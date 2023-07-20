@@ -6,13 +6,13 @@
 [Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v2.0.0-beta.1)
 
 The library contains:
-- `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2184. The struct can be created from a file type extension or parsed from an Internet Media Type string or `ReadOnlyMemory<Char>`.
-- The `MimeType` struct is able 
+- `MimeType` struct: Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2184. The struct can be created from a file type extension or parsed from an Internet Media Type string or ReadOnlyMemory&lt;Char&gt;.
+- The `MimeType` struct allows 
   - to retrieve an appropriate file type extension for its content automatically,
   - to serialize its content as an Internet Media Type string according to the standards,
   - to compare its content with other Internet Media Types for equality.
-- The class `MimeTypeBuilder` offers a fluent API to build `MimeType` instances from scratch.
-- The `FormattingOptions` enum allows a featured string serialization of `MimeType` instances.
+- The class `MimeTypeBuilder` offers a fluent API to build MimeType instances from scratch.
+- The `FormattingOptions` enum allows a featured string serialization of MimeType instances.
 
 The library is designed to support performance and small heap allocation. To have a a detailed explanation where the data for the file type extension parser comes from and how it is compiled, have a look at [MimeResourceCompiler](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/MimeResourceCompiler/Program.cs) 
 that is part of this repository.
@@ -22,12 +22,12 @@ that is part of this repository.
 .
 
 ### Examples
-1. [Get a `MimeType` instance from a file type extension and vice versa](#example1)
-2. [Build, serialize, and parse a `MimeType` instance](#example2)
-3. [Format a `MimeType` instance into a standards-compliant string using several options](#example3)
-4. [Compare `MimeType` instances](#example4)
+1. [Get a MimeType instance from a file type extension and vice versa](#example1)
+2. [Build, serialize, and parse a MimeType instance](#example2)
+3. [Format a MimeType instance into a standards-compliant string using several options](#example3)
+4. [Compare MimeType instances](#example4)
 
-#### <a name="example1">1.</a> Get a `MimeType` instance from a file type extension and vice versa:
+#### <a name="example1">1.</a> Get a MimeType instance from a file type extension and vice versa:
 ```csharp
 using FolkerKinzel.MimeTypes;
 
@@ -57,7 +57,7 @@ The file type extension for this MIME type is: .odt
 ```
 .
 
-#### <a name="example2">2.</a> Build, Serialize, and Parse a `MimeType` instance:
+#### <a name="example2">2.</a> Build, Serialize, and Parse a MimeType instance:
 ```csharp
 using FolkerKinzel.MimeTypes;
 
@@ -132,7 +132,7 @@ Parameter with  \, = and ".
 ```
 .
 
-#### <a name="example3">3.</a> Format a `MimeType` instance into a standards-compliant string using several options:
+#### <a name="example3">3.</a> Format a MimeType instance into a standards-compliant string using several options:
 ```csharp
 using FolkerKinzel.MimeTypes;
 
@@ -203,7 +203,7 @@ application/x-stuff;short=s;key-long=Very%20very%20loooong%20value%20in%20order%
 ```
 
 .
-#### <a name="example4">4.</a> Compare `MimeType` instances for equality:
+#### <a name="example4">4.</a> Compare MimeType instances for equality:
 
 
 ```csharp
