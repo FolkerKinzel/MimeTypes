@@ -17,6 +17,9 @@ The library contains:
 The library is designed to support performance and small heap allocation. To have a a detailed explanation where the data for the file type extension parser comes from and how it is compiled, have a look at [MimeResourceCompiler](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/MimeResourceCompiler/Program.cs) 
 that is part of this repository.
 
+[Version History](https://github.com/FolkerKinzel/MimeTypes/releases)
+
+.
 
 ### Examples
 1. [Get a `MimeType` instance from a file type extension and vice versa](#example1)
@@ -240,6 +243,3 @@ public static class EqualityExample
 }
 // Console Output: Success
 ```
-.
-
-- [Version History](https://github.com/FolkerKinzel/MimeTypes/releases)
