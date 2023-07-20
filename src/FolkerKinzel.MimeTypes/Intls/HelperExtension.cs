@@ -37,15 +37,10 @@ internal static class HelperExtension
     /// </summary>
     /// <param name="value">The value of the parameter.</param>
     /// <param name="paraName">The parameter's name.</param>
-    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException"><paramref name="value"/> is not a valid token.</exception>
     internal static void ValidateTokenParameter(this string value, string paraName)
     {
-        if (value is null)
-        {
-            throw new ArgumentNullException(paraName);
-        }
-
+        Debug.Assert(value != null);
         ThrowHelper.ThrowOnTokenError(value.AsSpan().ValidateToken(), paraName);
     }
 

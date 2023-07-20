@@ -6,16 +6,12 @@ public static class BuildAndParseExample
 {
     public static void Example()
     {
-        var dic = new ParameterModelDictionary()
-            {
-                new ParameterModel("first-parameter",
+        MimeType mimeType1 = new MimeTypeBuilder("application", "x-stuff")
+            .AddParameter("first-parameter",
                 "This is a very long parameter, which will be wrapped according to RFC 2184." +
                 Environment.NewLine +
-                "It contains also a few Non-ASCII-Characters: \u00E4\u00D6\u00DF.", "en"),
-                new ParameterModel("second-parameter", "Parameter with  \\, = and \".")
-            };
-
-        var mimeType1 = new MimeType("application", "x-stuff", dic);
+                "It contains also a few Non-ASCII-Characters: \u00E4\u00D6\u00DF.", "en")
+            .AddParameter("second-parameter", "Parameter with  \\, = and \".").Build();
         string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default);
         Console.WriteLine(s);
 

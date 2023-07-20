@@ -1,28 +1,13 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FolkerKinzel.MimeTypes;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Runtime.InteropServices;
-using System.Text.RegularExpressions;
 using System.Diagnostics;
 using FolkerKinzel.Strings.Polyfills;
+using FolkerKinzel.MimeTypes.Intls;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 
 [TestClass()]
 public class MimeTypeTests
 {
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void MimeTypeTest1() => _ = new MimeType(null!, "subtype");
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void MimeTypeTest2() => _ = new MimeType("type", null!);
-
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
     public void MimeTypeTest3() => _ = new MimeType("", "subtype");
@@ -49,12 +34,7 @@ public class MimeTypeTests
     [TestMethod]
     public void MimeTypeTest7()
     {
-        var dic = new ParameterModelDictionary()
-        {
-            new ParameterModel( "para", "@" )
-        };
-
-        var mime = new MimeType("application", "was", dic);
+        MimeType mime = new MimeTypeBuilder("application", "was").AddParameter("para", "@").Build();
         string s = mime.ToString();
         StringAssert.Contains(s, "\"@\"");
     }
@@ -82,6 +62,19 @@ public class MimeTypeTests
         MimeTypeParameter[] arr = mime.Parameters().ToArray();
         Assert.AreEqual(2, arr.Length);
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
+    }
+
+
+    [TestMethod]
+    public void ParseTest5()
+    {
+        const string media = "image";
+        const string subType = "jpeg";
+
+        string s = $"  {media}/{subType} (Comment2)";
+        var mime = MimeType.Parse(s);
+        Assert.AreEqual(media, mime.MediaType.ToString());
+        Assert.AreEqual(subType, subType.ToString());
     }
 
     [DataTestMethod]

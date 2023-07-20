@@ -1,4 +1,5 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using FolkerKinzel.MimeTypes.Intls;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 
@@ -33,10 +34,10 @@ public class ParameterModelTests
     [ExpectedException(typeof(ArgumentException))]
     public void MimeTypeParameterModelTest6() => _ = new ParameterModel(new string('a', 5000), "something");
 
-    [TestMethod]
-    public void IsEmptyTest1() => Assert.IsTrue(new ParameterModel().IsEmpty);
+    //[TestMethod]
+    //public void IsEmptyTest1() => Assert.IsTrue(new ParameterModel().IsEmpty);
 
-    [TestMethod]
-    public void IsEmptyTest2() => Assert.IsFalse(new ParameterModel("key", null).IsEmpty);
+    //[TestMethod]
+    //public void IsEmptyTest2() => Assert.IsFalse(new ParameterModel("key", null).IsEmpty);
 
 }

@@ -21,9 +21,13 @@
 - [x] **Breaking Change:** `MimeCache.EnlargeCapacity()` doesn't throw `ArgumentOutOfRangeException` anymore.
 - [x] **Breaking Change:** Rename `MimeTypeFormattingOptions` to `FormattingOptions`.
 - [x] **Breaking Change:** Refactor `FormattingOptions` to combine all otions with `FormattingOptions.IncludeParameters` except `FormattingOptions.None`.
-
+- [x] **Breaking Change:** Make the ctor `MimeType(string, string, ParameterModelDictionary?)` internal.
+- [x] **Breaking Change:** Make `ParameterModel` an internal class.
+- [x] **Breaking Change:** Make `ParameterModelDictionary` internal
+- [x] **Breaking Change:** 
 - [x] Implement an overload `MimeTypeParameter.ToString(bool)`;
 - [x] Make the second parameter of `MimeType.AppendTo(...)` optional.
+- [x] Implement `MimeTypeBuilder`.
 
 
 ### 1.0.0-beta.4

@@ -66,7 +66,7 @@ public class ParameterSerializerTests
     [TestMethod]
     public void AppendTest6()
     {
-        ReadOnlyMemory<char> mem = ("key=" + Uri.EscapeDataString("äöü")).AsMemory();
+        ReadOnlyMemory<char> mem = ("key*=''" + Uri.EscapeDataString("äöü")).AsMemory();
         _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para);
 
         var sb = new StringBuilder();

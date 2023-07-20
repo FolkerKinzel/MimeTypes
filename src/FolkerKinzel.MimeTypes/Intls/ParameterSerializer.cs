@@ -1,4 +1,5 @@
-﻿using FolkerKinzel.Strings;
+﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
 using System.Text;
 

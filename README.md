@@ -2,7 +2,7 @@
 [![NuGet](https://img.shields.io/nuget/v/FolkerKinzel.MimeTypes)](https://www.nuget.org/packages/FolkerKinzel.MimeTypes/)
 [![GitHub](https://img.shields.io/github/license/FolkerKinzel/MimeTypes)](https://github.com/FolkerKinzel/MimeTypes/blob/master/LICENSE)
 
-.NET library that supports the work with Internet Media Types ("MIME Types").
+#### .NET library that supports the work with Internet Media Types ("MIME Types").
 
 The library contains:
 * `readonly struct MimeType`: Represents a MIME type ("Internet Media Type") according 
@@ -18,7 +18,6 @@ security reasons.
 
 Read the [Project Reference](https://github.com/FolkerKinzel/MimeTypes/blob/master/ProjectReference/1.0.0-beta.3/FolkerKinzel.MimeTypes.Reference.en.chm) for details.
 
-> IMPORTANT: On some systems the content of the .CHM file is blocked. Before opening the file right click on the file icon, select Properties, and check the "Allow" checkbox (if it is present) in the lower right corner of the General tab in the Properties dialog.
 
 ### Examples
 Getting `MimeType` instances by parsing file type extensions and getting appropriate file type extensions

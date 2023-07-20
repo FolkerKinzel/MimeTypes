@@ -85,7 +85,7 @@ internal class Program
                     break;
             }
 
-            log.Fatal(err.ToString());
+            log.Fatal(err?.ToString() ?? "");
             Environment.ExitCode = -1;
         }
     }

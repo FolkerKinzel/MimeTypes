@@ -47,16 +47,16 @@ public readonly partial struct MimeType
     /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
     /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
     /// <param name="parameters">The <see cref="MimeType.Parameters"/> or <c>null</c>.</param>
-    /// <exception cref="ArgumentNullException">
-    /// <paramref name="mediaType"/> or <paramref name="subType"/> is <c>null</c>.
-    /// </exception>
+    /// 
     /// <exception cref="ArgumentException">
     /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
     /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
     /// which are not permitted by the standard (RFC 2045).
     /// </exception>
-    public MimeType(string mediaType, string subType, ParameterModelDictionary? parameters = null)
+    internal MimeType(string mediaType, string subType, ParameterModelDictionary? parameters = null)
     {
+        Debug.Assert(mediaType != null);
+        Debug.Assert(subType != null);
         MimeTypeCtorParametersValidator.Validate(mediaType, subType);
 
         _idx = mediaType.Length << MEDIA_TYPE_LENGTH_SHIFT;

@@ -46,13 +46,9 @@ internal static class ParameterValueDecoder
                 parameterString = parameterString.Slice(0, parameterString.Length - 1);
             }
         }
-        else // might be URL encoded
-        {
-            if (!TryDecodeUrl(in idx, ref parameterString))
-            {
-                return false;
-            }
-        }
+        
+        // If the the value is not quoted and the key is not starred (key*) the value shall remain as it is
+        // (RFC 2184).
 
         return true;
     }
