@@ -16,7 +16,16 @@ internal static class HelperExtension
 
         for (int i = 0; i < span.Length; i++)
         {
-            TSpecialKinds current = span[i].AnalyzeTSpecialKind();
+            char c = span[i];
+
+            Debug.Assert(c.IsAscii());
+
+            if (c.IsWhiteSpace() || c.IsControl() || c.IsReservedCharacter())
+            {
+                result = TSpecialKinds.TSpecial;
+            }
+
+            TSpecialKinds current = c.AnalyzeTSpecialKind();
 
             if (current == TSpecialKinds.MaskChar)
             {
@@ -43,7 +52,7 @@ internal static class HelperExtension
     {
         if (value is null)
         {
-            throw new ArgumentNullException(paraName); 
+            throw new ArgumentNullException(paraName);
         }
 
         ThrowHelper.ThrowOnTokenError(value.AsSpan().ValidateToken(), paraName);
@@ -74,7 +83,7 @@ internal static class HelperExtension
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0066:Switch-Anweisung in Ausdruck konvertieren", Justification = "<Ausstehend>")]
     private static TSpecialKinds AnalyzeTSpecialKind(this char c)
     {
-        // RFC 2045 Section 5.1 "tspecials"
+        // RFC 2045 Section 5.1 "tspecials" ('.' is not tspecial)
         switch (c)
         {
             case '(':
@@ -100,8 +109,6 @@ internal static class HelperExtension
     }
 
 
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    internal static bool IsTSpecial(this char c) => c.AnalyzeTSpecialKind() != TSpecialKinds.None;
 
 
     internal static IEnumerable<MimeTypeParameter> Sort(this IEnumerable<MimeTypeParameter> parameters, bool isTextMimeType)
@@ -135,6 +142,15 @@ internal static class HelperExtension
     }
 
 
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsTSpecial(this char c) => c.AnalyzeTSpecialKind() != TSpecialKinds.None;
+
+
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    private static bool IsReservedCharacter(this char c) => c is '*' or '\'' or '%'; // RFC 2184
+        
+
+
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
     private static TokenError AnalyzeTokenChar(this char c)
     {
@@ -158,7 +174,7 @@ internal static class HelperExtension
             return TokenError.ContainsNonAscii;
         }
 
-        if (c is '*' or '\'' or '%')
+        if (c.IsReservedCharacter()) // RFC 2184
         {
             return TokenError.ContainsReservedCharacter;
         }

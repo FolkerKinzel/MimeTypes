@@ -8,7 +8,7 @@ namespace FolkerKinzel.MimeTypes.Intls;
 /// Encapsulates and validates the data, which is used to initialize a <see cref="MimeTypeParameter"/>
 /// structure.
 /// </summary>
-internal class ParameterModel
+internal sealed class ParameterModel
 {
     /// <summary>
     /// Initializes a new <see cref="ParameterModel"/> instance.

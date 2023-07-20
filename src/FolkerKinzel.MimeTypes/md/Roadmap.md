@@ -1,5 +1,11 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
+### 2.0.0
+- [ ] Higher Code Coverage
+- [ ] Refactor ParameterSplitter
+- [x] Mark ParameterModel as `sealed`
+- [x] Mark MimeTypeBuilder as `sealed`
+
 
 ### 2.0.0-beta.1
 - [x] .NET 7 support

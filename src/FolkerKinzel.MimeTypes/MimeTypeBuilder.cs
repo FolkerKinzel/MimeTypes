@@ -21,7 +21,7 @@ namespace FolkerKinzel.MimeTypes;
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
 /// </example>
 /// <seealso cref="MimeType"/>
-public class MimeTypeBuilder
+public sealed class MimeTypeBuilder
 {
     private ParameterModelDictionary? _dic;
     private readonly string _mediaType;

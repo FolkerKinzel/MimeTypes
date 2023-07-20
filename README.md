@@ -146,7 +146,7 @@ public static class FormattingOptionsExample
             MimeTypeBuilder.Create("application", "x-stuff")
                            .AppendParameter("short", "s")
                            .AppendParameter("key-long",
-            "Very very very looong value to demonstrate the line wrapping")
+            "Very very loooong value in order to show the line wrapping")
                            .Build();
 
         Console.WriteLine("FormattingOptions.Default:");
@@ -179,26 +179,26 @@ public static class FormattingOptionsExample
 Console Output:
 
 FormattingOptions.Default:
-application/x-stuff; short=s; key-long=Very very very looong value to demonstrate the line wrapping
+application/x-stuff; short=s; key-long="Very very loooong value in order to show the line wrapping"
 
 FormattingOptions.None:
 application/x-stuff
 
 FormattingOptions.IncludeParameters:
-application/x-stuff;short=s;key-long=Very very very looong value to demonstrate the line wrapping
+application/x-stuff;short=s;key-long="Very very loooong value in order to show the line wrapping"
 
 FormattingOptions.LineWrapping:
 application/x-stuff;short=s;
-key-long*0=Very very very looong value to demonstrate the line ;
-key-long*1=wrapping
+key-long*0="Very very loooong value in order to show the line ";
+key-long*1="wrapping"
 
 FormattingOptions.LineWrapping | FormattingOptions.WhiteSpaceBetweenParameters:
 application/x-stuff; short=s;
-key-long*0=Very very very looong value to demonstrate the line ;
-key-long*1=wrapping
+key-long*0="Very very loooong value in order to show the line ";
+key-long*1="wrapping"
 
 FormattingOptions.AlwaysUrlEncoded:
-application/x-stuff;short=s;key-long=Very%20very%20very%20looong%20value%20to%20demonstrate%20the%20line%20wrapping
+application/x-stuff;short=s;key-long=Very%20very%20loooong%20value%20in%20order%20to%20show%20the%20line%20wrapping
 */
 ```
 
