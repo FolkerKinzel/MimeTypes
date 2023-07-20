@@ -6,6 +6,10 @@
 - [x] Mark ParameterModel as `sealed`
 - [x] Mark MimeTypeBuilder as `sealed`
 
+### 2.0.0-beta.2
+- [x] Mark ParameterModel as `sealed`
+- [x] Mark MimeTypeBuilder as `sealed`
+- [x] Fix a bug that Internet Media Type parameters including SPACE characters have not been enclosed with double quotes.
 
 ### 2.0.0-beta.1
 - [x] .NET 7 support
