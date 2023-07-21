@@ -1,4 +1,5 @@
 ﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.MimeTypes.Intls.Encodings;
 using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
 using System.Text;
@@ -40,10 +41,9 @@ internal static class ParameterSerializer
             valueSpan = encoded.AsSpan();
         }
 
-        TSpecialKinds tSpecialKind = starred ? TSpecialKinds.None
-                                             : hasValue
-                                                ? valueSpan.AnalyzeTSpecials()
-                                                : TSpecialKinds.TSpecial;
+        TSpecialKinds tSpecialKind = starred ? TSpecialKinds.None 
+                                             : valueSpan.AnalyzeTSpecials();
+
         _ = builder.Append(model.Key);
 
         _ = tSpecialKind switch
@@ -77,8 +77,7 @@ internal static class ParameterSerializer
             return builder.BuildUrlEncoded(in parameter, isValueAscii);
         }
 
-        // See https://mimesniff.spec.whatwg.org/#serializing-a-mime-type :
-        // Empty values should be Double-Quoted.
+        
         TSpecialKinds tSpecialKind = valueSpan.IsEmpty ? TSpecialKinds.TSpecial : valueSpan.AnalyzeTSpecials();
 
         return tSpecialKind == TSpecialKinds.None
@@ -199,24 +198,5 @@ internal static class ParameterSerializer
                 ? builder.Append(valueSpan)
                 : builder.Append(valueSpan).ToLowerInvariant(valueStart);
     }
-
-
-    private static StringBuilder AppendMasked(this StringBuilder sb, ReadOnlySpan<char> value)
-    {
-        sb.EnsureCapacity(sb.Length + value.Length * 2);
-
-        for (int i = 0; i < value.Length; i++)
-        {
-            char c = value[i];
-            if (c is '\"' or '\\')
-            {
-                _ = sb.Append('\\');
-            }
-            sb.Append(c);
-        }
-
-        return sb;
-    }
-
     
 }

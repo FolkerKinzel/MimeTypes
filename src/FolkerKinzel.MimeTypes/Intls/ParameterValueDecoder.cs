@@ -1,4 +1,5 @@
-﻿using FolkerKinzel.Strings;
+﻿using FolkerKinzel.MimeTypes.Intls.Encodings;
+using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
 using System;
 using System.Text;
@@ -83,21 +84,7 @@ internal static class ParameterValueDecoder
         // the builder it is eaten by the indexes
         _ = builder.Append(parameterString).Remove(builder.Length - 1, 1);
 
-        UnMask(builder, valueStart);
-        parameterString = builder.ToString().AsMemory();
-
-        //////////////////////////////////////////////
-
-        static void UnMask(StringBuilder builder, int startOfValue)
-        {
-            for (int i = startOfValue; i < builder.Length; i++)
-            {
-                if (builder[i] == '\\')
-                {
-                    // after the mask char one entry can be skipped:
-                    _ = builder.Remove(i, 1);
-                }
-            }
-        }
+        builder.UnMask(valueStart);
+        parameterString = builder.ToString().AsMemory();      
     }
 }

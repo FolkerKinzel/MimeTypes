@@ -12,6 +12,13 @@ internal static class HelperExtension
 
     internal static TSpecialKinds AnalyzeTSpecials(this ReadOnlySpan<char> span)
     {
+        // See https://mimesniff.spec.whatwg.org/#serializing-a-mime-type :
+        // Empty values should be Double-Quoted.
+        if (span.IsEmpty)
+        {
+            return TSpecialKinds.TSpecial;
+        }
+
         TSpecialKinds result = TSpecialKinds.None;
 
         for (int i = 0; i < span.Length; i++)
@@ -99,10 +106,10 @@ internal static class HelperExtension
             case ']':
             case '?':
             case '=':
-                return TSpecialKinds.TSpecial;
-            case '\\':
-            case '\"':
-                return TSpecialKinds.MaskChar;
+                return TSpecialKinds.TSpecial;  // There is nothing in the RFCs about masking of '\"', but:
+            case '\\':                          // https://mimesniff.spec.whatwg.org/#parsing-a-mime-type  § 4.5.:
+            case '\"':                          // 4.1. Precede each occurrence of U+0022 (") or U+005C (\) in value with U+005C (\).
+                return TSpecialKinds.MaskChar;  // 4.2. Prepend U+0022 (") to value. // 4.3. Append U+0022 (") to value.
             default:
                 return TSpecialKinds.None;
         }

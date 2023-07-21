@@ -4,6 +4,9 @@
 - [ ] Higher Code Coverage
 - [ ] Refactor ParameterSplitter
 - [ ] Faster validation of token names
+- [x] Fix a bug that splitted HTTP quoted strings could not be read correctly when the last character of a splitted chunk is a masking backslash.
+- [ ] Known issue: If a splitted parameter contains url encoded and quoted parts, and if in a quoted part a url encoded escape sequence is, e.g., '%7e'
+the decoder tries to decode it. (%7 or 7E causes no problems.)
 
 ### 2.0.0-beta.2
 - [x] Mark ParameterModel as `sealed`

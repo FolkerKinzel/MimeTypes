@@ -131,6 +131,71 @@ public class MimeTypeTests
     }
 
 
+    [TestMethod]
+    public void TryParseTest4()
+    {
+        string urlEncoded = Uri.EscapeDataString("äöü");
+        string mimeString = $"""
+            application/x-stuff;
+            key*1*=''{urlEncoded} ;
+            key*2="This is %E 7e\\ / \" @ ? ; quoted.\"
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+        Assert.AreEqual(1, mime.Parameters().Count());
+
+        var par = mime.Parameters().First();  
+    }
+
+
+    [TestMethod]
+    public void TryParseTest5()
+    {
+        const string ab = @"a\\b";
+        string mimeString = $"""
+            application/x-stuff;
+            key*1="a\\\";
+            key*2="\b"
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+
+        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        Assert.AreEqual(1, arr.Length);
+        Assert.AreEqual(ab, arr[0].Value.ToString(), false);
+    }
+
+    [TestMethod]
+    public void TryParseTest6()
+    {
+        const string ab = @"a\\b";
+        string mimeString = $"""
+            application/x-stuff;
+            key*1="a\\";
+            key*2="\\b"
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+
+        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        Assert.AreEqual(1, arr.Length);
+        Assert.AreEqual(ab, arr[0].Value.ToString(), false);
+    }
+
+    [TestMethod]
+    public void TryParseTest7()
+    {
+        const string ab = @"a\\b";
+        string mimeString = $"""
+            application/x-stuff;
+            key*1="a\";
+            key*2="\\\b"
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+
+        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        Assert.AreEqual(1, arr.Length);
+        Assert.AreEqual(ab, arr[0].Value.ToString(), false);
+    }
+
+
     [TestMethod()]
     public void ToStringTest1()
     {

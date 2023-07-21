@@ -1,4 +1,6 @@
-﻿namespace FolkerKinzel.MimeTypes.Intls;
+﻿using FolkerKinzel.Strings;
+
+namespace FolkerKinzel.MimeTypes.Intls;
 
 internal static class ParameterRawReader
 {
@@ -13,6 +15,15 @@ internal static class ParameterRawReader
 
             if (current == '\\') // Mask char: Skip one!
             {
+                int overNext = i + 2;
+                if (overNext < value.Length && value[overNext - 1] == '"' && value[overNext] == ';')
+                {
+                    // last char before the string ends is the masking '\\'
+                    // this must remein in the string
+                    // see: https://fetch.spec.whatwg.org/#collect-an-http-quoted-string
+                    continue;
+                }
+
                 i++;
                 continue;
             }

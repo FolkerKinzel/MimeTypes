@@ -1,7 +1,6 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
 
-namespace FolkerKinzel.MimeTypes.Tests;
+namespace FolkerKinzel.MimeTypes.Intls.Tests;
 
 [TestClass]
 public class ParameterModelTests

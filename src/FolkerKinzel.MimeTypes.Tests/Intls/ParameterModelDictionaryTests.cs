@@ -1,19 +1,17 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FolkerKinzel.MimeTypes;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using FolkerKinzel.MimeTypes.Intls;
 
-namespace FolkerKinzel.MimeTypes.Tests
+namespace FolkerKinzel.MimeTypes.Intls.Tests
 {
     [TestClass()]
     public class ParameterModelDictionaryTests
     {
         [TestMethod()]
-        public void MimeTypeParameterDataDictionaryTest() 
+        public void MimeTypeParameterDataDictionaryTest()
             => _ = new ParameterModelDictionary
             {
                 new ParameterModel("charset", "iso")
