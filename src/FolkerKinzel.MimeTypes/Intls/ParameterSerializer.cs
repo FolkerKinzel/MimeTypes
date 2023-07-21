@@ -2,6 +2,7 @@
 using FolkerKinzel.MimeTypes.Intls.Encodings;
 using FolkerKinzel.Strings;
 using FolkerKinzel.Strings.Polyfills;
+using System.Reflection;
 using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls;
@@ -29,28 +30,12 @@ internal static class ParameterSerializer
         EncodingAction action = valueSpan.EncodingAction();
         action = model.Language != null ? EncodingAction.UrlEncode : action;
 
-        if (action == EncodingAction.UrlEncode && model.Value != null)
-        {
-            if (!UrlEncoding.TryEncode(model.Value!, out string? encoded))
-            {
-                return;
-            }
-            valueSpan = encoded.AsSpan();
-        }
-
-        _ = builder.Append(model.Key);
-
         _ = action switch
         {
-            EncodingAction.Mask => builder.Append('=').AppendValueQuotedAndMasked(valueSpan, true),
-            EncodingAction.Quote => builder.Append('=').AppendValueQuoted(valueSpan, true),
-
-            // This adds '=':
-            _ => AppendValueUrlEncoded(builder,
-                                       action != EncodingAction.UrlEncode,
-                                       valueSpan,
-                                       model.Language.AsSpan(),
-                                       action == EncodingAction.UrlEncode),
+            EncodingAction.Mask => builder.BuildQuoted(model.Key.AsSpan(), valueSpan, true, true),
+            EncodingAction.Quote => builder.BuildQuoted(model.Key.AsSpan(), valueSpan, false, true),
+            EncodingAction.UrlEncode => builder.BuildUrlEncoded(model.Key.AsSpan(), model.Language.AsSpan(), model.Value ?? ""),
+            _ => builder.BuildUnQuoted(model.Key.AsSpan(), model.Value.AsSpan(), true)
         };
     }
 
@@ -68,63 +53,48 @@ internal static class ParameterSerializer
         ReadOnlySpan<char> valueSpan = parameter.Value;
         EncodingAction action = valueSpan.EncodingAction();
 
-        action = alwaysUrlEncoded || !parameter.Language.IsEmpty ? action = EncodingAction.UrlEncode : action;
+        action = alwaysUrlEncoded || !parameter.Language.IsEmpty ? EncodingAction.UrlEncode : action;
 
-        return action == EncodingAction.UrlEncode
-                        ? builder.BuildUrlEncoded(in parameter, false)
-                        : action == EncodingAction.None
-                            ? builder.BuildUnQuoted(in parameter)
-                            : builder.BuildQuoted(in parameter, action == EncodingAction.Mask);
+        return action switch
+        {
+            EncodingAction.Mask => builder.BuildQuoted(parameter.Key, valueSpan, true, parameter.IsValueCaseSensitive),
+            EncodingAction.Quote => builder.BuildQuoted(parameter.Key, valueSpan, false, parameter.IsValueCaseSensitive),
+            EncodingAction.UrlEncode => builder.BuildUrlEncoded(parameter.Key, parameter.Language, parameter.Value.ToString()),
+            _ => builder.BuildUnQuoted(parameter.Key, parameter.Value, parameter.IsValueCaseSensitive)
+        };
     }
 
 
-    private static StringBuilder BuildUrlEncoded(this StringBuilder builder, in MimeTypeParameter parameter, bool isValueAscii)
+    private static StringBuilder BuildUrlEncoded(this StringBuilder builder,
+                                                 ReadOnlySpan<char> keySpan,
+                                                 ReadOnlySpan<char> languageSpan,
+                                                 string value)
     {
-        ReadOnlySpan<char> keySpan = parameter.Key;
-        ReadOnlySpan<char> valueSpan = parameter.Value;
-        ReadOnlySpan<char> languageSpan = parameter.Language;
-
-        if (!UrlEncoding.TryEncode(valueSpan.ToString(), out string? encoded))
+        if (!UrlEncoding.TryEncode(value, out string? encoded))
         {
             return builder;
         }
-        valueSpan = encoded.AsSpan();
+        value = encoded;
 
-        bool starred = !isValueAscii || !languageSpan.IsEmpty;
-        _ = builder.EnsureCapacity(builder.Length + GetNeededCapacity(keySpan.Length, valueSpan.Length, languageSpan.Length, isValueAscii, starred));
+        _ = builder.EnsureCapacity(builder.Length + keySpan.Length + 1 + KEY_VALUE_SEPARATOR_LENGTH + UTF_8.Length + languageSpan.Length + 2 + value.Length);
+        
         return builder.BuildKey(keySpan) // adds '='
                       .Remove(builder.Length - 1, 1) // removes '='
-                      .AppendValueUrlEncoded(isValueAscii, valueSpan, languageSpan, starred); // adds '='
-
-        ///////////////////////////////////////////////////////////////////////////////////////////////////////
-
-        static int GetNeededCapacity(int keySpanLength, int valueSpanLength, int languageSpanLength, bool isValueAscii, bool starred)
-        {
-
-            int charsetLength = isValueAscii ? 0 : UTF_8.Length;
-
-            //                                                                =
-            int neededCapacity = valueSpanLength + keySpanLength + KEY_VALUE_SEPARATOR_LENGTH;
-            if (starred)
-            {
-                //                *                  ' '
-                neededCapacity += 1 + charsetLength + 2 + languageSpanLength;
-            }
-            return neededCapacity;
-        }
+                      .AppendValueUrlEncoded(languageSpan, value); // adds '='
     }
 
 
-    private static StringBuilder BuildQuoted(this StringBuilder builder, in MimeTypeParameter parameter, bool masked)
+    private static StringBuilder BuildQuoted(this StringBuilder builder,
+                                             ReadOnlySpan<char> keySpan,
+                                             ReadOnlySpan<char> valueSpan,
+                                             bool masked,
+                                             bool caseSensitive)
     {
-        ReadOnlySpan<char> valueSpan = parameter.Value;
-        ReadOnlySpan<char> keySpan = parameter.Key;
-
         PrepareBuilder(builder, keySpan.Length, valueSpan.Length, masked);
 
         _ = builder.BuildKey(keySpan); // adds '='
-        return masked ? builder.AppendValueQuotedAndMasked(valueSpan, parameter.IsValueCaseSensitive)
-                      : builder.AppendValueQuoted(valueSpan, parameter.IsValueCaseSensitive);
+        return masked ? builder.AppendValueQuotedAndMasked(valueSpan, caseSensitive)
+                      : builder.AppendValueQuoted(valueSpan, caseSensitive);
 
         ///////////////////////////////////////////////////////////////////////////////////////
 
@@ -136,14 +106,11 @@ internal static class ParameterSerializer
     }
 
 
-    private static StringBuilder BuildUnQuoted(this StringBuilder builder, in MimeTypeParameter parameter)
+    private static StringBuilder BuildUnQuoted(this StringBuilder builder, ReadOnlySpan<char> keySpan, ReadOnlySpan<char> valueSpan, bool caseSensitive)
     {
-        ReadOnlySpan<char> valueSpan = parameter.Value;
-        ReadOnlySpan<char> keySpan = parameter.Key;
-
         PrepareBuilder(builder, keySpan.Length, valueSpan.Length);
 
-        return builder.BuildKey(keySpan).AppendValueUnQuoted(valueSpan, parameter.IsValueCaseSensitive);
+        return builder.BuildKey(keySpan).AppendValueUnQuoted(valueSpan, caseSensitive);
 
         ////////////////////////////////////////////////////////////////
 
@@ -163,14 +130,10 @@ internal static class ParameterSerializer
 
 
     private static StringBuilder AppendValueUrlEncoded(this StringBuilder builder,
-                                                     bool isValueAscii,
-                                                     ReadOnlySpan<char> valueSpan,
-                                                     ReadOnlySpan<char> languageSpan,
-                                                     bool starred)
+                                                       ReadOnlySpan<char> languageSpan,
+                                                       string value)
     {
-        return starred
-            ? builder.Append('*').Append('=').Append(isValueAscii ? "" : UTF_8).Append('\'').Append(languageSpan).Append('\'').AppendValueUnQuoted(valueSpan, true)
-            : builder.Append('=').AppendValueUnQuoted(valueSpan, true);
+        return builder.Append('*').Append('=').Append(UTF_8).Append('\'').Append(languageSpan).Append('\'').AppendValueUnQuoted(value.AsSpan(), true);
     }
 
 
