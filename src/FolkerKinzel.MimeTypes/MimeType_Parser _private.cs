@@ -62,7 +62,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         ReadOnlySpan<char> topLevelMediaTypeSpan = mediaPartSpan.Slice(0, mediaTypeSeparatorIndex);
 
         if (topLevelMediaTypeSpan.Length > MEDIA_TYPE_LENGTH_MAX_VALUE ||
-            topLevelMediaTypeSpan.ValidateToken() != TokenError.None)
+            !topLevelMediaTypeSpan.IsToken(false))
         {
             return false;
         }
@@ -70,7 +70,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         ReadOnlySpan<char> subTypeSpan = mediaPartSpan.Slice(mediaTypeSeparatorIndex + 1);
 
         if (subTypeSpan.Length > SUB_TYPE_LENGTH_MAX_VALUE ||
-            subTypeSpan.ValidateToken() != TokenError.None)
+            !subTypeSpan.IsToken(false))
         {
             return false;
         }

@@ -7,7 +7,7 @@ using System.Text;
 namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2184.
+/// Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2231.
 /// </summary>
 /// <remarks>
 /// <note type="tip">

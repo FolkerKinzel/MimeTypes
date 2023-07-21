@@ -185,7 +185,7 @@ public class MimeTypeTests
         const string ab = @"a\\b";
         string mimeString = $"""
             application/x-stuff;
-            key*1="a\";
+            key*1="a\"        ;
             key*2="\\\b"
             """;
         Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));

@@ -29,7 +29,7 @@ public readonly partial struct MimeTypeParameter
 
 
     /// <summary>
-    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045, RFC 2046 and RFC 2184
+    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045, RFC 2046 and RFC 2231
     /// to a <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>

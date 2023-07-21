@@ -15,7 +15,7 @@ internal static class ParameterSerializer
     internal const string UTF_8 = "utf-8";
 
     /// <summary>
-    /// Appends a RFC 2184 serialized <see cref="ParameterModel"/>
+    /// Appends a RFC 2231 serialized <see cref="ParameterModel"/>
     /// to a <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder"></param>

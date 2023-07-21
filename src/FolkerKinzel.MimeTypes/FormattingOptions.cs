@@ -29,7 +29,7 @@ public enum FormattingOptions
 
     /// <summary>
     /// If selected, the output is wrapped if its length exceeds a given maximum. Parameters are
-    /// splittet according to RFC 2184. This option is combined with
+    /// splittet according to RFC 2231. This option is combined with
     /// <see cref="IncludeParameters"/>.
     /// </summary>
     LineWrapping = (1 << 2) | IncludeParameters,

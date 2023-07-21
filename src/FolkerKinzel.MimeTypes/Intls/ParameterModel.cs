@@ -26,7 +26,7 @@ internal sealed class ParameterModel
     /// </para>
     /// <para>
     /// <paramref name="key"/> is not a valid MIME type parameter name
-    /// according to RFC 2184,
+    /// according to RFC 2231,
     /// </para>
     /// <para>
     /// - or -
@@ -43,9 +43,7 @@ internal sealed class ParameterModel
     /// </exception>
     internal ParameterModel(string key, string? value, string? language = null)
     {
-        
-
-        key.ValidateTokenParameter(nameof(key));
+        key.ValidateTokenParameter(nameof(key), true);
 
         if (key.Length > MimeTypeParameter.KEY_LENGTH_MAX_VALUE)
         {

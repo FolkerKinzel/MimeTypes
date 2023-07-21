@@ -22,7 +22,7 @@ internal static class ParameterParser
                 ReadOnlySpan<char> keySpan = parameter.Key;
 
                 // keySpan might have the format "key*1" if the parameter is
-                // splitted (see RFC 2184). A trailing '*', which is an indicator that
+                // splitted (see RFC 2231). A trailing '*', which is an indicator that
                 // language and/or charset information is present, has yet been eaten by
                 // MimeTypeParameter.TryParse
                 if (keySpan.IsParameterSplitted())

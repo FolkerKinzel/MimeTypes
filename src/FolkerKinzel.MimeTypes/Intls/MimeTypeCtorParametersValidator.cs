@@ -19,8 +19,8 @@ internal static class MimeTypeCtorParametersValidator
     /// </exception>
     internal static void Validate(string mediaType, string subType)
     {
-        mediaType.ValidateTokenParameter(nameof(mediaType));
-        subType.ValidateTokenParameter(nameof(subType));
+        mediaType.ValidateTokenParameter(nameof(mediaType), false);
+        subType.ValidateTokenParameter(nameof(subType), false);
         ThrowOnTooLongMediaType(mediaType);
         ThrowOnTooLongSubType(subType);
     }

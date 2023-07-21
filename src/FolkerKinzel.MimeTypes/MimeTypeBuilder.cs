@@ -95,7 +95,7 @@ public sealed class MimeTypeBuilder
     /// </para>
     /// <para>
     /// <paramref name="key"/> is not a valid MIME type parameter name
-    /// according to RFC 2184,
+    /// according to RFC 2231,
     /// </para>
     /// <para>
     /// - or -

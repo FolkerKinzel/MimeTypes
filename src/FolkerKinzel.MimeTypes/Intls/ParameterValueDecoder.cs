@@ -26,7 +26,7 @@ internal static class ParameterValueDecoder
     /// </remarks>
     internal static bool TryDecodeValue(in ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)
     {
-        // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2184).
+        // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2231).
         // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
         if (idx.IsStarred && !TryDecodeUrl(in idx, ref parameterString))
         {
@@ -49,7 +49,7 @@ internal static class ParameterValueDecoder
         }
         
         // If the the value is not quoted and the key is not starred (key*) the value shall remain as it is
-        // (RFC 2184).
+        // (RFC 2231).
 
         return true;
     }

@@ -9,10 +9,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
     /// <summary>
     /// Creates a complete <see cref="string"/> representation of the instance 
-    /// (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.
+    /// (according to RFC 2045, RFC 2046 and RFC 2231) that includes the <see cref="Parameters"/>.
     /// </summary>
     /// <returns>A complete <see cref="string"/> representation of the instance 
-    /// (according to RFC 2045, RFC 2046 and RFC 2184) that includes the <see cref="Parameters"/>.</returns>
+    /// (according to RFC 2045, RFC 2046 and RFC 2231) that includes the <see cref="Parameters"/>.</returns>
     /// <example>
     /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
@@ -29,7 +29,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="FormattingOptions.LineWrapping"/>
     /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
-    /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045, RFC 2046 and RFC 2184.</returns>
+    /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045, RFC 2046 and RFC 2231.</returns>
     /// <example>
     /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>

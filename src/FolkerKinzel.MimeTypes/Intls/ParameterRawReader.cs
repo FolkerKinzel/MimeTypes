@@ -4,6 +4,7 @@ namespace FolkerKinzel.MimeTypes.Intls;
 
 internal static class ParameterRawReader
 {
+    const char SEPARATOR = ';';
     internal static int GetNextParameterSeparatorIndex(ReadOnlySpan<char> value)
     {
         bool isInQuotes = false;
@@ -13,18 +14,17 @@ internal static class ParameterRawReader
         {
             char current = value[i];
 
-            if (current == '\\') // Mask char: Skip one!
+            if (current == '\\')
             {
-                int overNext = i + 2;
-                if (overNext < value.Length && value[overNext - 1] == '"' && value[overNext] == ';')
+                // last char before the string ends is the masking '\\'
+                // this must remein in the string
+                // see: https://fetch.spec.whatwg.org/#collect-an-http-quoted-string
+                if (IsBackSlashLastChar(value, ref i))
                 {
-                    // last char before the string ends is the masking '\\'
-                    // this must remein in the string
-                    // see: https://fetch.spec.whatwg.org/#collect-an-http-quoted-string
-                    continue;
+                    return i;
                 }
 
-                i++;
+                i++; // Mask char: Skip one!
                 continue;
             }
 
@@ -38,7 +38,7 @@ internal static class ParameterRawReader
                 continue;
             }
 
-            if (current == ';' && attributeValueSeparatorFound)
+            if (current == SEPARATOR && attributeValueSeparatorFound)
             {
                 return i;
             }
@@ -65,5 +65,38 @@ internal static class ParameterRawReader
         }
 
         return -1;
+    }
+
+    private static bool IsBackSlashLastChar(ReadOnlySpan<char> value, ref int current)
+    {
+        int next = current + 1;
+        if (next < value.Length && 
+            value[next] == '"' && 
+            TryFindSeparatorSkipWhiteSpace(value, ref next))
+        {
+            current = next;
+            return true;
+        }
+        return false;
+
+        ///////////////////////////////////////////////////////////////////
+
+        static bool TryFindSeparatorSkipWhiteSpace(ReadOnlySpan<char> value, ref int next)
+        {
+            for (int i = next + 1; i < value.Length; i++)
+            {
+                char c = value[i];
+                if (c == SEPARATOR)
+                {
+                    next = i;
+                    return true;
+                }
+                if (!c.IsWhiteSpace())
+                {
+                    return false;
+                }
+            }
+            return false;
+        }
     }
 }

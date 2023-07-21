@@ -109,7 +109,7 @@ internal readonly ref struct ParameterIndexes
     /// dependens on the state of <see cref="KeyLength"/>.</returns>
     /// <remarks>
     /// <para>
-    /// A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2184)
+    /// A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2231)
     /// and the value is URL encoded.
     /// If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
     /// </para>

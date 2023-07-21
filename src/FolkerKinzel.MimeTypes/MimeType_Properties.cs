@@ -85,7 +85,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// Finds an appropriate file type extension for <paramref name="mimeTypeString"/>.
     /// </summary>
     /// <param name="mimeTypeString">A <see cref="string"/> that represents an Internet Media Type ("MIME type")
-    /// according to RFC 2045, RFC 2046 and RFC 2184.</param>
+    /// according to RFC 2045, RFC 2046 and RFC 2231.</param>
     /// <returns>An appropriate file type extension for <paramref name="mimeTypeString"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
