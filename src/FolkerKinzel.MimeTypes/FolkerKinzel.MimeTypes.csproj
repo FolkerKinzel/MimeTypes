@@ -42,6 +42,9 @@
     <Using Include="System.Runtime.CompilerServices" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
     <Using Include="System.Diagnostics" />
+	  <Using Include="System.Text"/>
+	  <Using Include="FolkerKinzel.Strings"/>
+	  <Using Include="FolkerKinzel.Strings.Polyfills"/>
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Intls\ThrowHelper.cs" />

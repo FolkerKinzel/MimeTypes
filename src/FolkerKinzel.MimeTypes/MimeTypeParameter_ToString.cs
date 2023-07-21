@@ -1,5 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
-using System.Text;
+﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
 namespace FolkerKinzel.MimeTypes;
 

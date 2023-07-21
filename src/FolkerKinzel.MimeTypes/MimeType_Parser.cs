@@ -1,10 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
-using FolkerKinzel.MimeTypes.Properties;
-using FolkerKinzel.Strings;
-using FolkerKinzel.Strings.Polyfills;
-using System.Text;
-
-namespace FolkerKinzel.MimeTypes;
+﻿namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {

@@ -7,6 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Diagnostics.CodeAnalysis;
 using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 

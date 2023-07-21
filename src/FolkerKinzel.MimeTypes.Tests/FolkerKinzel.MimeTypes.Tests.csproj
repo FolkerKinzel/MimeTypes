@@ -69,6 +69,13 @@
 		</EmbeddedResource>
 	</ItemGroup>
 
+	<ItemGroup>
+	  <Folder Include="Intls\Comparisons\" />
+	  <Folder Include="Intls\FileTypeExtensions\" />
+	  <Folder Include="Intls\Parameters\Encodings\" />
+	  <Folder Include="Intls\Parameters\Serializers\Builders\" />
+	</ItemGroup>
+
 
 	<Target Name="PostBuild" AfterTargets="PostBuildEvent" Condition="'$(TargetFramework)' == 'net6.0'">
 		<Exec Command="echo $(ProjectDir) &gt; &quot;$(ProjectDir)\Resources\ProjDir.txt&quot;" />

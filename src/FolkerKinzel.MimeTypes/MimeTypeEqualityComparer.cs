@@ -1,4 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
+﻿using FolkerKinzel.MimeTypes.Intls.Comparisons;
 
 namespace FolkerKinzel.MimeTypes;
 

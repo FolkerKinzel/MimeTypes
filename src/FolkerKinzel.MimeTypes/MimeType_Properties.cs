@@ -1,5 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
-using FolkerKinzel.Strings.Polyfills;
+﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
 namespace FolkerKinzel.MimeTypes;
 

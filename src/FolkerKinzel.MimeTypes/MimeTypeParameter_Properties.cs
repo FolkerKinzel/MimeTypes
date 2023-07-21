@@ -1,5 +1,4 @@
-﻿using FolkerKinzel.Strings.Polyfills;
-namespace FolkerKinzel.MimeTypes;
+﻿namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeTypeParameter
 {
@@ -24,7 +23,7 @@ public readonly partial struct MimeTypeParameter
     internal const int LANGUAGE_LENGTH_MAX_VALUE = 0xFF;
 
     private const int SINGLE_QUOTES_COUNT = 2;
-    private const int SEPARATOR_LENGTH = 1;
+    internal const int EQUALS_SIGN_LENGTH = 1;
 
 
     private readonly ReadOnlyMemory<char> _parameterString;
@@ -37,8 +36,8 @@ public readonly partial struct MimeTypeParameter
     private readonly int _idx;
 
 
-    // The Offset for the '='-Sign is not stored:         *                                             =
-    private int KeyValueOffset => ((_idx >> KEY_VALUE_OFFSET_SHIFT) & KEY_VALUE_OFFSET_MAX_VALUE) + SEPARATOR_LENGTH;
+    // The Offset for the '='-Sign is not stored:    *  or   ""                 1                          =
+    private int KeyValueOffset => ((_idx >> KEY_VALUE_OFFSET_SHIFT) & KEY_VALUE_OFFSET_MAX_VALUE) + EQUALS_SIGN_LENGTH;
 
     private int KeyLength => _idx & KEY_LENGTH_MAX_VALUE;
 
@@ -48,7 +47,7 @@ public readonly partial struct MimeTypeParameter
 
     private int CharSetLength => (_idx >> CHARSET_LENGTH_SHIFT) & CHARSET_LENGTH_MAX_VALUE;
 
-    private int LanguageStart => KeyLength + KeyValueOffset + CharSetLength + 1;
+    private int LanguageStart => KeyLength + KeyValueOffset + EQUALS_SIGN_LENGTH + CharSetLength;
 
     private int LanguageLength => (_idx >> LANGUAGE_LENGTH_SHIFT) & LANGUAGE_LENGTH_MAX_VALUE;
 

@@ -1,8 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Properties;
-using FolkerKinzel.Strings;
-using System.Reflection;
-
-namespace FolkerKinzel.MimeTypes.Intls;
+﻿namespace FolkerKinzel.MimeTypes.Intls;
 
 internal static class HelperExtension
 {

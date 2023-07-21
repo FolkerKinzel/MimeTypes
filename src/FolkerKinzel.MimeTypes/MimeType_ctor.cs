@@ -1,8 +1,6 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
-using FolkerKinzel.MimeTypes.Properties;
-using System;
+﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 using System.Runtime.InteropServices;
-using System.Text;
 
 namespace FolkerKinzel.MimeTypes;
 

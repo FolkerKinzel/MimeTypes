@@ -1,13 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Net.Sockets;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using FolkerKinzel.MimeTypes.Intls;
-using static System.Net.Mime.MediaTypeNames;
+﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 
 namespace FolkerKinzel.MimeTypes;
 
