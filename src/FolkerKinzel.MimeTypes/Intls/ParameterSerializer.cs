@@ -27,10 +27,9 @@ internal static class ParameterSerializer
 
         ReadOnlySpan<char> valueSpan = model.Value.AsSpan();
         EncodingAction action = valueSpan.EncodingAction();
+        action = model.Language != null ? EncodingAction.UrlEncode : action;
 
-        bool starred = model.Language != null || action == EncodingAction.UrlEncode;
-
-        if (starred && model.Value != null)
+        if (action == EncodingAction.UrlEncode && model.Value != null)
         {
             if (!UrlEncoding.TryEncode(model.Value!, out string? encoded))
             {
@@ -51,7 +50,7 @@ internal static class ParameterSerializer
                                        action != EncodingAction.UrlEncode,
                                        valueSpan,
                                        model.Language.AsSpan(),
-                                       starred),
+                                       action == EncodingAction.UrlEncode),
         };
     }
 
@@ -69,16 +68,13 @@ internal static class ParameterSerializer
         ReadOnlySpan<char> valueSpan = parameter.Value;
         EncodingAction action = valueSpan.EncodingAction();
 
-        bool urlEncoded = alwaysUrlEncoded || !parameter.Language.IsEmpty || action == EncodingAction.UrlEncode;
+        action = alwaysUrlEncoded || !parameter.Language.IsEmpty ? action = EncodingAction.UrlEncode : action;
 
-        if (urlEncoded)
-        {
-            return builder.BuildUrlEncoded(in parameter, action != EncodingAction.UrlEncode);
-        }
-
-        return action == EncodingAction.None
-                ? builder.BuildUnQuoted(in parameter)
-                : builder.BuildQuoted(in parameter, action == EncodingAction.Mask);
+        return action == EncodingAction.UrlEncode
+                        ? builder.BuildUrlEncoded(in parameter, false)
+                        : action == EncodingAction.None
+                            ? builder.BuildUnQuoted(in parameter)
+                            : builder.BuildQuoted(in parameter, action == EncodingAction.Mask);
     }
 
 
