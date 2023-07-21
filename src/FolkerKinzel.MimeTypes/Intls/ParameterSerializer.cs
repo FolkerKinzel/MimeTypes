@@ -13,6 +13,7 @@ namespace FolkerKinzel.MimeTypes.Intls;
 internal static class ParameterSerializer
 {
     internal const string UTF_8 = "utf-8";
+    private const int KEY_VALUE_SEPARATOR_LENGTH = 1;
 
     /// <summary>
     /// Appends a RFC 2231 serialized <see cref="ParameterModel"/>
@@ -25,14 +26,11 @@ internal static class ParameterSerializer
         Debug.Assert(builder is not null);
 
         ReadOnlySpan<char> valueSpan = model.Value.AsSpan();
-        ReadOnlySpan<char> languageSpan = model.Language.AsSpan();
-        bool isValueAscii = valueSpan.IsAscii();
-        bool hasValue = !valueSpan.IsEmpty;
+        EncodingAction action = valueSpan.EncodingAction();
 
-        bool starred = !languageSpan.IsEmpty || !isValueAscii;
+        bool starred = model.Language != null || action == EncodingAction.UrlEncode;
 
-
-        if (starred && hasValue)
+        if (starred && model.Value != null)
         {
             if (!UrlEncoding.TryEncode(model.Value!, out string? encoded))
             {
@@ -41,18 +39,19 @@ internal static class ParameterSerializer
             valueSpan = encoded.AsSpan();
         }
 
-        TSpecialKinds tSpecialKind = starred ? TSpecialKinds.None 
-                                             : valueSpan.AnalyzeTSpecials();
-
         _ = builder.Append(model.Key);
 
-        _ = tSpecialKind switch
+        _ = action switch
         {
-            TSpecialKinds.MaskChar => builder.Append('=').AppendValueQuotedAndMasked(valueSpan, true),
-            TSpecialKinds.TSpecial => builder.Append('=').AppendValueQuoted(valueSpan, true),
+            EncodingAction.Mask => builder.Append('=').AppendValueQuotedAndMasked(valueSpan, true),
+            EncodingAction.Quote => builder.Append('=').AppendValueQuoted(valueSpan, true),
 
             // This adds '=':
-            _ => AppendValueUrlEncoded(builder, isValueAscii, valueSpan, languageSpan, starred),
+            _ => AppendValueUrlEncoded(builder,
+                                       action != EncodingAction.UrlEncode,
+                                       valueSpan,
+                                       model.Language.AsSpan(),
+                                       starred),
         };
     }
 
@@ -68,21 +67,18 @@ internal static class ParameterSerializer
     internal static StringBuilder Append(this StringBuilder builder, in MimeTypeParameter parameter, bool alwaysUrlEncoded)
     {
         ReadOnlySpan<char> valueSpan = parameter.Value;
+        EncodingAction action = valueSpan.EncodingAction();
 
-        bool isValueAscii = valueSpan.IsAscii();
-        bool urlEncoded = alwaysUrlEncoded || !parameter.Language.IsEmpty || !isValueAscii;
+        bool urlEncoded = alwaysUrlEncoded || !parameter.Language.IsEmpty || action == EncodingAction.UrlEncode;
 
         if (urlEncoded)
         {
-            return builder.BuildUrlEncoded(in parameter, isValueAscii);
+            return builder.BuildUrlEncoded(in parameter, action != EncodingAction.UrlEncode);
         }
 
-        
-        TSpecialKinds tSpecialKind = valueSpan.IsEmpty ? TSpecialKinds.TSpecial : valueSpan.AnalyzeTSpecials();
-
-        return tSpecialKind == TSpecialKinds.None
+        return action == EncodingAction.None
                 ? builder.BuildUnQuoted(in parameter)
-                : builder.BuildQuoted(in parameter, tSpecialKind);
+                : builder.BuildQuoted(in parameter, action == EncodingAction.Mask);
     }
 
 
@@ -111,8 +107,8 @@ internal static class ParameterSerializer
 
             int charsetLength = isValueAscii ? 0 : UTF_8.Length;
 
-            //                                                     =
-            int neededCapacity = valueSpanLength + keySpanLength + 1;
+            //                                                                =
+            int neededCapacity = valueSpanLength + keySpanLength + KEY_VALUE_SEPARATOR_LENGTH;
             if (starred)
             {
                 //                *                  ' '
@@ -123,20 +119,24 @@ internal static class ParameterSerializer
     }
 
 
-    private static StringBuilder BuildQuoted(this StringBuilder builder, in MimeTypeParameter parameter, TSpecialKinds tSpecialKind)
+    private static StringBuilder BuildQuoted(this StringBuilder builder, in MimeTypeParameter parameter, bool masked)
     {
         ReadOnlySpan<char> valueSpan = parameter.Value;
         ReadOnlySpan<char> keySpan = parameter.Key;
-        bool isValueCaseSensitive = parameter.IsValueCaseSensitive;
 
-        bool masked = tSpecialKind == TSpecialKinds.MaskChar;
-
-        int neededCapacity = 2 + (masked ? valueSpan.Length + 2 : valueSpan.Length) + keySpan.Length + 1;
-        _ = builder.EnsureCapacity(builder.Length + neededCapacity);
+        PrepareBuilder(builder, keySpan.Length, valueSpan.Length, masked);
 
         _ = builder.BuildKey(keySpan); // adds '='
-        return masked ? builder.AppendValueQuotedAndMasked(valueSpan, isValueCaseSensitive)
-                      : builder.AppendValueQuoted(valueSpan, isValueCaseSensitive);
+        return masked ? builder.AppendValueQuotedAndMasked(valueSpan, parameter.IsValueCaseSensitive)
+                      : builder.AppendValueQuoted(valueSpan, parameter.IsValueCaseSensitive);
+
+        ///////////////////////////////////////////////////////////////////////////////////////
+
+        static void PrepareBuilder(StringBuilder builder, int keyLength, int valueLength, bool masked)
+        {
+            int neededCapacity = 2 + (masked ? valueLength + 2 : valueLength) + keyLength + KEY_VALUE_SEPARATOR_LENGTH;
+            _ = builder.EnsureCapacity(builder.Length + neededCapacity);
+        }
     }
 
 
@@ -145,11 +145,17 @@ internal static class ParameterSerializer
         ReadOnlySpan<char> valueSpan = parameter.Value;
         ReadOnlySpan<char> keySpan = parameter.Key;
 
-        //                                                       =
-        int neededCapacity = valueSpan.Length + keySpan.Length + 1;
-        _ = builder.EnsureCapacity(builder.Length + neededCapacity);
+        PrepareBuilder(builder, keySpan.Length, valueSpan.Length);
 
         return builder.BuildKey(keySpan).AppendValueUnQuoted(valueSpan, parameter.IsValueCaseSensitive);
+
+        ////////////////////////////////////////////////////////////////
+
+        static void PrepareBuilder(StringBuilder builder, int keyLength, int valueLength)
+        {
+            int neededCapacity = valueLength + keyLength + KEY_VALUE_SEPARATOR_LENGTH;
+            _ = builder.EnsureCapacity(builder.Length + neededCapacity);
+        }
     }
 
 

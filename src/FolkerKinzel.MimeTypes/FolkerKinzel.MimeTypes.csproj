@@ -44,6 +44,8 @@
     <Using Include="System.Diagnostics" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Intls\ThrowHelper.cs" />
+    <Compile Remove="Intls\TokenError.cs" />
     <Compile Remove="Intls\UnitTestGenerator.cs" />
   </ItemGroup>
   <ItemGroup>

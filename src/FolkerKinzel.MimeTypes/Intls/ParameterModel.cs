@@ -38,7 +38,7 @@ internal sealed class ParameterModel
     /// - or -
     /// </para>
     /// <para>
-    /// <paramref name="language"/> is neither <c>null</c> nor <see cref="string.Empty"/> nor a valid IETF-Language-Tag according to RFC-1766.
+    /// <paramref name="language"/> is neither <c>null</c> nor empty nor a valid IETF-Language-Tag according to RFC-1766.
     /// </para>
     /// </exception>
     internal ParameterModel(string key, string? value, string? language = null)
@@ -50,11 +50,12 @@ internal sealed class ParameterModel
             throw new ArgumentException(Res.StringTooLong, nameof(key));
         }
 
-        ValidateLanguageParameter(language, nameof(language));
+        Language = string.IsNullOrEmpty(language) ? null : language;
+        ValidateLanguageParameter(Language, nameof(language));
 
-        Key = key;
-        Value = value;
-        Language = string.IsNullOrWhiteSpace(language) ? null : language;
+        Key = key.Trim();
+        Value = string.IsNullOrEmpty(value) ? null : value;
+        
     }
 
 
