@@ -11,7 +11,7 @@ public class ParameterSplitterTests
     public void SplitParameterTest1()
     {
         ReadOnlyMemory<char> mem = "keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy=utf-8'en'Very%20very%20very%20very%20looooooooooooooooooooong%20text\"".AsMemory();
-        Assert.IsTrue(MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter param));
+        Assert.IsTrue(MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter param, out _));
 
         var input = new StringBuilder();
         param.AppendTo(input);
@@ -30,7 +30,7 @@ public class ParameterSplitterTests
         string s = "application/x-stuff;key*=utf-8'de'" + Uri.UnescapeDataString(value);
 
         Assert.IsTrue(MimeType.TryParse(s, out MimeType mime));
-        var para = mime.Parameters().First();
+        MimeTypeParameter para = mime.Parameters().First();
         Assert.AreEqual(value, para.Value.ToString(), false);
 
         s = mime.ToString(FormattingOptions.IncludeParameters | FormattingOptions.LineWrapping);
@@ -44,21 +44,25 @@ public class ParameterSplitterTests
     [TestMethod]
     public void SplitParameterTest3()
     {
+        const string value = """
+        Masked "1" Masked "2" Masked "3" 
+        """;
+
         string s = """
-                   application/x-stuff;
+                   application /x-stuff;
                    key*0="Masked \"1\" ";
                    key*1="Masked \"2\" ";
                    key*2="Masked \"3\" ";
                    """;
         Assert.IsTrue(MimeType.TryParse(s, out MimeType mime));
-        var para = mime.Parameters().First();
-        //Assert.AreEqual(value, para.Value.ToString(), false);
+        MimeTypeParameter para = mime.Parameters().First();
+        Assert.AreEqual(value, para.Value.ToString(), false);
 
         s = mime.ToString(FormattingOptions.IncludeParameters | FormattingOptions.LineWrapping);
 
         Assert.IsTrue(MimeType.TryParse(s, out mime));
         para = mime.Parameters().First();
-        //Assert.AreEqual(value, para.Value.ToString(), false);
+        Assert.AreEqual(value, para.Value.ToString(), false);
     }
 }
 

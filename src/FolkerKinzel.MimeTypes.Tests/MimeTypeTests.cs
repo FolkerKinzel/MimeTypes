@@ -138,13 +138,18 @@ public class MimeTypeTests
         string urlEncoded = Uri.EscapeDataString("äöü");
         string mimeString = $"""
             application/x-stuff;
-            key*1*=''{urlEncoded} ;
-            key*2="This is %E 7e\\ / \" @ ? ; quoted.\"
+            key*1*=utf-8'en'{urlEncoded} ;
+            key*2="This is %EF 7e\\ / \" @ ? ; quoted.\"
             """;
         Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-        Assert.AreEqual(1, mime.Parameters().Count());
+        var paras = mime.Parameters().ToArray();
+        Assert.AreEqual(1, paras.Length);
 
-        var par = mime.Parameters().First();  
+        MimeTypeParameter par = paras[0];
+        Assert.AreEqual("key", par.Key.ToString());
+        StringAssert.Contains(par.Value.ToString(), @"This is %EF 7e\ / "" @ ? ; quoted.\");
+        Assert.AreEqual("en", par.Language.ToString());
+        Assert.AreEqual("utf-8", par.CharSet.ToString());
     }
 
 

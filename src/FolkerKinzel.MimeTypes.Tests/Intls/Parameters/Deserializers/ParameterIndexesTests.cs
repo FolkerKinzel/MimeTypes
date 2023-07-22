@@ -37,7 +37,7 @@ public class ParameterIndexesTests
     public void ContainsCharSetAndLanguageTest1()
     {
         var idx = new ParameterIndexes("".AsSpan());
-        Assert.IsFalse(idx.IsStarred);
+        Assert.IsFalse(idx.Starred);
     }
 }
 

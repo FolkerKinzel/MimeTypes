@@ -26,10 +26,10 @@ internal readonly ref struct ParameterIndexes
             return;
         }
 
-        IsStarred = Span[keyLengthLocal - 1] == '*';
-        IsValueQuoted = !IsStarred && GetIsValueQuoted(Span.Slice(keyLengthLocal + 1));
-        KeyLength = IsStarred ? keyLengthLocal - STAR_LENGTH : keyLengthLocal;
-        KeyValueOffset = IsStarred || IsValueQuoted ? 1 : 0;
+        Starred = Span[keyLengthLocal - 1] == '*';
+        IsValueQuoted = !Starred && GetIsValueQuoted(Span.Slice(keyLengthLocal + 1));
+        KeyLength = Starred ? keyLengthLocal - STAR_LENGTH : keyLengthLocal;
+        KeyValueOffset = Starred || IsValueQuoted ? 1 : 0;
         ValuePartStart = KeyLength + KeyValueOffset + SEPARATOR_LENGTH;
 
         var idx = GetLanguageIdx();
@@ -114,7 +114,7 @@ internal readonly ref struct ParameterIndexes
     /// If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
     /// </para>
     /// </remarks>
-    internal readonly bool IsStarred;
+    internal readonly bool Starred;
 
     /// <summary>
     /// Indicates whether the parameter value is enclosed with double quotes.
@@ -122,9 +122,9 @@ internal readonly ref struct ParameterIndexes
     /// <returns><c>true</c> if the parameter key is enclosed with double quotes, otherwise false.</returns>
     internal readonly bool IsValueQuoted;
 
-    private readonly bool IsSplitted() => Span.Slice(0, KeyLength).IsParameterSplitted();
+    private readonly bool Splitted() => Span.Slice(0, KeyLength).IsParameterSplitted();
 
-    internal readonly bool Decode() => IsValueQuoted || !IsSplitted();
+    internal readonly bool Decode() => IsValueQuoted || !Splitted();
 
     /// <summary>
     /// Verifies the indexes.
@@ -163,7 +163,7 @@ internal readonly ref struct ParameterIndexes
 
     private readonly (int LanguageStart, int LanguageLength) GetLanguageIdx()
     {
-        if (!IsStarred)
+        if (!Starred)
         {
             return (0, 0);
         }

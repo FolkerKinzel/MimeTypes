@@ -24,7 +24,7 @@ internal static class ParameterValueDecoder
     {
         // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2231).
         // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
-        if (idx.IsStarred && !TryDecodeUrl(in idx, ref parameterString))
+        if (idx.Starred && !TryDecodeUrl(in idx, ref parameterString))
         {
             return false;
         }

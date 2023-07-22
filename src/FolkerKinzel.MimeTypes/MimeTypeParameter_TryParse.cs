@@ -7,18 +7,22 @@ public readonly partial struct MimeTypeParameter
     /// <summary>
     /// Tries to parse a read-only character memory as <see cref="MimeTypeParameter"/>.
     /// </summary>
-    /// <param name="sanitizeParameterSring"><c>true</c> indicates that the <paramref name="parameterString"/> should be examinated and sanitized.</param>
+    /// <param name="sanitizeParameterString"><c>true</c> indicates that the <paramref name="parameterString"/> should be examinated and sanitized.</param>
     /// <param name="parameterString">The ReadOnlyMemory&lt;char&gt; to be parsed.</param>
     /// <param name="parameter">When the method returns <c>true</c> the parameter holds the parsed <see cref="MimeTypeParameter"/>.</param>
     /// 
     /// <returns><c>true</c> if <paramref name="parameterString"/> could be parsed as <see cref="MimeTypeParameter"/>.</returns>
-    internal static bool TryParse(bool sanitizeParameterSring, ref ReadOnlyMemory<char> parameterString, out MimeTypeParameter parameter)
+    internal static bool TryParse(bool sanitizeParameterString,
+                                  ref ReadOnlyMemory<char> parameterString,
+                                  out MimeTypeParameter parameter,
+                                  out bool starred)
     {
         parameter = default;
+        starred = false;
 
         ParameterIndexes idx; 
 
-        if (sanitizeParameterSring)
+        if (sanitizeParameterString)
         {
             var sanitizer = new ParameterSanitizer();
             
@@ -48,6 +52,7 @@ public readonly partial struct MimeTypeParameter
         }
 
         parameter = new MimeTypeParameter(in parameterString, idx.InitMimeTypeParameterCtorIdx());
+        starred = idx.Starred;
         return true;    
     }
 

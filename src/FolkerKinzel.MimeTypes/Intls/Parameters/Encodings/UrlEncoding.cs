@@ -1,4 +1,5 @@
 ﻿using System.Net;
+using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
 
@@ -54,10 +55,24 @@ internal static class UrlEncoding
         Encoding encoding = TextEncodingConverter.GetEncoding(charSet, encoderFallback, decoderFallback);
         Encoding ascii = TextEncodingConverter.GetEncoding(20127, encoderFallback, decoderFallback);
 
-        ascii.EncoderFallback = EncoderFallback.ExceptionFallback;
         byte[] bytes = ascii.GetBytes(value);
 
         result = encoding.GetString(WebUtility.UrlDecodeToBytes(bytes, 0, bytes.Length));
         return result;
+    }
+
+    internal static string UrlEncodeValueWithCharset(string value, string? charSet)
+    {
+        Encoding encoding = TextEncodingConverter.GetEncoding(charSet);
+        var bytes = encoding.GetBytes(value);
+
+        StringBuilder sb = new StringBuilder(3);
+
+        for (int i = 0; i < bytes.Length; i++)
+        {
+            sb.Append('%');
+            sb.Append(bytes[i].ToString("X2"));
+        }
+        return sb.ToString();
     }
 }

@@ -37,21 +37,22 @@ public class MimeTypeParameterTests
         """;
 
         var mime = MimeType.Parse(longMessage);
+        Assert.AreEqual(1, mime.Parameters().Count());
 
-        foreach (MimeTypeParameter param in mime.Parameters()) 
-        {
-            ReadOnlySpan<char> key = param.Key;
-            ReadOnlySpan<char> value = param.Value;
-        }
+        //foreach (MimeTypeParameter param in mime.Parameters()) 
+        //{
+        //    ReadOnlySpan<char> key = param.Key;
+        //    ReadOnlySpan<char> value = param.Value;
+        //}
 
-        string s = mime.ToString();
+        //string s = mime.ToString();
     }
 
     [TestMethod]
     public void TryParseTest1()
     {
         ReadOnlyMemory<char> mem = "key:value".AsMemory();
-        Assert.IsFalse(MimeTypeParameter.TryParse(true, ref mem, out _));
+        Assert.IsFalse(MimeTypeParameter.TryParse(true, ref mem, out _, out _));
     }
 
 
@@ -73,8 +74,8 @@ public class MimeTypeParameterTests
     public void CharsetTest1()
     {
         string input = "key*=utf-8'de'" + Uri.EscapeDataString("äääääääääh");
-        var mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter parameter));
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter parameter, out _));
         Assert.AreEqual("utf-8", parameter.CharSet.ToString());
         Assert.AreEqual("de", parameter.Language.ToString());
 

@@ -47,7 +47,7 @@ public class ParameterSerializerTests
     public void AppendTest4()
     {
         ReadOnlyMemory<char> mem = "key=".AsMemory();
-        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para);
+        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para, out _);
 
         var sb = new StringBuilder();
         sb.Append(in para, false);
@@ -58,7 +58,7 @@ public class ParameterSerializerTests
     public void AppendTest5()
     {
         ReadOnlyMemory<char> mem = "key*='en'".AsMemory();
-        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para);
+        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para, out _);
 
         var sb = new StringBuilder();
         sb.Append(in para, false);
@@ -69,7 +69,7 @@ public class ParameterSerializerTests
     public void AppendTest6()
     {
         ReadOnlyMemory<char> mem = ("key*=''" + Uri.EscapeDataString("äöü")).AsMemory();
-        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para);
+        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para, out _);
 
         var sb = new StringBuilder();
         sb.Append(in para, false);
@@ -81,7 +81,7 @@ public class ParameterSerializerTests
     {
         const string bla = "charset=\"BLA\\\"BLA\"";
         ReadOnlyMemory<char> mem = bla.AsMemory();
-        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para);
+        _ = MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter para, out _);
 
         var sb = new StringBuilder();
         sb.Append(in para, false);

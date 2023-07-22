@@ -1,5 +1,6 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+using FolkerKinzel.Strings;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
@@ -8,7 +9,7 @@ internal static class ParameterParser
     internal static IEnumerable<MimeTypeParameter> ParseParameters(ReadOnlyMemory<char> remainingParameters)
     {
         string currentKey = "";
-        bool currentUrlEncoded = false;
+        bool splittedParameterStartedUrlEncoded = false;
 
         StringBuilder? sb = null;
         MimeTypeParameter currentParameter;
@@ -17,7 +18,7 @@ internal static class ParameterParser
         {
             GetNextParameterMemory(ref remainingParameters, out ReadOnlyMemory<char> nextParameter);
 
-            if (MimeTypeParameter.TryParse(true, ref nextParameter, out MimeTypeParameter parameter))
+            if (MimeTypeParameter.TryParse(true, ref nextParameter, out MimeTypeParameter parameter, out bool currentStarred))
             {
                 ReadOnlySpan<char> keySpan = parameter.Key;
 
@@ -30,11 +31,11 @@ internal static class ParameterParser
                 {
                     sb ??= new StringBuilder(MimeTypeParameter.STRING_LENGTH);
 
-                    bool isParameterUrlEncoded = keySpan[keySpan.Length - 1] == '*';
                     keySpan = keySpan.Slice(0, splitIndicatorIndex + 1); // key*
 
                     if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase)) // next parameter
                     {
+                        splittedParameterStartedUrlEncoded = currentStarred;
                         currentKey = keySpan.ToString();
 
                         if (TryParseParameter(sb, out currentParameter)) // return previous splitted parameter that might be in the StringBuilder
@@ -45,20 +46,16 @@ internal static class ParameterParser
                         _ = sb.Append(currentKey).Append('=').Append(parameter.CharSet).Append('\'').Append(parameter.Language).Append('\'');
                     }
 
-                    if(currentUrlEncoded && !isParameterUrlEncoded)
-                    {
-                        // decode the UrlEncoded value in sb
-                        // remove the * from the keyName in sb
-                        sb.Remove(0, currentKey.Length + 1);
-                        if(sb.Contains('%'))
-                        {
-                            string charset = sb.ToString(0, sb.IndexOf('\''));
-                            if(UrlEncoding.TryDecode(sb.ToString(), ))
-                        }
-                    }
-
                     // concat with the previous:
                     _ = sb.Append(parameter.Value);
+
+                    if (splittedParameterStartedUrlEncoded && !currentStarred && parameter.Value.Contains('%'))
+                    {
+                        // Quoted parts of a splitted parameter that starts URL encoded 
+                        // could contain URL escape sequences like "%C7. That's why the 
+                        // '%' chars have to be UrlEncoded before the value is appended.
+                        sb.ReplacePercentSignsUrlEncoded(currentKey.Length, parameter.Value.Length);
+                    }
                 }
                 else // not splitted; NOTE: This MUST be a different parameter than the previous because "key*1" and "key" are different keys.
                 {
@@ -71,7 +68,7 @@ internal static class ParameterParser
                     yield return parameter;
                 }
             }
-        }//whille
+        }//while
 
 
         // The last parameter, which might be in the StringBuilder:
@@ -81,6 +78,14 @@ internal static class ParameterParser
         }
     }
 
+    private static void ReplacePercentSignsUrlEncoded(this StringBuilder sb, int currentKeyLength, int currentValueLength)
+    {
+        Debug.Assert(sb != null);
+        Debug.Assert(sb.IndexOf('\'') != -1);
+        int lengthOfKeyAndEqualsSign = currentKeyLength + 1;
+        string charSet = sb.ToString(lengthOfKeyAndEqualsSign, sb.IndexOf('\'') - lengthOfKeyAndEqualsSign);
+        sb.Replace("%", UrlEncoding.UrlEncodeValueWithCharset("%", charSet), sb.Length - currentValueLength, currentValueLength);
+    }
 
     /// <summary>
     /// Tries to parse the content in a <see cref="StringBuilder"/> as <see cref="MimeTypeParameter"/>.
@@ -95,7 +100,7 @@ internal static class ParameterParser
             ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
             _ = sb.Clear();
 
-            return MimeTypeParameter.TryParse(false, ref mem, out concatenated);
+            return MimeTypeParameter.TryParse(false, ref mem, out concatenated, out _);
         }
 
         concatenated = default;
