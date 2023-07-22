@@ -27,10 +27,10 @@ internal static class ParameterSerializer
 
         _ = action switch
         {
-            EncodingAction.Mask => builder.BuildQuoted(model.Key.AsSpan(), valueSpan, true, true),
-            EncodingAction.Quote => builder.BuildQuoted(model.Key.AsSpan(), valueSpan, false, true),
+            EncodingAction.Mask => builder.BuildQuoted(model.Key.AsSpan(), valueSpan, true, MimeTypeParameter.GetIsValueCaseSensitive(model.Key)),
+            EncodingAction.Quote => builder.BuildQuoted(model.Key.AsSpan(), valueSpan, false, MimeTypeParameter.GetIsValueCaseSensitive(model.Key)),
             EncodingAction.UrlEncode => builder.BuildUrlEncoded(model.Key.AsSpan(), model.Language.AsSpan(), model.Value ?? ""),
-            _ => builder.BuildUnQuoted(model.Key.AsSpan(), model.Value.AsSpan(), true)
+            _ => builder.BuildUnQuoted(model.Key.AsSpan(), valueSpan, MimeTypeParameter.GetIsValueCaseSensitive(model.Key))
         };
     }
 

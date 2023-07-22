@@ -8,6 +8,7 @@
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
 /// </example>
 [Flags]
+[SuppressMessage("Design", "CA1069:Enumerationswerte dürfen nicht dupliziert werden", Justification = "<Ausstehend>")]
 public enum FormattingOptions
 {
     /// <summary>

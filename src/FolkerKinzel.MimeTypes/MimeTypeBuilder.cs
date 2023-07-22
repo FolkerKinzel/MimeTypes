@@ -142,5 +142,5 @@ public sealed class MimeTypeBuilder
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     /// <seealso cref="MimeType"/>
-    public MimeType Build() => new MimeType(_mediaType, _subType, _dic);
+    public MimeType Build() => new(_mediaType, _subType, _dic);
 }

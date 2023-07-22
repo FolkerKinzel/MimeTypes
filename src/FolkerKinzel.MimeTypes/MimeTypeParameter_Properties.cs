@@ -5,6 +5,7 @@ public readonly partial struct MimeTypeParameter
     internal const int STRING_LENGTH = 32;
 
     private const string CHARSET_KEY = "charset";
+    private const string ACCESS_TYPE_KEY = "access-type";
     private const string ASCII_CHARSET_VALUE = "us-ascii";
 
     internal const char SEPARATOR = '=';
@@ -143,8 +144,7 @@ public readonly partial struct MimeTypeParameter
     /// Indicates whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "access-type". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "access-type"; otherwise, <c>false</c>.</value>
-    private bool IsAccessTypeParameter
-        => Key.Equals("access-type", StringComparison.OrdinalIgnoreCase);
+    private bool IsAccessTypeParameter => Key.Equals(ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
 
 
     /// <summary>
@@ -157,5 +157,8 @@ public readonly partial struct MimeTypeParameter
 
 
     internal bool IsValueCaseSensitive => !(IsCharSetParameter || IsAccessTypeParameter);
+
+    internal static bool GetIsValueCaseSensitive(string key) => !(key.Equals(CHARSET_KEY, StringComparison.OrdinalIgnoreCase) ||
+                                                                  key.Equals(ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase));
 
 }
