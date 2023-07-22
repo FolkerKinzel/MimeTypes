@@ -8,7 +8,7 @@
 - [ ] Fix known issue: If a splitted parameter contains url encoded and quoted parts, and if in a quoted part a url encoded escape sequence is, e.g., '%7e'
 the decoder tries to decode it. (%7 or 7E causes no problems.)
 - [x] Remove the German resource file.
-- [ ] `MimeType.AppendTo(...)` and `MimeTypeParameter.AppendTo(...)` should better return the StringBuilder instead of void.
+- [x] `MimeType.AppendTo(...)` and `MimeTypeParameter.AppendTo(...)` should better return the StringBuilder instead of void.
 
 
 ### 2.0.0-beta.2

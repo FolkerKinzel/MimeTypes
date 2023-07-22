@@ -49,8 +49,9 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="FormattingOptions.LineWrapping"/>
     /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
+    /// <returns>A reference to <paramref name="builder"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
-    public void AppendTo(StringBuilder builder,
+    public StringBuilder AppendTo(StringBuilder builder,
                                   FormattingOptions options = FormattingOptions.Default,
                                   int lineLength = MinimumLineLength)
     {
@@ -61,7 +62,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
         if (IsEmpty)
         {
-            return;
+            return builder;
         }
 
         if (--lineLength < MinimumLineLength)
@@ -86,6 +87,8 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
                 AppendUnWrappedParameters(builder, options, urlEncodedParameterValues);
             }
         }
+
+        return builder;
     }
 
 

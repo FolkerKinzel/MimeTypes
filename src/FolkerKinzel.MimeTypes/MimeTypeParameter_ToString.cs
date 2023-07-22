@@ -35,9 +35,10 @@ public readonly partial struct MimeTypeParameter
     /// <param name="alwaysUrlEncoded">Pass <c>true</c> to URL encode the <see cref="Value"/>s if they contain forbidden characters (instead
     /// of wrapping them with double quotes and masking the forbidden characters with '\'). Without this option URL encoding is always used 
     /// when a <see cref="Language"/> is specified or when the <see cref="Value"/> contains Non-ASCII characters.</param>
+    /// <returns>A reference to <paramref name="builder"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
-    public void AppendTo(StringBuilder builder, bool alwaysUrlEncoded = false)
+    public StringBuilder AppendTo(StringBuilder builder, bool alwaysUrlEncoded = false)
     {
         if (builder is null)
         {
@@ -47,10 +48,10 @@ public readonly partial struct MimeTypeParameter
         // Standard ctor
         if (IsEmpty)
         {
-            return;
+            return builder;
         }
 
-        _ = builder.Append(in this, alwaysUrlEncoded);
+        return builder.Append(in this, alwaysUrlEncoded);
     }
 
 
