@@ -11,7 +11,7 @@ public class ParameterSanitizerTests
         var value = "".AsMemory();
         var sani = new ParameterSanitizer();
 
-        Assert.IsFalse(sani.RepairParameterString(ref value, out _));
+        Assert.IsFalse(sani.RepairParameterString(ref value));
     }
 
     [TestMethod]
@@ -20,7 +20,7 @@ public class ParameterSanitizerTests
         var value = "(Comm=ent".AsMemory();
         var sani = new ParameterSanitizer();
 
-        Assert.IsFalse(sani.RepairParameterString(ref value, out _));
+        Assert.IsFalse(sani.RepairParameterString(ref value));
     }
 
     [TestMethod]
@@ -29,7 +29,7 @@ public class ParameterSanitizerTests
         var value = "(Com\\)m=ent)".AsMemory();
         var sani = new ParameterSanitizer();
 
-        Assert.IsFalse(sani.RepairParameterString(ref value, out _));
+        Assert.IsFalse(sani.RepairParameterString(ref value));
     }
 
     [TestMethod]
@@ -38,7 +38,7 @@ public class ParameterSanitizerTests
         var value = "key=va\\(lue)".AsMemory();
         var sani = new ParameterSanitizer();
 
-        Assert.IsFalse(sani.RepairParameterString(ref value, out _));
+        Assert.IsFalse(sani.RepairParameterString(ref value));
     }
 }
 

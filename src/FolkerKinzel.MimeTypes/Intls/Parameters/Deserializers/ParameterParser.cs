@@ -27,7 +27,7 @@ internal static class ParameterParser
                 {
                     sb ??= new StringBuilder(MimeTypeParameter.STRING_LENGTH);
 
-                    keySpan = keySpan.Slice(0, keySpan.GetStarIndex() + 1); // key*
+                    keySpan = keySpan.Slice(0, keySpan.GetSplitIndicatorIndex() + 1); // key*
 
                     if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase)) // next parameter
                     {

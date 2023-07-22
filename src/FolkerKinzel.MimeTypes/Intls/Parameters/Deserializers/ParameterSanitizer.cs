@@ -10,18 +10,17 @@ internal ref struct ParameterSanitizer
     private ReadOnlySpan<char> _span;
     private ReadOnlyMemory<char> _parameterString;
 
-    internal bool RepairParameterString(ref ReadOnlyMemory<char> parameterString, out int keyLength)
+    internal bool RepairParameterString(ref ReadOnlyMemory<char> parameterString)
     {
         _parameterString = parameterString;
         _parameterString = _parameterString.Trim();
-        keyLength = 0;
 
         if (_parameterString.Length == 0)
         {
             return false;
         }
 
-        keyLength = UpdateKeyLength();
+        int keyLength = UpdateKeyLength();
 
         if (keyLength < 1)
         {
@@ -71,7 +70,7 @@ internal ref struct ParameterSanitizer
         int idxBeforeKeyValueSeparator = keyValueSeparatorIndex - 1;
         int idxAfterKeyValueSeparator = keyValueSeparatorIndex + 1;
         if (_span[idxBeforeKeyValueSeparator].IsWhiteSpace() ||
-           _span.Length > idxAfterKeyValueSeparator && _span[idxAfterKeyValueSeparator].IsWhiteSpace())
+           (_span.Length > idxAfterKeyValueSeparator && _span[idxAfterKeyValueSeparator].IsWhiteSpace()))
         {
             var sb = new StringBuilder(_span.Length);
             _ = sb.Append(_span.Slice(0, keyValueSeparatorIndex).TrimEnd())

@@ -2,10 +2,10 @@
 ## Roadmap
 ### 2.0.0-beta.3
 - [x] Higher Code Coverage
-- [ ] Refactor ParameterSplitter
+- [x] Refactor ParameterSplitter
 - [x] Faster validation of token names
 - [x] Fix a bug that splitted HTTP quoted strings could not be read correctly when the last character of a splitted chunk is a masking backslash.
-- [ ] Known issue: If a splitted parameter contains url encoded and quoted parts, and if in a quoted part a url encoded escape sequence is, e.g., '%7e'
+- [ ] Fix known issue: If a splitted parameter contains url encoded and quoted parts, and if in a quoted part a url encoded escape sequence is, e.g., '%7e'
 the decoder tries to decode it. (%7 or 7E causes no problems.)
 - [x] Remove the German resource file.
 - [ ] `MimeType.AppendTo(...)` and `MimeTypeParameter.AppendTo(...)` should better return the StringBuilder instead of void.

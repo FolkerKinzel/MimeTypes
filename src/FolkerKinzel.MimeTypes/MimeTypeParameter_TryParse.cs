@@ -22,7 +22,7 @@ public readonly partial struct MimeTypeParameter
         {
             var sanitizer = new ParameterSanitizer();
             
-            if (!sanitizer.RepairParameterString(ref parameterString, out int keyLength))
+            if (!sanitizer.RepairParameterString(ref parameterString))
             {
                 return false;
             }
