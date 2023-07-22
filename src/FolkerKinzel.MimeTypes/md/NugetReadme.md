@@ -10,7 +10,7 @@ The library contains:
   - to retrieve an appropriate file type extension for its content automatically,
   - to serialize its content as an Internet Media Type string according to the standards,
   - to compare its content with other Internet Media Types for equality.
-- The class `MimeTypeBuilder` offers a fluent API to build MimeType instances from scratch.
+- The `MimeTypeBuilder` class offers a fluent API to build MimeType instances from scratch.
 - The `FormattingOptions` enum allows a featured string serialization of MimeType instances.
 
 The library is designed to support performance and small heap allocation.
