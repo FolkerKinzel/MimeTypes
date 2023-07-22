@@ -12,13 +12,14 @@ internal static class ParameterParser
         bool splittedParameterStartedUrlEncoded = false;
 
         StringBuilder? sb = null;
-        MimeTypeParameter currentParameter;
+        MimeTypeParameter concatenated;
+
 
         while (!remainingParameters.IsEmpty)
         {
             GetNextParameterMemory(ref remainingParameters, out ReadOnlyMemory<char> nextParameter);
 
-            if (MimeTypeParameter.TryParse(true, ref nextParameter, out MimeTypeParameter parameter, out bool currentStarred))
+            if (MimeTypeParameter.TryParse(true, ref nextParameter, out MimeTypeParameter parameter, out bool currentParameterStarred))
             {
                 ReadOnlySpan<char> keySpan = parameter.Key;
 
@@ -35,21 +36,23 @@ internal static class ParameterParser
 
                     if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase)) // next parameter
                     {
-                        splittedParameterStartedUrlEncoded = currentStarred;
+                        splittedParameterStartedUrlEncoded = currentParameterStarred;
                         currentKey = keySpan.ToString();
 
-                        if (TryParseParameter(sb, out currentParameter)) // return previous splitted parameter that might be in the StringBuilder
+                        if (TryParseParameter(sb, out concatenated)) // return previous splitted parameter that might be in the StringBuilder
                         {
-                            yield return currentParameter;
+                            yield return concatenated;
                         }
 
-                        _ = sb.Append(currentKey).Append('=').Append(parameter.CharSet).Append('\'').Append(parameter.Language).Append('\'');
+                        _ = currentParameterStarred
+                            ? sb.Append(currentKey).Append('=').Append(parameter.CharSet).Append('\'').Append(parameter.Language).Append('\'')
+                            : sb.Append(currentKey.AsSpan(0, currentKey.Length - 1)).Append('=');
                     }
 
                     // concat with the previous:
                     _ = sb.Append(parameter.Value);
 
-                    if (splittedParameterStartedUrlEncoded && !currentStarred && parameter.Value.Contains('%'))
+                    if (splittedParameterStartedUrlEncoded && !currentParameterStarred && parameter.Value.Contains('%'))
                     {
                         // Quoted parts of a splitted parameter that starts URL encoded 
                         // could contain URL escape sequences like "%C7. That's why the 
@@ -59,9 +62,9 @@ internal static class ParameterParser
                 }
                 else // not splitted; NOTE: This MUST be a different parameter than the previous because "key*1" and "key" are different keys.
                 {
-                    if (TryParseParameter(sb, out currentParameter)) // return previous splitted parameter that might be in the StringBuilder
+                    if (TryParseParameter(sb, out concatenated)) // return previous splitted parameter that might be in the StringBuilder
                     {
-                        yield return currentParameter;
+                        yield return concatenated;
                     }
 
                     currentKey = string.Empty;
@@ -72,9 +75,9 @@ internal static class ParameterParser
 
 
         // The last parameter, which might be in the StringBuilder:
-        if (TryParseParameter(sb, out currentParameter))
+        if (TryParseParameter(sb, out concatenated))
         {
-            yield return currentParameter;
+            yield return concatenated;
         }
     }
 

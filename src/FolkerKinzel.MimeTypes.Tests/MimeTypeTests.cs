@@ -32,6 +32,7 @@ public class MimeTypeTests
     [ExpectedException(typeof(ArgumentException))]
     public void MimeTypeTest6() => _ = MimeTypeBuilder.Create(new string('a', short.MaxValue + 1), "subtype");
 
+
     [TestMethod]
     public void MimeTypeTest7()
     {
@@ -142,7 +143,7 @@ public class MimeTypeTests
             key*2="This is %EF 7e\\ / \" @ ? ; quoted.\"
             """;
         Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-        var paras = mime.Parameters().ToArray();
+        MimeTypeParameter[] paras = mime.Parameters().ToArray();
         Assert.AreEqual(1, paras.Length);
 
         MimeTypeParameter par = paras[0];
@@ -150,6 +151,45 @@ public class MimeTypeTests
         StringAssert.Contains(par.Value.ToString(), @"This is %EF 7e\ / "" @ ? ; quoted.\");
         Assert.AreEqual("en", par.Language.ToString());
         Assert.AreEqual("utf-8", par.CharSet.ToString());
+    }
+
+
+    [TestMethod]
+    public void TryParseTest4b()
+    {
+        string mimeString = $"""
+            application/x-stuff;
+            key*1=abc;
+            key*2=xy%EFz
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+        MimeTypeParameter[] paras = mime.Parameters().ToArray();
+        Assert.AreEqual(1, paras.Length);
+
+        MimeTypeParameter par = paras[0];
+        Assert.AreEqual("key", par.Key.ToString());
+        StringAssert.Contains(par.Value.ToString(), "xy%EFz");
+        Assert.AreEqual("", par.Language.ToString());
+        Assert.AreEqual("", par.CharSet.ToString());
+    }
+
+    [TestMethod]
+    public void TryParseTest4c()
+    {
+        string mimeString = $"""
+            application/x-stuff;
+            key*1="abc def";
+            key*2="xy %EF z"
+            """;
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
+        MimeTypeParameter[] paras = mime.Parameters().ToArray();
+        Assert.AreEqual(1, paras.Length);
+
+        MimeTypeParameter par = paras[0];
+        Assert.AreEqual("key", par.Key.ToString());
+        StringAssert.Contains(par.Value.ToString(), "xy %EF z");
+        Assert.AreEqual("", par.Language.ToString());
+        Assert.AreEqual("", par.CharSet.ToString());
     }
 
 
