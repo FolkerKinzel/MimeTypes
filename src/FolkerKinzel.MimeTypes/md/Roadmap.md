@@ -1,6 +1,7 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
 ### 2.0.0-beta.3
+- [x] Dependency update
 - [x] Higher Code Coverage
 - [x] Refactor ParameterSplitter
 - [x] Faster validation of token names
@@ -8,6 +9,7 @@
 - [x] Fix known issue: If a splitted parameter contains url encoded and quoted parts, and if in a quoted part a url encoded escape sequence is, e.g., '%7e'
 the decoder tries to decode it. (%7 or 7E causes no problems.)
 - [x] Remove the German resource file.
+- [x] Remove unused resources
 - [x] `MimeType.AppendTo(...)` and `MimeTypeParameter.AppendTo(...)` should better return the StringBuilder instead of void.
 
 

@@ -61,60 +61,6 @@ namespace FolkerKinzel.MimeTypes.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} contains a control character. ähnelt.
-        /// </summary>
-        internal static string ContainsControlCharacter {
-            get {
-                return ResourceManager.GetString("ContainsControlCharacter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} contains a Non-ASCII character. ähnelt.
-        /// </summary>
-        internal static string ContainsNonAscii {
-            get {
-                return ResourceManager.GetString("ContainsNonAscii", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} contains a reserved character. ähnelt.
-        /// </summary>
-        internal static string ContainsReservedCharacter {
-            get {
-                return ResourceManager.GetString("ContainsReservedCharacter", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} contains a tspecial character (RFC 2045). ähnelt.
-        /// </summary>
-        internal static string ContainsTSpecial {
-            get {
-                return ResourceManager.GetString("ContainsTSpecial", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} contains whitespace. ähnelt.
-        /// </summary>
-        internal static string ContainsWhiteSpace {
-            get {
-                return ResourceManager.GetString("ContainsWhiteSpace", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} is an empty String. ähnelt.
-        /// </summary>
-        internal static string EmptyString {
-            get {
-                return ResourceManager.GetString("EmptyString", resourceCulture);
-            }
-        }
-        
-        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die {0} is not a valid IETF language tag. ähnelt.
         /// </summary>
         internal static string InvalidIetfLanguageTag {
@@ -124,7 +70,7 @@ namespace FolkerKinzel.MimeTypes.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die {0} is not a valid MIME type. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die {0} is not a valid Internet Media (MIME) type. ähnelt.
         /// </summary>
         internal static string InvalidMimeType {
             get {
@@ -142,16 +88,7 @@ namespace FolkerKinzel.MimeTypes.Properties {
         }
         
         /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die The resource {0} was not found. ähnelt.
-        /// </summary>
-        internal static string ResourceNotFound {
-            get {
-                return ResourceManager.GetString("ResourceNotFound", resourceCulture);
-            }
-        }
-        
-        /// <summary>
-        ///   Sucht eine lokalisierte Zeichenfolge, die The String is too long. ähnelt.
+        ///   Sucht eine lokalisierte Zeichenfolge, die The string is too long. ähnelt.
         /// </summary>
         internal static string StringTooLong {
             get {
