@@ -6,7 +6,7 @@
 
 The library contains:
 - `MimeType` struct: Represents a MIME type ("Internet Media Type") according to RFC 2045, RFC 2046 and RFC 2231. The struct can be created from a file type extension or parsed from an Internet Media Type string or ReadOnlyMemory&lt;Char&gt;.
-- The `MimeType` struct allows 
+- The MimeType struct allows 
   - to retrieve an appropriate file type extension for its content automatically,
   - to serialize its content as an Internet Media Type string according to the standards,
   - to compare its content with other Internet Media Types for equality.
