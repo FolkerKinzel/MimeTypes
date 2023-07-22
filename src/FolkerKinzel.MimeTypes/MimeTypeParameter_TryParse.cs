@@ -7,19 +7,18 @@ public readonly partial struct MimeTypeParameter
     /// <summary>
     /// Tries to parse a read-only character memory as <see cref="MimeTypeParameter"/>.
     /// </summary>
-    /// <param name="firstRun"><c>true</c> if the method runs the first time on <paramref name="parameterString"/>. If the parameter is split 
-    /// across multiple lines, the method has to be called twice. Changes to <paramref name="parameterString"/> are only applied in the first run.</param>
-    /// <param name="parameterString"></param>
+    /// <param name="sanitizeParameterSring"><c>true</c> indicates that the <paramref name="parameterString"/> should be examinated and sanitized.</param>
+    /// <param name="parameterString">The ReadOnlyMemory&lt;char&gt; to be parsed.</param>
     /// <param name="parameter">When the method returns <c>true</c> the parameter holds the parsed <see cref="MimeTypeParameter"/>.</param>
     /// 
     /// <returns><c>true</c> if <paramref name="parameterString"/> could be parsed as <see cref="MimeTypeParameter"/>.</returns>
-    internal static bool TryParse(bool firstRun, ref ReadOnlyMemory<char> parameterString, out MimeTypeParameter parameter)
+    internal static bool TryParse(bool sanitizeParameterSring, ref ReadOnlyMemory<char> parameterString, out MimeTypeParameter parameter)
     {
         parameter = default;
 
         ParameterIndexes idx; 
 
-        if (firstRun)
+        if (sanitizeParameterSring)
         {
             var sanitizer = new ParameterSanitizer();
             
