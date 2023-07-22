@@ -28,6 +28,8 @@ internal static class ValueBuilderUrlEncoded
                       .AppendValueUrlEncoded(languageSpan, value); // adds "*="
     }
 
+
+
     private static StringBuilder AppendValueUrlEncoded(this StringBuilder builder,
                                                        ReadOnlySpan<char> languageSpan,
                                                        string value)

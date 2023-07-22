@@ -14,8 +14,8 @@
     <PackageVersion>2.0.0-beta.2</PackageVersion>
     <FileVersion>2.0.0.18</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
-    <Description>.NET library that supports the work with Internet Media Types ("MIME Types").</Description>
-    <PackageTags>MIME Media C# .NET</PackageTags>
+    <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
+    <PackageTags>MIME Internet Media Type C# .NET</PackageTags>
     <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v2.0.0-beta.2</PackageReleaseNotes>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>

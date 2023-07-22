@@ -26,7 +26,7 @@ public class ParameterSerializerTests
 
         var sb = new StringBuilder();
         ParameterSerializer.Append(sb, in model);
-        StringAssert.Contains(sb.ToString(), "key*='en'");
+        StringAssert.Contains(sb.ToString(), "key*=utf-8'en'");
     }
 
     [TestMethod]
@@ -62,7 +62,7 @@ public class ParameterSerializerTests
 
         var sb = new StringBuilder();
         sb.Append(in para, false);
-        StringAssert.Contains(sb.ToString(), "key*='en'");
+        StringAssert.Contains(sb.ToString(), "key*=utf-8'en'");
     }
 
     [TestMethod]

@@ -21,6 +21,7 @@ internal static class UrlEncoding
         return true;
     }
 
+    [ExcludeFromCodeCoverage]
     internal static bool TryDecode(string value, ReadOnlySpan<char> charSet, [NotNullWhen(true)] out string? decoded)
     {
         try
