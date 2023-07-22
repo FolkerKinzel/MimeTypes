@@ -1,4 +1,5 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
@@ -7,6 +8,7 @@ internal static class ParameterParser
     internal static IEnumerable<MimeTypeParameter> ParseParameters(ReadOnlyMemory<char> remainingParameters)
     {
         string currentKey = "";
+        bool currentUrlEncoded = false;
 
         StringBuilder? sb = null;
         MimeTypeParameter currentParameter;
@@ -23,11 +25,13 @@ internal static class ParameterParser
                 // splitted (see RFC 2231). A trailing '*', which is an indicator that
                 // language and/or charset information is present, has yet been eaten by
                 // MimeTypeParameter.TryParse
-                if (keySpan.IsParameterSplitted())
+                int splitIndicatorIndex = keySpan.GetSplitIndicatorIndex();
+                if (splitIndicatorIndex != -1) // splitted
                 {
                     sb ??= new StringBuilder(MimeTypeParameter.STRING_LENGTH);
 
-                    keySpan = keySpan.Slice(0, keySpan.GetSplitIndicatorIndex() + 1); // key*
+                    bool isParameterUrlEncoded = keySpan[keySpan.Length - 1] == '*';
+                    keySpan = keySpan.Slice(0, splitIndicatorIndex + 1); // key*
 
                     if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase)) // next parameter
                     {
@@ -39,6 +43,18 @@ internal static class ParameterParser
                         }
 
                         _ = sb.Append(currentKey).Append('=').Append(parameter.CharSet).Append('\'').Append(parameter.Language).Append('\'');
+                    }
+
+                    if(currentUrlEncoded && !isParameterUrlEncoded)
+                    {
+                        // decode the UrlEncoded value in sb
+                        // remove the * from the keyName in sb
+                        sb.Remove(0, currentKey.Length + 1);
+                        if(sb.Contains('%'))
+                        {
+                            string charset = sb.ToString(0, sb.IndexOf('\''));
+                            if(UrlEncoding.TryDecode(sb.ToString(), ))
+                        }
                     }
 
                     // concat with the previous:
