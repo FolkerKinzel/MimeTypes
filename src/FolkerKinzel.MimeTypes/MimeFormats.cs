@@ -8,7 +8,7 @@
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
 /// </example>
 [Flags]
-public enum MimeFormat
+public enum MimeFormats
 {
     /// <summary>
     /// Specifies the default format (including the <see cref="MimeType.Parameters"/>, without 

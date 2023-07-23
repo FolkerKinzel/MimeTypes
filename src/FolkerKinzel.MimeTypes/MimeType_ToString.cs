@@ -14,7 +14,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
-    public override string ToString() => ToString(FormattingOptions.Default);
+    public override string ToString() => ToString(MimeFormats.Default);
 
 
     /// <summary>
@@ -31,7 +31,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
-    public string ToString(FormattingOptions options, int lineLength = MinimumLineLength)
+    public string ToString(MimeFormats options, int lineLength = MinimumLineLength)
     {
         var sb = new StringBuilder(StringLength);
         AppendTo(sb, options, lineLength);
@@ -52,7 +52,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <returns>A reference to <paramref name="builder"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
     public StringBuilder AppendTo(StringBuilder builder,
-                                  FormattingOptions options = FormattingOptions.Default,
+                                  MimeFormats options = MimeFormats.Default,
                                   int lineLength = MinimumLineLength)
     {
         if (builder is null)
@@ -65,6 +65,8 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
             return builder;
         }
 
+        options = options.Normalize();
+
         if (--lineLength < MinimumLineLength)
         {
             lineLength = MinimumLineLength - 1;
@@ -74,17 +76,17 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         int insertStartIndex = builder.Length;
         _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(insertStartIndex);
 
-        if (options.HasFlag(FormattingOptions.IncludeParameters))
-        {
-            bool urlEncodedParameterValues = options.HasFlag(FormattingOptions.AlwaysUrlEncoded);
+        Debug.Assert(options == options.Normalize());
 
-            if (!urlEncodedParameterValues && options.HasFlag(FormattingOptions.LineWrapping))
+        if (options != MimeFormats.IgnoreParameters)
+        {
+            if (options.HasFlag(MimeFormats.LineWrapping))
             {
                 AppendWrappedParameters(builder, options, lineLength);
             }
             else
             {
-                AppendUnWrappedParameters(builder, options, urlEncodedParameterValues);
+                AppendUnWrappedParameters(builder, options);
             }
         }
 
@@ -92,9 +94,10 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     }
 
 
-    private void AppendUnWrappedParameters(StringBuilder builder, FormattingOptions options, bool urlEncodedParameterValues)
+    private void AppendUnWrappedParameters(StringBuilder builder, MimeFormats options)
     {
-        bool appendSpace = !urlEncodedParameterValues & options.HasFlag(FormattingOptions.WhiteSpaceBetweenParameters);
+        Debug.Assert(options == options.Normalize());
+        bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
         foreach (MimeTypeParameter parameter in Parameters())
         {
             _ = builder.Append(';');
@@ -103,19 +106,28 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
                 _ = builder.Append(' ');
             }
 
-            builder.Append(in parameter, urlEncodedParameterValues);
+            builder.Append(in parameter, options == MimeFormats.Url);
         }
     }
 
 
-    private void AppendWrappedParameters(StringBuilder builder, FormattingOptions options, int lineLength)
+    private void AppendWrappedParameters(StringBuilder builder, MimeFormats options, int lineLength)
     {
+        Debug.Assert(options == options.Normalize());
+
+
+
         var worker = new StringBuilder(lineLength);
-        bool appendSpace = options.HasFlag(FormattingOptions.WhiteSpaceBetweenParameters);
+        bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
 
         foreach (MimeTypeParameter parameter in Parameters())
         {
             EncodingAction action = worker.Clear().Append(in parameter, false);
+
+            lineLength = ComputeMinimumLineLength(
+                            parameter.Key.Length + parameter.CharSet.Length + parameter.Language.Length,
+                            lineLength,
+                            action);
 
             if (worker.Length > lineLength)
             {
@@ -148,6 +160,36 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
             }
 
         }
+    }
+
+
+    /// <summary>
+    /// Computes the minimum length that is needed for a line. (Depends on key, charset,
+    /// language and the <see cref="EncodingAction"/>.)
+    /// </summary>
+    /// <param name="givenLength">The length that can't be wrapped (key, language, charset).</param>
+    /// <param name="desiredLineLength"></param>
+    /// <param name="enc"></param>
+    /// <returns>The minimum length that is needed for a line.</returns>
+    private static int ComputeMinimumLineLength(int givenLength, int desiredLineLength, EncodingAction enc)
+    {
+        int minimumLength = givenLength + ParameterSplitter.MINIMUM_LINE_LENGTH;
+
+        if (enc == EncodingAction.UrlEncode)
+        {
+            minimumLength += 3; // *''
+        }
+        else if (enc.HasFlag(EncodingAction.Quote))
+        {
+            minimumLength += 2; // ""
+        }
+
+        if (desiredLineLength < minimumLength)
+        {
+            desiredLineLength = minimumLength;
+        }
+
+        return desiredLineLength;
     }
 
 }

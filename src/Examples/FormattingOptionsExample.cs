@@ -13,28 +13,28 @@ public static class FormattingOptionsExample
             "Very very loooong value in order to show the line wrapping")
                            .Build();
 
-        Console.WriteLine("FormattingOptions.Default:");
+        Console.WriteLine("MimeFormats.Default:");
         Console.WriteLine(mime.ToString());
         Console.WriteLine();
 
-        Console.WriteLine("FormattingOptions.None:");
-        Console.WriteLine(mime.ToString(FormattingOptions.None));
+        Console.WriteLine("MimeFormats.IgnoreParameters:");
+        Console.WriteLine(mime.ToString(MimeFormats.IgnoreParameters));
         Console.WriteLine();
 
-        Console.WriteLine("FormattingOptions.IncludeParameters:");
-        Console.WriteLine(mime.ToString(FormattingOptions.IncludeParameters));
+        Console.WriteLine("MimeFormats.AvoidSpace:");
+        Console.WriteLine(mime.ToString(MimeFormats.AvoidSpace));
         Console.WriteLine();
 
-        Console.WriteLine("FormattingOptions.LineWrapping:");
-        Console.WriteLine(mime.ToString(FormattingOptions.LineWrapping));
+        Console.WriteLine("MimeFormats.LineWrapping:");
+        Console.WriteLine(mime.ToString(MimeFormats.LineWrapping));
         Console.WriteLine();
 
-        Console.WriteLine("FormattingOptions.LineWrapping | FormattingOptions.WhiteSpaceBetweenParameters:");
-        Console.WriteLine(mime.ToString(FormattingOptions.LineWrapping | FormattingOptions.WhiteSpaceBetweenParameters));
+        Console.WriteLine("MimeFormats.LineWrapping | MimeFormats.AvoidSpace:");
+        Console.WriteLine(mime.ToString(MimeFormats.LineWrapping | MimeFormats.AvoidSpace));
         Console.WriteLine();
 
-        Console.WriteLine("FormattingOptions.AlwaysUrlEncoded:");
-        Console.WriteLine(mime.ToString(FormattingOptions.AlwaysUrlEncoded));
+        Console.WriteLine("MimeFormats.Url:");
+        Console.WriteLine(mime.ToString(MimeFormats.Url));
         Console.WriteLine();
     }
 }
@@ -42,25 +42,25 @@ public static class FormattingOptionsExample
 /*
 Console Output:
 
-FormattingOptions.Default:
+MimeFormats.Default:
 application/x-stuff; short=s; key-long="Very very loooong value in order to show the line wrapping"
 
-FormattingOptions.None:
+MimeFormats.IgnoreParameters:
 application/x-stuff
 
-FormattingOptions.IncludeParameters:
+MimeFormats.AvoidSpace:
 application/x-stuff;short=s;key-long="Very very loooong value in order to show the line wrapping"
 
-FormattingOptions.LineWrapping:
-application/x-stuff;short=s;
-key-long*0="Very very loooong value in order to show the line ";
-key-long*1="wrapping"
-
-FormattingOptions.LineWrapping | FormattingOptions.WhiteSpaceBetweenParameters:
+MimeFormats.LineWrapping:
 application/x-stuff; short=s;
 key-long*0="Very very loooong value in order to show the line ";
 key-long*1="wrapping"
 
-FormattingOptions.AlwaysUrlEncoded:
+MimeFormats.LineWrapping | MimeFormats.AvoidSpace:
+application/x-stuff;short=s;
+key-long*0="Very very loooong value in order to show the line ";
+key-long*1="wrapping"
+
+MimeFormats.Url:
 application/x-stuff;short=s;key-long*=utf-8''Very%20very%20loooong%20value%20in%20order%20to%20show%20the%20line%20wrapping
 */

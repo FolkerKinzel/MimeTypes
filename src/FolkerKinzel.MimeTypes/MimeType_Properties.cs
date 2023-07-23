@@ -77,7 +77,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
     public string GetFileTypeExtension()
-        => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(FormattingOptions.None));
+        => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeFormats.IgnoreParameters));
 
 
     /// <summary>

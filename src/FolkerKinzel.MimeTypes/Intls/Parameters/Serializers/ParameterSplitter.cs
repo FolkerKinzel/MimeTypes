@@ -1,10 +1,14 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+using System.Runtime.ConstrainedExecution;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
 internal static class ParameterSplitter
 {
     private const int DOUBLE_QUOTES_COUNT = 2;
+    private const int COUNTER_INITIAL_LENGTH = 1;
+    internal const int MINIMUM_LINE_LENGTH = 9; // *0= and 6 value chars per line at least
+
 
     /// <summary>
     /// Indicates whether the parameter is splitted.
@@ -53,39 +57,17 @@ internal static class ParameterSplitter
     internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameter parameter, StringBuilder worker, int lineLength, EncodingAction enc)
     {
         Debug.Assert(worker.Length > 0);
-        const int COUNTER_INITIAL_LENGTH = 1;
+        Debug.Assert(lineLength >= parameter.Key.Length + parameter.CharSet.Length + parameter.Language.Length + MINIMUM_LINE_LENGTH);
 
         RemoveKeyFromWorker(worker, enc);
-        int minimumLength = ComputeMinimumLineLength(parameter, enc);
-
-        if (lineLength < minimumLength)
-        {
-            lineLength = minimumLength;
-        }
 
         var tmp = new StringBuilder(lineLength);
-        _ = tmp.Append(parameter.Key).Append('*');
-
-        int counterIdx = tmp.Length;
-        int counter = 0;
-        _ = tmp.Append(counter);
-
-        if (enc == EncodingAction.UrlEncode)
-        {
-            _ = tmp.Append('*');
-        }
-        _ = tmp.Append('=');
-
-        int normalValueStart = tmp.Length - COUNTER_INITIAL_LENGTH;
-
-        if (enc == EncodingAction.UrlEncode)
-        {
-            _ = tmp.Append(ParameterSerializer.UTF_8).Append('\'').Append(parameter.Language).Append('\'');
-        }
+        (int counterIdx, int normalValueStart) = PrepareTmp(in parameter, enc, tmp);
 
         int valueStart = tmp.Length;
-        int valLength;
         bool quoted = enc.HasFlag(EncodingAction.Quote);
+        int counter = 0;
+        int valLength;
 
         do
         {
@@ -105,23 +87,6 @@ internal static class ParameterSplitter
             valueStart = normalValueStart + counter.DigitsCount();
 
         } while (valLength > 5); // Security: if counter gets too large valLength could become negative
-    }
-
-    private static int UpdateLineLength(int workerLength, int lineLength, bool quoted, int valueStart)
-    {
-        int valLength = lineLength - valueStart;
-        if (quoted)
-        {
-            valLength -= DOUBLE_QUOTES_COUNT;
-        }
-
-        // The rest of the last line:
-        if (valLength > workerLength)
-        {
-            valLength = workerLength;
-        }
-
-        return valLength;
     }
 
     /// <summary>
@@ -144,32 +109,49 @@ internal static class ParameterSplitter
             startOfValue++; // ="
             _ = worker.Remove(worker.Length - 1, 1);
         }
-        
+
         _ = worker.Remove(0, startOfValue);
     }
 
-    /// <summary>
-    /// Computes the minimum length that is needed for a line. (Depends on key, charset,
-    /// language and quotes.)
-    /// </summary>
-    /// <param name="parameter"></param>
-    /// <param name="quoted"></param>
-    /// <param name="urlEncoded"></param>
-    /// <returns>The minimum length that is needed for a line. </returns>
-    private static int ComputeMinimumLineLength(MimeTypeParameter parameter, EncodingAction enc)
+
+    private static (int counterIdx, int normalValueStart) PrepareTmp(in MimeTypeParameter parameter, EncodingAction enc, StringBuilder tmp)
     {
-        int minimumLength = parameter.Key.Length + 9; // *0= and 6 value chars per line at least
+        _ = tmp.Append(parameter.Key).Append('*');
+
+        int counterIdx = tmp.Length;
+        _ = tmp.Append('0');
 
         if (enc == EncodingAction.UrlEncode)
         {
-            minimumLength += 3 + parameter.CharSet.Length + parameter.Language.Length; // *''
+            _ = tmp.Append('*');
         }
-        else if (enc.HasFlag(EncodingAction.Quote))
+        _ = tmp.Append('=');
+
+        int normalValueStart = tmp.Length - COUNTER_INITIAL_LENGTH;
+
+        if (enc == EncodingAction.UrlEncode)
         {
-            minimumLength += 2; // ""
+            _ = tmp.Append(ParameterSerializer.UTF_8).Append('\'').Append(parameter.Language).Append('\'');
         }
 
-        return minimumLength;
+        return (counterIdx, normalValueStart);
+    }
+
+    private static int UpdateLineLength(int workerLength, int lineLength, bool quoted, int valueStart)
+    {
+        int valLength = lineLength - valueStart;
+        if (quoted)
+        {
+            valLength -= DOUBLE_QUOTES_COUNT;
+        }
+
+        // The rest of the last line:
+        if (valLength > workerLength)
+        {
+            valLength = workerLength;
+        }
+
+        return valLength;
     }
 
     /// <summary>

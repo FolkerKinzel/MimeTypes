@@ -8,14 +8,14 @@ public class MimeFormatTests
     [TestMethod]
     public void MimeFormatTest1()
     {
-        MimeFormat fm = default;
-        Assert.AreEqual(MimeFormat.Default, fm);
-        fm |= MimeFormat.AvoidSpace;
-        Assert.IsTrue(fm.HasFlag(MimeFormat.Default));
-        fm = MimeFormat.Default | MimeFormat.Url;
-        Assert.IsTrue(fm.HasFlag(MimeFormat.AvoidSpace));
-        fm &= ~MimeFormat.AvoidSpace;
-        Assert.AreNotEqual(MimeFormat.Url, fm);
-        Assert.IsFalse(fm.HasFlag(MimeFormat.Url));
+        MimeFormats fm = default;
+        Assert.AreEqual(MimeFormats.Default, fm);
+        fm |= MimeFormats.AvoidSpace;
+        Assert.IsTrue(fm.HasFlag(MimeFormats.Default));
+        fm = MimeFormats.Default | MimeFormats.Url;
+        Assert.IsTrue(fm.HasFlag(MimeFormats.AvoidSpace));
+        fm &= ~MimeFormats.AvoidSpace;
+        Assert.AreNotEqual(MimeFormats.Url, fm);
+        Assert.IsFalse(fm.HasFlag(MimeFormats.Url));
     }
 }

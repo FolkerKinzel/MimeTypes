@@ -127,7 +127,7 @@ public class MimeTypeTests
         MimeTypeParameter[] arr = mime.Parameters().ToArray();
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
 
-        string s = mime.ToString(FormattingOptions.IncludeParameters);
+        string s = mime.ToString();
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);
     }
@@ -277,7 +277,7 @@ public class MimeTypeTests
     {
         string input = "application/x-stuff; p1=normal; p2=\"text loch\"; p3*=utf-8\'\'" + Uri.EscapeDataString("äöü");
         var mime = MimeType.Parse(input);
-        Assert.AreEqual("application/x-stuff;p1=normal;p2*=utf-8\'\'text%20loch;p3*=utf-8\'\'" + Uri.EscapeDataString("äöü"), mime.ToString(FormattingOptions.AlwaysUrlEncoded));
+        Assert.AreEqual("application/x-stuff;p1=normal;p2*=utf-8\'\'text%20loch;p3*=utf-8\'\'" + Uri.EscapeDataString("äöü"), mime.ToString(MimeFormats.Url));
     }
 
     [TestMethod]
@@ -294,7 +294,7 @@ public class MimeTypeTests
                                   .AppendParameter("key", value)
                                   .AppendParameter("other", "bla")
                                   .Build();
-        string s = mime.ToString(FormattingOptions.LineWrapping);
+        string s = mime.ToString(MimeFormats.LineWrapping);
         Assert.IsFalse(s.Contains('\"'));
         Assert.IsFalse(s.Contains('\''));
 
@@ -615,7 +615,7 @@ public class MimeTypeTests
         };
 
         var mimeType1 = new MimeType(mediaType, subType, dic);
-        string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default);
+        string s = mimeType1.ToString(MimeFormats.LineWrapping);
 
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);
@@ -642,7 +642,7 @@ public class MimeTypeTests
 
 
         var mimeType1 = MimeType.Parse(mimeString);
-        string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default, 10);
+        string s = mimeType1.ToString(MimeFormats.LineWrapping, 10);
 
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);

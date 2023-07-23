@@ -1,4 +1,5 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+using FolkerKinzel.MimeTypes.Tests;
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using System.Text;
 
@@ -17,10 +18,12 @@ public class ParameterSplitterTests
         param.AppendTo(input);
         EncodingAction enc = input.Append(in param, false);
         string s = "";
-        foreach (StringBuilder sb in ParameterSplitter.SplitParameter(param, input, -42, enc))
+        foreach (StringBuilder sb in ParameterSplitter.SplitParameter(param, input, 70, enc))
         {
             s += sb.ToString() + Environment.NewLine;
         }
+
+        Assert.AreNotEqual(1, s.GetLinesCount());   
     }
 
 
@@ -34,7 +37,7 @@ public class ParameterSplitterTests
         MimeTypeParameter para = mime.Parameters().First();
         Assert.AreEqual(value, para.Value.ToString(), false);
 
-        s = mime.ToString(FormattingOptions.IncludeParameters | FormattingOptions.LineWrapping);
+        s = mime.ToString(MimeFormats.LineWrapping);
 
         Assert.IsTrue(MimeType.TryParse(s, out mime));
         para = mime.Parameters().First();
@@ -59,7 +62,7 @@ public class ParameterSplitterTests
         MimeTypeParameter para = mime.Parameters().First();
         Assert.AreEqual(value, para.Value.ToString(), false);
 
-        s = mime.ToString(FormattingOptions.IncludeParameters | FormattingOptions.LineWrapping);
+        s = mime.ToString(MimeFormats.LineWrapping);
 
         Assert.IsTrue(MimeType.TryParse(s, out mime));
         para = mime.Parameters().First();

@@ -17,7 +17,7 @@ public static class BuildAndParseExample
                            .AppendParameter("second-parameter", "Parameter with  \\, = and \".")
                            .Build();
 
-        string s = mimeType1.ToString(FormattingOptions.LineWrapping | FormattingOptions.Default);
+        string s = mimeType1.ToString(MimeFormats.LineWrapping);
         Console.WriteLine(s);
 
         var mimeType2 = MimeType.Parse(s);
