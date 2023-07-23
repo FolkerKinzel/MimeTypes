@@ -4,7 +4,7 @@
 - [ ] Replace `FormattingOptions` with `MimeFormat`
 
 ### 2.0.0-beta.4
-- [x] Fix a bug that choosing `FormattingOptions.AlwaysUrlEncoded` did mark parameters as url encoded even if they contained no characters to escape.
+- [x] Fix a bug that choosing `FormattingOptions.AlwaysUrlEncoded` did mark parameters as URL-encoded even if they didn't contain any character to escape.
 
 
 ### 2.0.0-beta.3
