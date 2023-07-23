@@ -62,5 +62,5 @@ key-long*0="Very very loooong value in order to show the line ";
 key-long*1="wrapping"
 
 FormattingOptions.AlwaysUrlEncoded:
-application/x-stuff;short=s;key-long=Very%20very%20loooong%20value%20in%20order%20to%20show%20the%20line%20wrapping
+application/x-stuff;short=s;key-long*=utf-8''Very%20very%20loooong%20value%20in%20order%20to%20show%20the%20line%20wrapping
 */

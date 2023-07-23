@@ -25,7 +25,7 @@ internal static class ReaderFactory
 
 #if DEBUG
         return stream is null
-            ? throw new InvalidDataException(string.Format(Res.ResourceNotFound, resourcePath))
+            ? throw new InvalidDataException(string.Format("The resource {0} was not found.", resourcePath))
             : new StreamReader(stream);
 #else
             return new StreamReader(stream!);

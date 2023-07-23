@@ -102,7 +102,8 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
             {
                 _ = builder.Append(' ');
             }
-            parameter.AppendTo(builder, urlEncodedParameterValues);
+
+            builder.Append(in parameter, urlEncodedParameterValues);
         }
     }
 
@@ -114,11 +115,11 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
         foreach (MimeTypeParameter parameter in Parameters())
         {
-            parameter.AppendTo(worker.Clear(), false);
+            EncodingAction action = worker.Clear().Append(in parameter, false);
 
             if (worker.Length > lineLength)
             {
-                foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(parameter, worker, lineLength))
+                foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(parameter, worker, lineLength, action))
                 {
                     _ = builder.Append(';').Append(NEW_LINE).Append(tmp);
                 }

@@ -48,17 +48,15 @@ internal static class ParameterSplitter
     /// <param name="parameter">The <see cref="MimeTypeParameter"/> to split.</param>
     /// <param name="worker">A <see cref="StringBuilder"/> that holds the serialized <paramref name="parameter"/>.</param>
     /// <param name="lineLength">The line length at which the parameter should be splitted.</param>
+    /// <param name="enc">The <see cref="EncodingAction"/> the <paramref name="parameter"/> had been serialized to worker.</param>
     /// <returns>A collection of <see cref="StringBuilder"/> objects that represents the splitted <paramref name="parameter"/>.</returns>
-    internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameter parameter, StringBuilder worker, int lineLength)
+    internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameter parameter, StringBuilder worker, int lineLength, EncodingAction enc)
     {
         Debug.Assert(worker.Length > 0);
         const int COUNTER_INITIAL_LENGTH = 1;
 
-        bool quoted = worker[worker.Length - 1] == '"';
-        bool urlEncoded = !quoted && (!parameter.Language.IsEmpty || worker.Contains('%'));
-
-        PrepareWorker(worker, quoted, urlEncoded);
-        int minimumLength = ComputeMinimumLength(parameter, quoted, urlEncoded);
+        PrepareWorker(worker, enc);
+        int minimumLength = ComputeMinimumLength(parameter, enc);
 
         if (lineLength < minimumLength)
         {
@@ -72,7 +70,7 @@ internal static class ParameterSplitter
         int counter = 0;
         _ = tmp.Append(counter);
 
-        if (urlEncoded)
+        if (enc == EncodingAction.UrlEncode)
         {
             _ = tmp.Append('*');
         }
@@ -80,18 +78,20 @@ internal static class ParameterSplitter
 
         int normalValueStart = tmp.Length - COUNTER_INITIAL_LENGTH;
 
-        if (urlEncoded)
+        if (enc == EncodingAction.UrlEncode)
         {
             _ = tmp.Append(ParameterSerializer.UTF_8).Append('\'').Append(parameter.Language).Append('\'');
         }
 
         int valueStart = tmp.Length;
         int valLength;
+        bool quoted = enc.HasFlag(EncodingAction.Quote);
 
         do
         {
             valLength = UpdateLineLength(worker.Length, lineLength, quoted, valueStart);
             MoveChunk(worker, quoted, tmp, valLength);
+
             yield return tmp;
 
             if (worker.Length == 0)
@@ -130,19 +130,21 @@ internal static class ParameterSplitter
     /// <param name="worker"></param>
     /// <param name="quoted"></param>
     /// <param name="urlEncoded"></param>
-    private static void PrepareWorker(StringBuilder worker, bool quoted, bool urlEncoded)
+    private static void PrepareWorker(StringBuilder worker, EncodingAction enc)
     {
         int startOfValue = worker.IndexOf('=') + 1;
-        if (quoted)
-        {
-            startOfValue++; // ="
-            _ = worker.Remove(worker.Length - 1, 1);
-        }
-        else if (urlEncoded)
+
+        if (enc == EncodingAction.UrlEncode)
         {
             startOfValue = worker.IndexOf('\'', startOfValue);
             startOfValue = worker.IndexOf('\'', startOfValue + 1) + 1;
         }
+        else if (enc.HasFlag(EncodingAction.Quote))
+        {
+            startOfValue++; // ="
+            _ = worker.Remove(worker.Length - 1, 1);
+        }
+        
         _ = worker.Remove(0, startOfValue);
     }
 
@@ -154,17 +156,17 @@ internal static class ParameterSplitter
     /// <param name="quoted"></param>
     /// <param name="urlEncoded"></param>
     /// <returns>The minimum length that is needed for a line. </returns>
-    private static int ComputeMinimumLength(MimeTypeParameter parameter, bool quoted, bool urlEncoded)
+    private static int ComputeMinimumLength(MimeTypeParameter parameter, EncodingAction enc)
     {
         int minimumLength = parameter.Key.Length + 9; // *0= and 6 value chars per line at least
 
-        if (quoted)
-        {
-            minimumLength += 2; // ""
-        }
-        else if (urlEncoded)
+        if (enc == EncodingAction.UrlEncode)
         {
             minimumLength += 3 + parameter.CharSet.Length + parameter.Language.Length; // *''
+        }
+        else if (enc.HasFlag(EncodingAction.Quote))
+        {
+            minimumLength += 2; // ""
         }
 
         return minimumLength;

@@ -1,5 +1,12 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
+### 3.0.0-beta.1
+- [ ] Replace `FormattingOptions` with `MimeFormat`
+
+### 2.0.0-beta.4
+- [x] Fix a bug that choosing `FormattingOptions.AlwaysUrlEncoded` did mark parameters as url encoded even if they contained no characters to escape.
+
+
 ### 2.0.0-beta.3
 - [x] Dependency update
 - [x] Higher Code Coverage

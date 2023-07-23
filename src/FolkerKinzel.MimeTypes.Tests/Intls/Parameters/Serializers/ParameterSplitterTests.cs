@@ -15,8 +15,9 @@ public class ParameterSplitterTests
 
         var input = new StringBuilder();
         param.AppendTo(input);
+        EncodingAction enc = input.Append(in param, false);
         string s = "";
-        foreach (StringBuilder sb in ParameterSplitter.SplitParameter(param, input, -42))
+        foreach (StringBuilder sb in ParameterSplitter.SplitParameter(param, input, -42, enc))
         {
             s += sb.ToString() + Environment.NewLine;
         }

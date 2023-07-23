@@ -42,9 +42,9 @@ public enum FormattingOptions
 
     /// <summary>
     /// <para>
-    /// If selected, parameter values are always URL encoded and the options <see cref="LineWrapping"/> and
-    /// <see cref="WhiteSpaceBetweenParameters"/> are ignored. (Without this option, URL encoding is used only
-    /// for Non-ASCII characters.)
+    /// If selected, parameter values are URL-encoded even if they didn't contain non-ASCII characters. Choosing this 
+    /// option, the options <see cref="LineWrapping"/> and
+    /// <see cref="WhiteSpaceBetweenParameters"/> are ignored.
     /// </para>
     /// <para>
     /// This option is combined with <see cref="IncludeParameters"/>.

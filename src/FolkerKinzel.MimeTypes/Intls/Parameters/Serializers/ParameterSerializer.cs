@@ -1,5 +1,6 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Builders;
+using System;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
@@ -43,20 +44,37 @@ internal static class ParameterSerializer
     /// <param name="parameter"></param>
     /// <param name="alwaysUrlEncoded"></param>
     /// <returns><paramref name="builder"/></returns>
-    internal static StringBuilder Append(this StringBuilder builder, in MimeTypeParameter parameter, bool alwaysUrlEncoded)
+    internal static EncodingAction Append(this StringBuilder builder, in MimeTypeParameter parameter, bool alwaysUrlEncoded)
     {
+        if(parameter.IsEmpty)
+        {
+            return EncodingAction.None;
+        }
+
         ReadOnlySpan<char> valueSpan = parameter.Value;
-        EncodingAction action = valueSpan.EncodingAction();
+        EncodingAction action;
 
-        action = alwaysUrlEncoded || !parameter.Language.IsEmpty ? EncodingAction.UrlEncode : action;
+        if (!parameter.Language.IsEmpty)
+        {
+            action = EncodingAction.UrlEncode;
+        }
+        else
+        {
+            action = valueSpan.EncodingAction();
+            action = !alwaysUrlEncoded ? action : action.HasFlag(EncodingAction.Quote)
+                                                    ? EncodingAction.UrlEncode
+                                                    : action;
+        }
 
-        return action switch
+        _ = action switch
         {
             EncodingAction.Mask => builder.BuildQuoted(parameter.Key, valueSpan, true, parameter.IsValueCaseSensitive),
             EncodingAction.Quote => builder.BuildQuoted(parameter.Key, valueSpan, false, parameter.IsValueCaseSensitive),
             EncodingAction.UrlEncode => builder.BuildUrlEncoded(parameter.Key, parameter.Language, parameter.Value.ToString()),
             _ => builder.BuildUnQuoted(parameter.Key, parameter.Value, parameter.IsValueCaseSensitive)
         };
+
+        return action;
     }
 
 

@@ -69,6 +69,99 @@ public class MimeTypeParameterTests
         Assert.AreEqual(0, sb.Length);
     }
 
+    [TestMethod]
+    public void AppendToTest3()
+    {
+        const string input = "normal=value";
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+        var sb = new StringBuilder();
+        _ = para.AppendTo(sb, alwaysUrlEncoded: true);
+        Assert.AreEqual(input, sb.ToString());
+    }
+
+    [TestMethod]
+    public void AppendToTest4()
+    {
+        const string input = "quoted=\"text loch\"";
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+        var sb = new StringBuilder();
+        _ = para.AppendTo(sb, alwaysUrlEncoded: true);
+        Assert.AreEqual("quoted*=utf-8''text%20loch", sb.ToString());
+    }
+
+    [TestMethod]
+    public void AppendToTest5()
+    {
+        const string input = "encoded*=utf-8''value%20continuation";
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+        var sb = new StringBuilder();
+        _ = para.AppendTo(sb, alwaysUrlEncoded: true);
+        Assert.AreEqual(input, sb.ToString());
+    }
+
+
+    [TestMethod]
+    public void ToStringTest1()
+    {
+        const string input = "normal=value";
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+        Assert.AreEqual(input, para.ToString(alwaysUrlEncoded: true));
+    }
+
+    [TestMethod]
+    public void ToStringTest2()
+    {
+        const string input = "quoted=\"text loch\"";
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+       
+        Assert.AreEqual("quoted*=utf-8''text%20loch", para.ToString(alwaysUrlEncoded: true));
+    }
+
+    [TestMethod]
+    public void ToStringTest3()
+    {
+        const string input = "encoded*=utf-8\'\'value%20continuation";
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+       
+        Assert.AreEqual(input, para.ToString(alwaysUrlEncoded: true));
+    }
+
+    [TestMethod]
+    public void ToStringTest4()
+    {
+        const string input = "normal=value";
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+        Assert.AreEqual(input, para.ToString());
+    }
+
+    [TestMethod]
+    public void ToStringTest5()
+    {
+        const string input = "quoted=\"text loch\"";
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+
+        Assert.AreEqual(input, para.ToString());
+    }
+
+    [TestMethod]
+    public void ToStringTest6()
+    {
+        string input = "encoded*=utf-8\'\'" + Uri.EscapeDataString("äöü");
+        ReadOnlyMemory<char> mem = input.AsMemory();
+        Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
+
+        Assert.AreEqual(input, para.ToString());
+    }
+
+
 
     [TestMethod]
     public void CharsetTest1()

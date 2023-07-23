@@ -272,6 +272,35 @@ public class MimeTypeTests
         Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString());
     }
 
+    [TestMethod]
+    public void ToStringTest4()
+    {
+        string input = "application/x-stuff; p1=normal; p2=\"text loch\"; p3*=utf-8\'\'" + Uri.EscapeDataString("äöü");
+        var mime = MimeType.Parse(input);
+        Assert.AreEqual("application/x-stuff;p1=normal;p2*=utf-8\'\'text%20loch;p3*=utf-8\'\'" + Uri.EscapeDataString("äöü"), mime.ToString(FormattingOptions.AlwaysUrlEncoded));
+    }
+
+    [TestMethod]
+    public void ToStringTest5()
+    {
+        string value = "";
+
+        for (int i = 0; i < 50; i++)
+        {
+            value += "abc";
+        }
+
+        MimeType mime = MimeTypeBuilder.Create("application", "x-stuff")
+                                  .AppendParameter("key", value)
+                                  .AppendParameter("other", "bla")
+                                  .Build();
+        string s = mime.ToString(FormattingOptions.LineWrapping);
+        Assert.IsFalse(s.Contains('\"'));
+        Assert.IsFalse(s.Contains('\''));
+
+        mime = MimeType.Parse(s);
+        Assert.AreEqual(2, mime.Parameters().Count());
+    }
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
