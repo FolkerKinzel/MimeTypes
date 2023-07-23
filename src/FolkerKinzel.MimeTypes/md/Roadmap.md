@@ -2,10 +2,10 @@
 ## Roadmap
 ### 3.0.0-beta.1
 - [x] Replace `FormattingOptions` with `MimeFormats`
+- [x] Rename the parameters `alwaysUrlEncoded` in `MimeTypeParameter.ToString(...)` and `MimeTypeParameter.AppendTo(...)` into `urlFormat`
 
-### 2.0.0-beta.4
+### 2.0.0-beta.5
 - [x] Fix a bug that choosing `FormattingOptions.AlwaysUrlEncoded` did mark parameters as URL-encoded even if they didn't contain any character to escape.
-
 
 ### 2.0.0-beta.3
 - [x] Dependency update

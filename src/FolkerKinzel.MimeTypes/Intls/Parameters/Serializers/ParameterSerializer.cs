@@ -42,9 +42,9 @@ internal static class ParameterSerializer
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="parameter"></param>
-    /// <param name="alwaysUrlEncoded"></param>
-    /// <returns><paramref name="builder"/></returns>
-    internal static EncodingAction Append(this StringBuilder builder, in MimeTypeParameter parameter, bool alwaysUrlEncoded)
+    /// <param name="urlFormat"></param>
+    /// <returns>The <see cref="EncodingAction"/> which has been used to serialize the <paramref name="parameter"/>.</returns>
+    internal static EncodingAction Append(this StringBuilder builder, in MimeTypeParameter parameter, bool urlFormat)
     {
         if(parameter.IsEmpty)
         {
@@ -61,7 +61,7 @@ internal static class ParameterSerializer
         else
         {
             action = valueSpan.EncodingAction();
-            action = !alwaysUrlEncoded ? action : action.HasFlag(EncodingAction.Quote)
+            action = !urlFormat ? action : action.HasFlag(EncodingAction.Quote)
                                                     ? EncodingAction.UrlEncode
                                                     : action;
         }
@@ -77,6 +77,4 @@ internal static class ParameterSerializer
         return action;
     }
 
-
- 
 }

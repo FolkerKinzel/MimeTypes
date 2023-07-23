@@ -93,8 +93,8 @@ internal static class ParameterSplitter
     /// Removes anything from worker except the parameter value.
     /// </summary>
     /// <param name="worker"></param>
-    /// <param name="quoted"></param>
-    /// <param name="urlEncoded"></param>
+    /// <param name="enc">The <see cref="EncodingAction"/> that had been used to
+    /// serialize the content in <paramref name="worker"/>.</param>
     private static void RemoveKeyFromWorker(StringBuilder worker, EncodingAction enc)
     {
         int startOfValue = worker.IndexOf('=') + 1;

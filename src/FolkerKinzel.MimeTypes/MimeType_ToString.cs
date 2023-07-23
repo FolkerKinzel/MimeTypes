@@ -5,11 +5,11 @@ namespace FolkerKinzel.MimeTypes;
 public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 {
     /// <summary>
-    /// Creates a complete <see cref="string"/> representation of the instance 
-    /// (according to RFC 2045, RFC 2046 and RFC 2231) that includes the <see cref="Parameters"/>.
+    /// Creates a <see cref="string"/> representation of the instance that includes the 
+    /// <see cref="Parameters"/>.
     /// </summary>
-    /// <returns>A complete <see cref="string"/> representation of the instance 
-    /// (according to RFC 2045, RFC 2046 and RFC 2231) that includes the <see cref="Parameters"/>.</returns>
+    /// <returns>A <see cref="string"/> representation of the instance 
+    /// (according to RFC 2045 and RFC 2231) that includes the <see cref="Parameters"/>.</returns>
     /// <example>
     /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
@@ -18,15 +18,16 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
 
     /// <summary>
-    /// Creates a <see cref="string"/> representation of the instance, and allows to determine, whether or not 
-    /// to include the <see cref="Parameters"/>.
+    /// Creates a <see cref="string"/> representation of the instance, and allows to specify several 
+    /// <paramref name="options"/>.
     /// </summary>
-    /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
-    /// <param name="lineLength">The maximum number of characters in a single line of the serialized instance
-    /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="FormattingOptions.LineWrapping"/>
+    /// <param name="options">Named constants to specify options for the serialization of the instance. The
+    /// flags can be combined.</param>
+    /// <param name="lineLength">The number of characters in a single line of the serialized instance
+    /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeFormats.LineWrapping"/>
     /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
-    /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045, RFC 2046 and RFC 2231.</returns>
+    /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2231.</returns>
     /// <example>
     /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
@@ -40,13 +41,14 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
 
     /// <summary>
-    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2046 to a 
+    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2231 to a 
     /// <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>
-    /// <param name="options">Named constants to specify options for the serialization of the instance.</param>
-    /// <param name="lineLength">The maximum number of characters in a single line of the serialized instance
-    /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="FormattingOptions.LineWrapping"/>
+    /// <param name="options">Named constants to specify options for the serialization of the instance. The
+    /// flags can be combined.</param>
+    /// <param name="lineLength">The number of characters in a single line of the serialized instance
+    /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeFormats.LineWrapping"/>
     /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
     /// <returns>A reference to <paramref name="builder"/>.</returns>

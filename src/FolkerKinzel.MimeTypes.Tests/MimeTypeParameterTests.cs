@@ -76,7 +76,7 @@ public class MimeTypeParameterTests
         ReadOnlyMemory<char> mem = input.AsMemory();
         Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
         var sb = new StringBuilder();
-        _ = para.AppendTo(sb, alwaysUrlEncoded: true);
+        _ = para.AppendTo(sb, urlFormat: true);
         Assert.AreEqual(input, sb.ToString());
     }
 
@@ -87,7 +87,7 @@ public class MimeTypeParameterTests
         ReadOnlyMemory<char> mem = input.AsMemory();
         Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
         var sb = new StringBuilder();
-        _ = para.AppendTo(sb, alwaysUrlEncoded: true);
+        _ = para.AppendTo(sb, urlFormat: true);
         Assert.AreEqual("quoted*=utf-8''text%20loch", sb.ToString());
     }
 
@@ -98,7 +98,7 @@ public class MimeTypeParameterTests
         ReadOnlyMemory<char> mem = input.AsMemory();
         Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
         var sb = new StringBuilder();
-        _ = para.AppendTo(sb, alwaysUrlEncoded: true);
+        _ = para.AppendTo(sb, urlFormat: true);
         Assert.AreEqual(input, sb.ToString());
     }
 
@@ -109,7 +109,7 @@ public class MimeTypeParameterTests
         const string input = "normal=value";
         ReadOnlyMemory<char> mem = input.AsMemory();
         Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
-        Assert.AreEqual(input, para.ToString(alwaysUrlEncoded: true));
+        Assert.AreEqual(input, para.ToString(urlFormat: true));
     }
 
     [TestMethod]
@@ -119,7 +119,7 @@ public class MimeTypeParameterTests
         ReadOnlyMemory<char> mem = input.AsMemory();
         Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
        
-        Assert.AreEqual("quoted*=utf-8''text%20loch", para.ToString(alwaysUrlEncoded: true));
+        Assert.AreEqual("quoted*=utf-8''text%20loch", para.ToString(urlFormat: true));
     }
 
     [TestMethod]
@@ -129,7 +129,7 @@ public class MimeTypeParameterTests
         ReadOnlyMemory<char> mem = input.AsMemory();
         Assert.IsTrue(MimeTypeParameter.TryParse(false, ref mem, out MimeTypeParameter para, out _));
        
-        Assert.AreEqual(input, para.ToString(alwaysUrlEncoded: true));
+        Assert.AreEqual(input, para.ToString(urlFormat: true));
     }
 
     [TestMethod]

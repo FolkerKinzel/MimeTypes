@@ -15,14 +15,13 @@ public readonly partial struct MimeTypeParameter
     /// <summary>
     /// Creates a <see cref="string"/> representation of the instance.
     /// </summary>
-    /// <param name="alwaysUrlEncoded">Pass <c>true</c> to URL encode the <see cref="Value"/>s if they contain forbidden characters (instead
-    /// of wrapping them with double quotes and masking the forbidden characters with '\'). Without this option URL encoding is always used 
-    /// when a <see cref="Language"/> is specified or when the <see cref="Value"/> contains Non-ASCII characters.</param>
+    /// <param name="urlFormat">Pass <c>true</c> to get an URL-encoded string representation 
+    /// that can be used within a URI, <c>false</c> to get the default format.</param>
     /// <returns>A <see cref="string"/> representation of the instance.</returns>
-    public string ToString(bool alwaysUrlEncoded)
+    public string ToString(bool urlFormat)
     {
         var sb = new StringBuilder(STRING_LENGTH);
-        sb.Append(in this, alwaysUrlEncoded);
+        sb.Append(in this, urlFormat);
         return sb.ToString();
     }
 
@@ -32,19 +31,18 @@ public readonly partial struct MimeTypeParameter
     /// to a <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>
-    /// <param name="alwaysUrlEncoded">Pass <c>true</c> to URL encode the <see cref="Value"/>s if they contain forbidden characters (instead
-    /// of wrapping them with double quotes and masking the forbidden characters with '\'). Without this option URL encoding is always used 
-    /// when a <see cref="Language"/> is specified or when the <see cref="Value"/> contains Non-ASCII characters.</param>
+    /// <param name="urlFormat">Pass <c>true</c> to get an URL-encoded string representation 
+    /// that can be used within a URI, <c>false</c> to get the default format.</param>
     /// <returns>A reference to <paramref name="builder"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
-    public StringBuilder AppendTo(StringBuilder builder, bool alwaysUrlEncoded = false)
+    public StringBuilder AppendTo(StringBuilder builder, bool urlFormat = false)
     {
         if (builder is null)
         {
             throw new ArgumentNullException(nameof(builder));
         }
 
-        builder.Append(in this, alwaysUrlEncoded);
+        builder.Append(in this, urlFormat);
         return builder;
     }
 
