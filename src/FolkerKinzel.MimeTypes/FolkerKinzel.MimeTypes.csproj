@@ -12,7 +12,7 @@
     <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
     <PackageVersion>2.0.0-beta.5</PackageVersion>
-    <FileVersion>2.0.0.35</FileVersion>
+    <FileVersion>2.0.0.37</FileVersion>
     <AssemblyVersion>2.0.0.0</AssemblyVersion>
     <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
     <PackageTags>MIME Internet Media Type C# .NET</PackageTags>

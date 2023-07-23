@@ -55,8 +55,8 @@ internal static class ParameterSplitter
         Debug.Assert(worker.Length > 0);
         const int COUNTER_INITIAL_LENGTH = 1;
 
-        PrepareWorker(worker, enc);
-        int minimumLength = ComputeMinimumLength(parameter, enc);
+        RemoveKeyFromWorker(worker, enc);
+        int minimumLength = ComputeMinimumLineLength(parameter, enc);
 
         if (lineLength < minimumLength)
         {
@@ -130,7 +130,7 @@ internal static class ParameterSplitter
     /// <param name="worker"></param>
     /// <param name="quoted"></param>
     /// <param name="urlEncoded"></param>
-    private static void PrepareWorker(StringBuilder worker, EncodingAction enc)
+    private static void RemoveKeyFromWorker(StringBuilder worker, EncodingAction enc)
     {
         int startOfValue = worker.IndexOf('=') + 1;
 
@@ -156,7 +156,7 @@ internal static class ParameterSplitter
     /// <param name="quoted"></param>
     /// <param name="urlEncoded"></param>
     /// <returns>The minimum length that is needed for a line. </returns>
-    private static int ComputeMinimumLength(MimeTypeParameter parameter, EncodingAction enc)
+    private static int ComputeMinimumLineLength(MimeTypeParameter parameter, EncodingAction enc)
     {
         int minimumLength = parameter.Key.Length + 9; // *0= and 6 value chars per line at least
 
