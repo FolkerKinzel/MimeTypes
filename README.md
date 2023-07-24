@@ -6,12 +6,13 @@
 [Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v3.0.0-beta.1)
 
 The library contains:
-- The static `MimeType` class allows to retrieve an appropriate file type extension for a given
-- `MimeType` struct: Represents a MIME type ("Internet Media Type") according to [RFC 2045](https://datatracker.ietf.org/doc/html/rfc2045#section-5.1) and [RFC 2231](https://datatracker.ietf.org/doc/html/rfc2231.html). The struct can be created from a file type extension or parsed from an Internet Media Type string or ReadOnlyMemory&lt;Char&gt;.
-- The MimeType struct allows 
-  - to retrieve an appropriate file type extension for its content automatically,
-  - to serialize its content as an Internet Media Type string according to the standards,
-  - to compare its content with other Internet Media Types for equality.
+- The static `MimeType` class works on strings and allows to retrieve an appropriate file type extension for a given Internet Media Type ("MIME type") or an appropriate Internet Media Type for a given file type extension.
+- The `MimeTypeInfo` struct provides all the information that's contained in an Internet Media Type ("MIME type"). The struct can be created from a file type extension or parsed from an Internet Media Type.
+  - It allows 
+    - to examine all contained information in separate properties,
+    - to serialize its content as an Internet Media Type string according to the standards (see [RFC 2045](https://datatracker.ietf.org/doc/html/rfc2045#section-5.1) and [RFC 2231](https://datatracker.ietf.org/doc/html/rfc2231.html)),
+    - to compare its content with other Internet Media Types for equality,
+    - to retrieve an appropriate file type extension.
 - The `MimeTypeBuilder` class offers a fluent API to build MimeTypeInfo instances from scratch.
 - The `FormattingOptions` enum allows a featured string serialization of MimeTypeInfo instances.
 
