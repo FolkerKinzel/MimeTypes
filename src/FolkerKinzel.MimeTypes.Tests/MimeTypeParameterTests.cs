@@ -13,7 +13,7 @@ public class MimeTypeParameterTests
     [TestMethod]
     public void CloneTest1()
     {
-        Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
+        Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
         ICloneable cloneable = inetMedia.Parameters().First();
         object o = cloneable.Clone();
         Assert.AreEqual(cloneable, o);
@@ -23,7 +23,7 @@ public class MimeTypeParameterTests
     [TestMethod]
     public void EqualsTest1()
     {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
+        Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=US-ASCII", out MimeTypeInfo media1));
         object o1 = media1.Parameters().First();
         Assert.IsFalse(o1.Equals(42));
     }
@@ -36,7 +36,7 @@ public class MimeTypeParameterTests
         URL = "ftp://cs.utk.edu/pub/moore/bulk-mailer/bulk-mailer.tar" (Comment)
         """;
 
-        var mime = MimeType.Parse(longMessage);
+        var mime = MimeTypeInfo.Parse(longMessage);
         Assert.AreEqual(1, mime.Parameters().Count());
 
         //foreach (MimeTypeParameter param in mime.Parameters()) 

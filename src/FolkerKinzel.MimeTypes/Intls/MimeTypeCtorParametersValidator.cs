@@ -4,8 +4,8 @@ namespace FolkerKinzel.MimeTypes.Intls;
 
 internal static class MimeTypeCtorParametersValidator
 {
-    private const int MEDIA_TYPE_LENGTH_MAX_VALUE = MimeType.MEDIA_TYPE_LENGTH_MAX_VALUE;
-    private const int SUB_TYPE_LENGTH_MAX_VALUE = MimeType.SUB_TYPE_LENGTH_MAX_VALUE;
+    private const int MEDIA_TYPE_LENGTH_MAX_VALUE = MimeTypeInfo.MEDIA_TYPE_LENGTH_MAX_VALUE;
+    private const int SUB_TYPE_LENGTH_MAX_VALUE = MimeTypeInfo.SUB_TYPE_LENGTH_MAX_VALUE;
 
 
     /// <summary>Validates <paramref name="mediaType"/> and <paramref name="subType"/>.</summary>

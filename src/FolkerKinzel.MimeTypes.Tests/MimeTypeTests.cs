@@ -1,661 +1,2004 @@
 ﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
-using FolkerKinzel.Strings.Polyfills;
-using FolkerKinzel.MimeTypes.Intls;
-using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 
-[TestClass()]
+[TestClass]
 public class MimeTypeTests
-{
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest3() => _ = MimeTypeBuilder.Create("", "subtype");
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest4() => _ = MimeTypeBuilder.Create("type", "");
+{ 
+    #region FromFileTypeExtensionTests
 
     [DataTestMethod]
-    [DataRow("?")]
-    [DataRow("*")]
-    [DataRow("%")]
-    [DataRow(" ")]
-    [DataRow("ö")]
-    [DataRow("\0")]
-    [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest5(string type) => _ = MimeTypeBuilder.Create(type, "");
-
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest6() => _ = MimeTypeBuilder.Create(new string('a', short.MaxValue + 1), "subtype");
-
-
-    [TestMethod]
-    public void MimeTypeTest7()
-    {
-        MimeType mime = MimeTypeBuilder.Create("application", "was").AppendParameter("para", "@").Build();
-        string s = mime.ToString();
-        StringAssert.Contains(s, "\"@\"");
-    }
-
-    [TestMethod()]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void ParseTest1()
-        => _ = MimeType.Parse((string?)null!);
-
-    [TestMethod()]
-    [ExpectedException(typeof(ArgumentException))]
-    public void ParseTest2() => _ = MimeType.Parse(" \t \r\n");
-
-    [TestMethod]
-    public void ParseTest3()
-    {
-        string mimeString = """
-            application/x-stuff;
-            key1*1=123;
-            key1*2=456;
-            key2*1=abc;
-            key2*2=def
-            """;
-        var mime = MimeType.Parse(mimeString.AsMemory());
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
-        Assert.AreEqual(2, arr.Length);
-        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
-    }
-
-
-    [TestMethod]
-    public void ParseTest5()
-    {
-        const string media = "image";
-        const string subType = "jpeg";
-
-        string s = $"  {media}/{subType} (Comment2)";
-        var mime = MimeType.Parse(s);
-        Assert.AreEqual(media, mime.MediaType.ToString());
-        Assert.AreEqual(subType, subType.ToString());
-    }
-
-    [DataTestMethod]
-    [DataRow("text/plain; charset=iso-8859-1", true, 1)]
-    [DataRow("text / plain; charset=iso-8859-1;;", true, 1)]
-    [DataRow("text / plain; charset=iso-8859-1;second=;", true, 2)]
-    [DataRow("text / plain; charset=iso-8859-1;second=\"Second ; Value\"", true, 2)]
-    public void TryParseTest1(string input, bool expected, int parametersCount)
-    {
-        Assert.AreEqual(expected, MimeType.TryParse(input, out MimeType mediaType));
-
-        //int size = Marshal.SizeOf(ReadOnlyMemory<char>.Empty);
-        //size = Marshal.SizeOf(mediaType);
-
-        MimeTypeParameter[]? arr = mediaType.Parameters().ToArray();
-
-        Assert.AreEqual(parametersCount, arr.Length);
-    }
-
-
-    [TestMethod]
-    public void TryParseTest2()
-    {
-        string mimeString = """
-            application/x-stuff;k=val1;
-            key2*1=abc;
-            key2*2=def
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
-        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
-
-        string s = mime.ToString();
-        Assert.IsNotNull(s);
-        Assert.AreNotEqual(0, s.Length);
-    }
-
-
-    [TestMethod]
-    public void TryParseTest3()
-    {
-        string mimeString = """
-            application/x-stuff;k=val1;
-            key2*1=abc;
-            key2*2=def
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
-        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
-
-        string s = mime.ToString();
-        Assert.IsNotNull(s);
-        Assert.AreNotEqual(0, s.Length);
-    }
-
-
-    [TestMethod]
-    public void TryParseTest4()
-    {
-        string urlEncoded = Uri.EscapeDataString("äöü");
-        string mimeString = $"""
-            application/x-stuff;
-            key*1*=utf-8'en'{urlEncoded} ;
-            key*2="This is %EF 7e\\ / \" @ ? ; quoted.\"
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-        MimeTypeParameter[] paras = mime.Parameters().ToArray();
-        Assert.AreEqual(1, paras.Length);
-
-        MimeTypeParameter par = paras[0];
-        Assert.AreEqual("key", par.Key.ToString());
-        StringAssert.Contains(par.Value.ToString(), @"This is %EF 7e\ / "" @ ? ; quoted.\");
-        Assert.AreEqual("en", par.Language.ToString());
-        Assert.AreEqual("utf-8", par.CharSet.ToString());
-    }
-
-
-    [TestMethod]
-    public void TryParseTest4b()
-    {
-        string mimeString = $"""
-            application/x-stuff;
-            key*1=abc;
-            key*2=xy%EFz
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-        MimeTypeParameter[] paras = mime.Parameters().ToArray();
-        Assert.AreEqual(1, paras.Length);
-
-        MimeTypeParameter par = paras[0];
-        Assert.AreEqual("key", par.Key.ToString());
-        StringAssert.Contains(par.Value.ToString(), "xy%EFz");
-        Assert.AreEqual("", par.Language.ToString());
-        Assert.AreEqual("", par.CharSet.ToString());
-    }
-
-    [TestMethod]
-    public void TryParseTest4c()
-    {
-        string mimeString = $"""
-            application/x-stuff;
-            key*1="abc def";
-            key*2="xy %EF z"
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-        MimeTypeParameter[] paras = mime.Parameters().ToArray();
-        Assert.AreEqual(1, paras.Length);
-
-        MimeTypeParameter par = paras[0];
-        Assert.AreEqual("key", par.Key.ToString());
-        StringAssert.Contains(par.Value.ToString(), "xy %EF z");
-        Assert.AreEqual("", par.Language.ToString());
-        Assert.AreEqual("", par.CharSet.ToString());
-    }
-
-
-    [TestMethod]
-    public void TryParseTest5()
-    {
-        const string ab = @"a\\b";
-        string mimeString = $"""
-            application/x-stuff;
-            key*1="a\\\";
-            key*2="\b"
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
-        Assert.AreEqual(1, arr.Length);
-        Assert.AreEqual(ab, arr[0].Value.ToString(), false);
-    }
-
-    [TestMethod]
-    public void TryParseTest6()
-    {
-        const string ab = @"a\\b";
-        string mimeString = $"""
-            application/x-stuff;
-            key*1="a\\";
-            key*2="\\b"
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
-        Assert.AreEqual(1, arr.Length);
-        Assert.AreEqual(ab, arr[0].Value.ToString(), false);
-    }
-
-    [TestMethod]
-    public void TryParseTest7()
-    {
-        const string ab = @"a\\b";
-        string mimeString = $"""
-            application/x-stuff;
-            key*1="a\"        ;
-            key*2="\\\b"
-            """;
-        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType mime));
-
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
-        Assert.AreEqual(1, arr.Length);
-        Assert.AreEqual(ab, arr[0].Value.ToString(), false);
-    }
-
-
-    [TestMethod()]
-    public void ToStringTest1()
-    {
-        string result = new MimeType().ToString();
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(0, result.Length);
-    }
-
-
-    [TestMethod()]
-    public void ToStringTest2()
-    {
-        const string input = "text/plain";
-        Assert.IsTrue(MimeType.TryParse(input, out MimeType media));
-        string result = media.ToString();
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(input, result);
-    }
-
-
-    [TestMethod]
-    public void ToStringTest3()
-    {
-        Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
-
-        Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString());
-    }
-
-    [TestMethod]
-    public void ToStringTest4()
-    {
-        string input = "application/x-stuff; p1=normal; p2=\"text loch\"; p3*=utf-8\'\'" + Uri.EscapeDataString("äöü");
-        var mime = MimeType.Parse(input);
-        Assert.AreEqual("application/x-stuff;p1=normal;p2*=utf-8\'\'text%20loch;p3*=utf-8\'\'" + Uri.EscapeDataString("äöü"), mime.ToString(MimeFormats.Url));
-    }
-
-    [TestMethod]
-    public void ToStringTest5()
-    {
-        string value = "";
-
-        for (int i = 0; i < 50; i++)
-        {
-            value += "abc";
-        }
-
-        MimeType mime = MimeTypeBuilder.Create("application", "x-stuff")
-                                  .AppendParameter("key", value)
-                                  .AppendParameter("other", "bla")
-                                  .Build();
-        string s = mime.ToString(MimeFormats.LineWrapping);
-        Assert.IsFalse(s.Contains('\"'));
-        Assert.IsFalse(s.Contains('\''));
-
-        mime = MimeType.Parse(s);
-        Assert.AreEqual(2, mime.Parameters().Count());
-    }
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void AppendToTest1()
-    {
-        Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType inetMedia));
-        inetMedia.AppendTo(null!);
-    }
-
-
-    [TestMethod]
-    public void CloneTest1()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
-        ICloneable o1 = media1;
-
-        object o2 = o1.Clone();
-
-        Assert.IsTrue(o1.Equals(o2));
-    }
-
-    [TestMethod]
-    public void CloneTest2()
-    {
-        var o = (MimeType)MimeType.Empty.Clone();
-        Assert.IsTrue(o.IsEmpty);
-    }
-
-    
-
-    [TestMethod]
-    public void EqualsTest1()
-    {
-        string media1 = "text/plain; charset=iso-8859-1";
-        string media2 = "TEXT/PLAIN; CHARSET=ISO-8859-1";
-
-        var mediaType1 = MimeType.Parse(media1);
-        var mediaType2 = MimeType.Parse(media2);
-
-        Assert.IsTrue(mediaType1 == mediaType2);
-        Assert.IsFalse(mediaType1 != mediaType2);
-
-        Assert.AreEqual(mediaType1.GetHashCode(), mediaType2.GetHashCode());
-    }
-
-    [TestMethod]
-    public void EqualsTest2()
-    {
-        string media1 = "text/plain; charset=iso-8859-1;second=value";
-        string media2 = "TEXT/PLAIN; CHARSET=ISO-8859-1;SECOND=VALUE";
-
-        var mediaType1 = MimeType.Parse(media1);
-        var mediaType2 = MimeType.Parse(media2);
-
-        Assert.IsTrue(mediaType1 != mediaType2);
-        Assert.IsFalse(mediaType1 == mediaType2);
-
-        Assert.AreNotEqual(mediaType1.GetHashCode(), mediaType2.GetHashCode());
-    }
-
-    [TestMethod]
-    public void EqualsTest3()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=us-ascii", out MimeType media1));
-        Assert.IsTrue(MimeType.TryParse("text/plain", out MimeType media2));
-
-        Assert.IsTrue(media1 == media2);
-        Assert.IsFalse(media1 != media2);
-
-        Assert.AreEqual(media1.GetHashCode(), media2.GetHashCode());
-    }
-
-    [TestMethod]
-    public void EqualsTest4()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=iso-8859-1", out MimeType media1));
-        Assert.IsTrue(MimeType.TryParse("text/plain", out MimeType media2));
-
-        Assert.IsTrue(media1 != media2);
-        Assert.IsFalse(media1 == media2);
-
-        Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
-    }
-
-    [TestMethod]
-    public void EqualsTest5()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=iso-8859-1", out MimeType media1));
-        Assert.IsTrue(MimeType.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeType media2));
-
-        Assert.IsTrue(media1 == media2);
-        Assert.IsFalse(media1 != media2);
-
-        Assert.AreEqual(media1.GetHashCode(), media2.GetHashCode());
-    }
-
-    [TestMethod]
-    public void EqualsTest6()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=iso-8859-1;other=value", out MimeType media1));
-        Assert.IsTrue(MimeType.TryParse("text/plain;charset=iso-8859-1;OTHER=VALUE", out MimeType media2));
-
-        Assert.IsTrue(media1 != media2);
-        Assert.IsFalse(media1 == media2);
-
-        Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
-    }
-
-    [TestMethod]
-    public void EqualsTest7()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=iso-8859-1", out MimeType media1));
-        Assert.IsTrue(MimeType.TryParse("text/plain", out MimeType media2));
-
-        Assert.IsFalse(media1.Equals(media2));
-        Assert.IsFalse(media1.Equals(in media2));
-        Assert.IsFalse(media1.Equals(in media2, false));
-        Assert.IsTrue(media1.Equals(in media2, true));
-
-        Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
-        Assert.AreEqual(media1.GetHashCode(true), media2.GetHashCode(true));
-    }
-
-    [TestMethod]
-    public void EqualsTest8()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
-        Assert.IsTrue(MimeType.TryParse("text/plain", out MimeType media2));
-
-        Assert.IsTrue(media1.Equals(media2));
-        Assert.IsTrue(media1.Equals(in media2));
-        Assert.IsTrue(media1.Equals(in media2, false));
-        Assert.IsTrue(media1.Equals(in media2, true));
-
-        Assert.AreEqual(media1.GetHashCode(), media2.GetHashCode());
-        Assert.AreEqual(media1.GetHashCode(true), media2.GetHashCode(true));
-    }
-
-
-    [TestMethod]
-    public void EqualsTest9()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
-        object o1 = media1;
-        Assert.IsFalse(o1.Equals(42));
-    }
-
-    [TestMethod]
-    public void EqualsTest10()
-    {
-        Assert.IsTrue(MimeType.TryParse("application/octet-stream; charset=US-ASCII", out MimeType media1));
-        Assert.IsTrue(MimeType.TryParse("application/octet-stream", out MimeType media2));
-
-        Assert.IsFalse(media1.Equals(media2));
-        Assert.IsFalse(media1.Equals(in media2));
-        Assert.IsFalse(media1.Equals(in media2, false));
-        Assert.IsTrue(media1.Equals(in media2, true));
-
-        Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
-        Assert.AreEqual(media1.GetHashCode(true), media2.GetHashCode(true));
-    }
-    
-    [TestMethod]
-    public void EqualsTest11()
-    {
-        Assert.IsTrue(MimeType.TryParse("text/plain; charset=US-ASCII", out MimeType media1));
-        Assert.IsTrue(MimeType.TryParse("application/octet-stream", out MimeType media2));
-
-        Assert.IsTrue(media1.IsTextPlain);
-        Assert.IsFalse(media2.IsTextPlain);
-
-        Assert.IsFalse(media1.Equals(media2));
-        Assert.IsFalse(media1.Equals(in media2));
-        Assert.IsFalse(media1.Equals(in media2, false));
-        Assert.IsFalse(media1.Equals(in media2, true));
-
-        Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
-        Assert.AreNotEqual(media1.GetHashCode(true), media2.GetHashCode(true));
-    }
-
-
-
-
-    [TestMethod]
-    public void EqualsTest12()
-    {
-        const string media1 = "text/plain; charset=us-ascii";
-        const string media2 = "TEXT/PLAIN";
-        const string media3 = "TEXT/HTML";
-        const string media4 = "text/plain; charset=iso-8859-1";
-        const string media5 = "TEXT/PLAIN; CHARSET=ISO-8859-1";
-        const string media6 = "text/plain; charset=iso-8859-1; other-parameter=other_value";
-        const string media7 = "text/plain; OTHER-PARAMETER=other_value; charset=ISO-8859-1";
-        const string media8 = "text/plain; charset=iso-8859-1; other-parameter=OTHER_VALUE";
-
-        Assert.IsTrue(MimeType.Parse(media1) == MimeType.Parse(media2) &&
-        MimeType.Parse(media2) != MimeType.Parse(media3) &&
-        MimeType.Parse(media2) != MimeType.Parse(media4) &&
-        MimeType.Parse(media2).Equals(MimeType.Parse(media4), ignoreParameters: true) &&
-        MimeType.Parse(media4) == MimeType.Parse(media5) &&
-        MimeType.Parse(media4) != MimeType.Parse(media6) &&
-        MimeType.Parse(media6) == MimeType.Parse(media7) &&
-        MimeType.Parse(media6) != MimeType.Parse(media8));
-        
-    }
-
-    [TestMethod]
-    public void RemoveUrlEncodingTest1()
-    {
-        Assert.IsTrue(MimeType.TryParse("application/octet-stream; para*=utf-8'de'Hallo%20Folker", out MimeType media1));
-
-        MimeTypeParameter para = media1.Parameters().First();
-        Assert.AreEqual(para.Value.ToString(), "Hallo Folker");
-        Assert.AreEqual(para.Language.ToString(), "de");
-        Assert.AreEqual(para.Key.ToString(), "para");
-    }
-
-    [TestMethod]
-    public void ParseParametersTest1()
-    {
-        string input = "application/x-stuff;" + Environment.NewLine +
-                        "title*1*=us-ascii'en'This%20is%20even%20more%20;" + Environment.NewLine +
-                        "title*2*=%2A%2A%2Afun%2A%2A%2A%20;" + Environment.NewLine +
-                        "title*3=\"isn't it!\"";
-
-        Assert.IsTrue(MimeType.TryParse(input, out MimeType mimeType));
-        Assert.AreEqual(1, mimeType.Parameters().Count());
-        MimeTypeParameter param = mimeType.Parameters().First();
-
-        Assert.AreEqual("title", param.Key.ToString());
-        Assert.AreEqual("en", param.Language.ToString());
-        Assert.IsTrue(param.Value.EndsWith("isn't it!".AsSpan()));
-
-    }
-
-    [TestMethod]
-    public void ParseParametersTest2()
-    {
-        const string input = "application/x-stuff; param=\"directory\\\\file.text\"";
-
-        Assert.IsTrue(MimeType.TryParse(input, out MimeType mimeType));
-        Assert.AreEqual(1, mimeType.Parameters().Count());
-        MimeTypeParameter param = mimeType.Parameters().First();
-
-        Assert.AreEqual("param", param.Key.ToString());
-        Assert.AreEqual(@"directory\file.text", param.Value.ToString());
-
-        Assert.AreEqual(input, mimeType.ToString());
-    }
-
-    [DataTestMethod]
+    [DataRow("text/html", ".htm")]
+    [DataRow("text/javascript", ".js")]
     [DataRow("text/cache-manifest", ".appcache")]
+    [DataRow("text/calendar", ".ics")]
+    [DataRow("text/calendar", ".ifb")]
+    [DataRow("text/css", ".css")]
+    [DataRow("text/csv", ".csv")]
+    [DataRow("text/html", ".html")]
     [DataRow("text/n3", ".n3")]
+    [DataRow("text/plain", ".txt")]
+    [DataRow("text/plain", ".text")]
+    [DataRow("text/plain", ".conf")]
+    [DataRow("text/plain", ".def")]
+    [DataRow("text/plain", ".list")]
+    [DataRow("text/plain", ".log")]
+    [DataRow("text/plain", ".in")]
+    [DataRow("text/prs.lines.tag", ".dsc")]
+    [DataRow("text/richtext", ".rtx")]
+    [DataRow("text/sgml", ".sgml")]
+    [DataRow("text/sgml", ".sgm")]
     [DataRow("text/tab-separated-values", ".tsv")]
+    [DataRow("text/troff", ".t")]
+    [DataRow("text/troff", ".tr")]
+    [DataRow("text/troff", ".roff")]
+    [DataRow("text/troff", ".man")]
+    [DataRow("text/troff", ".me")]
+    [DataRow("text/troff", ".ms")]
+    [DataRow("text/turtle", ".ttl")]
+    [DataRow("text/uri-list", ".uri")]
+    [DataRow("text/uri-list", ".uris")]
+    [DataRow("text/uri-list", ".urls")]
+    [DataRow("text/vcard", ".vcard")]
+    [DataRow("text/vnd.curl", ".curl")]
+    [DataRow("text/vnd.curl.dcurl", ".dcurl")]
+    [DataRow("text/vnd.curl.mcurl", ".mcurl")]
+    [DataRow("text/vnd.curl.scurl", ".scurl")]
+    [DataRow("text/vnd.dvb.subtitle", ".sub")]
+    [DataRow("text/vnd.fly", ".fly")]
+    [DataRow("text/vnd.fmi.flexstor", ".flx")]
+    [DataRow("text/vnd.graphviz", ".gv")]
+    [DataRow("text/vnd.in3d.3dml", ".3dml")]
+    [DataRow("text/vnd.in3d.spot", ".spot")]
+    [DataRow("text/vnd.sun.j2me.app-descriptor", ".jad")]
+    [DataRow("text/vnd.wap.wml", ".wml")]
+    [DataRow("text/vnd.wap.wmlscript", ".wmls")]
     [DataRow("text/x-asm", ".s")]
+    [DataRow("text/x-asm", ".asm")]
+    [DataRow("text/x-c", ".c")]
+    [DataRow("text/x-c", ".cc")]
+    [DataRow("text/x-c", ".cxx")]
+    [DataRow("text/x-c", ".cpp")]
+    [DataRow("text/x-c", ".h")]
+    [DataRow("text/x-c", ".hh")]
+    [DataRow("text/x-c", ".dic")]
+    [DataRow("text/x-fortran", ".f")]
+    [DataRow("text/x-fortran", ".for")]
+    [DataRow("text/x-fortran", ".f77")]
+    [DataRow("text/x-fortran", ".f90")]
+    [DataRow("text/x-java-source", ".java")]
+    [DataRow("text/x-nfo", ".nfo")]
+    [DataRow("text/x-opml", ".opml")]
+    [DataRow("text/x-pascal", ".p")]
+    [DataRow("text/x-pascal", ".pas")]
+    [DataRow("text/x-setext", ".etx")]
+    [DataRow("text/x-sfv", ".sfv")]
+    [DataRow("text/x-uuencode", ".uu")]
+    [DataRow("text/x-vcalendar", ".vcs")]
+    [DataRow("text/x-vcard", ".vcf")]
+    [DataRow("text/x-speech", ".talk")]
+    [DataRow("text/x-speech", ".spc")]
+    [DataRow("text/markdown", ".md")]
+    [DataRow("video/quicktime", ".mov")]
+    [DataRow("video/3gpp", ".3gp")]
+    [DataRow("video/3gpp2", ".3g2")]
+    [DataRow("video/h261", ".h261")]
+    [DataRow("video/h263", ".h263")]
+    [DataRow("video/h264", ".h264")]
+    [DataRow("video/jpeg", ".jpgv")]
+    [DataRow("video/jpm", ".jpm")]
+    [DataRow("video/jpm", ".jpgm")]
+    [DataRow("video/mj2", ".mj2")]
+    [DataRow("video/mj2", ".mjp2")]
+    [DataRow("video/mp4", ".mp4")]
+    [DataRow("video/mp4", ".mp4v")]
+    [DataRow("video/mp4", ".mpg4")]
+    [DataRow("video/mpeg", ".mpeg")]
+    [DataRow("video/mpeg", ".mpg")]
+    [DataRow("video/mpeg", ".mpe")]
+    [DataRow("video/mpeg", ".m1v")]
+    [DataRow("video/mpeg", ".m2v")]
+    [DataRow("video/ogg", ".ogv")]
+    [DataRow("video/quicktime", ".qt")]
     [DataRow("video/vnd.dece.hd", ".uvh")]
+    [DataRow("video/vnd.dece.hd", ".uvvh")]
+    [DataRow("video/vnd.dece.mobile", ".uvm")]
+    [DataRow("video/vnd.dece.mobile", ".uvvm")]
+    [DataRow("video/vnd.dece.pd", ".uvp")]
+    [DataRow("video/vnd.dece.pd", ".uvvp")]
+    [DataRow("video/vnd.dece.sd", ".uvs")]
+    [DataRow("video/vnd.dece.sd", ".uvvs")]
+    [DataRow("video/vnd.dece.video", ".uvv")]
+    [DataRow("video/vnd.dece.video", ".uvvv")]
+    [DataRow("video/vnd.dvb.file", ".dvb")]
+    [DataRow("video/vnd.fvt", ".fvt")]
+    [DataRow("video/vnd.mpegurl", ".mxu")]
+    [DataRow("video/vnd.mpegurl", ".m4u")]
+    [DataRow("video/vnd.ms-playready.media.pyv", ".pyv")]
+    [DataRow("video/vnd.uvvu.mp4", ".uvu")]
+    [DataRow("video/vnd.uvvu.mp4", ".uvvu")]
+    [DataRow("video/vnd.vivo", ".viv")]
+    [DataRow("video/webm", ".webm")]
+    [DataRow("video/x-f4v", ".f4v")]
+    [DataRow("video/x-fli", ".fli")]
+    [DataRow("video/x-flv", ".flv")]
+    [DataRow("video/x-m4v", ".m4v")]
+    [DataRow("video/x-matroska", ".mkv")]
+    [DataRow("video/x-matroska", ".mk3d")]
+    [DataRow("video/x-matroska", ".mks")]
+    [DataRow("video/x-mng", ".mng")]
+    [DataRow("video/x-ms-asf", ".asf")]
+    [DataRow("video/x-ms-asf", ".asx")]
+    [DataRow("video/x-ms-vob", ".vob")]
+    [DataRow("video/x-ms-wm", ".wm")]
+    [DataRow("video/x-ms-wmv", ".wmv")]
+    [DataRow("video/x-ms-wmx", ".wmx")]
+    [DataRow("video/x-ms-wvx", ".wvx")]
+    [DataRow("video/x-msvideo", ".avi")]
+    [DataRow("video/x-sgi-movie", ".movie")]
+    [DataRow("video/x-smv", ".smv")]
+    [DataRow("video/vnd.vivo", ".vivo")]
+    [DataRow("image/fits", ".fits")]
+    [DataRow("image/bmp", ".bmp")]
+    [DataRow("image/cgm", ".cgm")]
+    [DataRow("image/g3fax", ".g3")]
+    [DataRow("image/gif", ".gif")]
     [DataRow("image/ief", ".ief")]
+    [DataRow("image/jpeg", ".jpeg")]
+    [DataRow("image/jpeg", ".jpg")]
+    [DataRow("image/jpeg", ".jpe")]
+    [DataRow("image/ktx", ".ktx")]
+    [DataRow("image/png", ".png")]
+    [DataRow("image/prs.btif", ".btif")]
+    [DataRow("image/sgi", ".sgi")]
+    [DataRow("image/svg+xml", ".svg")]
+    [DataRow("image/svg+xml", ".svgz")]
+    [DataRow("image/tiff", ".tiff")]
+    [DataRow("image/tiff", ".tif")]
+    [DataRow("image/vnd.adobe.photoshop", ".psd")]
+    [DataRow("image/vnd.dece.graphic", ".uvi")]
+    [DataRow("image/vnd.dece.graphic", ".uvvi")]
+    [DataRow("image/vnd.dece.graphic", ".uvg")]
+    [DataRow("image/vnd.dece.graphic", ".uvvg")]
+    [DataRow("image/vnd.djvu", ".djvu")]
+    [DataRow("image/vnd.djvu", ".djv")]
+    [DataRow("image/vnd.dwg", ".dwg")]
+    [DataRow("image/vnd.dxf", ".dxf")]
+    [DataRow("image/vnd.fastbidsheet", ".fbs")]
+    [DataRow("image/vnd.fpx", ".fpx")]
+    [DataRow("image/vnd.fst", ".fst")]
+    [DataRow("image/vnd.fujixerox.edmics-mmr", ".mmr")]
     [DataRow("image/vnd.fujixerox.edmics-rlc", ".rlc")]
+    [DataRow("image/vnd.ms-modi", ".mdi")]
+    [DataRow("image/vnd.ms-photo", ".wdp")]
+    [DataRow("image/vnd.net-fpx", ".npx")]
+    [DataRow("image/vnd.wap.wbmp", ".wbmp")]
+    [DataRow("image/vnd.xiff", ".xif")]
+    [DataRow("image/webp", ".webp")]
+    [DataRow("image/x-3ds", ".3ds")]
+    [DataRow("image/x-cmu-raster", ".ras")]
+    [DataRow("image/x-cmx", ".cmx")]
+    [DataRow("image/x-freehand", ".fh")]
+    [DataRow("image/x-freehand", ".fhc")]
+    [DataRow("image/x-freehand", ".fh4")]
+    [DataRow("image/x-freehand", ".fh5")]
+    [DataRow("image/x-freehand", ".fh7")]
+    [DataRow("image/x-icon", ".ico")]
+    [DataRow("image/x-mrsid-image", ".sid")]
+    [DataRow("image/x-pcx", ".pcx")]
+    [DataRow("image/x-pict", ".pic")]
+    [DataRow("image/x-pict", ".pct")]
+    [DataRow("image/x-portable-anymap", ".pnm")]
+    [DataRow("image/x-portable-bitmap", ".pbm")]
+    [DataRow("image/x-portable-graymap", ".pgm")]
+    [DataRow("image/x-portable-pixmap", ".ppm")]
+    [DataRow("image/x-rgb", ".rgb")]
+    [DataRow("image/x-tga", ".tga")]
+    [DataRow("image/x-xbitmap", ".xbm")]
+    [DataRow("image/x-xpixmap", ".xpm")]
+    [DataRow("image/x-xwindowdump", ".xwd")]
+    [DataRow("image/cis-cod", ".cod")]
+    [DataRow("image/fif", ".fif")]
+    [DataRow("image/vasa", ".mcf")]
+    [DataRow("image/x-wmf", ".wmf")]
+    [DataRow("image/mpeg-h", ".hevc")]
+    [DataRow("image/x-xcf", ".xcf")]
+    [DataRow("image/x-icns", ".icns")]
+    [DataRow("image/jp2", ".jp2")]
+    [DataRow("image/jp2", ".jpg2")]
+    [DataRow("image/jpx", ".jpx")]
+    [DataRow("image/fits", ".fts")]
+    [DataRow("image/fits", ".fit")]
+    [DataRow("application/andrew-inset", ".ez")]
+    [DataRow("application/applixware", ".aw")]
+    [DataRow("application/atom+xml", ".atom")]
+    [DataRow("application/atomcat+xml", ".atomcat")]
+    [DataRow("application/atomsvc+xml", ".atomsvc")]
+    [DataRow("application/ccxml+xml", ".ccxml")]
+    [DataRow("application/cdmi-capability", ".cdmia")]
+    [DataRow("application/cdmi-container", ".cdmic")]
+    [DataRow("application/cdmi-domain", ".cdmid")]
+    [DataRow("application/cdmi-object", ".cdmio")]
+    [DataRow("application/cdmi-queue", ".cdmiq")]
     [DataRow("application/cu-seeme", ".cu")]
+    [DataRow("application/davmount+xml", ".davmount")]
+    [DataRow("application/docbook+xml", ".dbk")]
+    [DataRow("application/dssc+der", ".dssc")]
+    [DataRow("application/dssc+xml", ".xdssc")]
+    [DataRow("application/ecmascript", ".ecma")]
+    [DataRow("application/emma+xml", ".emma")]
+    [DataRow("application/epub+zip", ".epub")]
+    [DataRow("application/exi", ".exi")]
+    [DataRow("application/font-tdpfr", ".pfr")]
+    [DataRow("application/gml+xml", ".gml")]
+    [DataRow("application/gpx+xml", ".gpx")]
+    [DataRow("application/gxf", ".gxf")]
+    [DataRow("application/hyperstudio", ".stk")]
+    [DataRow("application/inkml+xml", ".ink")]
+    [DataRow("application/inkml+xml", ".inkml")]
+    [DataRow("application/ipfix", ".ipfix")]
+    [DataRow("application/java-archive", ".jar")]
+    [DataRow("application/java-serialized-object", ".ser")]
+    [DataRow("application/java-vm", ".class")]
+    [DataRow("application/json", ".json")]
+    [DataRow("application/jsonml+json", ".jsonml")]
+    [DataRow("application/lost+xml", ".lostxml")]
+    [DataRow("application/mac-binhex40", ".hqx")]
+    [DataRow("application/mac-compactpro", ".cpt")]
+    [DataRow("application/mads+xml", ".mads")]
+    [DataRow("application/marc", ".mrc")]
+    [DataRow("application/marcxml+xml", ".mrcx")]
+    [DataRow("application/mathematica", ".ma")]
+    [DataRow("application/mathematica", ".nb")]
+    [DataRow("application/mathematica", ".mb")]
+    [DataRow("application/mathml+xml", ".mathml")]
+    [DataRow("application/mbox", ".mbox")]
+    [DataRow("application/mediaservercontrol+xml", ".mscml")]
+    [DataRow("application/metalink+xml", ".metalink")]
+    [DataRow("application/metalink4+xml", ".meta4")]
+    [DataRow("application/mets+xml", ".mets")]
+    [DataRow("application/mods+xml", ".mods")]
+    [DataRow("application/mp21", ".m21")]
+    [DataRow("application/mp21", ".mp21")]
+    [DataRow("application/mp4", ".mp4s")]
+    [DataRow("application/msword", ".doc")]
+    [DataRow("application/msword", ".dot")]
+    [DataRow("application/mxf", ".mxf")]
+    [DataRow("application/octet-stream", ".bin")]
+    [DataRow("application/octet-stream", ".dms")]
+    [DataRow("application/octet-stream", ".lrf")]
+    [DataRow("application/octet-stream", ".mar")]
+    [DataRow("application/octet-stream", ".so")]
+    [DataRow("application/octet-stream", ".dist")]
+    [DataRow("application/octet-stream", ".distz")]
+    [DataRow("application/octet-stream", ".pkg")]
+    [DataRow("application/octet-stream", ".bpk")]
+    [DataRow("application/octet-stream", ".dump")]
+    [DataRow("application/octet-stream", ".elc")]
+    [DataRow("application/octet-stream", ".deploy")]
+    [DataRow("application/oda", ".oda")]
+    [DataRow("application/oebps-package+xml", ".opf")]
+    [DataRow("application/ogg", ".ogx")]
+    [DataRow("application/omdoc+xml", ".omdoc")]
+    [DataRow("application/onenote", ".onetoc")]
+    [DataRow("application/onenote", ".onetoc2")]
+    [DataRow("application/onenote", ".onetmp")]
+    [DataRow("application/onenote", ".onepkg")]
+    [DataRow("application/oxps", ".oxps")]
+    [DataRow("application/patch-ops-error+xml", ".xer")]
+    [DataRow("application/pdf", ".pdf")]
+    [DataRow("application/pgp-encrypted", ".pgp")]
+    [DataRow("application/pgp-signature", ".asc")]
+    [DataRow("application/pgp-signature", ".sig")]
+    [DataRow("application/pics-rules", ".prf")]
+    [DataRow("application/pkcs10", ".p10")]
+    [DataRow("application/pkcs7-mime", ".p7m")]
+    [DataRow("application/pkcs7-mime", ".p7c")]
+    [DataRow("application/pkcs7-signature", ".p7s")]
+    [DataRow("application/pkcs8", ".p8")]
+    [DataRow("application/pkix-attr-cert", ".ac")]
+    [DataRow("application/pkix-cert", ".cer")]
+    [DataRow("application/pkix-crl", ".crl")]
+    [DataRow("application/pkix-pkipath", ".pkipath")]
+    [DataRow("application/pkixcmp", ".pki")]
+    [DataRow("application/pls+xml", ".pls")]
+    [DataRow("application/postscript", ".ai")]
+    [DataRow("application/postscript", ".eps")]
+    [DataRow("application/postscript", ".ps")]
+    [DataRow("application/prs.cww", ".cww")]
+    [DataRow("application/pskc+xml", ".pskcxml")]
+    [DataRow("application/rdf+xml", ".rdf")]
+    [DataRow("application/reginfo+xml", ".rif")]
+    [DataRow("application/relax-ng-compact-syntax", ".rnc")]
+    [DataRow("application/resource-lists+xml", ".rl")]
+    [DataRow("application/resource-lists-diff+xml", ".rld")]
+    [DataRow("application/rls-services+xml", ".rs")]
+    [DataRow("application/rpki-ghostbusters", ".gbr")]
+    [DataRow("application/rpki-manifest", ".mft")]
+    [DataRow("application/rpki-roa", ".roa")]
+    [DataRow("application/rsd+xml", ".rsd")]
+    [DataRow("application/rss+xml", ".rss")]
+    [DataRow("application/rtf", ".rtf")]
+    [DataRow("application/sbml+xml", ".sbml")]
+    [DataRow("application/scvp-cv-request", ".scq")]
+    [DataRow("application/scvp-cv-response", ".scs")]
+    [DataRow("application/scvp-vp-request", ".spq")]
+    [DataRow("application/scvp-vp-response", ".spp")]
+    [DataRow("application/sdp", ".sdp")]
+    [DataRow("application/set-payment-initiation", ".setpay")]
+    [DataRow("application/set-registration-initiation", ".setreg")]
+    [DataRow("application/shf+xml", ".shf")]
+    [DataRow("application/smil+xml", ".smi")]
+    [DataRow("application/smil+xml", ".smil")]
+    [DataRow("application/sparql-query", ".rq")]
+    [DataRow("application/sparql-results+xml", ".srx")]
+    [DataRow("application/srgs", ".gram")]
+    [DataRow("application/srgs+xml", ".grxml")]
+    [DataRow("application/sru+xml", ".sru")]
+    [DataRow("application/ssdl+xml", ".ssdl")]
+    [DataRow("application/ssml+xml", ".ssml")]
+    [DataRow("application/tei+xml", ".tei")]
+    [DataRow("application/tei+xml", ".teicorpus")]
+    [DataRow("application/thraud+xml", ".tfi")]
+    [DataRow("application/timestamped-data", ".tsd")]
+    [DataRow("application/vnd.3gpp.pic-bw-large", ".plb")]
+    [DataRow("application/vnd.3gpp.pic-bw-small", ".psb")]
+    [DataRow("application/vnd.3gpp.pic-bw-var", ".pvb")]
+    [DataRow("application/vnd.3gpp2.tcap", ".tcap")]
+    [DataRow("application/vnd.3m.post-it-notes", ".pwn")]
+    [DataRow("application/vnd.accpac.simply.aso", ".aso")]
+    [DataRow("application/vnd.accpac.simply.imp", ".imp")]
+    [DataRow("application/vnd.acucobol", ".acu")]
+    [DataRow("application/vnd.acucorp", ".atc")]
+    [DataRow("application/vnd.acucorp", ".acutc")]
+    [DataRow("application/vnd.adobe.air-application-installer-package+zip", ".air")]
+    [DataRow("application/vnd.adobe.formscentral.fcdt", ".fcdt")]
+    [DataRow("application/vnd.adobe.fxp", ".fxp")]
+    [DataRow("application/vnd.adobe.fxp", ".fxpl")]
+    [DataRow("application/vnd.adobe.xdp+xml", ".xdp")]
+    [DataRow("application/vnd.adobe.xfdf", ".xfdf")]
+    [DataRow("application/vnd.ahead.space", ".ahead")]
+    [DataRow("application/vnd.airzip.filesecure.azf", ".azf")]
+    [DataRow("application/vnd.airzip.filesecure.azs", ".azs")]
+    [DataRow("application/vnd.amazon.ebook", ".azw")]
+    [DataRow("application/vnd.americandynamics.acc", ".acc")]
+    [DataRow("application/vnd.amiga.ami", ".ami")]
+    [DataRow("application/vnd.android.package-archive", ".apk")]
+    [DataRow("application/vnd.anser-web-certificate-issue-initiation", ".cii")]
+    [DataRow("application/vnd.anser-web-funds-transfer-initiation", ".fti")]
+    [DataRow("application/vnd.antix.game-component", ".atx")]
+    [DataRow("application/vnd.apple.installer+xml", ".mpkg")]
+    [DataRow("application/vnd.apple.mpegurl", ".m3u8")]
+    [DataRow("application/vnd.aristanetworks.swi", ".swi")]
+    [DataRow("application/vnd.astraea-software.iota", ".iota")]
+    [DataRow("application/vnd.audiograph", ".aep")]
+    [DataRow("application/vnd.blueice.multipass", ".mpm")]
+    [DataRow("application/vnd.bmi", ".bmi")]
+    [DataRow("application/vnd.businessobjects", ".rep")]
+    [DataRow("application/vnd.chemdraw+xml", ".cdxml")]
+    [DataRow("application/vnd.chipnuts.karaoke-mmd", ".mmd")]
+    [DataRow("application/vnd.cinderella", ".cdy")]
+    [DataRow("application/vnd.claymore", ".cla")]
+    [DataRow("application/vnd.cloanto.rp9", ".rp9")]
+    [DataRow("application/vnd.clonk.c4group", ".c4g")]
+    [DataRow("application/vnd.clonk.c4group", ".c4d")]
+    [DataRow("application/vnd.clonk.c4group", ".c4f")]
+    [DataRow("application/vnd.clonk.c4group", ".c4p")]
+    [DataRow("application/vnd.clonk.c4group", ".c4u")]
+    [DataRow("application/vnd.cluetrust.cartomobile-config", ".c11amc")]
+    [DataRow("application/vnd.cluetrust.cartomobile-config-pkg", ".c11amz")]
+    [DataRow("application/vnd.commonspace", ".csp")]
+    [DataRow("application/vnd.contact.cmsg", ".cdbcmsg")]
+    [DataRow("application/vnd.cosmocaller", ".cmc")]
+    [DataRow("application/vnd.crick.clicker", ".clkx")]
+    [DataRow("application/vnd.crick.clicker.keyboard", ".clkk")]
+    [DataRow("application/vnd.crick.clicker.palette", ".clkp")]
+    [DataRow("application/vnd.crick.clicker.template", ".clkt")]
+    [DataRow("application/vnd.crick.clicker.wordbank", ".clkw")]
+    [DataRow("application/vnd.criticaltools.wbs+xml", ".wbs")]
+    [DataRow("application/vnd.ctc-posml", ".pml")]
+    [DataRow("application/vnd.cups-ppd", ".ppd")]
+    [DataRow("application/vnd.curl.car", ".car")]
+    [DataRow("application/vnd.curl.pcurl", ".pcurl")]
+    [DataRow("application/vnd.dart", ".dart")]
+    [DataRow("application/vnd.data-vision.rdz", ".rdz")]
+    [DataRow("application/vnd.dece.data", ".uvf")]
+    [DataRow("application/vnd.dece.data", ".uvvf")]
+    [DataRow("application/vnd.dece.data", ".uvd")]
+    [DataRow("application/vnd.dece.data", ".uvvd")]
+    [DataRow("application/vnd.dece.ttml+xml", ".uvt")]
+    [DataRow("application/vnd.dece.ttml+xml", ".uvvt")]
+    [DataRow("application/vnd.dece.unspecified", ".uvx")]
+    [DataRow("application/vnd.dece.unspecified", ".uvvx")]
+    [DataRow("application/vnd.dece.zip", ".uvz")]
+    [DataRow("application/vnd.dece.zip", ".uvvz")]
+    [DataRow("application/vnd.denovo.fcselayout-link", ".fe_launch")]
+    [DataRow("application/vnd.dna", ".dna")]
+    [DataRow("application/vnd.dolby.mlp", ".mlp")]
+    [DataRow("application/vnd.dpgraph", ".dpg")]
+    [DataRow("application/vnd.dreamfactory", ".dfac")]
+    [DataRow("application/vnd.ds-keypoint", ".kpxx")]
+    [DataRow("application/vnd.dvb.ait", ".ait")]
+    [DataRow("application/vnd.dvb.service", ".svc")]
+    [DataRow("application/vnd.dynageo", ".geo")]
+    [DataRow("application/vnd.ecowin.chart", ".mag")]
+    [DataRow("application/vnd.enliven", ".nml")]
+    [DataRow("application/vnd.epson.esf", ".esf")]
+    [DataRow("application/vnd.epson.msf", ".msf")]
+    [DataRow("application/vnd.epson.quickanime", ".qam")]
+    [DataRow("application/vnd.epson.salt", ".slt")]
+    [DataRow("application/vnd.epson.ssf", ".ssf")]
+    [DataRow("application/vnd.eszigno3+xml", ".es3")]
+    [DataRow("application/vnd.eszigno3+xml", ".et3")]
+    [DataRow("application/vnd.ezpix-album", ".ez2")]
+    [DataRow("application/vnd.ezpix-package", ".ez3")]
+    [DataRow("application/vnd.fdf", ".fdf")]
+    [DataRow("application/vnd.fdsn.mseed", ".mseed")]
+    [DataRow("application/vnd.fdsn.seed", ".seed")]
+    [DataRow("application/vnd.fdsn.seed", ".dataless")]
+    [DataRow("application/vnd.flographit", ".gph")]
+    [DataRow("application/vnd.fluxtime.clip", ".ftc")]
+    [DataRow("application/vnd.framemaker", ".fm")]
+    [DataRow("application/vnd.framemaker", ".frame")]
+    [DataRow("application/vnd.framemaker", ".maker")]
+    [DataRow("application/vnd.framemaker", ".book")]
+    [DataRow("application/vnd.frogans.fnc", ".fnc")]
+    [DataRow("application/vnd.frogans.ltf", ".ltf")]
+    [DataRow("application/vnd.fsc.weblaunch", ".fsc")]
+    [DataRow("application/vnd.fujitsu.oasys", ".oas")]
+    [DataRow("application/vnd.fujitsu.oasys2", ".oa2")]
+    [DataRow("application/vnd.fujitsu.oasys3", ".oa3")]
+    [DataRow("application/vnd.fujitsu.oasysgp", ".fg5")]
+    [DataRow("application/vnd.fujitsu.oasysprs", ".bh2")]
+    [DataRow("application/vnd.fujixerox.ddd", ".ddd")]
+    [DataRow("application/vnd.fujixerox.docuworks", ".xdw")]
+    [DataRow("application/vnd.fujixerox.docuworks.binder", ".xbd")]
+    [DataRow("application/vnd.fuzzysheet", ".fzs")]
+    [DataRow("application/vnd.genomatix.tuxedo", ".txd")]
+    [DataRow("application/vnd.geogebra.file", ".ggb")]
+    [DataRow("application/vnd.geogebra.tool", ".ggt")]
+    [DataRow("application/vnd.geometry-explorer", ".gex")]
+    [DataRow("application/vnd.geometry-explorer", ".gre")]
+    [DataRow("application/vnd.geonext", ".gxt")]
+    [DataRow("application/vnd.geoplan", ".g2w")]
+    [DataRow("application/vnd.geospace", ".g3w")]
+    [DataRow("application/vnd.gmx", ".gmx")]
+    [DataRow("application/vnd.google-earth.kml+xml", ".kml")]
+    [DataRow("application/vnd.google-earth.kmz", ".kmz")]
+    [DataRow("application/vnd.grafeq", ".gqf")]
+    [DataRow("application/vnd.grafeq", ".gqs")]
+    [DataRow("application/vnd.groove-account", ".gac")]
+    [DataRow("application/vnd.groove-help", ".ghf")]
+    [DataRow("application/vnd.groove-identity-message", ".gim")]
+    [DataRow("application/vnd.groove-injector", ".grv")]
+    [DataRow("application/vnd.groove-tool-message", ".gtm")]
+    [DataRow("application/vnd.groove-tool-template", ".tpl")]
+    [DataRow("application/vnd.groove-vcard", ".vcg")]
+    [DataRow("application/vnd.hal+xml", ".hal")]
+    [DataRow("application/vnd.handheld-entertainment+xml", ".zmm")]
+    [DataRow("application/vnd.hbci", ".hbci")]
+    [DataRow("application/vnd.hhe.lesson-player", ".les")]
+    [DataRow("application/vnd.hp-hpgl", ".hpgl")]
+    [DataRow("application/vnd.hp-hpid", ".hpid")]
+    [DataRow("application/vnd.hp-hps", ".hps")]
+    [DataRow("application/vnd.hp-jlyt", ".jlt")]
+    [DataRow("application/vnd.hp-pcl", ".pcl")]
+    [DataRow("application/vnd.hp-pclxl", ".pclxl")]
+    [DataRow("application/vnd.hydrostatix.sof-data", ".sfd-hdstx")]
+    [DataRow("application/vnd.ibm.minipay", ".mpy")]
+    [DataRow("application/vnd.ibm.modcap", ".afp")]
+    [DataRow("application/vnd.ibm.modcap", ".listafp")]
+    [DataRow("application/vnd.ibm.modcap", ".list3820")]
+    [DataRow("application/vnd.ibm.rights-management", ".irm")]
+    [DataRow("application/vnd.ibm.secure-container", ".sc")]
+    [DataRow("application/vnd.iccprofile", ".icc")]
+    [DataRow("application/vnd.iccprofile", ".icm")]
+    [DataRow("application/vnd.igloader", ".igl")]
+    [DataRow("application/vnd.immervision-ivp", ".ivp")]
+    [DataRow("application/vnd.immervision-ivu", ".ivu")]
+    [DataRow("application/vnd.insors.igm", ".igm")]
+    [DataRow("application/vnd.intercon.formnet", ".xpw")]
+    [DataRow("application/vnd.intercon.formnet", ".xpx")]
+    [DataRow("application/vnd.intergeo", ".i2g")]
+    [DataRow("application/vnd.intu.qbo", ".qbo")]
+    [DataRow("application/vnd.intu.qfx", ".qfx")]
+    [DataRow("application/vnd.ipunplugged.rcprofile", ".rcprofile")]
+    [DataRow("application/vnd.irepository.package+xml", ".irp")]
+    [DataRow("application/vnd.is-xpr", ".xpr")]
+    [DataRow("application/vnd.isac.fcs", ".fcs")]
+    [DataRow("application/vnd.jam", ".jam")]
+    [DataRow("application/vnd.jcp.javame.midlet-rms", ".rms")]
+    [DataRow("application/vnd.jisp", ".jisp")]
+    [DataRow("application/vnd.joost.joda-archive", ".joda")]
+    [DataRow("application/vnd.kahootz", ".ktz")]
+    [DataRow("application/vnd.kahootz", ".ktr")]
+    [DataRow("application/vnd.kde.karbon", ".karbon")]
+    [DataRow("application/vnd.kde.kchart", ".chrt")]
+    [DataRow("application/vnd.kde.kformula", ".kfo")]
+    [DataRow("application/vnd.kde.kivio", ".flw")]
+    [DataRow("application/vnd.kde.kontour", ".kon")]
+    [DataRow("application/vnd.kde.kpresenter", ".kpr")]
+    [DataRow("application/vnd.kde.kpresenter", ".kpt")]
+    [DataRow("application/vnd.kde.kspread", ".ksp")]
+    [DataRow("application/vnd.kde.kword", ".kwd")]
+    [DataRow("application/vnd.kde.kword", ".kwt")]
+    [DataRow("application/vnd.kenameaapp", ".htke")]
+    [DataRow("application/vnd.kidspiration", ".kia")]
+    [DataRow("application/vnd.kinar", ".kne")]
+    [DataRow("application/vnd.kinar", ".knp")]
+    [DataRow("application/vnd.koan", ".skp")]
+    [DataRow("application/vnd.koan", ".skd")]
+    [DataRow("application/vnd.koan", ".skt")]
+    [DataRow("application/vnd.koan", ".skm")]
+    [DataRow("application/vnd.kodak-descriptor", ".sse")]
+    [DataRow("application/vnd.las.las+xml", ".lasxml")]
+    [DataRow("application/vnd.llamagraphics.life-balance.desktop", ".lbd")]
+    [DataRow("application/vnd.llamagraphics.life-balance.exchange+xml", ".lbe")]
+    [DataRow("application/vnd.lotus-1-2-3", ".123")]
+    [DataRow("application/vnd.lotus-approach", ".apr")]
+    [DataRow("application/vnd.lotus-freelance", ".pre")]
+    [DataRow("application/vnd.lotus-notes", ".nsf")]
+    [DataRow("application/vnd.lotus-organizer", ".org")]
+    [DataRow("application/vnd.lotus-screencam", ".scm")]
+    [DataRow("application/vnd.lotus-wordpro", ".lwp")]
+    [DataRow("application/vnd.macports.portpkg", ".portpkg")]
+    [DataRow("application/vnd.mcd", ".mcd")]
+    [DataRow("application/vnd.medcalcdata", ".mc1")]
+    [DataRow("application/vnd.mediastation.cdkey", ".cdkey")]
+    [DataRow("application/vnd.mfer", ".mwf")]
+    [DataRow("application/vnd.mfmp", ".mfm")]
+    [DataRow("application/vnd.micrografx.flo", ".flo")]
+    [DataRow("application/vnd.micrografx.igx", ".igx")]
+    [DataRow("application/vnd.mif", ".mif")]
+    [DataRow("application/vnd.mobius.daf", ".daf")]
+    [DataRow("application/vnd.mobius.dis", ".dis")]
+    [DataRow("application/vnd.mobius.mbk", ".mbk")]
+    [DataRow("application/vnd.mobius.mqy", ".mqy")]
+    [DataRow("application/vnd.mobius.msl", ".msl")]
+    [DataRow("application/vnd.mobius.plc", ".plc")]
+    [DataRow("application/vnd.mobius.txf", ".txf")]
+    [DataRow("application/vnd.mophun.application", ".mpn")]
+    [DataRow("application/vnd.mophun.certificate", ".mpc")]
+    [DataRow("application/vnd.mozilla.xul+xml", ".xul")]
+    [DataRow("application/vnd.ms-artgalry", ".cil")]
+    [DataRow("application/vnd.ms-cab-compressed", ".cab")]
+    [DataRow("application/vnd.ms-excel", ".xls")]
+    [DataRow("application/vnd.ms-excel", ".xlm")]
+    [DataRow("application/vnd.ms-excel", ".xla")]
+    [DataRow("application/vnd.ms-excel", ".xlc")]
+    [DataRow("application/vnd.ms-excel", ".xlt")]
+    [DataRow("application/vnd.ms-excel", ".xlw")]
+    [DataRow("application/vnd.ms-excel.addin.macroenabled.12", ".xlam")]
+    [DataRow("application/vnd.ms-excel.sheet.binary.macroenabled.12", ".xlsb")]
+    [DataRow("application/vnd.ms-excel.sheet.macroenabled.12", ".xlsm")]
+    [DataRow("application/vnd.ms-excel.template.macroenabled.12", ".xltm")]
+    [DataRow("application/vnd.ms-fontobject", ".eot")]
+    [DataRow("application/vnd.ms-htmlhelp", ".chm")]
+    [DataRow("application/vnd.ms-ims", ".ims")]
+    [DataRow("application/vnd.ms-lrm", ".lrm")]
+    [DataRow("application/vnd.ms-officetheme", ".thmx")]
+    [DataRow("application/vnd.ms-pki.seccat", ".cat")]
+    [DataRow("application/vnd.ms-pki.stl", ".stl")]
+    [DataRow("application/vnd.ms-powerpoint", ".ppt")]
+    [DataRow("application/vnd.ms-powerpoint", ".pps")]
+    [DataRow("application/vnd.ms-powerpoint", ".pot")]
+    [DataRow("application/vnd.ms-powerpoint.addin.macroenabled.12", ".ppam")]
+    [DataRow("application/vnd.ms-powerpoint.presentation.macroenabled.12", ".pptm")]
+    [DataRow("application/vnd.ms-powerpoint.slide.macroenabled.12", ".sldm")]
+    [DataRow("application/vnd.ms-powerpoint.slideshow.macroenabled.12", ".ppsm")]
+    [DataRow("application/vnd.ms-powerpoint.template.macroenabled.12", ".potm")]
+    [DataRow("application/vnd.ms-project", ".mpp")]
+    [DataRow("application/vnd.ms-project", ".mpt")]
+    [DataRow("application/vnd.ms-word.document.macroenabled.12", ".docm")]
+    [DataRow("application/vnd.ms-word.template.macroenabled.12", ".dotm")]
+    [DataRow("application/vnd.ms-works", ".wps")]
+    [DataRow("application/vnd.ms-works", ".wks")]
+    [DataRow("application/vnd.ms-works", ".wcm")]
+    [DataRow("application/vnd.ms-works", ".wdb")]
+    [DataRow("application/vnd.ms-wpl", ".wpl")]
+    [DataRow("application/vnd.ms-xpsdocument", ".xps")]
+    [DataRow("application/vnd.mseq", ".mseq")]
+    [DataRow("application/vnd.musician", ".mus")]
+    [DataRow("application/vnd.muvee.style", ".msty")]
+    [DataRow("application/vnd.mynfc", ".taglet")]
+    [DataRow("application/vnd.neurolanguage.nlu", ".nlu")]
+    [DataRow("application/vnd.nitf", ".ntf")]
+    [DataRow("application/vnd.nitf", ".nitf")]
+    [DataRow("application/vnd.noblenet-directory", ".nnd")]
+    [DataRow("application/vnd.noblenet-sealer", ".nns")]
+    [DataRow("application/vnd.noblenet-web", ".nnw")]
+    [DataRow("application/vnd.nokia.n-gage.data", ".ngdat")]
+    [DataRow("application/vnd.nokia.n-gage.symbian.install", ".n-gage")]
+    [DataRow("application/vnd.nokia.radio-preset", ".rpst")]
+    [DataRow("application/vnd.nokia.radio-presets", ".rpss")]
+    [DataRow("application/vnd.novadigm.edm", ".edm")]
+    [DataRow("application/vnd.novadigm.edx", ".edx")]
+    [DataRow("application/vnd.novadigm.ext", ".ext")]
+    [DataRow("application/vnd.oasis.opendocument.chart", ".odc")]
+    [DataRow("application/vnd.oasis.opendocument.chart-template", ".otc")]
+    [DataRow("application/vnd.oasis.opendocument.database", ".odb")]
+    [DataRow("application/vnd.oasis.opendocument.formula", ".odf")]
+    [DataRow("application/vnd.oasis.opendocument.formula-template", ".odft")]
+    [DataRow("application/vnd.oasis.opendocument.graphics", ".odg")]
+    [DataRow("application/vnd.oasis.opendocument.graphics-template", ".otg")]
+    [DataRow("application/vnd.oasis.opendocument.image", ".odi")]
+    [DataRow("application/vnd.oasis.opendocument.image-template", ".oti")]
+    [DataRow("application/vnd.oasis.opendocument.presentation", ".odp")]
+    [DataRow("application/vnd.oasis.opendocument.presentation-template", ".otp")]
+    [DataRow("application/vnd.oasis.opendocument.spreadsheet", ".ods")]
+    [DataRow("application/vnd.oasis.opendocument.spreadsheet-template", ".ots")]
+    [DataRow("application/vnd.oasis.opendocument.text", ".odt")]
+    [DataRow("application/vnd.oasis.opendocument.text-master", ".odm")]
+    [DataRow("application/vnd.oasis.opendocument.text-template", ".ott")]
+    [DataRow("application/vnd.oasis.opendocument.text-web", ".oth")]
+    [DataRow("application/vnd.olpc-sugar", ".xo")]
+    [DataRow("application/vnd.oma.dd2+xml", ".dd2")]
+    [DataRow("application/vnd.openofficeorg.extension", ".oxt")]
+    [DataRow("application/vnd.openxmlformats-officedocument.presentationml.presentation", ".pptx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.presentationml.slide", ".sldx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.presentationml.slideshow", ".ppsx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.presentationml.template", ".potx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.spreadsheetml.template", ".xltx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.wordprocessingml.document", ".docx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.wordprocessingml.template", ".dotx")]
+    [DataRow("application/vnd.osgeo.mapguide.package", ".mgp")]
+    [DataRow("application/vnd.osgi.dp", ".dp")]
+    [DataRow("application/vnd.osgi.subsystem", ".esa")]
+    [DataRow("application/vnd.palm", ".pdb")]
+    [DataRow("application/vnd.palm", ".pqa")]
+    [DataRow("application/vnd.palm", ".oprc")]
+    [DataRow("application/vnd.pawaafile", ".paw")]
+    [DataRow("application/vnd.pg.format", ".str")]
+    [DataRow("application/vnd.pg.osasli", ".ei6")]
+    [DataRow("application/vnd.picsel", ".efif")]
+    [DataRow("application/vnd.pmi.widget", ".wg")]
+    [DataRow("application/vnd.pocketlearn", ".plf")]
+    [DataRow("application/vnd.powerbuilder6", ".pbd")]
+    [DataRow("application/vnd.previewsystems.box", ".box")]
+    [DataRow("application/vnd.proteus.magazine", ".mgz")]
+    [DataRow("application/vnd.publishare-delta-tree", ".qps")]
+    [DataRow("application/vnd.pvi.ptid1", ".ptid")]
+    [DataRow("application/vnd.quark.quarkxpress", ".qxd")]
+    [DataRow("application/vnd.quark.quarkxpress", ".qxt")]
+    [DataRow("application/vnd.quark.quarkxpress", ".qwd")]
+    [DataRow("application/vnd.quark.quarkxpress", ".qwt")]
+    [DataRow("application/vnd.quark.quarkxpress", ".qxl")]
+    [DataRow("application/vnd.quark.quarkxpress", ".qxb")]
+    [DataRow("application/vnd.realvnc.bed", ".bed")]
+    [DataRow("application/vnd.recordare.musicxml", ".mxl")]
+    [DataRow("application/vnd.recordare.musicxml+xml", ".musicxml")]
+    [DataRow("application/vnd.rig.cryptonote", ".cryptonote")]
+    [DataRow("application/vnd.rn-realmedia", ".rm")]
+    [DataRow("application/vnd.rn-realmedia-vbr", ".rmvb")]
+    [DataRow("application/vnd.route66.link66+xml", ".link66")]
+    [DataRow("application/vnd.sailingtracker.track", ".st")]
+    [DataRow("application/vnd.seemail", ".see")]
+    [DataRow("application/vnd.sema", ".sema")]
+    [DataRow("application/vnd.semd", ".semd")]
+    [DataRow("application/vnd.semf", ".semf")]
+    [DataRow("application/vnd.shana.informed.formdata", ".ifm")]
+    [DataRow("application/vnd.shana.informed.formtemplate", ".itp")]
+    [DataRow("application/vnd.shana.informed.interchange", ".iif")]
+    [DataRow("application/vnd.shana.informed.package", ".ipk")]
+    [DataRow("application/vnd.simtech-mindmapper", ".twd")]
+    [DataRow("application/vnd.simtech-mindmapper", ".twds")]
+    [DataRow("application/vnd.smaf", ".mmf")]
+    [DataRow("application/vnd.smart.teacher", ".teacher")]
+    [DataRow("application/vnd.solent.sdkm+xml", ".sdkm")]
+    [DataRow("application/vnd.solent.sdkm+xml", ".sdkd")]
+    [DataRow("application/vnd.spotfire.dxp", ".dxp")]
+    [DataRow("application/vnd.spotfire.sfs", ".sfs")]
+    [DataRow("application/vnd.stardivision.calc", ".sdc")]
+    [DataRow("application/vnd.stardivision.draw", ".sda")]
+    [DataRow("application/vnd.stardivision.impress", ".sdd")]
+    [DataRow("application/vnd.stardivision.math", ".smf")]
+    [DataRow("application/vnd.stardivision.writer", ".sdw")]
+    [DataRow("application/vnd.stardivision.writer", ".vor")]
+    [DataRow("application/vnd.stardivision.writer-global", ".sgl")]
+    [DataRow("application/vnd.stepmania.package", ".smzip")]
+    [DataRow("application/vnd.stepmania.stepchart", ".sm")]
+    [DataRow("application/vnd.sun.xml.calc", ".sxc")]
+    [DataRow("application/vnd.sun.xml.calc.template", ".stc")]
+    [DataRow("application/vnd.sun.xml.draw", ".sxd")]
+    [DataRow("application/vnd.sun.xml.draw.template", ".std")]
+    [DataRow("application/vnd.sun.xml.impress", ".sxi")]
+    [DataRow("application/vnd.sun.xml.impress.template", ".sti")]
+    [DataRow("application/vnd.sun.xml.math", ".sxm")]
+    [DataRow("application/vnd.sun.xml.writer", ".sxw")]
+    [DataRow("application/vnd.sun.xml.writer.global", ".sxg")]
+    [DataRow("application/vnd.sun.xml.writer.template", ".stw")]
+    [DataRow("application/vnd.sus-calendar", ".sus")]
+    [DataRow("application/vnd.sus-calendar", ".susp")]
+    [DataRow("application/vnd.svd", ".svd")]
+    [DataRow("application/vnd.symbian.install", ".sis")]
+    [DataRow("application/vnd.symbian.install", ".sisx")]
+    [DataRow("application/vnd.syncml+xml", ".xsm")]
+    [DataRow("application/vnd.syncml.dm+wbxml", ".bdm")]
+    [DataRow("application/vnd.syncml.dm+xml", ".xdm")]
+    [DataRow("application/vnd.tao.intent-module-archive", ".tao")]
+    [DataRow("application/vnd.tcpdump.pcap", ".pcap")]
+    [DataRow("application/vnd.tcpdump.pcap", ".cap")]
+    [DataRow("application/vnd.tcpdump.pcap", ".dmp")]
+    [DataRow("application/vnd.tmobile-livetv", ".tmo")]
+    [DataRow("application/vnd.trid.tpt", ".tpt")]
+    [DataRow("application/vnd.triscape.mxs", ".mxs")]
+    [DataRow("application/vnd.trueapp", ".tra")]
+    [DataRow("application/vnd.ufdl", ".ufd")]
+    [DataRow("application/vnd.ufdl", ".ufdl")]
+    [DataRow("application/vnd.uiq.theme", ".utz")]
+    [DataRow("application/vnd.umajin", ".umj")]
+    [DataRow("application/vnd.unity", ".unityweb")]
+    [DataRow("application/vnd.uoml+xml", ".uoml")]
+    [DataRow("application/vnd.vcx", ".vcx")]
+    [DataRow("application/vnd.visio", ".vsd")]
+    [DataRow("application/vnd.visio", ".vst")]
+    [DataRow("application/vnd.visio", ".vss")]
+    [DataRow("application/vnd.visio", ".vsw")]
+    [DataRow("application/vnd.visionary", ".vis")]
+    [DataRow("application/vnd.vsf", ".vsf")]
+    [DataRow("application/vnd.wap.wbxml", ".wbxml")]
+    [DataRow("application/vnd.wap.wmlc", ".wmlc")]
+    [DataRow("application/vnd.wap.wmlscriptc", ".wmlsc")]
+    [DataRow("application/vnd.webturbo", ".wtb")]
+    [DataRow("application/vnd.wolfram.player", ".nbp")]
+    [DataRow("application/vnd.wordperfect", ".wpd")]
+    [DataRow("application/vnd.wqd", ".wqd")]
+    [DataRow("application/vnd.wt.stf", ".stf")]
+    [DataRow("application/vnd.xara", ".xar")]
+    [DataRow("application/vnd.xfdl", ".xfdl")]
+    [DataRow("application/vnd.yamaha.hv-dic", ".hvd")]
+    [DataRow("application/vnd.yamaha.hv-script", ".hvs")]
+    [DataRow("application/vnd.yamaha.hv-voice", ".hvp")]
+    [DataRow("application/vnd.yamaha.openscoreformat", ".osf")]
+    [DataRow("application/vnd.yamaha.openscoreformat.osfpvg+xml", ".osfpvg")]
+    [DataRow("application/vnd.yamaha.smaf-audio", ".saf")]
+    [DataRow("application/vnd.yamaha.smaf-phrase", ".spf")]
+    [DataRow("application/vnd.yellowriver-custom-menu", ".cmp")]
+    [DataRow("application/vnd.zul", ".zir")]
+    [DataRow("application/vnd.zul", ".zirz")]
+    [DataRow("application/vnd.zzazz.deck+xml", ".zaz")]
+    [DataRow("application/voicexml+xml", ".vxml")]
+    [DataRow("application/widget", ".wgt")]
+    [DataRow("application/winhlp", ".hlp")]
+    [DataRow("application/wsdl+xml", ".wsdl")]
+    [DataRow("application/wspolicy+xml", ".wspolicy")]
+    [DataRow("application/x-7z-compressed", ".7z")]
+    [DataRow("application/x-abiword", ".abw")]
+    [DataRow("application/x-ace-compressed", ".ace")]
+    [DataRow("application/x-apple-diskimage", ".dmg")]
+    [DataRow("application/x-authorware-bin", ".aab")]
+    [DataRow("application/x-authorware-bin", ".x32")]
+    [DataRow("application/x-authorware-bin", ".u32")]
+    [DataRow("application/x-authorware-bin", ".vox")]
+    [DataRow("application/x-authorware-map", ".aam")]
+    [DataRow("application/x-authorware-seg", ".aas")]
+    [DataRow("application/x-bcpio", ".bcpio")]
+    [DataRow("application/x-bittorrent", ".torrent")]
+    [DataRow("application/x-blorb", ".blb")]
+    [DataRow("application/x-blorb", ".blorb")]
+    [DataRow("application/x-bzip", ".bz")]
+    [DataRow("application/x-bzip2", ".bz2")]
+    [DataRow("application/x-bzip2", ".boz")]
+    [DataRow("application/x-cbr", ".cbr")]
+    [DataRow("application/x-cbr", ".cba")]
+    [DataRow("application/x-cbr", ".cbt")]
+    [DataRow("application/x-cbr", ".cbz")]
+    [DataRow("application/x-cbr", ".cb7")]
+    [DataRow("application/x-cdlink", ".vcd")]
+    [DataRow("application/x-cfs-compressed", ".cfs")]
+    [DataRow("application/x-chat", ".chat")]
+    [DataRow("application/x-chess-pgn", ".pgn")]
+    [DataRow("application/x-conference", ".nsc")]
+    [DataRow("application/x-cpio", ".cpio")]
+    [DataRow("application/x-csh", ".csh")]
+    [DataRow("application/x-debian-package", ".deb")]
+    [DataRow("application/x-debian-package", ".udeb")]
+    [DataRow("application/x-dgc-compressed", ".dgc")]
+    [DataRow("application/x-director", ".dir")]
+    [DataRow("application/x-director", ".dcr")]
+    [DataRow("application/x-director", ".dxr")]
+    [DataRow("application/x-director", ".cst")]
+    [DataRow("application/x-director", ".cct")]
+    [DataRow("application/x-director", ".cxt")]
+    [DataRow("application/x-director", ".w3d")]
+    [DataRow("application/x-director", ".fgd")]
+    [DataRow("application/x-director", ".swa")]
+    [DataRow("application/x-doom", ".wad")]
+    [DataRow("application/x-dtbncx+xml", ".ncx")]
+    [DataRow("application/x-dtbook+xml", ".dtb")]
+    [DataRow("application/x-dtbresource+xml", ".res")]
+    [DataRow("application/x-dvi", ".dvi")]
+    [DataRow("application/x-envoy", ".evy")]
+    [DataRow("application/x-eva", ".eva")]
+    [DataRow("application/x-font-bdf", ".bdf")]
+    [DataRow("application/x-font-ghostscript", ".gsf")]
+    [DataRow("application/x-font-linux-psf", ".psf")]
+    [DataRow("application/x-font-pcf", ".pcf")]
+    [DataRow("application/x-font-snf", ".snf")]
+    [DataRow("application/x-font-type1", ".pfa")]
+    [DataRow("application/x-font-type1", ".pfb")]
+    [DataRow("application/x-font-type1", ".pfm")]
+    [DataRow("application/x-font-type1", ".afm")]
+    [DataRow("application/x-freearc", ".arc")]
+    [DataRow("application/x-futuresplash", ".spl")]
+    [DataRow("application/x-gca-compressed", ".gca")]
+    [DataRow("application/x-glulx", ".ulx")]
+    [DataRow("application/x-gnumeric", ".gnumeric")]
+    [DataRow("application/x-gramps-xml", ".gramps")]
+    [DataRow("application/x-gtar", ".gtar")]
+    [DataRow("application/x-hdf", ".hdf")]
+    [DataRow("application/x-install-instructions", ".install")]
+    [DataRow("application/x-iso9660-image", ".iso")]
+    [DataRow("application/x-java-jnlp-file", ".jnlp")]
+    [DataRow("application/x-latex", ".latex")]
+    [DataRow("application/x-lzh-compressed", ".lzh")]
+    [DataRow("application/x-lzh-compressed", ".lha")]
+    [DataRow("application/x-mie", ".mie")]
+    [DataRow("application/x-mobipocket-ebook", ".prc")]
+    [DataRow("application/x-mobipocket-ebook", ".mobi")]
+    [DataRow("application/x-ms-application", ".application")]
+    [DataRow("application/x-ms-shortcut", ".lnk")]
+    [DataRow("application/x-ms-wmd", ".wmd")]
+    [DataRow("application/x-ms-wmz", ".wmz")]
+    [DataRow("application/x-ms-xbap", ".xbap")]
+    [DataRow("application/x-msaccess", ".mdb")]
+    [DataRow("application/x-msbinder", ".obd")]
+    [DataRow("application/x-mscardfile", ".crd")]
+    [DataRow("application/x-msclip", ".clp")]
+    [DataRow("application/x-msdownload", ".exe")]
+    [DataRow("application/x-msdownload", ".dll")]
+    [DataRow("application/x-msdownload", ".com")]
+    [DataRow("application/x-msdownload", ".bat")]
+    [DataRow("application/x-msdownload", ".msi")]
+    [DataRow("application/x-msmediaview", ".mvb")]
+    [DataRow("application/x-msmediaview", ".m13")]
+    [DataRow("application/x-msmediaview", ".m14")]
+    [DataRow("application/x-msmetafile", ".emf")]
+    [DataRow("application/x-msmetafile", ".emz")]
+    [DataRow("application/x-msmoney", ".mny")]
+    [DataRow("application/x-mspublisher", ".pub")]
+    [DataRow("application/x-msschedule", ".scd")]
+    [DataRow("application/x-msterminal", ".trm")]
+    [DataRow("application/x-mswrite", ".wri")]
+    [DataRow("application/x-netcdf", ".nc")]
+    [DataRow("application/x-netcdf", ".cdf")]
+    [DataRow("application/x-nzb", ".nzb")]
+    [DataRow("application/x-pkcs12", ".p12")]
+    [DataRow("application/x-pkcs12", ".pfx")]
+    [DataRow("application/x-pkcs7-certificates", ".p7b")]
+    [DataRow("application/x-pkcs7-certreqresp", ".p7r")]
+    [DataRow("application/x-rar-compressed", ".rar")]
+    [DataRow("application/x-research-info-systems", ".ris")]
+    [DataRow("application/x-sh", ".sh")]
+    [DataRow("application/x-shar", ".shar")]
+    [DataRow("application/x-shockwave-flash", ".swf")]
+    [DataRow("application/x-silverlight-app", ".xap")]
+    [DataRow("application/x-sql", ".sql")]
+    [DataRow("application/x-stuffit", ".sit")]
+    [DataRow("application/x-stuffitx", ".sitx")]
+    [DataRow("application/x-subrip", ".srt")]
+    [DataRow("application/x-sv4cpio", ".sv4cpio")]
+    [DataRow("application/x-sv4crc", ".sv4crc")]
+    [DataRow("application/x-t3vm-image", ".t3")]
+    [DataRow("application/x-tads", ".gam")]
+    [DataRow("application/x-tar", ".tar")]
+    [DataRow("application/x-tcl", ".tcl")]
+    [DataRow("application/x-tex", ".tex")]
+    [DataRow("application/x-tex-tfm", ".tfm")]
+    [DataRow("application/x-texinfo", ".texinfo")]
+    [DataRow("application/x-texinfo", ".texi")]
+    [DataRow("application/x-tgif", ".obj")]
+    [DataRow("application/x-ustar", ".ustar")]
+    [DataRow("application/x-wais-source", ".src")]
+    [DataRow("application/x-x509-ca-cert", ".der")]
+    [DataRow("application/x-x509-ca-cert", ".crt")]
+    [DataRow("application/x-xfig", ".fig")]
+    [DataRow("application/x-xliff+xml", ".xlf")]
+    [DataRow("application/x-xpinstall", ".xpi")]
+    [DataRow("application/x-xz", ".xz")]
+    [DataRow("application/x-zmachine", ".z1")]
+    [DataRow("application/x-zmachine", ".z2")]
+    [DataRow("application/x-zmachine", ".z3")]
+    [DataRow("application/x-zmachine", ".z4")]
+    [DataRow("application/x-zmachine", ".z5")]
+    [DataRow("application/x-zmachine", ".z6")]
+    [DataRow("application/x-zmachine", ".z7")]
+    [DataRow("application/x-zmachine", ".z8")]
+    [DataRow("application/xaml+xml", ".xaml")]
+    [DataRow("application/xcap-diff+xml", ".xdf")]
+    [DataRow("application/xenc+xml", ".xenc")]
+    [DataRow("application/xhtml+xml", ".xhtml")]
+    [DataRow("application/xhtml+xml", ".xht")]
+    [DataRow("application/xml", ".xml")]
+    [DataRow("application/xml", ".xsl")]
+    [DataRow("application/xml-dtd", ".dtd")]
+    [DataRow("application/xop+xml", ".xop")]
+    [DataRow("application/xproc+xml", ".xpl")]
+    [DataRow("application/xslt+xml", ".xslt")]
+    [DataRow("application/xspf+xml", ".xspf")]
+    [DataRow("application/xv+xml", ".mxml")]
+    [DataRow("application/xv+xml", ".xhvml")]
+    [DataRow("application/xv+xml", ".xvml")]
+    [DataRow("application/xv+xml", ".xvm")]
+    [DataRow("application/yang", ".yang")]
+    [DataRow("application/yin+xml", ".yin")]
+    [DataRow("application/zip", ".zip")]
+    [DataRow("application/astound", ".asd")]
+    [DataRow("application/astound", ".asn")]
+    [DataRow("application/dsptype", ".tsp")]
+    [DataRow("application/force-download", ".reg")]
+    [DataRow("application/listenup", ".ptlk")]
+    [DataRow("application/mbedlet", ".mbd")]
+    [DataRow("application/mspowerpoint", ".ppz")]
+    [DataRow("application/rtc", ".rtc")]
+    [DataRow("application/studiom", ".smp")]
+    [DataRow("application/toolbook", ".tbk")]
+    [DataRow("application/vocaltec-media-desc", ".vmd")]
+    [DataRow("application/vocaltec-media-file", ".vmf")]
+    [DataRow("application/xhtml+xml", ".shtml")]
+    [DataRow("application/x-compress", ".z")]
+    [DataRow("application/x-httpd-php", ".php")]
+    [DataRow("application/x-httpd-php", ".phtml")]
+    [DataRow("application/x-sprite", ".spr")]
+    [DataRow("application/x-sprite", ".sprite")]
+    [DataRow("application/x-supercard", ".sca")]
+    [DataRow("application/x-troff-man", ".troff")]
+    [DataRow("application/x-iso9660-image", ".udf")]
+    [DataRow("application/x-pem-file", ".pem")]
+    [DataRow("application/pkcs8", ".key")]
+    [DataRow("application/pkcs10", ".csr")]
+    [DataRow("application/x-apple-diskimage", ".img")]
+    [DataRow("application/x-apple-diskimage-udif", ".udif")]
+    [DataRow("application/vnd.rar", ".rev")]
+    [DataRow("application/vnd.rar", ".r00")]
+    [DataRow("application/vnd.rar", ".r01")]
+    [DataRow("application/x-zoo", ".zoo")]
+    [DataRow("application/vnd.ms-package.3dmanufacturing-3dmodel+xml", ".3mf")]
+    [DataRow("application/x-ofx", ".ofx")]
+    [DataRow("application/x-font-ttf", ".ttf")]
+    [DataRow("application/x-font-ttf", ".tte")]
+    [DataRow("application/x-font-ttf", ".dfont")]
+    [DataRow("application/font-woff", ".woff")]
+    [DataRow("application/geo+json", ".geojson")]
+    [DataRow("application/itn", ".itn")]
+    [DataRow("application/x-amf", ".amf")]
+    [DataRow("application/java-archive", ".war")]
+    [DataRow("application/bat", ".cmd")]
+    [DataRow("application/vnd.apple.mpegurl", ".m3u")]
+    [DataRow("audio/adpcm", ".adp")]
+    [DataRow("audio/basic", ".au")]
+    [DataRow("audio/basic", ".snd")]
+    [DataRow("audio/midi", ".mid")]
+    [DataRow("audio/midi", ".midi")]
+    [DataRow("audio/midi", ".kar")]
+    [DataRow("audio/midi", ".rmi")]
+    [DataRow("audio/mp4", ".m4a")]
+    [DataRow("audio/mp4", ".mp4a")]
+    [DataRow("audio/mpeg", ".mpga")]
+    [DataRow("audio/mpeg", ".mp2")]
+    [DataRow("audio/mpeg", ".mp2a")]
+    [DataRow("audio/mpeg", ".mp3")]
+    [DataRow("audio/mpeg", ".m2a")]
+    [DataRow("audio/mpeg", ".m3a")]
+    [DataRow("audio/ogg", ".oga")]
+    [DataRow("audio/ogg", ".ogg")]
+    [DataRow("audio/ogg", ".spx")]
+    [DataRow("audio/ogg", ".opus")]
+    [DataRow("audio/s3m", ".s3m")]
     [DataRow("audio/silk", ".sil")]
+    [DataRow("audio/vnd.dece.audio", ".uva")]
+    [DataRow("audio/vnd.dece.audio", ".uvva")]
+    [DataRow("audio/vnd.digital-winds", ".eol")]
+    [DataRow("audio/vnd.dra", ".dra")]
+    [DataRow("audio/vnd.dts", ".dts")]
+    [DataRow("audio/vnd.dts.hd", ".dtshd")]
+    [DataRow("audio/vnd.lucent.voice", ".lvp")]
+    [DataRow("audio/vnd.ms-playready.media.pya", ".pya")]
+    [DataRow("audio/vnd.nuera.ecelp4800", ".ecelp4800")]
+    [DataRow("audio/vnd.nuera.ecelp7470", ".ecelp7470")]
+    [DataRow("audio/vnd.nuera.ecelp9600", ".ecelp9600")]
+    [DataRow("audio/vnd.rip", ".rip")]
+    [DataRow("audio/webm", ".weba")]
+    [DataRow("audio/x-aac", ".aac")]
+    [DataRow("audio/x-aiff", ".aif")]
+    [DataRow("audio/x-aiff", ".aiff")]
+    [DataRow("audio/x-aiff", ".aifc")]
+    [DataRow("audio/x-caf", ".caf")]
+    [DataRow("audio/x-flac", ".flac")]
+    [DataRow("audio/x-matroska", ".mka")]
+    [DataRow("audio/x-ms-wax", ".wax")]
+    [DataRow("audio/x-ms-wma", ".wma")]
+    [DataRow("audio/x-pn-realaudio", ".ram")]
+    [DataRow("audio/x-pn-realaudio", ".ra")]
+    [DataRow("audio/x-pn-realaudio-plugin", ".rmp")]
+    [DataRow("audio/x-wav", ".wav")]
+    [DataRow("audio/xm", ".xm")]
+    [DataRow("audio/echospeech", ".es")]
+    [DataRow("audio/tsplayer", ".tsi")]
+    [DataRow("audio/x-dspeech", ".dus")]
+    [DataRow("audio/x-dspeech", ".cht")]
+    [DataRow("audio/x-pn-realaudio-plugin", ".rpm")]
+    [DataRow("audio/x-qt-stream", ".stream")]
+    [DataRow("audio/ac3", ".ac3")]
     [DataRow("chemical/x-cdx", ".cdx")]
-    [DataRow("model/3mf", ".3mf")]
-    [DataRow("nixda/nüschgefunden", ".bin")]
-    public void GetFileTypeExtensionTest1(string mime, string expected)
-        => Assert.AreEqual(expected, MimeType.GetFileTypeExtension(mime));
-
-    [TestMethod]
-    public void GetFileTypeExtensionTest2()
-        => Assert.AreEqual(".bin", MimeType.GetFileTypeExtension(null));
-
-    [DataTestMethod]
-    [DataRow("text/cache-manifest", ".appcache")]
-    [DataRow("text/n3", ".n3")]
-    [DataRow("text/tab-separated-values", ".tsv")]
-    [DataRow("text/x-asm", ".s")]
-    [DataRow("video/vnd.dece.hd", ".uvh")]
-    [DataRow("image/ief", ".ief")]
-    [DataRow("image/vnd.fujixerox.edmics-rlc", ".rlc")]
-    [DataRow("application/cu-seeme", ".cu")]
-    [DataRow("audio/silk", ".sil")]
-    [DataRow("chemical/x-cdx", ".cdx")]
+    [DataRow("chemical/x-cif", ".cif")]
+    [DataRow("chemical/x-cmdf", ".cmdf")]
+    [DataRow("chemical/x-cml", ".cml")]
+    [DataRow("chemical/x-csml", ".csml")]
+    [DataRow("chemical/x-xyz", ".xyz")]
+    [DataRow("chemical/x-mdl-molfile", ".mol")]
+    [DataRow("font/collection", ".ttc")]
+    [DataRow("font/otf", ".otf")]
+    [DataRow("font/woff2", ".woff2")]
+    [DataRow("message/rfc822", ".eml")]
+    [DataRow("message/rfc822", ".mime")]
+    [DataRow("model/iges", ".igs")]
+    [DataRow("model/iges", ".iges")]
+    [DataRow("model/mesh", ".msh")]
+    [DataRow("model/mesh", ".mesh")]
+    [DataRow("model/mesh", ".silo")]
+    [DataRow("model/vnd.collada+xml", ".dae")]
+    [DataRow("model/vnd.dwf", ".dwf")]
+    [DataRow("model/vnd.gdl", ".gdl")]
+    [DataRow("model/vnd.gtw", ".gtw")]
+    [DataRow("model/vnd.mts", ".mts")]
+    [DataRow("model/vnd.vtu", ".vtu")]
+    [DataRow("model/vrml", ".wrl")]
+    [DataRow("model/vrml", ".vrml")]
+    [DataRow("model/x3d+binary", ".x3db")]
+    [DataRow("model/x3d+binary", ".x3dbz")]
+    [DataRow("model/x3d+vrml", ".x3dv")]
+    [DataRow("model/x3d+vrml", ".x3dvz")]
+    [DataRow("model/x3d+xml", ".x3d")]
+    [DataRow("model/x3d+xml", ".x3dz")]
+    [DataRow("model/gltf+json", ".gltf")]
+    [DataRow("model/gltf-binary", ".glb")]
+    [DataRow("x-conference/x-cooltalk", ".ice")]
     [DataRow("workbook/formulaone", ".vts")]
-    public void FromFileTypeExtensionTest1(string expected, string fileTypeExtension)
-        => Assert.AreEqual(expected, MimeType.FromFileTypeExtension(fileTypeExtension).ToString());
+    [DataRow("workbook/formulaone", ".vtts")]
+    [DataRow("x-world/x-3dmf", ".qd3")]
+    [DataRow("x-world/x-3dmf", ".qd3d")]
 
-    [TestMethod]
-    public void FromFileTypeExtensionTest2()
-        => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension("").ToString());
-
-    [TestMethod]
-    public void FromFileTypeExtensionTest3()
-        => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension("".AsSpan()).ToString());
-
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void FromFileTypeExtensionTest4()
-        => _ = MimeType.FromFileTypeExtension((string)null!);
-
-    [TestMethod]
-    public void BuildAndParseTest1()
-    {
-        const string mediaType = "application";
-        const string subType = "x-stuff";
-
-        var dic = new ParameterModelDictionary()
-        {
-            new ParameterModel("first-parameter",
-            "This is a very long parameter, which will be wrapped according to RFC 2184." +
-            Environment.NewLine +
-            "It contains also a few Non-ASCII-Characters: \u00E4\u00D6\u00DF.", "en"),
-            new ParameterModel("second-parameter", "Parameter with  \\, = and \".")
-        };
-
-        var mimeType1 = new MimeType(mediaType, subType, dic);
-        string s = mimeType1.ToString(MimeFormats.LineWrapping);
-
-        Assert.IsNotNull(s);
-        Assert.AreNotEqual(0, s.Length);
-        Assert.AreNotEqual(1, s.GetLinesCount());
-
-        var mimeType2 = MimeType.Parse(s);
-
-        Assert.AreEqual(mediaType, mimeType2.MediaType.ToString(), false);
-        Assert.AreEqual(subType, mimeType2.SubType.ToString(), false);
-
-        Assert.AreEqual(2, mimeType2.Parameters().Count());
-    }
-
-    [TestMethod]
-    public void BuildAndParseTest2()
-    {
-        Debug.WriteLine('\uFFFD');
-        const string mediaType = "application";
-        const string subType = "x-stuff";
-        const string paraKey = "key";
-        string paraValue = "a@b@c " + new string('a', 100);
-
-        string mimeString = $"{mediaType}/{subType};{paraKey}=\"{paraValue}\"";
+    // Test the default cache data to ensure, that this even works
+    // if this data is retrieved from the resources rather than from the cache
+    [DataRow("application/json", ".json")]
+    [DataRow("application/pdf", ".pdf")]
+    [DataRow("application/rtf", ".rtf")]
+    [DataRow("application/xml", ".xml")]
+    [DataRow("application/zip", ".zip")]
+    [DataRow("image/gif", ".gif")]
+    [DataRow("image/jpeg", ".jpg")]
+    [DataRow("image/jpeg", ".jpeg")]
+    [DataRow("image/png", ".png")]
+    [DataRow("image/svg+xml", ".svg")]
+    [DataRow("message/rfc822", ".eml")]
+    [DataRow("text/html", ".htm")]
+    [DataRow("text/html", ".html")]
+    [DataRow("text/plain", ".txt")]
+    [DataRow("text/plain", ".log")]
 
 
-        var mimeType1 = MimeType.Parse(mimeString);
-        string s = mimeType1.ToString(MimeFormats.LineWrapping, 10);
+    // Miscellaneous tests:
+    [DataRow("application/json", ".json")]
+    [DataRow("image/vnd.adobe.photoshop", ".psd")]
+    [DataRow("application/json", ".json")]
+    [DataRow("application/octet-stream", "##############++")]
+    public void FromFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeType.FromFileTypeExtension(extension));
 
-        Assert.IsNotNull(s);
-        Assert.AreNotEqual(0, s.Length);
-        Assert.AreNotEqual(1, s.GetLinesCount());
+    #endregion
 
-        var mimeType2 = MimeType.Parse(s);
+    #region GetFileTypeExtensionTest
 
-        Assert.AreEqual(mediaType, mimeType2.MediaType.ToString(), false);
-        Assert.AreEqual(subType, mimeType2.SubType.ToString(), false);
+    [DataTestMethod]
+    [DataRow("text/html", ".htm")]
+    [DataRow("text/javascript", ".js")]
+    [DataRow("text/cache-manifest", ".appcache")]
+    [DataRow("text/calendar", ".ics")]
+    [DataRow("text/css", ".css")]
+    [DataRow("text/csv", ".csv")]
+    [DataRow("text/n3", ".n3")]
+    [DataRow("text/plain", ".txt")]
+    [DataRow("text/prs.lines.tag", ".dsc")]
+    [DataRow("text/richtext", ".rtx")]
+    [DataRow("text/sgml", ".sgml")]
+    [DataRow("text/tab-separated-values", ".tsv")]
+    [DataRow("text/troff", ".t")]
+    [DataRow("text/turtle", ".ttl")]
+    [DataRow("text/uri-list", ".uri")]
+    [DataRow("text/vcard", ".vcard")]
+    [DataRow("text/vnd.curl", ".curl")]
+    [DataRow("text/vnd.curl.dcurl", ".dcurl")]
+    [DataRow("text/vnd.curl.mcurl", ".mcurl")]
+    [DataRow("text/vnd.curl.scurl", ".scurl")]
+    [DataRow("text/vnd.dvb.subtitle", ".sub")]
+    [DataRow("text/vnd.fly", ".fly")]
+    [DataRow("text/vnd.fmi.flexstor", ".flx")]
+    [DataRow("text/vnd.graphviz", ".gv")]
+    [DataRow("text/vnd.in3d.3dml", ".3dml")]
+    [DataRow("text/vnd.in3d.spot", ".spot")]
+    [DataRow("text/vnd.sun.j2me.app-descriptor", ".jad")]
+    [DataRow("text/vnd.wap.wml", ".wml")]
+    [DataRow("text/vnd.wap.wmlscript", ".wmls")]
+    [DataRow("text/x-asm", ".s")]
+    [DataRow("text/x-c", ".c")]
+    [DataRow("text/x-fortran", ".f")]
+    [DataRow("text/x-java-source", ".java")]
+    [DataRow("text/x-nfo", ".nfo")]
+    [DataRow("text/x-opml", ".opml")]
+    [DataRow("text/x-pascal", ".p")]
+    [DataRow("text/x-setext", ".etx")]
+    [DataRow("text/x-sfv", ".sfv")]
+    [DataRow("text/x-uuencode", ".uu")]
+    [DataRow("text/x-vcalendar", ".vcs")]
+    [DataRow("text/x-vcard", ".vcf")]
+    [DataRow("text/comma-separated-values", ".csv")]
+    [DataRow("text/x-speech", ".talk")]
+    [DataRow("text/markdown", ".md")]
+    [DataRow("text/ecmascript", ".js")]
+    [DataRow("text/javascript1.0", ".js")]
+    [DataRow("text/javascript1.1", ".js")]
+    [DataRow("text/javascript1.2", ".js")]
+    [DataRow("text/javascript1.3", ".js")]
+    [DataRow("text/javascript1.4", ".js")]
+    [DataRow("text/javascript1.5", ".js")]
+    [DataRow("text/jscript", ".js")]
+    [DataRow("text/livescript", ".js")]
+    [DataRow("text/x-ecmascript", ".js")]
+    [DataRow("text/x-javascript", ".js")]
+    [DataRow("video/quicktime", ".mov")]
+    [DataRow("video/3gpp", ".3gp")]
+    [DataRow("video/3gpp2", ".3g2")]
+    [DataRow("video/h261", ".h261")]
+    [DataRow("video/h263", ".h263")]
+    [DataRow("video/h264", ".h264")]
+    [DataRow("video/jpeg", ".jpgv")]
+    [DataRow("video/jpm", ".jpm")]
+    [DataRow("video/mj2", ".mj2")]
+    [DataRow("video/mp4", ".mp4")]
+    [DataRow("video/mpeg", ".mpeg")]
+    [DataRow("video/ogg", ".ogv")]
+    [DataRow("video/vnd.dece.hd", ".uvh")]
+    [DataRow("video/vnd.dece.mobile", ".uvm")]
+    [DataRow("video/vnd.dece.pd", ".uvp")]
+    [DataRow("video/vnd.dece.sd", ".uvs")]
+    [DataRow("video/vnd.dece.video", ".uvv")]
+    [DataRow("video/vnd.dvb.file", ".dvb")]
+    [DataRow("video/vnd.fvt", ".fvt")]
+    [DataRow("video/vnd.mpegurl", ".mxu")]
+    [DataRow("video/vnd.ms-playready.media.pyv", ".pyv")]
+    [DataRow("video/vnd.uvvu.mp4", ".uvu")]
+    [DataRow("video/vnd.vivo", ".viv")]
+    [DataRow("video/webm", ".webm")]
+    [DataRow("video/x-f4v", ".f4v")]
+    [DataRow("video/x-fli", ".fli")]
+    [DataRow("video/x-flv", ".flv")]
+    [DataRow("video/x-m4v", ".m4v")]
+    [DataRow("video/x-matroska", ".mkv")]
+    [DataRow("video/x-mng", ".mng")]
+    [DataRow("video/x-ms-asf", ".asf")]
+    [DataRow("video/x-ms-vob", ".vob")]
+    [DataRow("video/x-ms-wm", ".wm")]
+    [DataRow("video/x-ms-wmv", ".wmv")]
+    [DataRow("video/x-ms-wmx", ".wmx")]
+    [DataRow("video/x-ms-wvx", ".wvx")]
+    [DataRow("video/x-msvideo", ".avi")]
+    [DataRow("video/x-sgi-movie", ".movie")]
+    [DataRow("video/x-smv", ".smv")]
+    [DataRow("image/fits", ".fits")]
+    [DataRow("image/bmp", ".bmp")]
+    [DataRow("image/cgm", ".cgm")]
+    [DataRow("image/g3fax", ".g3")]
+    [DataRow("image/gif", ".gif")]
+    [DataRow("image/ief", ".ief")]
+    [DataRow("image/jpeg", ".jpg")]
+    [DataRow("image/ktx", ".ktx")]
+    [DataRow("image/png", ".png")]
+    [DataRow("image/prs.btif", ".btif")]
+    [DataRow("image/sgi", ".sgi")]
+    [DataRow("image/svg+xml", ".svg")]
+    [DataRow("image/tiff", ".tiff")]
+    [DataRow("image/vnd.adobe.photoshop", ".psd")]
+    [DataRow("image/vnd.dece.graphic", ".uvi")]
+    [DataRow("image/vnd.djvu", ".djvu")]
+    [DataRow("image/vnd.dvb.subtitle", ".sub")]
+    [DataRow("image/vnd.dwg", ".dwg")]
+    [DataRow("image/vnd.dxf", ".dxf")]
+    [DataRow("image/vnd.fastbidsheet", ".fbs")]
+    [DataRow("image/vnd.fpx", ".fpx")]
+    [DataRow("image/vnd.fst", ".fst")]
+    [DataRow("image/vnd.fujixerox.edmics-mmr", ".mmr")]
+    [DataRow("image/vnd.fujixerox.edmics-rlc", ".rlc")]
+    [DataRow("image/vnd.ms-modi", ".mdi")]
+    [DataRow("image/vnd.ms-photo", ".wdp")]
+    [DataRow("image/vnd.net-fpx", ".npx")]
+    [DataRow("image/vnd.wap.wbmp", ".wbmp")]
+    [DataRow("image/vnd.xiff", ".xif")]
+    [DataRow("image/webp", ".webp")]
+    [DataRow("image/x-3ds", ".3ds")]
+    [DataRow("image/x-cmu-raster", ".ras")]
+    [DataRow("image/x-cmx", ".cmx")]
+    [DataRow("image/x-freehand", ".fh")]
+    [DataRow("image/x-icon", ".ico")]
+    [DataRow("image/x-mrsid-image", ".sid")]
+    [DataRow("image/x-pcx", ".pcx")]
+    [DataRow("image/x-pict", ".pic")]
+    [DataRow("image/x-portable-anymap", ".pnm")]
+    [DataRow("image/x-portable-bitmap", ".pbm")]
+    [DataRow("image/x-portable-graymap", ".pgm")]
+    [DataRow("image/x-portable-pixmap", ".ppm")]
+    [DataRow("image/x-rgb", ".rgb")]
+    [DataRow("image/x-tga", ".tga")]
+    [DataRow("image/x-xbitmap", ".xbm")]
+    [DataRow("image/x-xpixmap", ".xpm")]
+    [DataRow("image/x-xwindowdump", ".xwd")]
+    [DataRow("image/x-bmp", ".bmp")]
+    [DataRow("image/x-ms-bmp", ".bmp")]
+    [DataRow("image/cis-cod", ".cod")]
+    [DataRow("image/cmu-raster", ".ras")]
+    [DataRow("image/fif", ".fif")]
+    [DataRow("image/vasa", ".mcf")]
+    [DataRow("image/x-windowdump", ".xwd")]
+    [DataRow("image/x-wmf", ".wmf")]
+    [DataRow("image/wmf", ".wmf")]
+    [DataRow("image/mpeg-h", ".hevc")]
+    [DataRow("image/avi", ".avi")]
+    [DataRow("image/pict", ".pic")]
+    [DataRow("image/mov", ".mov")]
+    [DataRow("image/x-xcf", ".xcf")]
+    [DataRow("image/x-djvu", ".djv")]
+    [DataRow("image/x-icns", ".icns")]
+    [DataRow("image/jp2", ".jp2")]
+    [DataRow("image/jpx", ".jpx")]
+    [DataRow("image/jpm", ".jpm")]
+    [DataRow("application/andrew-inset", ".ez")]
+    [DataRow("application/applixware", ".aw")]
+    [DataRow("application/atom+xml", ".atom")]
+    [DataRow("application/atomcat+xml", ".atomcat")]
+    [DataRow("application/atomsvc+xml", ".atomsvc")]
+    [DataRow("application/ccxml+xml", ".ccxml")]
+    [DataRow("application/cdmi-capability", ".cdmia")]
+    [DataRow("application/cdmi-container", ".cdmic")]
+    [DataRow("application/cdmi-domain", ".cdmid")]
+    [DataRow("application/cdmi-object", ".cdmio")]
+    [DataRow("application/cdmi-queue", ".cdmiq")]
+    [DataRow("application/cu-seeme", ".cu")]
+    [DataRow("application/davmount+xml", ".davmount")]
+    [DataRow("application/docbook+xml", ".dbk")]
+    [DataRow("application/dssc+der", ".dssc")]
+    [DataRow("application/dssc+xml", ".xdssc")]
+    [DataRow("application/ecmascript", ".ecma")]
+    [DataRow("application/emma+xml", ".emma")]
+    [DataRow("application/epub+zip", ".epub")]
+    [DataRow("application/exi", ".exi")]
+    [DataRow("application/font-tdpfr", ".pfr")]
+    [DataRow("application/gml+xml", ".gml")]
+    [DataRow("application/gpx+xml", ".gpx")]
+    [DataRow("application/gxf", ".gxf")]
+    [DataRow("application/hyperstudio", ".stk")]
+    [DataRow("application/inkml+xml", ".ink")]
+    [DataRow("application/ipfix", ".ipfix")]
+    [DataRow("application/java-archive", ".jar")]
+    [DataRow("application/java-serialized-object", ".ser")]
+    [DataRow("application/java-vm", ".class")]
+    [DataRow("application/javascript", ".js")]
+    [DataRow("application/json", ".json")]
+    [DataRow("application/jsonml+json", ".jsonml")]
+    [DataRow("application/lost+xml", ".lostxml")]
+    [DataRow("application/mac-binhex40", ".hqx")]
+    [DataRow("application/mac-compactpro", ".cpt")]
+    [DataRow("application/mads+xml", ".mads")]
+    [DataRow("application/marc", ".mrc")]
+    [DataRow("application/marcxml+xml", ".mrcx")]
+    [DataRow("application/mathematica", ".ma")]
+    [DataRow("application/mathml+xml", ".mathml")]
+    [DataRow("application/mbox", ".mbox")]
+    [DataRow("application/mediaservercontrol+xml", ".mscml")]
+    [DataRow("application/metalink+xml", ".metalink")]
+    [DataRow("application/metalink4+xml", ".meta4")]
+    [DataRow("application/mets+xml", ".mets")]
+    [DataRow("application/mods+xml", ".mods")]
+    [DataRow("application/mp21", ".m21")]
+    [DataRow("application/mp4", ".mp4s")]
+    [DataRow("application/msword", ".doc")]
+    [DataRow("application/mxf", ".mxf")]
+    [DataRow("application/octet-stream", ".bin")]
+    [DataRow("application/oda", ".oda")]
+    [DataRow("application/oebps-package+xml", ".opf")]
+    [DataRow("application/ogg", ".ogx")]
+    [DataRow("application/omdoc+xml", ".omdoc")]
+    [DataRow("application/onenote", ".onetoc")]
+    [DataRow("application/oxps", ".oxps")]
+    [DataRow("application/patch-ops-error+xml", ".xer")]
+    [DataRow("application/pdf", ".pdf")]
+    [DataRow("application/pgp-encrypted", ".pgp")]
+    [DataRow("application/pgp-signature", ".asc")]
+    [DataRow("application/pics-rules", ".prf")]
+    [DataRow("application/pkcs10", ".p10")]
+    [DataRow("application/pkcs7-mime", ".p7m")]
+    [DataRow("application/pkcs7-signature", ".p7s")]
+    [DataRow("application/pkcs8", ".p8")]
+    [DataRow("application/pkix-attr-cert", ".ac")]
+    [DataRow("application/pkix-cert", ".cer")]
+    [DataRow("application/pkix-crl", ".crl")]
+    [DataRow("application/pkix-pkipath", ".pkipath")]
+    [DataRow("application/pkixcmp", ".pki")]
+    [DataRow("application/pls+xml", ".pls")]
+    [DataRow("application/postscript", ".ai")]
+    [DataRow("application/prs.cww", ".cww")]
+    [DataRow("application/pskc+xml", ".pskcxml")]
+    [DataRow("application/rdf+xml", ".rdf")]
+    [DataRow("application/reginfo+xml", ".rif")]
+    [DataRow("application/relax-ng-compact-syntax", ".rnc")]
+    [DataRow("application/resource-lists+xml", ".rl")]
+    [DataRow("application/resource-lists-diff+xml", ".rld")]
+    [DataRow("application/rls-services+xml", ".rs")]
+    [DataRow("application/rpki-ghostbusters", ".gbr")]
+    [DataRow("application/rpki-manifest", ".mft")]
+    [DataRow("application/rpki-roa", ".roa")]
+    [DataRow("application/rsd+xml", ".rsd")]
+    [DataRow("application/rss+xml", ".rss")]
+    [DataRow("application/rtf", ".rtf")]
+    [DataRow("application/sbml+xml", ".sbml")]
+    [DataRow("application/scvp-cv-request", ".scq")]
+    [DataRow("application/scvp-cv-response", ".scs")]
+    [DataRow("application/scvp-vp-request", ".spq")]
+    [DataRow("application/scvp-vp-response", ".spp")]
+    [DataRow("application/sdp", ".sdp")]
+    [DataRow("application/set-payment-initiation", ".setpay")]
+    [DataRow("application/set-registration-initiation", ".setreg")]
+    [DataRow("application/shf+xml", ".shf")]
+    [DataRow("application/smil+xml", ".smi")]
+    [DataRow("application/sparql-query", ".rq")]
+    [DataRow("application/sparql-results+xml", ".srx")]
+    [DataRow("application/srgs", ".gram")]
+    [DataRow("application/srgs+xml", ".grxml")]
+    [DataRow("application/sru+xml", ".sru")]
+    [DataRow("application/ssdl+xml", ".ssdl")]
+    [DataRow("application/ssml+xml", ".ssml")]
+    [DataRow("application/tei+xml", ".tei")]
+    [DataRow("application/thraud+xml", ".tfi")]
+    [DataRow("application/timestamped-data", ".tsd")]
+    [DataRow("application/vnd.3gpp.pic-bw-large", ".plb")]
+    [DataRow("application/vnd.3gpp.pic-bw-small", ".psb")]
+    [DataRow("application/vnd.3gpp.pic-bw-var", ".pvb")]
+    [DataRow("application/vnd.3gpp2.tcap", ".tcap")]
+    [DataRow("application/vnd.3m.post-it-notes", ".pwn")]
+    [DataRow("application/vnd.accpac.simply.aso", ".aso")]
+    [DataRow("application/vnd.accpac.simply.imp", ".imp")]
+    [DataRow("application/vnd.acucobol", ".acu")]
+    [DataRow("application/vnd.acucorp", ".atc")]
+    [DataRow("application/vnd.adobe.air-application-installer-package+zip", ".air")]
+    [DataRow("application/vnd.adobe.formscentral.fcdt", ".fcdt")]
+    [DataRow("application/vnd.adobe.fxp", ".fxp")]
+    [DataRow("application/vnd.adobe.xdp+xml", ".xdp")]
+    [DataRow("application/vnd.adobe.xfdf", ".xfdf")]
+    [DataRow("application/vnd.ahead.space", ".ahead")]
+    [DataRow("application/vnd.airzip.filesecure.azf", ".azf")]
+    [DataRow("application/vnd.airzip.filesecure.azs", ".azs")]
+    [DataRow("application/vnd.amazon.ebook", ".azw")]
+    [DataRow("application/vnd.americandynamics.acc", ".acc")]
+    [DataRow("application/vnd.amiga.ami", ".ami")]
+    [DataRow("application/vnd.android.package-archive", ".apk")]
+    [DataRow("application/vnd.anser-web-certificate-issue-initiation", ".cii")]
+    [DataRow("application/vnd.anser-web-funds-transfer-initiation", ".fti")]
+    [DataRow("application/vnd.antix.game-component", ".atx")]
+    [DataRow("application/vnd.apple.installer+xml", ".mpkg")]
+    [DataRow("application/vnd.apple.mpegurl", ".m3u8")]
+    [DataRow("application/vnd.aristanetworks.swi", ".swi")]
+    [DataRow("application/vnd.astraea-software.iota", ".iota")]
+    [DataRow("application/vnd.audiograph", ".aep")]
+    [DataRow("application/vnd.blueice.multipass", ".mpm")]
+    [DataRow("application/vnd.bmi", ".bmi")]
+    [DataRow("application/vnd.businessobjects", ".rep")]
+    [DataRow("application/vnd.chemdraw+xml", ".cdxml")]
+    [DataRow("application/vnd.chipnuts.karaoke-mmd", ".mmd")]
+    [DataRow("application/vnd.cinderella", ".cdy")]
+    [DataRow("application/vnd.claymore", ".cla")]
+    [DataRow("application/vnd.cloanto.rp9", ".rp9")]
+    [DataRow("application/vnd.clonk.c4group", ".c4g")]
+    [DataRow("application/vnd.cluetrust.cartomobile-config", ".c11amc")]
+    [DataRow("application/vnd.cluetrust.cartomobile-config-pkg", ".c11amz")]
+    [DataRow("application/vnd.commonspace", ".csp")]
+    [DataRow("application/vnd.contact.cmsg", ".cdbcmsg")]
+    [DataRow("application/vnd.cosmocaller", ".cmc")]
+    [DataRow("application/vnd.crick.clicker", ".clkx")]
+    [DataRow("application/vnd.crick.clicker.keyboard", ".clkk")]
+    [DataRow("application/vnd.crick.clicker.palette", ".clkp")]
+    [DataRow("application/vnd.crick.clicker.template", ".clkt")]
+    [DataRow("application/vnd.crick.clicker.wordbank", ".clkw")]
+    [DataRow("application/vnd.criticaltools.wbs+xml", ".wbs")]
+    [DataRow("application/vnd.ctc-posml", ".pml")]
+    [DataRow("application/vnd.cups-ppd", ".ppd")]
+    [DataRow("application/vnd.curl.car", ".car")]
+    [DataRow("application/vnd.curl.pcurl", ".pcurl")]
+    [DataRow("application/vnd.dart", ".dart")]
+    [DataRow("application/vnd.data-vision.rdz", ".rdz")]
+    [DataRow("application/vnd.dece.data", ".uvf")]
+    [DataRow("application/vnd.dece.ttml+xml", ".uvt")]
+    [DataRow("application/vnd.dece.unspecified", ".uvx")]
+    [DataRow("application/vnd.dece.zip", ".uvz")]
+    [DataRow("application/vnd.denovo.fcselayout-link", ".fe_launch")]
+    [DataRow("application/vnd.dna", ".dna")]
+    [DataRow("application/vnd.dolby.mlp", ".mlp")]
+    [DataRow("application/vnd.dpgraph", ".dpg")]
+    [DataRow("application/vnd.dreamfactory", ".dfac")]
+    [DataRow("application/vnd.ds-keypoint", ".kpxx")]
+    [DataRow("application/vnd.dvb.ait", ".ait")]
+    [DataRow("application/vnd.dvb.service", ".svc")]
+    [DataRow("application/vnd.dynageo", ".geo")]
+    [DataRow("application/vnd.ecowin.chart", ".mag")]
+    [DataRow("application/vnd.enliven", ".nml")]
+    [DataRow("application/vnd.epson.esf", ".esf")]
+    [DataRow("application/vnd.epson.msf", ".msf")]
+    [DataRow("application/vnd.epson.quickanime", ".qam")]
+    [DataRow("application/vnd.epson.salt", ".slt")]
+    [DataRow("application/vnd.epson.ssf", ".ssf")]
+    [DataRow("application/vnd.eszigno3+xml", ".es3")]
+    [DataRow("application/vnd.ezpix-album", ".ez2")]
+    [DataRow("application/vnd.ezpix-package", ".ez3")]
+    [DataRow("application/vnd.fdf", ".fdf")]
+    [DataRow("application/vnd.fdsn.mseed", ".mseed")]
+    [DataRow("application/vnd.fdsn.seed", ".seed")]
+    [DataRow("application/vnd.flographit", ".gph")]
+    [DataRow("application/vnd.fluxtime.clip", ".ftc")]
+    [DataRow("application/vnd.framemaker", ".fm")]
+    [DataRow("application/vnd.frogans.fnc", ".fnc")]
+    [DataRow("application/vnd.frogans.ltf", ".ltf")]
+    [DataRow("application/vnd.fsc.weblaunch", ".fsc")]
+    [DataRow("application/vnd.fujitsu.oasys", ".oas")]
+    [DataRow("application/vnd.fujitsu.oasys2", ".oa2")]
+    [DataRow("application/vnd.fujitsu.oasys3", ".oa3")]
+    [DataRow("application/vnd.fujitsu.oasysgp", ".fg5")]
+    [DataRow("application/vnd.fujitsu.oasysprs", ".bh2")]
+    [DataRow("application/vnd.fujixerox.ddd", ".ddd")]
+    [DataRow("application/vnd.fujixerox.docuworks", ".xdw")]
+    [DataRow("application/vnd.fujixerox.docuworks.binder", ".xbd")]
+    [DataRow("application/vnd.fuzzysheet", ".fzs")]
+    [DataRow("application/vnd.genomatix.tuxedo", ".txd")]
+    [DataRow("application/vnd.geogebra.file", ".ggb")]
+    [DataRow("application/vnd.geogebra.tool", ".ggt")]
+    [DataRow("application/vnd.geometry-explorer", ".gex")]
+    [DataRow("application/vnd.geonext", ".gxt")]
+    [DataRow("application/vnd.geoplan", ".g2w")]
+    [DataRow("application/vnd.geospace", ".g3w")]
+    [DataRow("application/vnd.gmx", ".gmx")]
+    [DataRow("application/vnd.google-earth.kml+xml", ".kml")]
+    [DataRow("application/vnd.google-earth.kmz", ".kmz")]
+    [DataRow("application/vnd.grafeq", ".gqf")]
+    [DataRow("application/vnd.groove-account", ".gac")]
+    [DataRow("application/vnd.groove-help", ".ghf")]
+    [DataRow("application/vnd.groove-identity-message", ".gim")]
+    [DataRow("application/vnd.groove-injector", ".grv")]
+    [DataRow("application/vnd.groove-tool-message", ".gtm")]
+    [DataRow("application/vnd.groove-tool-template", ".tpl")]
+    [DataRow("application/vnd.groove-vcard", ".vcg")]
+    [DataRow("application/vnd.hal+xml", ".hal")]
+    [DataRow("application/vnd.handheld-entertainment+xml", ".zmm")]
+    [DataRow("application/vnd.hbci", ".hbci")]
+    [DataRow("application/vnd.hhe.lesson-player", ".les")]
+    [DataRow("application/vnd.hp-hpgl", ".hpgl")]
+    [DataRow("application/vnd.hp-hpid", ".hpid")]
+    [DataRow("application/vnd.hp-hps", ".hps")]
+    [DataRow("application/vnd.hp-jlyt", ".jlt")]
+    [DataRow("application/vnd.hp-pcl", ".pcl")]
+    [DataRow("application/vnd.hp-pclxl", ".pclxl")]
+    [DataRow("application/vnd.hydrostatix.sof-data", ".sfd-hdstx")]
+    [DataRow("application/vnd.ibm.minipay", ".mpy")]
+    [DataRow("application/vnd.ibm.modcap", ".afp")]
+    [DataRow("application/vnd.ibm.rights-management", ".irm")]
+    [DataRow("application/vnd.ibm.secure-container", ".sc")]
+    [DataRow("application/vnd.iccprofile", ".icc")]
+    [DataRow("application/vnd.igloader", ".igl")]
+    [DataRow("application/vnd.immervision-ivp", ".ivp")]
+    [DataRow("application/vnd.immervision-ivu", ".ivu")]
+    [DataRow("application/vnd.insors.igm", ".igm")]
+    [DataRow("application/vnd.intercon.formnet", ".xpw")]
+    [DataRow("application/vnd.intergeo", ".i2g")]
+    [DataRow("application/vnd.intu.qbo", ".qbo")]
+    [DataRow("application/vnd.intu.qfx", ".qfx")]
+    [DataRow("application/vnd.ipunplugged.rcprofile", ".rcprofile")]
+    [DataRow("application/vnd.irepository.package+xml", ".irp")]
+    [DataRow("application/vnd.is-xpr", ".xpr")]
+    [DataRow("application/vnd.isac.fcs", ".fcs")]
+    [DataRow("application/vnd.jam", ".jam")]
+    [DataRow("application/vnd.jcp.javame.midlet-rms", ".rms")]
+    [DataRow("application/vnd.jisp", ".jisp")]
+    [DataRow("application/vnd.joost.joda-archive", ".joda")]
+    [DataRow("application/vnd.kahootz", ".ktz")]
+    [DataRow("application/vnd.kde.karbon", ".karbon")]
+    [DataRow("application/vnd.kde.kchart", ".chrt")]
+    [DataRow("application/vnd.kde.kformula", ".kfo")]
+    [DataRow("application/vnd.kde.kivio", ".flw")]
+    [DataRow("application/vnd.kde.kontour", ".kon")]
+    [DataRow("application/vnd.kde.kpresenter", ".kpr")]
+    [DataRow("application/vnd.kde.kspread", ".ksp")]
+    [DataRow("application/vnd.kde.kword", ".kwd")]
+    [DataRow("application/vnd.kenameaapp", ".htke")]
+    [DataRow("application/vnd.kidspiration", ".kia")]
+    [DataRow("application/vnd.kinar", ".kne")]
+    [DataRow("application/vnd.koan", ".skp")]
+    [DataRow("application/vnd.kodak-descriptor", ".sse")]
+    [DataRow("application/vnd.las.las+xml", ".lasxml")]
+    [DataRow("application/vnd.llamagraphics.life-balance.desktop", ".lbd")]
+    [DataRow("application/vnd.llamagraphics.life-balance.exchange+xml", ".lbe")]
+    [DataRow("application/vnd.lotus-1-2-3", ".123")]
+    [DataRow("application/vnd.lotus-approach", ".apr")]
+    [DataRow("application/vnd.lotus-freelance", ".pre")]
+    [DataRow("application/vnd.lotus-notes", ".nsf")]
+    [DataRow("application/vnd.lotus-organizer", ".org")]
+    [DataRow("application/vnd.lotus-screencam", ".scm")]
+    [DataRow("application/vnd.lotus-wordpro", ".lwp")]
+    [DataRow("application/vnd.macports.portpkg", ".portpkg")]
+    [DataRow("application/vnd.mcd", ".mcd")]
+    [DataRow("application/vnd.medcalcdata", ".mc1")]
+    [DataRow("application/vnd.mediastation.cdkey", ".cdkey")]
+    [DataRow("application/vnd.mfer", ".mwf")]
+    [DataRow("application/vnd.mfmp", ".mfm")]
+    [DataRow("application/vnd.micrografx.flo", ".flo")]
+    [DataRow("application/vnd.micrografx.igx", ".igx")]
+    [DataRow("application/vnd.mif", ".mif")]
+    [DataRow("application/vnd.mobius.daf", ".daf")]
+    [DataRow("application/vnd.mobius.dis", ".dis")]
+    [DataRow("application/vnd.mobius.mbk", ".mbk")]
+    [DataRow("application/vnd.mobius.mqy", ".mqy")]
+    [DataRow("application/vnd.mobius.msl", ".msl")]
+    [DataRow("application/vnd.mobius.plc", ".plc")]
+    [DataRow("application/vnd.mobius.txf", ".txf")]
+    [DataRow("application/vnd.mophun.application", ".mpn")]
+    [DataRow("application/vnd.mophun.certificate", ".mpc")]
+    [DataRow("application/vnd.mozilla.xul+xml", ".xul")]
+    [DataRow("application/vnd.ms-artgalry", ".cil")]
+    [DataRow("application/vnd.ms-cab-compressed", ".cab")]
+    [DataRow("application/vnd.ms-excel", ".xls")]
+    [DataRow("application/vnd.ms-excel.addin.macroenabled.12", ".xlam")]
+    [DataRow("application/vnd.ms-excel.sheet.binary.macroenabled.12", ".xlsb")]
+    [DataRow("application/vnd.ms-excel.sheet.macroenabled.12", ".xlsm")]
+    [DataRow("application/vnd.ms-excel.template.macroenabled.12", ".xltm")]
+    [DataRow("application/vnd.ms-fontobject", ".eot")]
+    [DataRow("application/vnd.ms-htmlhelp", ".chm")]
+    [DataRow("application/vnd.ms-ims", ".ims")]
+    [DataRow("application/vnd.ms-lrm", ".lrm")]
+    [DataRow("application/vnd.ms-officetheme", ".thmx")]
+    [DataRow("application/vnd.ms-pki.seccat", ".cat")]
+    [DataRow("application/vnd.ms-pki.stl", ".stl")]
+    [DataRow("application/vnd.ms-powerpoint", ".ppt")]
+    [DataRow("application/vnd.ms-powerpoint.addin.macroenabled.12", ".ppam")]
+    [DataRow("application/vnd.ms-powerpoint.presentation.macroenabled.12", ".pptm")]
+    [DataRow("application/vnd.ms-powerpoint.slide.macroenabled.12", ".sldm")]
+    [DataRow("application/vnd.ms-powerpoint.slideshow.macroenabled.12", ".ppsm")]
+    [DataRow("application/vnd.ms-powerpoint.template.macroenabled.12", ".potm")]
+    [DataRow("application/vnd.ms-project", ".mpp")]
+    [DataRow("application/vnd.ms-word.document.macroenabled.12", ".docm")]
+    [DataRow("application/vnd.ms-word.template.macroenabled.12", ".dotm")]
+    [DataRow("application/vnd.ms-works", ".wps")]
+    [DataRow("application/vnd.ms-wpl", ".wpl")]
+    [DataRow("application/vnd.ms-xpsdocument", ".xps")]
+    [DataRow("application/vnd.mseq", ".mseq")]
+    [DataRow("application/vnd.musician", ".mus")]
+    [DataRow("application/vnd.muvee.style", ".msty")]
+    [DataRow("application/vnd.mynfc", ".taglet")]
+    [DataRow("application/vnd.neurolanguage.nlu", ".nlu")]
+    [DataRow("application/vnd.nitf", ".ntf")]
+    [DataRow("application/vnd.noblenet-directory", ".nnd")]
+    [DataRow("application/vnd.noblenet-sealer", ".nns")]
+    [DataRow("application/vnd.noblenet-web", ".nnw")]
+    [DataRow("application/vnd.nokia.n-gage.data", ".ngdat")]
+    [DataRow("application/vnd.nokia.n-gage.symbian.install", ".n-gage")]
+    [DataRow("application/vnd.nokia.radio-preset", ".rpst")]
+    [DataRow("application/vnd.nokia.radio-presets", ".rpss")]
+    [DataRow("application/vnd.novadigm.edm", ".edm")]
+    [DataRow("application/vnd.novadigm.edx", ".edx")]
+    [DataRow("application/vnd.novadigm.ext", ".ext")]
+    [DataRow("application/vnd.oasis.opendocument.chart", ".odc")]
+    [DataRow("application/vnd.oasis.opendocument.chart-template", ".otc")]
+    [DataRow("application/vnd.oasis.opendocument.database", ".odb")]
+    [DataRow("application/vnd.oasis.opendocument.formula", ".odf")]
+    [DataRow("application/vnd.oasis.opendocument.formula-template", ".odft")]
+    [DataRow("application/vnd.oasis.opendocument.graphics", ".odg")]
+    [DataRow("application/vnd.oasis.opendocument.graphics-template", ".otg")]
+    [DataRow("application/vnd.oasis.opendocument.image", ".odi")]
+    [DataRow("application/vnd.oasis.opendocument.image-template", ".oti")]
+    [DataRow("application/vnd.oasis.opendocument.presentation", ".odp")]
+    [DataRow("application/vnd.oasis.opendocument.presentation-template", ".otp")]
+    [DataRow("application/vnd.oasis.opendocument.spreadsheet", ".ods")]
+    [DataRow("application/vnd.oasis.opendocument.spreadsheet-template", ".ots")]
+    [DataRow("application/vnd.oasis.opendocument.text", ".odt")]
+    [DataRow("application/vnd.oasis.opendocument.text-master", ".odm")]
+    [DataRow("application/vnd.oasis.opendocument.text-template", ".ott")]
+    [DataRow("application/vnd.oasis.opendocument.text-web", ".oth")]
+    [DataRow("application/vnd.olpc-sugar", ".xo")]
+    [DataRow("application/vnd.oma.dd2+xml", ".dd2")]
+    [DataRow("application/vnd.openofficeorg.extension", ".oxt")]
+    [DataRow("application/vnd.openxmlformats-officedocument.presentationml.presentation", ".pptx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.presentationml.slide", ".sldx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.presentationml.slideshow", ".ppsx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.presentationml.template", ".potx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet", ".xlsx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.spreadsheetml.template", ".xltx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.wordprocessingml.document", ".docx")]
+    [DataRow("application/vnd.openxmlformats-officedocument.wordprocessingml.template", ".dotx")]
+    [DataRow("application/vnd.osgeo.mapguide.package", ".mgp")]
+    [DataRow("application/vnd.osgi.dp", ".dp")]
+    [DataRow("application/vnd.osgi.subsystem", ".esa")]
+    [DataRow("application/vnd.palm", ".pdb")]
+    [DataRow("application/vnd.pawaafile", ".paw")]
+    [DataRow("application/vnd.pg.format", ".str")]
+    [DataRow("application/vnd.pg.osasli", ".ei6")]
+    [DataRow("application/vnd.picsel", ".efif")]
+    [DataRow("application/vnd.pmi.widget", ".wg")]
+    [DataRow("application/vnd.pocketlearn", ".plf")]
+    [DataRow("application/vnd.powerbuilder6", ".pbd")]
+    [DataRow("application/vnd.previewsystems.box", ".box")]
+    [DataRow("application/vnd.proteus.magazine", ".mgz")]
+    [DataRow("application/vnd.publishare-delta-tree", ".qps")]
+    [DataRow("application/vnd.pvi.ptid1", ".ptid")]
+    [DataRow("application/vnd.quark.quarkxpress", ".qxd")]
+    [DataRow("application/vnd.realvnc.bed", ".bed")]
+    [DataRow("application/vnd.recordare.musicxml", ".mxl")]
+    [DataRow("application/vnd.recordare.musicxml+xml", ".musicxml")]
+    [DataRow("application/vnd.rig.cryptonote", ".cryptonote")]
+    [DataRow("application/vnd.rim.cod", ".cod")]
+    [DataRow("application/vnd.rn-realmedia", ".rm")]
+    [DataRow("application/vnd.rn-realmedia-vbr", ".rmvb")]
+    [DataRow("application/vnd.route66.link66+xml", ".link66")]
+    [DataRow("application/vnd.sailingtracker.track", ".st")]
+    [DataRow("application/vnd.seemail", ".see")]
+    [DataRow("application/vnd.sema", ".sema")]
+    [DataRow("application/vnd.semd", ".semd")]
+    [DataRow("application/vnd.semf", ".semf")]
+    [DataRow("application/vnd.shana.informed.formdata", ".ifm")]
+    [DataRow("application/vnd.shana.informed.formtemplate", ".itp")]
+    [DataRow("application/vnd.shana.informed.interchange", ".iif")]
+    [DataRow("application/vnd.shana.informed.package", ".ipk")]
+    [DataRow("application/vnd.simtech-mindmapper", ".twd")]
+    [DataRow("application/vnd.smaf", ".mmf")]
+    [DataRow("application/vnd.smart.teacher", ".teacher")]
+    [DataRow("application/vnd.solent.sdkm+xml", ".sdkm")]
+    [DataRow("application/vnd.spotfire.dxp", ".dxp")]
+    [DataRow("application/vnd.spotfire.sfs", ".sfs")]
+    [DataRow("application/vnd.stardivision.calc", ".sdc")]
+    [DataRow("application/vnd.stardivision.draw", ".sda")]
+    [DataRow("application/vnd.stardivision.impress", ".sdd")]
+    [DataRow("application/vnd.stardivision.math", ".smf")]
+    [DataRow("application/vnd.stardivision.writer", ".sdw")]
+    [DataRow("application/vnd.stardivision.writer-global", ".sgl")]
+    [DataRow("application/vnd.stepmania.package", ".smzip")]
+    [DataRow("application/vnd.stepmania.stepchart", ".sm")]
+    [DataRow("application/vnd.sun.xml.calc", ".sxc")]
+    [DataRow("application/vnd.sun.xml.calc.template", ".stc")]
+    [DataRow("application/vnd.sun.xml.draw", ".sxd")]
+    [DataRow("application/vnd.sun.xml.draw.template", ".std")]
+    [DataRow("application/vnd.sun.xml.impress", ".sxi")]
+    [DataRow("application/vnd.sun.xml.impress.template", ".sti")]
+    [DataRow("application/vnd.sun.xml.math", ".sxm")]
+    [DataRow("application/vnd.sun.xml.writer", ".sxw")]
+    [DataRow("application/vnd.sun.xml.writer.global", ".sxg")]
+    [DataRow("application/vnd.sun.xml.writer.template", ".stw")]
+    [DataRow("application/vnd.sus-calendar", ".sus")]
+    [DataRow("application/vnd.svd", ".svd")]
+    [DataRow("application/vnd.symbian.install", ".sis")]
+    [DataRow("application/vnd.syncml+xml", ".xsm")]
+    [DataRow("application/vnd.syncml.dm+wbxml", ".bdm")]
+    [DataRow("application/vnd.syncml.dm+xml", ".xdm")]
+    [DataRow("application/vnd.tao.intent-module-archive", ".tao")]
+    [DataRow("application/vnd.tcpdump.pcap", ".pcap")]
+    [DataRow("application/vnd.tmobile-livetv", ".tmo")]
+    [DataRow("application/vnd.trid.tpt", ".tpt")]
+    [DataRow("application/vnd.triscape.mxs", ".mxs")]
+    [DataRow("application/vnd.trueapp", ".tra")]
+    [DataRow("application/vnd.ufdl", ".ufd")]
+    [DataRow("application/vnd.uiq.theme", ".utz")]
+    [DataRow("application/vnd.umajin", ".umj")]
+    [DataRow("application/vnd.unity", ".unityweb")]
+    [DataRow("application/vnd.uoml+xml", ".uoml")]
+    [DataRow("application/vnd.vcx", ".vcx")]
+    [DataRow("application/vnd.visio", ".vsd")]
+    [DataRow("application/vnd.visionary", ".vis")]
+    [DataRow("application/vnd.vsf", ".vsf")]
+    [DataRow("application/vnd.wap.wbxml", ".wbxml")]
+    [DataRow("application/vnd.wap.wmlc", ".wmlc")]
+    [DataRow("application/vnd.wap.wmlscriptc", ".wmlsc")]
+    [DataRow("application/vnd.webturbo", ".wtb")]
+    [DataRow("application/vnd.wolfram.player", ".nbp")]
+    [DataRow("application/vnd.wordperfect", ".wpd")]
+    [DataRow("application/vnd.wqd", ".wqd")]
+    [DataRow("application/vnd.wt.stf", ".stf")]
+    [DataRow("application/vnd.xara", ".xar")]
+    [DataRow("application/vnd.xfdl", ".xfdl")]
+    [DataRow("application/vnd.yamaha.hv-dic", ".hvd")]
+    [DataRow("application/vnd.yamaha.hv-script", ".hvs")]
+    [DataRow("application/vnd.yamaha.hv-voice", ".hvp")]
+    [DataRow("application/vnd.yamaha.openscoreformat", ".osf")]
+    [DataRow("application/vnd.yamaha.openscoreformat.osfpvg+xml", ".osfpvg")]
+    [DataRow("application/vnd.yamaha.smaf-audio", ".saf")]
+    [DataRow("application/vnd.yamaha.smaf-phrase", ".spf")]
+    [DataRow("application/vnd.yellowriver-custom-menu", ".cmp")]
+    [DataRow("application/vnd.zul", ".zir")]
+    [DataRow("application/vnd.zzazz.deck+xml", ".zaz")]
+    [DataRow("application/voicexml+xml", ".vxml")]
+    [DataRow("application/widget", ".wgt")]
+    [DataRow("application/winhlp", ".hlp")]
+    [DataRow("application/wsdl+xml", ".wsdl")]
+    [DataRow("application/wspolicy+xml", ".wspolicy")]
+    [DataRow("application/x-7z-compressed", ".7z")]
+    [DataRow("application/x-abiword", ".abw")]
+    [DataRow("application/x-ace-compressed", ".ace")]
+    [DataRow("application/x-apple-diskimage", ".dmg")]
+    [DataRow("application/x-authorware-bin", ".aab")]
+    [DataRow("application/x-authorware-map", ".aam")]
+    [DataRow("application/x-authorware-seg", ".aas")]
+    [DataRow("application/x-bcpio", ".bcpio")]
+    [DataRow("application/x-bittorrent", ".torrent")]
+    [DataRow("application/x-blorb", ".blb")]
+    [DataRow("application/x-bzip", ".bz")]
+    [DataRow("application/x-bzip2", ".bz2")]
+    [DataRow("application/x-cbr", ".cbr")]
+    [DataRow("application/x-cdlink", ".vcd")]
+    [DataRow("application/x-cfs-compressed", ".cfs")]
+    [DataRow("application/x-chat", ".chat")]
+    [DataRow("application/x-chess-pgn", ".pgn")]
+    [DataRow("application/x-conference", ".nsc")]
+    [DataRow("application/x-cpio", ".cpio")]
+    [DataRow("application/x-csh", ".csh")]
+    [DataRow("application/x-debian-package", ".deb")]
+    [DataRow("application/x-dgc-compressed", ".dgc")]
+    [DataRow("application/x-director", ".dir")]
+    [DataRow("application/x-doom", ".wad")]
+    [DataRow("application/x-dtbncx+xml", ".ncx")]
+    [DataRow("application/x-dtbook+xml", ".dtb")]
+    [DataRow("application/x-dtbresource+xml", ".res")]
+    [DataRow("application/x-dvi", ".dvi")]
+    [DataRow("application/x-envoy", ".evy")]
+    [DataRow("application/x-eva", ".eva")]
+    [DataRow("application/x-font-bdf", ".bdf")]
+    [DataRow("application/x-font-ghostscript", ".gsf")]
+    [DataRow("application/x-font-linux-psf", ".psf")]
+    [DataRow("application/x-font-pcf", ".pcf")]
+    [DataRow("application/x-font-snf", ".snf")]
+    [DataRow("application/x-font-type1", ".pfa")]
+    [DataRow("application/x-freearc", ".arc")]
+    [DataRow("application/x-futuresplash", ".spl")]
+    [DataRow("application/x-gca-compressed", ".gca")]
+    [DataRow("application/x-glulx", ".ulx")]
+    [DataRow("application/x-gnumeric", ".gnumeric")]
+    [DataRow("application/x-gramps-xml", ".gramps")]
+    [DataRow("application/x-gtar", ".gtar")]
+    [DataRow("application/x-hdf", ".hdf")]
+    [DataRow("application/x-install-instructions", ".install")]
+    [DataRow("application/x-iso9660-image", ".iso")]
+    [DataRow("application/x-java-jnlp-file", ".jnlp")]
+    [DataRow("application/x-latex", ".latex")]
+    [DataRow("application/x-lzh-compressed", ".lzh")]
+    [DataRow("application/x-mie", ".mie")]
+    [DataRow("application/x-mobipocket-ebook", ".prc")]
+    [DataRow("application/x-ms-application", ".application")]
+    [DataRow("application/x-ms-shortcut", ".lnk")]
+    [DataRow("application/x-ms-wmd", ".wmd")]
+    [DataRow("application/x-ms-wmz", ".wmz")]
+    [DataRow("application/x-ms-xbap", ".xbap")]
+    [DataRow("application/x-msaccess", ".mdb")]
+    [DataRow("application/x-msbinder", ".obd")]
+    [DataRow("application/x-mscardfile", ".crd")]
+    [DataRow("application/x-msclip", ".clp")]
+    [DataRow("application/x-msdownload", ".exe")]
+    [DataRow("application/x-msmediaview", ".mvb")]
+    [DataRow("application/x-msmetafile", ".wmf")]
+    [DataRow("application/x-msmoney", ".mny")]
+    [DataRow("application/x-mspublisher", ".pub")]
+    [DataRow("application/x-msschedule", ".scd")]
+    [DataRow("application/x-msterminal", ".trm")]
+    [DataRow("application/x-mswrite", ".wri")]
+    [DataRow("application/x-netcdf", ".nc")]
+    [DataRow("application/x-nzb", ".nzb")]
+    [DataRow("application/x-pkcs12", ".p12")]
+    [DataRow("application/x-pkcs7-certificates", ".p7b")]
+    [DataRow("application/x-pkcs7-certreqresp", ".p7r")]
+    [DataRow("application/x-rar-compressed", ".rar")]
+    [DataRow("application/x-research-info-systems", ".ris")]
+    [DataRow("application/x-sh", ".sh")]
+    [DataRow("application/x-shar", ".shar")]
+    [DataRow("application/x-shockwave-flash", ".swf")]
+    [DataRow("application/x-silverlight-app", ".xap")]
+    [DataRow("application/x-sql", ".sql")]
+    [DataRow("application/x-stuffit", ".sit")]
+    [DataRow("application/x-stuffitx", ".sitx")]
+    [DataRow("application/x-subrip", ".srt")]
+    [DataRow("application/x-sv4cpio", ".sv4cpio")]
+    [DataRow("application/x-sv4crc", ".sv4crc")]
+    [DataRow("application/x-t3vm-image", ".t3")]
+    [DataRow("application/x-tads", ".gam")]
+    [DataRow("application/x-tar", ".tar")]
+    [DataRow("application/x-tcl", ".tcl")]
+    [DataRow("application/x-tex", ".tex")]
+    [DataRow("application/x-tex-tfm", ".tfm")]
+    [DataRow("application/x-texinfo", ".texinfo")]
+    [DataRow("application/x-tgif", ".obj")]
+    [DataRow("application/x-ustar", ".ustar")]
+    [DataRow("application/x-wais-source", ".src")]
+    [DataRow("application/x-x509-ca-cert", ".der")]
+    [DataRow("application/x-xfig", ".fig")]
+    [DataRow("application/x-xliff+xml", ".xlf")]
+    [DataRow("application/x-xpinstall", ".xpi")]
+    [DataRow("application/x-xz", ".xz")]
+    [DataRow("application/x-zmachine", ".z1")]
+    [DataRow("application/xaml+xml", ".xaml")]
+    [DataRow("application/xcap-diff+xml", ".xdf")]
+    [DataRow("application/xenc+xml", ".xenc")]
+    [DataRow("application/xhtml+xml", ".xhtml")]
+    [DataRow("application/xml", ".xml")]
+    [DataRow("application/xml-dtd", ".dtd")]
+    [DataRow("application/xop+xml", ".xop")]
+    [DataRow("application/xproc+xml", ".xpl")]
+    [DataRow("application/xslt+xml", ".xslt")]
+    [DataRow("application/xspf+xml", ".xspf")]
+    [DataRow("application/xv+xml", ".mxml")]
+    [DataRow("application/yang", ".yang")]
+    [DataRow("application/yin+xml", ".yin")]
+    [DataRow("application/zip", ".zip")]
+    [DataRow("application/acad", ".dwg")]
+    [DataRow("application/astound", ".asd")]
+    [DataRow("application/dsptype", ".tsp")]
+    [DataRow("application/dxf", ".dxf")]
+    [DataRow("application/force-download", ".reg")]
+    [DataRow("application/futuresplash", ".spl")]
+    [DataRow("application/listenup", ".ptlk")]
+    [DataRow("application/mbedlet", ".mbd")]
+    [DataRow("application/mif", ".mif")]
+    [DataRow("application/msexcel", ".xls")]
+    [DataRow("application/mshelp", ".chm")]
+    [DataRow("application/mspowerpoint", ".ppt")]
+    [DataRow("application/rtc", ".rtc")]
+    [DataRow("application/studiom", ".smp")]
+    [DataRow("application/toolbook", ".tbk")]
+    [DataRow("application/vocaltec-media-desc", ".vmd")]
+    [DataRow("application/vocaltec-media-file", ".vmf")]
+    [DataRow("application/x-compress", ".z")]
+    [DataRow("application/x-httpd-php", ".php")]
+    [DataRow("application/x-mif", ".mif")]
+    [DataRow("application/x-nschat", ".nsc")]
+    [DataRow("application/x-sprite", ".spr")]
+    [DataRow("application/x-supercard", ".sca")]
+    [DataRow("application/x-troff", ".t")]
+    [DataRow("application/x-troff-man", ".man")]
+    [DataRow("application/x-troff-me", ".me")]
+    [DataRow("application/x-troff-ms", ".me")]
+    [DataRow("application/pgp-keys", ".pgp")]
+    [DataRow("application/x-x509-user-cert", ".crt")]
+    [DataRow("application/x-pem-file", ".pem")]
+    [DataRow("application/x-apple-diskimage-udif", ".udif")]
+    [DataRow("application/vnd.rar", ".rar")]
+    [DataRow("application/x-zoo", ".zoo")]
+    [DataRow("application/vnd.ms-package.3dmanufacturing-3dmodel+xml", ".3mf")]
+    [DataRow("application/vnd.ms-printing.printticket+xml", ".3mf")]
+    [DataRow("application/x-ofx", ".ofx")]
+    [DataRow("application/x-font-ttf", ".ttf")]
+    [DataRow("application/font-sfnt", ".ttf")]
+    [DataRow("application/font-woff", ".woff")]
+    [DataRow("application/geo+json", ".geojson")]
+    [DataRow("application/itn", ".itn")]
+    [DataRow("application/x-amf", ".amf")]
+    [DataRow("application/x-3ds", ".3ds")]
+    [DataRow("application/x-httpd-java", ".class")]
+    [DataRow("application/fits", ".fits")]
+    [DataRow("application/bat", ".bat")]
+    [DataRow("application/x-bat", ".bat")]
+    [DataRow("application/x-msdos-program", ".bat")]
+    [DataRow("application/x-ecmascript", ".js")]
+    [DataRow("application/x-javascript", ".js")]
+    [DataRow("audio/adpcm", ".adp")]
+    [DataRow("audio/basic", ".au")]
+    [DataRow("audio/midi", ".mid")]
+    [DataRow("audio/mp4", ".m4a")]
+    [DataRow("audio/mpeg", ".mpga")]
+    [DataRow("audio/ogg", ".oga")]
+    [DataRow("audio/s3m", ".s3m")]
+    [DataRow("audio/silk", ".sil")]
+    [DataRow("audio/vnd.dece.audio", ".uva")]
+    [DataRow("audio/vnd.digital-winds", ".eol")]
+    [DataRow("audio/vnd.dra", ".dra")]
+    [DataRow("audio/vnd.dts", ".dts")]
+    [DataRow("audio/vnd.dts.hd", ".dtshd")]
+    [DataRow("audio/vnd.lucent.voice", ".lvp")]
+    [DataRow("audio/vnd.ms-playready.media.pya", ".pya")]
+    [DataRow("audio/vnd.nuera.ecelp4800", ".ecelp4800")]
+    [DataRow("audio/vnd.nuera.ecelp7470", ".ecelp7470")]
+    [DataRow("audio/vnd.nuera.ecelp9600", ".ecelp9600")]
+    [DataRow("audio/vnd.rip", ".rip")]
+    [DataRow("audio/webm", ".weba")]
+    [DataRow("audio/x-aac", ".aac")]
+    [DataRow("audio/x-aiff", ".aif")]
+    [DataRow("audio/x-caf", ".caf")]
+    [DataRow("audio/x-flac", ".flac")]
+    [DataRow("audio/x-matroska", ".mka")]
+    [DataRow("audio/x-mpegurl", ".m3u")]
+    [DataRow("audio/x-ms-wax", ".wax")]
+    [DataRow("audio/x-ms-wma", ".wma")]
+    [DataRow("audio/x-pn-realaudio", ".ram")]
+    [DataRow("audio/x-pn-realaudio-plugin", ".rmp")]
+    [DataRow("audio/x-wav", ".wav")]
+    [DataRow("audio/xm", ".xm")]
+    [DataRow("audio/echospeech", ".es")]
+    [DataRow("audio/tsplayer", ".tsi")]
+    [DataRow("audio/voxware", ".vox")]
+    [DataRow("audio/wav", ".wav")]
+    [DataRow("audio/x-dspeech", ".dus")]
+    [DataRow("audio/x-midi", ".mid")]
+    [DataRow("audio/x-mpeg", ".mp2")]
+    [DataRow("audio/x-qt-stream", ".stream")]
+    [DataRow("audio/aac", ".aac")]
+    [DataRow("audio/ac3", ".ac3")]
+    [DataRow("audio/x-scpls", ".pls")]
+    [DataRow("chemical/x-cdx", ".cdx")]
+    [DataRow("chemical/x-cif", ".cif")]
+    [DataRow("chemical/x-cmdf", ".cmdf")]
+    [DataRow("chemical/x-cml", ".cml")]
+    [DataRow("chemical/x-csml", ".csml")]
+    [DataRow("chemical/x-xyz", ".xyz")]
+    [DataRow("chemical/x-mdl-molfile", ".mol")]
+    [DataRow("chemical/x-daylight-smiles", ".smi")]
+    [DataRow("font/collection", ".ttc")]
+    [DataRow("font/otf", ".otf")]
+    [DataRow("font/ttf", ".ttf")]
+    [DataRow("font/woff", ".woff")]
+    [DataRow("font/woff2", ".woff2")]
+    [DataRow("font/sfnt", ".ttf")]
+    [DataRow("message/rfc822", ".eml")]
+    [DataRow("model/iges", ".igs")]
+    [DataRow("model/mesh", ".msh")]
+    [DataRow("model/vnd.collada+xml", ".dae")]
+    [DataRow("model/vnd.dwf", ".dwf")]
+    [DataRow("model/vnd.gdl", ".gdl")]
+    [DataRow("model/vnd.gtw", ".gtw")]
+    [DataRow("model/vnd.mts", ".mts")]
+    [DataRow("model/vnd.vtu", ".vtu")]
+    [DataRow("model/vrml", ".wrl")]
+    [DataRow("model/x3d+binary", ".x3db")]
+    [DataRow("model/x3d+vrml", ".x3dv")]
+    [DataRow("model/x3d+xml", ".x3d")]
+    [DataRow("model/3mf", ".3mf")]
+    [DataRow("model/gltf+json", ".gltf")]
+    [DataRow("model/gltf-binary", ".glb")]
+    [DataRow("x-conference/x-cooltalk", ".ice")]
+    [DataRow("drawing/x-dwf", ".dwf")]
+    [DataRow("workbook/formulaone", ".vts")]
+    [DataRow("x-world/x-3dmf", ".qd3")]
+    [DataRow("x-world/x-vrml", ".wrl")]
 
-        Assert.AreEqual(1, mimeType2.Parameters().Count());
-    }
+    // Test the default cache data to ensure, that this even works
+    // if this data is retrieved from the resources rather than from the cache
+    [DataRow("application/json", ".json")]
+    [DataRow("application/pdf", ".pdf")]
+    [DataRow("application/rtf", ".rtf")]
+    [DataRow("application/xml", ".xml")]
+    [DataRow("application/zip", ".zip")]
+    [DataRow("image/gif", ".gif")]
+    [DataRow("image/jpeg", ".jpg")]
+    [DataRow("image/png", ".png")]
+    [DataRow("image/svg+xml", ".svg")]
+    [DataRow("message/rfc822", ".eml")]
+    [DataRow("text/html", ".htm")]
+    [DataRow("text/plain", ".txt")]
 
-    
+    // Miscellaneous tests:
+    [DataRow("x-conference/x-cooltalk", ".ice")]
+    [DataRow("font/collection", ".ttc")]
+    [DataRow("font/woff2", ".woff2")]
+    [DataRow("font/blabla", ".bin")]
+    [DataRow("application/json", ".json")]
+    [DataRow("image/vnd.adobe.photoshop", ".psd")]
+    [DataRow("application/json", ".json")]
+    [DataRow("blabla/nichda", ".bin")]
+    public void GetFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(extension, MimeType.GetFileTypeExtension(mimeType));
+
+    #endregion
+
+    //[TestMethod]
+    //public void GenerateTests()
+    //{
+    //    UnitTestGenerator.GenerateTests();
+    //}
+
+
 
 }

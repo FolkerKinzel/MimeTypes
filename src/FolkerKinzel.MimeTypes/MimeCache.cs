@@ -25,7 +25,7 @@ namespace FolkerKinzel.MimeTypes;
 /// </remarks>
 /// <example>
 /// <para>
-/// Get a <see cref="MimeType"/> instance from a file type extension and vice versa:
+/// Get a <see cref="MimeTypeInfo"/> instance from a file type extension and vice versa:
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
 /// </example>
@@ -107,13 +107,14 @@ public static class MimeCache
     }
 
 
-    internal static string GetMimeType(string fileTypeExtension)
+    internal static string GetMimeType(string? fileTypeExtension)
         => string.IsNullOrWhiteSpace(fileTypeExtension) ? DEFAULT_MIME_TYPE : DoGetMimeType(fileTypeExtension);
 
 
     [SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
     internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
     {
+        fileTypeExtension = fileTypeExtension.Trim();
         if (fileTypeExtension.StartsWith('.'))
         {
             fileTypeExtension = fileTypeExtension.Slice(1);
@@ -171,13 +172,13 @@ public static class MimeCache
     }
 
 
-    internal static string GetFileTypeExtension(string? mimeType)
+    internal static string GetFileTypeExtension(string? mimeType, bool leadingDot)
     {
         return mimeType is null
-            ? PrepareFileTypeExtension(DEFAULT_FILE_TYPE_EXTENSION)
+            ? PrepareFileTypeExtension(DEFAULT_FILE_TYPE_EXTENSION, leadingDot)
             : TryGetFileTypeExtensionFromCache(mimeType, out string? fileTypeExtension)
-                    ? PrepareFileTypeExtension(fileTypeExtension)
-                    : PrepareFileTypeExtension(GetFileTypeExtensionFromResources(mimeType));
+                    ? PrepareFileTypeExtension(fileTypeExtension, leadingDot)
+                    : PrepareFileTypeExtension(GetFileTypeExtensionFromResources(mimeType), leadingDot);
 
         //////////////////////////////////////////
 
@@ -215,7 +216,7 @@ public static class MimeCache
 
 
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static string PrepareFileTypeExtension(string fileTypeExtension) => $".{fileTypeExtension}";
+    private static string PrepareFileTypeExtension(string fileTypeExtension, bool leadingDot) => leadingDot ? $".{fileTypeExtension}" : fileTypeExtension;
 
 
     private static void SetCapacity()

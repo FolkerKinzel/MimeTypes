@@ -2,7 +2,7 @@
 
 internal sealed class MimeTypeEqualityComparerIgnoreParameters : MimeTypeEqualityComparer
 {
-    public override bool Equals(MimeType x, MimeType y) => x.Equals(y, true);
+    public override bool Equals(MimeTypeInfo x, MimeTypeInfo y) => x.Equals(y, true);
 
-    public override int GetHashCode([DisallowNull] MimeType obj) => obj.GetHashCode(true);
+    public override int GetHashCode([DisallowNull] MimeTypeInfo obj) => obj.GetHashCode(true);
 }

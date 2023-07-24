@@ -3,17 +3,17 @@ using FolkerKinzel.MimeTypes.Properties;
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
+public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
 {
-    private static MimeType ParseInternal(ref ReadOnlyMemory<char> value)
+    private static MimeTypeInfo ParseInternal(ref ReadOnlyMemory<char> value)
     {
-        return TryParseInternal(ref value, out MimeType mimeType)
+        return TryParseInternal(ref value, out MimeTypeInfo mimeType)
                 ? mimeType
                 : throw new ArgumentException(string.Format(Res.InvalidMimeType, nameof(value)), nameof(value));
     }
 
 
-    private static bool TryParseInternal(ref ReadOnlyMemory<char> value, out MimeType mimeType)
+    private static bool TryParseInternal(ref ReadOnlyMemory<char> value, out MimeTypeInfo mimeType)
     {
         mimeType = default;
         value = value.TrimStart();
@@ -73,7 +73,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
         }
 
         int idx = InitIdx(parameterSeparatorIndex, topLevelMediaTypeSpan.Length, subTypeSpan.Length);
-        mimeType = new MimeType(in value, idx);
+        mimeType = new MimeTypeInfo(in value, idx);
         return true;
     }
 
@@ -82,7 +82,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
                                    bool hasParameters,
                                    ReadOnlySpan<char> mediaPartSpan,
                                    ReadOnlySpan<char> parameterSpan,
-                                   out MimeType mimeType)
+                                   out MimeTypeInfo mimeType)
     {
         var sb = new StringBuilder(capacity);
         _ = sb.Append(mediaPartSpan).ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty);

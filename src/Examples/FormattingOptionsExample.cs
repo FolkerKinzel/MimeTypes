@@ -6,7 +6,7 @@ public static class FormattingOptionsExample
 {
     public static void Example()
     {
-        MimeType mime =
+        MimeTypeInfo mime =
             MimeTypeBuilder.Create("application", "x-stuff")
                            .AppendParameter("short", "s")
                            .AppendParameter("key-long",

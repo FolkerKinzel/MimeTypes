@@ -1,21 +1,21 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
+public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
 {
     /// <summary>
-    /// Parses a <see cref="string"/> as <see cref="MimeType"/>.
+    /// Parses a <see cref="string"/> as <see cref="MimeTypeInfo"/>.
     /// </summary>
     /// <param name="value">The <see cref="string"/> to parse.</param>
-    /// <returns>The <see cref="MimeType"/> instance, which <paramref name="value"/> represents.</returns>
+    /// <returns>The <see cref="MimeTypeInfo"/> instance, which <paramref name="value"/> represents.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeTypeInfo"/>.</exception>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
-    public static MimeType Parse(string value)
+    public static MimeTypeInfo Parse(string value)
     {
         if (value is null)
         {
@@ -28,26 +28,26 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
 
     /// <summary>
-    /// Parses a <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> as <see cref="MimeType"/>.
+    /// Parses a <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> as <see cref="MimeTypeInfo"/>.
     /// </summary>
     /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse.</param>
-    /// <returns>The <see cref="MimeType"/> instance, which <paramref name="value"/> represents.</returns>
-    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
+    /// <returns>The <see cref="MimeTypeInfo"/> instance, which <paramref name="value"/> represents.</returns>
+    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeTypeInfo"/>.</exception>
     /// <seealso cref="Parse(string)"/>
-    /// <seealso cref="TryParse(ReadOnlyMemory{char}, out MimeType)"/>
+    /// <seealso cref="TryParse(ReadOnlyMemory{char}, out MimeTypeInfo)"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MimeType Parse(ReadOnlyMemory<char> value) =>
+    public static MimeTypeInfo Parse(ReadOnlyMemory<char> value) =>
         ParseInternal(ref value);
 
 
     /// <summary>
-    /// Tries to parse a <see cref="string"/> as <see cref="MimeType"/>.
+    /// Tries to parse a <see cref="string"/> as <see cref="MimeTypeInfo"/>.
     /// </summary>
     /// <param name="value">The <see cref="string"/> to parse.</param>
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
-    /// <see cref="MimeType"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
-    /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeType"/>; otherwise, <c>false</c>.</returns>
-    public static bool TryParse(string? value, out MimeType mimeType)
+    /// <see cref="MimeTypeInfo"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
+    /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeTypeInfo"/>; otherwise, <c>false</c>.</returns>
+    public static bool TryParse(string? value, out MimeTypeInfo mimeType)
     {
         if (value is null)
         {
@@ -61,23 +61,23 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
 
     /// <summary>
-    /// Tries to parse a <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> as <see cref="MimeType"/>.
+    /// Tries to parse a <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> as <see cref="MimeTypeInfo"/>.
     /// </summary>
     /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse.</param>
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
-    /// <see cref="MimeType"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
-    /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeType"/>; otherwise, <c>false</c>.</returns>
+    /// <see cref="MimeTypeInfo"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
+    /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeTypeInfo"/>; otherwise, <c>false</c>.</returns>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static bool TryParse(ReadOnlyMemory<char> value, out MimeType mimeType) =>
+    public static bool TryParse(ReadOnlyMemory<char> value, out MimeTypeInfo mimeType) =>
         TryParseInternal(ref value, out mimeType);
 
 
     /// <summary>
-    /// Creates an appropriate <see cref="MimeType"/> instance for a given
+    /// Creates an appropriate <see cref="MimeTypeInfo"/> instance for a given
     /// file type extension.
     /// </summary>
     /// <param name="fileTypeExtension">The file type extension to search for.</param>
-    /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileTypeExtension"/>.</returns>
+    /// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileTypeExtension"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to find often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
@@ -85,26 +85,25 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </remarks>
     /// <example>
     /// <para>
-    /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
-    /// from <see cref="MimeType"/> instances:
+    /// Getting <see cref="MimeTypeInfo"/> instances by parsing file type extensions and getting appropriate file type extensions
+    /// from <see cref="MimeTypeInfo"/> instances:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
-    public static MimeType FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension)
+    public static MimeTypeInfo FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension)
     {
         ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
-        _ = TryParseInternal(ref memory, out MimeType inetMediaType);
+        _ = TryParseInternal(ref memory, out MimeTypeInfo inetMediaType);
         return inetMediaType;
     }
 
 
     /// <summary>
-    /// Creates an appropriate <see cref="MimeType"/> instance for a given
+    /// Creates an appropriate <see cref="MimeTypeInfo"/> instance for a given
     /// file type extension.
     /// </summary>
     /// <param name="fileTypeExtension">The file type extension to search for.</param>
-    /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileTypeExtension"/>.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="fileTypeExtension"/> is <c>null</c>.</exception>
+    /// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileTypeExtension"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to find often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
@@ -112,20 +111,15 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </remarks>
     /// <example>
     /// <para>
-    /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
-    /// from <see cref="MimeType"/> instances:
+    /// Getting <see cref="MimeTypeInfo"/> instances by parsing file type extensions and getting appropriate file type extensions
+    /// from <see cref="MimeTypeInfo"/> instances:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
-    public static MimeType FromFileTypeExtension(string fileTypeExtension)
+    public static MimeTypeInfo FromFileTypeExtension(string? fileTypeExtension)
     {
-        if (fileTypeExtension is null)
-        {
-            throw new ArgumentNullException(nameof(fileTypeExtension));
-        }
-
         ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
-        _ = TryParseInternal(ref memory, out MimeType inetMediaType);
+        _ = TryParseInternal(ref memory, out MimeTypeInfo inetMediaType);
         return inetMediaType;
     }
 

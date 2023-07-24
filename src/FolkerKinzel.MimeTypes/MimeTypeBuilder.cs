@@ -4,15 +4,15 @@ using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Fluent API to create <see cref="MimeType"/> instances.
+/// Fluent API to create <see cref="MimeTypeInfo"/> instances.
 /// </summary>
 /// <example>
 /// <para>
-/// Build, serialize, and parse a <see cref="MimeType"/> instance:
+/// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
 /// </example>
-/// <seealso cref="MimeType"/>
+/// <seealso cref="MimeTypeInfo"/>
 public sealed class MimeTypeBuilder
 {
     private ParameterModelDictionary? _dic;
@@ -22,8 +22,8 @@ public sealed class MimeTypeBuilder
     /// <summary>
     /// Initializes a new <see cref="MimeTypeBuilder"/> object.
     /// </summary>
-    /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
-    /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
+    /// <param name="mediaType">The <see cref="MimeTypeInfo.MediaType"/>.</param>
+    /// <param name="subType">The <see cref="MimeTypeInfo.SubType"/>.</param>
     /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> 
     /// or <paramref name="subType"/> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException">
@@ -42,8 +42,8 @@ public sealed class MimeTypeBuilder
     /// <summary>
     /// Creates a new <see cref="MimeTypeBuilder"/> object.
     /// </summary>
-    /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
-    /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
+    /// <param name="mediaType">The <see cref="MimeTypeInfo.MediaType"/>.</param>
+    /// <param name="subType">The <see cref="MimeTypeInfo.SubType"/>.</param>
     /// <returns>A reference to the <see cref="MimeTypeBuilder"/> that is created.</returns>
     /// 
     /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> 
@@ -55,17 +55,17 @@ public sealed class MimeTypeBuilder
     /// </exception>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
-    /// <seealso cref="MimeType"/>
+    /// <seealso cref="MimeTypeInfo"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeTypeBuilder Create(string mediaType, string subType) => new(mediaType, subType);
 
 
     /// <summary>
-    /// Adds a <see cref="MimeTypeParameter"/> to the <see cref="MimeType"/> instance to create.
+    /// Adds a <see cref="MimeTypeParameter"/> to the <see cref="MimeTypeInfo"/> instance to create.
     /// </summary>
     /// <param name="key">The name of the parameter.</param>
     /// <param name="value">The value of the parameter.</param>
@@ -73,7 +73,7 @@ public sealed class MimeTypeBuilder
     /// <returns>A reference to the <see cref="MimeTypeBuilder"/> instance on which the method was called.</returns>
     /// 
     /// <remarks>
-    /// The <paramref name="key"/> of a parameter must be unique inside of a <see cref="MimeType"/>. It's compared 
+    /// The <paramref name="key"/> of a parameter must be unique inside of a <see cref="MimeTypeInfo"/>. It's compared 
     /// case insensitive. If this method is called several times with equal keys, the last wins.
     /// </remarks>
     /// 
@@ -104,7 +104,7 @@ public sealed class MimeTypeBuilder
     /// </exception>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
@@ -132,15 +132,15 @@ public sealed class MimeTypeBuilder
     }
 
     /// <summary>
-    /// Builds the <see cref="MimeType"/>.
+    /// Builds the <see cref="MimeTypeInfo"/>.
     /// </summary>
-    /// <returns>The new <see cref="MimeType"/> instance.</returns>
+    /// <returns>The new <see cref="MimeTypeInfo"/> instance.</returns>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
-    /// <seealso cref="MimeType"/>
-    public MimeType Build() => new(_mediaType, _subType, _dic);
+    /// <seealso cref="MimeTypeInfo"/>
+    public MimeTypeInfo Build() => new(_mediaType, _subType, _dic);
 }

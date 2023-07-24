@@ -11,7 +11,7 @@ public static class BuildAndParseExample
         It also contains a few Non-ASCII-Characters: äöß.
         """;
 
-        MimeType mimeType1 = 
+        MimeTypeInfo mimeType1 = 
             MimeTypeBuilder.Create("application", "x-stuff")
                            .AppendParameter("first-parameter", longParameterValue, "en")
                            .AppendParameter("second-parameter", "Parameter with  \\, = and \".")
@@ -20,7 +20,7 @@ public static class BuildAndParseExample
         string s = mimeType1.ToString(MimeFormats.LineWrapping);
         Console.WriteLine(s);
 
-        var mimeType2 = MimeType.Parse(s);
+        var mimeType2 = MimeTypeInfo.Parse(s);
 
         Console.WriteLine();
         Console.WriteLine($"Media Type: {mimeType2.MediaType.ToString()}");

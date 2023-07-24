@@ -15,14 +15,14 @@ public static class EqualityExample
         const string media7 = "text/plain; OTHER-PARAMETER=other_value; charset=ISO-8859-1";
         const string media8 = "text/plain; charset=iso-8859-1; other-parameter=OTHER_VALUE";
 
-        if (MimeType.Parse(media1) == MimeType.Parse(media2) &&
-           MimeType.Parse(media2) != MimeType.Parse(media3) &&
-           MimeType.Parse(media2) != MimeType.Parse(media4) &&
-           MimeType.Parse(media2).Equals(MimeType.Parse(media4), ignoreParameters: true) &&
-           MimeType.Parse(media4) == MimeType.Parse(media5) &&
-           MimeType.Parse(media4) != MimeType.Parse(media6) &&
-           MimeType.Parse(media6) == MimeType.Parse(media7) &&
-           MimeType.Parse(media6) != MimeType.Parse(media8))
+        if (MimeTypeInfo.Parse(media1) == MimeTypeInfo.Parse(media2) &&
+           MimeTypeInfo.Parse(media2) != MimeTypeInfo.Parse(media3) &&
+           MimeTypeInfo.Parse(media2) != MimeTypeInfo.Parse(media4) &&
+           MimeTypeInfo.Parse(media2).Equals(MimeTypeInfo.Parse(media4), ignoreParameters: true) &&
+           MimeTypeInfo.Parse(media4) == MimeTypeInfo.Parse(media5) &&
+           MimeTypeInfo.Parse(media4) != MimeTypeInfo.Parse(media6) &&
+           MimeTypeInfo.Parse(media6) == MimeTypeInfo.Parse(media7) &&
+           MimeTypeInfo.Parse(media6) != MimeTypeInfo.Parse(media8))
         {
             Console.WriteLine("Success");
         }

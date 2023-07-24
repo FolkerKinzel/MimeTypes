@@ -21,8 +21,8 @@ public class MimeTypeEqualityComparerTests
         {
             new ParameterModel("para1", "the value")
         };
-        var mime1 = new MimeType("image", "png", dic);
-        var mime2 = new MimeType("image", "png");
+        var mime1 = new MimeTypeInfo("image", "png", dic);
+        var mime2 = new MimeTypeInfo("image", "png");
 
         MimeTypeEqualityComparer cmp1 = MimeTypeEqualityComparer.IgnoreParameters;
         MimeTypeEqualityComparer cmp2 = MimeTypeEqualityComparer.Default;

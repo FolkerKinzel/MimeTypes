@@ -2,7 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
+public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
 {
     /// <summary>
     /// Creates a <see cref="string"/> representation of the instance that includes the 
@@ -11,7 +11,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <returns>A <see cref="string"/> representation of the instance 
     /// (according to RFC 2045 and RFC 2231) that includes the <see cref="Parameters"/>.</returns>
     /// <example>
-    /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+    /// <para>Format a <see cref="MimeTypeInfo"/> instance into a standards-compliant string using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
     public override string ToString() => ToString(MimeFormats.Default);
@@ -29,7 +29,7 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <see cref="MinimumLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+    /// <para>Format a <see cref="MimeTypeInfo"/> instance into a standards-compliant string using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
     public string ToString(MimeFormats options, int lineLength = MinimumLineLength)

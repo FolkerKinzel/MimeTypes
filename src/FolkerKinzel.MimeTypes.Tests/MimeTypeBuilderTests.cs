@@ -43,7 +43,7 @@ public class MimeTypeBuilderTests
                    .AppendParameter("charset", "utf-8")
                    .AppendParameter("charset", "UTF-8");
 
-        MimeType mime = builder.Build();
+        MimeTypeInfo mime = builder.Build();
         Assert.AreEqual(1, mime.Parameters().Count());
         builder.ClearParameters();
         mime = builder.Build();

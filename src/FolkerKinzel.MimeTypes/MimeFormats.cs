@@ -1,23 +1,23 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Options for formatting a <see cref="MimeType"/> as <see cref="string"/>. The flags can be combined.
+/// Options for formatting a <see cref="MimeTypeInfo"/> as <see cref="string"/>. The flags can be combined.
 /// </summary>
 /// <example>
-/// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+/// <para>Format a <see cref="MimeTypeInfo"/> instance into a standards-compliant string using several options:</para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
 /// </example>
 [Flags]
 public enum MimeFormats
 {
     /// <summary>
-    /// Specifies the default format (including the <see cref="MimeType.Parameters"/>, without 
+    /// Specifies the default format (including the <see cref="MimeTypeInfo.Parameters"/>, without 
     /// line wrapping, and with one <c>SPACE</c> character (U+0020) before each parameter).
     /// </summary>
     Default = 0,
 
     /// <summary>
-    /// Specifies that the <see cref="MimeType.Parameters"/> are not included in the output and
+    /// Specifies that the <see cref="MimeTypeInfo.Parameters"/> are not included in the output and
     /// any other option is ignored.
     /// </summary>
     IgnoreParameters = 1,

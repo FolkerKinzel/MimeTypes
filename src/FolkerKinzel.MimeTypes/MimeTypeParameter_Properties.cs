@@ -62,7 +62,7 @@ public readonly partial struct MimeTypeParameter
     /// </summary>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
@@ -74,7 +74,7 @@ public readonly partial struct MimeTypeParameter
     /// </summary>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
@@ -86,7 +86,7 @@ public readonly partial struct MimeTypeParameter
     /// </summary>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>

@@ -2,7 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
+public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
 {
     private readonly ReadOnlyMemory<char> _mimeTypeString;
 
@@ -31,14 +31,14 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// <summary>
     /// Gets the parameters.
     /// </summary>
-    /// <returns>The collection of parameters of the <see cref="MimeType"/>.</returns>
+    /// <returns>The collection of parameters of the <see cref="MimeTypeInfo"/>.</returns>
     /// <remarks>
     /// <note type="tip">Iterating through the <see cref="MimeTypeParameter"/>s can be an expensive operation
     /// in some cases. Consider to call <see cref="Enumerable.ToArray{TSource}(IEnumerable{TSource})"/>
     /// on the return value if you need it more than once.</note></remarks>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
@@ -56,15 +56,15 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
 
 
     /// <summary>
-    /// Gets an empty <see cref="MimeType"/> structure.
+    /// Gets an empty <see cref="MimeTypeInfo"/> structure.
     /// </summary>
-    public static MimeType Empty => default;
+    public static MimeTypeInfo Empty => default;
 
 
     /// <summary>
-    /// Finds an appropriate file type extension for the <see cref="MimeType"/> instance.
+    /// Finds an appropriate file type extension for the <see cref="MimeTypeInfo"/> instance.
     /// </summary>
-    /// <returns>An appropriate file type extension for the <see cref="MimeType"/> instance.</returns>
+    /// <returns>An appropriate file type extension for the <see cref="MimeTypeInfo"/> instance.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
@@ -72,37 +72,37 @@ public readonly partial struct MimeType : IEquatable<MimeType>, ICloneable
     /// </remarks>
     /// <example>
     /// <para>
-    /// Get a <see cref="MimeType"/> instance from a file type extension and vice versa:
+    /// Get a <see cref="MimeTypeInfo"/> instance from a file type extension and vice versa:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
-    public string GetFileTypeExtension()
-        => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeFormats.IgnoreParameters));
+    public string GetFileTypeExtension(bool leadingDot)
+        => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeFormats.IgnoreParameters), leadingDot);
 
 
-    /// <summary>
-    /// Finds an appropriate file type extension for <paramref name="mimeTypeString"/>.
-    /// </summary>
-    /// <param name="mimeTypeString">A <see cref="string"/> that represents an Internet Media Type ("MIME type")
-    /// according to RFC 2045, RFC 2046 and RFC 2231.</param>
-    /// <returns>An appropriate file type extension for <paramref name="mimeTypeString"/>.</returns>
-    /// <remarks>
-    /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
-    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
-    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
-    /// </remarks>
-    /// <example>
-    /// <para>
-    /// Getting <see cref="MimeType"/> instances by parsing file type extensions and getting appropriate file type extensions
-    /// from <see cref="MimeType"/> instances:
-    /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
-    /// </example>
-    public static string GetFileTypeExtension(string? mimeTypeString)
-    {
-        _ = TryParse(mimeTypeString, out MimeType mimeType);
-        return mimeType.GetFileTypeExtension();
-    }
+    ///// <summary>
+    ///// Finds an appropriate file type extension for <paramref name="mimeTypeString"/>.
+    ///// </summary>
+    ///// <param name="mimeTypeString">A <see cref="string"/> that represents an Internet Media Type ("MIME type")
+    ///// according to RFC 2045, RFC 2046 and RFC 2231.</param>
+    ///// <returns>An appropriate file type extension for <paramref name="mimeTypeString"/>.</returns>
+    ///// <remarks>
+    ///// Internally a small memory cache is used to retrieve often used file type extensions faster. You
+    ///// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
+    ///// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+    ///// </remarks>
+    ///// <example>
+    ///// <para>
+    ///// Getting <see cref="MimeTypeInfo"/> instances by parsing file type extensions and getting appropriate file type extensions
+    ///// from <see cref="MimeTypeInfo"/> instances:
+    ///// </para>
+    ///// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
+    ///// </example>
+    //public static string GetFileTypeExtension(string? mimeTypeString)
+    //{
+    //    _ = TryParse(mimeTypeString, out MimeTypeInfo mimeType);
+    //    return mimeType.GetFileTypeExtension();
+    //}
 
 
     /// <summary>

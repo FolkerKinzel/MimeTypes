@@ -3,7 +3,7 @@
 namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Encapsulates a parameter of a <see cref="MimeType"/>.
+/// Encapsulates a parameter of a <see cref="MimeTypeInfo"/>.
 /// </summary>
 /// <remarks>
 /// <note type="tip">
@@ -14,17 +14,17 @@ namespace FolkerKinzel.MimeTypes;
 /// If you intend to hold a <see cref="MimeTypeParameter"/> for a long time in memory and if this <see cref="MimeTypeParameter"/> is parsed
 /// from a <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> that comes from a very long <see cref="string"/>, 
 /// keep in mind, that the <see cref="MimeTypeParameter"/> holds a reference to that <see cref="string"/>. Consider in this case to make
-/// a copy of the <see cref="MimeType"/> structure with <see cref="MimeTypeParameter.Clone"/>: The copy is built on a separate <see cref="string"/>,
+/// a copy of the <see cref="MimeTypeInfo"/> structure with <see cref="MimeTypeParameter.Clone"/>: The copy is built on a separate <see cref="string"/>,
 /// which is case-normalized and only as long as needed.
 /// </para>
 /// </note>
 /// </remarks>
 /// <example>
 /// <para>
-/// Build, serialize, and parse a <see cref="MimeType"/> instance:
+/// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
-/// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+/// <para>Format a <see cref="MimeTypeInfo"/> instance into a standards-compliant string using several options:</para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
 /// </example>
 [StructLayout(LayoutKind.Auto)]
