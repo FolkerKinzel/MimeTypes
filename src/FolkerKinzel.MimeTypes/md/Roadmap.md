@@ -1,5 +1,8 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
+### 4.0.0-beta.1
+
+
 ### 3.0.0-beta.1
 - [x] Replace `FormattingOptions` with `MimeFormats`
 - [x] Rename the parameters `alwaysUrlEncoded` in `MimeTypeParameter.ToString(...)` and `MimeTypeParameter.AppendTo(...)` into `urlFormat`
