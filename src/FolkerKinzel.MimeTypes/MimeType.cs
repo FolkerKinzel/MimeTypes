@@ -1,8 +1,30 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
+/// <summary>
+/// Methods that retrieve an appropriate file type extension for a given Internet Media Type <see cref="string"/> ("MIME type") or
+/// an appropriate Internet Media Type <see cref="string"/> for a given file type extension.
+/// </summary>
 public static class MimeType
 {
-    public static string GetFileTypeExtension(string? mimeType, bool leadingDot = true)
+    /// <summary>
+    /// Gets an appropriate file type extension for <paramref name="mimeType"/>.
+    /// </summary>
+    /// <param name="mimeType">A string that represents an Internet Media Type ("MIME type") or <c>null</c>.</param>
+    /// <param name="includePeriod"><c>true</c> specifies, that the period "." (U+002E) is included in the retrieved file type 
+    /// extension, <c>false</c>, that it's not.</param>
+    /// <returns>An appropriate file type extension for <paramref name="mimeType"/>.</returns>
+    /// <remarks>
+    /// <para>
+    /// If no other file type extension could be found, <see cref="MimeCache.DefaultFileTypeExtension"/>
+    /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
+    /// </para>
+    /// <para>
+    /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
+    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
+    /// </para>
+    /// </remarks>
+    public static string GetFileTypeExtension(string? mimeType, bool includePeriod = true)
     {
         if (mimeType != null)
         {
@@ -17,10 +39,29 @@ public static class MimeType
                 ? null
                 : mimeType.ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty).ToLowerInvariant();
         }
-        return MimeCache.GetFileTypeExtension(mimeType, leadingDot);
+        return MimeCache.GetFileTypeExtension(mimeType, includePeriod);
     }
 
-    public static string GetFileTypeExtension(ReadOnlySpan<char> mimeType, bool leadingDot = true)
+
+    /// <summary>
+    /// Gets an appropriate file type extension for <paramref name="mimeType"/>.
+    /// </summary>
+    /// <param name="mimeType">A read-only character span that represents an Internet Media Type ("MIME type").</param>
+    /// <param name="includePeriod"><c>true</c> specifies, that the period "." (U+002E) is included in the retrieved file type 
+    /// extension, <c>false</c>, that it's not.</param>
+    /// <returns>An appropriate file type extension for <paramref name="mimeType"/>.</returns>
+    /// <remarks>
+    /// <para>
+    /// If no other file type extension could be found, <see cref="MimeCache.DefaultFileTypeExtension"/>
+    /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
+    /// </para>
+    /// <para>
+    /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
+    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
+    /// </para>
+    /// </remarks>
+    public static string GetFileTypeExtension(ReadOnlySpan<char> mimeType, bool includePeriod = true)
     {
         int parameterStartIdx = mimeType.IndexOf(';');
 
@@ -33,13 +74,45 @@ public static class MimeType
             ? null
             : mimeType.ToString().ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty).ToLowerInvariant();
 
-        return MimeCache.GetFileTypeExtension(mimeTypeString, leadingDot);
+        return MimeCache.GetFileTypeExtension(mimeTypeString, includePeriod);
     }
 
-
+    /// <summary>
+    /// Gets an appropriate Internet Media Type ("MIME type") for a given file type extension.
+    /// </summary>
+    /// <param name="fileTypeExtension">The file type extension or <c>null</c>.</param>
+    /// <returns>An appropriate Internet Media Type ("MIME type") for <paramref name="fileTypeExtension"/>.</returns>
+    /// <remarks>
+    /// <para>
+    /// If no other Internet Media Type could be found, <see cref="MimeCache.DefaultMimeType"/>
+    /// is returned.
+    /// </para>
+    /// <para>
+    /// Internally a small memory cache is used to retrieve often used Internet Media Types faster. You
+    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
+    /// </para>
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string FromFileTypeExtension(string? fileTypeExtension) => MimeCache.GetMimeType(fileTypeExtension);
 
+
+    /// <summary>
+    /// Gets an appropriate Internet Media Type ("MIME type") for a given file type extension.
+    /// </summary>
+    /// <param name="fileTypeExtension">The file type extension or <c>null</c>.</param>
+    /// <returns>An appropriate Internet Media Type ("MIME type") for <paramref name="fileTypeExtension"/>.</returns>
+    /// <remarks>
+    /// <para>
+    /// If no other Internet Media Type could be found, <see cref="MimeCache.DefaultMimeType"/>
+    /// is returned.
+    /// </para>
+    /// <para>
+    /// Internally a small memory cache is used to retrieve often used Internet Media Types faster. You
+    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
+    /// </para>
+    /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension) => MimeCache.GetMimeType(fileTypeExtension);
 }

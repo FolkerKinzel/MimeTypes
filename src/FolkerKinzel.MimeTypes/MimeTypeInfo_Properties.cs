@@ -62,13 +62,21 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
 
 
     /// <summary>
-    /// Finds an appropriate file type extension for the <see cref="MimeTypeInfo"/> instance.
+    /// Gets an appropriate file type extension for the <see cref="MimeTypeInfo"/> instance.
     /// </summary>
+    /// <param name="includePeriod"><c>true</c> specifies, that the period "." (U+002E) is included in the retrieved file type 
+    /// extension, <c>false</c>, that it's not.</param>
     /// <returns>An appropriate file type extension for the <see cref="MimeTypeInfo"/> instance.</returns>
     /// <remarks>
+    /// <para>
+    /// If no other file type extension could be found, <see cref="MimeCache.DefaultFileTypeExtension"/>
+    /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
+    /// </para>
+    /// <para>
     /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
-    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
-    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
+    /// </para>
     /// </remarks>
     /// <example>
     /// <para>
@@ -76,8 +84,8 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
-    public string GetFileTypeExtension(bool leadingDot)
-        => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeFormats.IgnoreParameters), leadingDot);
+    public string GetFileTypeExtension(bool includePeriod)
+        => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeFormats.IgnoreParameters), includePeriod);
 
 
     ///// <summary>

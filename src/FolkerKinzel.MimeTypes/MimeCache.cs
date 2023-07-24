@@ -31,6 +31,16 @@ namespace FolkerKinzel.MimeTypes;
 /// </example>
 public static class MimeCache
 {
+    /// <summary>
+    /// The Internet Media Type ("MIME type") that is used as a fallback value.
+    /// </summary>
+    public const string DefaultMimeType = "application/octet-stream";
+
+    /// <summary>
+    /// The file type extension that is used as a fallback value.
+    /// </summary>
+    public const string DefaultFileTypeExtension = "bin";
+
     private class Entry
     {
         public Entry(string mimeType, string extension)
@@ -49,8 +59,7 @@ public static class MimeCache
 
     ////////////////////////////////////////////
 
-    internal const string DEFAULT_MIME_TYPE = "application/octet-stream";
-    internal const string DEFAULT_FILE_TYPE_EXTENSION = "bin";
+    
 
 
     private const int CACHE_CLEANUP_SIZE = 4;
@@ -108,7 +117,7 @@ public static class MimeCache
 
 
     internal static string GetMimeType(string? fileTypeExtension)
-        => string.IsNullOrWhiteSpace(fileTypeExtension) ? DEFAULT_MIME_TYPE : DoGetMimeType(fileTypeExtension);
+        => string.IsNullOrWhiteSpace(fileTypeExtension) ? DefaultMimeType : DoGetMimeType(fileTypeExtension);
 
 
     [SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
@@ -122,7 +131,7 @@ public static class MimeCache
 
         if (fileTypeExtension.IsWhiteSpace())
         {
-            return DEFAULT_MIME_TYPE;
+            return DefaultMimeType;
         }
 
         return DoGetMimeType(fileTypeExtension.ToString());
@@ -175,7 +184,7 @@ public static class MimeCache
     internal static string GetFileTypeExtension(string? mimeType, bool leadingDot)
     {
         return mimeType is null
-            ? PrepareFileTypeExtension(DEFAULT_FILE_TYPE_EXTENSION, leadingDot)
+            ? PrepareFileTypeExtension(DefaultFileTypeExtension, leadingDot)
             : TryGetFileTypeExtensionFromCache(mimeType, out string? fileTypeExtension)
                     ? PrepareFileTypeExtension(fileTypeExtension, leadingDot)
                     : PrepareFileTypeExtension(GetFileTypeExtensionFromResources(mimeType), leadingDot);

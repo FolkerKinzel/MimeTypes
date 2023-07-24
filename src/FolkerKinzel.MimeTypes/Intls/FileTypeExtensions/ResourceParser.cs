@@ -29,7 +29,7 @@ internal static class ResourceParser
             }
         }
 
-        return MimeCache.DEFAULT_MIME_TYPE;
+        return MimeCache.DefaultMimeType;
     }
 
 
@@ -43,7 +43,7 @@ internal static class ResourceParser
         }
         else
         {
-            return MimeCache.DEFAULT_FILE_TYPE_EXTENSION;
+            return MimeCache.DefaultFileTypeExtension;
         }
 
         using StreamReader reader = ReaderFactory.InitMimeFileReader();
@@ -69,7 +69,7 @@ internal static class ResourceParser
             }
         }
 
-        return MimeCache.DEFAULT_FILE_TYPE_EXTENSION;
+        return MimeCache.DefaultFileTypeExtension;
 
         ////////////////////////////////////
 

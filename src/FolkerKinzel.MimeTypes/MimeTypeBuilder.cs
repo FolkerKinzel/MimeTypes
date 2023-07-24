@@ -4,7 +4,7 @@ using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Fluent API to create <see cref="MimeTypeInfo"/> instances.
+/// Fluent API to create <see cref="MimeTypeInfo"/> instances from scratch.
 /// </summary>
 /// <example>
 /// <para>
