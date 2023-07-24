@@ -19,13 +19,12 @@ that is part of this repository.
 
 [Version History](https://github.com/FolkerKinzel/MimeTypes/releases)
 
-.
 
-### Examples
-1. [Get a MimeType instance from a file type extension and vice versa](#example1)
-2. [Build, serialize, and parse a MimeType instance](#example2)
-3. [Format a MimeType instance into a standards-compliant string using several options](#example3)
-4. [Compare MimeType instances](#example4)
+### Code Examples
+1. [Get an Internet Media Type ("MIME type") string from a file type extension and vice versa](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/FileExtensionExample.cs)
+2. [Build, serialize, and parse a MimeTypeInfo instance](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/BuildAndParseExample.cs)
+3. [Format a MimeTypeInfo instance into a standards-compliant string using several options](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/FormattingOptionsExample.cs)
+4. [Compare MimeTypeInfo instances](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/EqualityExample.cs)
 
 #### <a name="example1">1.</a> Get a MimeType instance from a file type extension and vice versa:
 ```csharp
