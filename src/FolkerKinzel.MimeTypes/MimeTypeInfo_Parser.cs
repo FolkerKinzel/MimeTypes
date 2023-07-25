@@ -83,13 +83,6 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
-    /// <example>
-    /// <para>
-    /// Getting <see cref="MimeTypeInfo"/> instances by parsing file type extensions and getting appropriate file type extensions
-    /// from <see cref="MimeTypeInfo"/> instances:
-    /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
-    /// </example>
     public static MimeTypeInfo FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension)
     {
         ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
@@ -109,13 +102,6 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
-    /// <example>
-    /// <para>
-    /// Getting <see cref="MimeTypeInfo"/> instances by parsing file type extensions and getting appropriate file type extensions
-    /// from <see cref="MimeTypeInfo"/> instances:
-    /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
-    /// </example>
     public static MimeTypeInfo FromFileTypeExtension(string? fileTypeExtension)
     {
         ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();

@@ -24,10 +24,6 @@ namespace FolkerKinzel.MimeTypes;
 /// </remarks>
 /// <example>
 /// <para>
-/// Get a <see cref="MimeTypeInfo"/> instance from a file type extension and vice versa:
-/// </para>
-/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
-/// <para>
 /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>

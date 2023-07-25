@@ -78,12 +78,6 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
-    /// <example>
-    /// <para>
-    /// Get a <see cref="MimeTypeInfo"/> instance from a file type extension and vice versa:
-    /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
-    /// </example>
     public string GetFileTypeExtension(bool includePeriod)
         => MimeCache.GetFileTypeExtension(IsEmpty ? null : ToString(MimeFormats.IgnoreParameters), includePeriod);
 

@@ -1,15 +1,22 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Methods that retrieve an appropriate file type extension for a given Internet Media Type <see cref="string"/> ("MIME type") or
-/// an appropriate Internet Media Type <see cref="string"/> for a given file type extension.
+/// Static class that works on <see cref="string"/>s and offers methods which are able to retrieve an appropriate file type extension 
+/// for a given Internet Media Type ("MIME type") or
+/// an appropriate Internet Media Type for a given file type extension.
 /// </summary>
+/// <example>
+/// <para>
+/// Get an Internet Media Type from a file type extension and vice versa:
+/// </para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
+/// </example>
 public static class MimeType
 {
     /// <summary>
     /// Gets an appropriate file type extension for <paramref name="mimeType"/>.
     /// </summary>
-    /// <param name="mimeType">A string that represents an Internet Media Type ("MIME type") or <c>null</c>.</param>
+    /// <param name="mimeType">A <see cref="string"/> that represents an Internet Media Type ("MIME type") or <c>null</c>.</param>
     /// <param name="includePeriod"><c>true</c> specifies, that the period "." (U+002E) is included in the retrieved file type 
     /// extension, <c>false</c>, that it's not.</param>
     /// <returns>An appropriate file type extension for <paramref name="mimeType"/>.</returns>
@@ -24,6 +31,12 @@ public static class MimeType
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    /// <example>
+    /// <para>
+    /// Get an Internet Media Type from a file type extension and vice versa:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
+    /// </example>
     public static string GetFileTypeExtension(string? mimeType, bool includePeriod = true)
     {
         if (mimeType != null)
@@ -61,6 +74,12 @@ public static class MimeType
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    /// <example>
+    /// <para>
+    /// Get an Internet Media Type from a file type extension and vice versa:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
+    /// </example>
     public static string GetFileTypeExtension(ReadOnlySpan<char> mimeType, bool includePeriod = true)
     {
         int parameterStartIdx = mimeType.IndexOf(';');
@@ -93,6 +112,12 @@ public static class MimeType
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    /// <example>
+    /// <para>
+    /// Get an Internet Media Type from a file type extension and vice versa:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
+    /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string FromFileTypeExtension(string? fileTypeExtension) => MimeCache.GetMimeType(fileTypeExtension);
 
@@ -113,6 +138,12 @@ public static class MimeType
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    /// <example>
+    /// <para>
+    /// Get an Internet Media Type from a file type extension and vice versa:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
+    /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension) => MimeCache.GetMimeType(fileTypeExtension);
 }
