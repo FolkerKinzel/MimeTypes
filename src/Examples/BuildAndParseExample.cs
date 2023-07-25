@@ -12,10 +12,10 @@ public static class BuildAndParseExample
         """;
 
         MimeTypeInfo mimeType1 = 
-            MimeTypeBuilder.Create("application", "x-stuff")
+            MimeType.Create("application", "x-stuff")
                            .AppendParameter("first-parameter", longParameterValue, "en")
                            .AppendParameter("second-parameter", "Parameter with  \\, = and \".")
-                           .Build();
+                           .AsInfo();
 
         string s = mimeType1.ToString(MimeFormats.LineWrapping);
         Console.WriteLine(s);

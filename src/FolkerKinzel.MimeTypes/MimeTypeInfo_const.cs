@@ -16,12 +16,8 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     /// <summary>
     /// The estimated length of the <see cref="string"/> that is created when <see cref="ToString()"/> is called.
     /// </summary>
-    [EditorBrowsable(EditorBrowsableState.Never)]
-    public const int StringLength = 80;
+    private const int STRING_LENGTH = 80;
 
 
-    /// <summary>
-    /// Minimum count of characters at which a line is wrapped.
-    /// </summary>
-    public const int MinimumLineLength = 64;
+    
 }

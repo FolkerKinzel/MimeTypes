@@ -6,9 +6,9 @@ internal class Program
     {
         //FormattingOptionsExample.Example();
         //Console.WriteLine();
-        //FileExtensionExample.Example();
+        FileExtensionExample.Example();
         //Console.WriteLine();
-        BuildAndParseExample.Example();
+        //BuildAndParseExample.Example();
         //Console.WriteLine();
         //EqualityExample.Example();
     }

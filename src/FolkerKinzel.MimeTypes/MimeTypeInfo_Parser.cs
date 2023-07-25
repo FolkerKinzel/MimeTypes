@@ -74,18 +74,18 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
 
     /// <summary>
     /// Creates an appropriate <see cref="MimeTypeInfo"/> instance for a given
-    /// file type extension.
+    /// file name.
     /// </summary>
-    /// <param name="fileTypeExtension">The file type extension to search for.</param>
-    /// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileTypeExtension"/>.</returns>
+    /// <param name="fileName">A file path, file name, file type extension (no matter whether with or without the period "."), or <c>null</c>.</param>
+    /// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileName"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to find often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
-    public static MimeTypeInfo FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension)
+    public static MimeTypeInfo FromFileName(ReadOnlySpan<char> fileName)
     {
-        ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
+        ReadOnlyMemory<char> memory = MimeConverter.FromFileName(fileName).AsMemory();
         _ = TryParseInternal(ref memory, out MimeTypeInfo inetMediaType);
         return inetMediaType;
     }
@@ -93,20 +93,17 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
 
     /// <summary>
     /// Creates an appropriate <see cref="MimeTypeInfo"/> instance for a given
-    /// file type extension.
+    /// file name.
     /// </summary>
-    /// <param name="fileTypeExtension">The file type extension to search for.</param>
-    /// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileTypeExtension"/>.</returns>
+    /// <param name="fileName">A file path, file name, file type extension (no matter whether with or without the period "."), or <c>null</c>.</param>
+    /// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileName"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to find often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
-    public static MimeTypeInfo FromFileTypeExtension(string? fileTypeExtension)
-    {
-        ReadOnlyMemory<char> memory = MimeCache.GetMimeType(fileTypeExtension).AsMemory();
-        _ = TryParseInternal(ref memory, out MimeTypeInfo inetMediaType);
-        return inetMediaType;
-    }
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
+    public static MimeTypeInfo FromFileName(string? fileName) => FromFileName(fileName.AsSpan());
+    
 
 }

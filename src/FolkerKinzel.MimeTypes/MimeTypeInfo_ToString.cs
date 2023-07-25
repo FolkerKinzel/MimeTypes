@@ -5,36 +5,35 @@ namespace FolkerKinzel.MimeTypes;
 public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
 {
     /// <summary>
-    /// Creates a <see cref="string"/> representation of the instance that includes the 
-    /// <see cref="Parameters"/>.
+    /// Serializes the instance into an Internet Media Type <see cref="string"/> ("MIME type") using the 
+    /// <see cref="MimeFormats.Default"/> format.
     /// </summary>
     /// <returns>A <see cref="string"/> representation of the instance 
-    /// (according to RFC 2045 and RFC 2231) that includes the <see cref="Parameters"/>.</returns>
+    /// according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Format a <see cref="MimeTypeInfo"/> instance into a standards-compliant string using several options:</para>
+    /// <para>Serialize a <see cref="MimeTypeInfo"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
     public override string ToString() => ToString(MimeFormats.Default);
 
 
     /// <summary>
-    /// Creates a <see cref="string"/> representation of the instance, and allows to specify several 
-    /// <paramref name="options"/>.
+    /// Serializes the instance into an Internet Media Type <see cref="string"/> ("MIME type") with several <paramref name="options"/>
     /// </summary>
     /// <param name="options">Named constants to specify options for the serialization of the instance. The
     /// flags can be combined.</param>
     /// <param name="lineLength">The number of characters in a single line of the serialized instance
     /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeFormats.LineWrapping"/>
-    /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
-    /// <see cref="MinimumLineLength"/> is taken instead.</param>
+    /// is not set. If the value of the argument is smaller than <see cref="MimeType.MinimumLineLength"/>, the value of 
+    /// <see cref="MimeType.MinimumLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Format a <see cref="MimeTypeInfo"/> instance into a standards-compliant string using several options:</para>
+    /// <para>Serialize a <see cref="MimeTypeInfo"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
-    public string ToString(MimeFormats options, int lineLength = MinimumLineLength)
+    public string ToString(MimeFormats options, int lineLength = MimeType.MinimumLineLength)
     {
-        var sb = new StringBuilder(StringLength);
+        var sb = new StringBuilder(STRING_LENGTH);
         AppendTo(sb, options, lineLength);
         return sb.ToString();
     }
@@ -49,13 +48,13 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     /// flags can be combined.</param>
     /// <param name="lineLength">The number of characters in a single line of the serialized instance
     /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeFormats.LineWrapping"/>
-    /// is not set. If the value of the argument is smaller than <see cref="MinimumLineLength"/>, the value of 
-    /// <see cref="MinimumLineLength"/> is taken instead.</param>
+    /// is not set. If the value of the argument is smaller than <see cref="MimeType.MinimumLineLength"/>, the value of 
+    /// <see cref="MimeType.MinimumLineLength"/> is taken instead.</param>
     /// <returns>A reference to <paramref name="builder"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
     public StringBuilder AppendTo(StringBuilder builder,
                                   MimeFormats options = MimeFormats.Default,
-                                  int lineLength = MinimumLineLength)
+                                  int lineLength = MimeType.MinimumLineLength)
     {
         if (builder is null)
         {
@@ -69,12 +68,12 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
 
         options = options.Normalize();
 
-        if (--lineLength < MinimumLineLength)
+        if (--lineLength < MimeType.MinimumLineLength)
         {
-            lineLength = MinimumLineLength - 1;
+            lineLength = MimeType.MinimumLineLength - 1;
         }
 
-        _ = builder.EnsureCapacity(builder.Length + StringLength);
+        _ = builder.EnsureCapacity(builder.Length + STRING_LENGTH);
         int insertStartIndex = builder.Length;
         _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(insertStartIndex);
 

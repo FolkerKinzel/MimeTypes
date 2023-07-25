@@ -11,11 +11,11 @@ public class MimeTypeInfoTests
 {
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest3() => _ = MimeTypeBuilder.Create("", "subtype");
+    public void MimeTypeTest3() => _ = MimeType.Create("", "subtype");
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest4() => _ = MimeTypeBuilder.Create("type", "");
+    public void MimeTypeTest4() => _ = MimeType.Create("type", "");
 
     [DataTestMethod]
     [DataRow("?")]
@@ -25,18 +25,18 @@ public class MimeTypeInfoTests
     [DataRow("ö")]
     [DataRow("\0")]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest5(string type) => _ = MimeTypeBuilder.Create(type, "");
+    public void MimeTypeTest5(string type) => _ = MimeType.Create(type, "");
 
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest6() => _ = MimeTypeBuilder.Create(new string('a', short.MaxValue + 1), "subtype");
+    public void MimeTypeTest6() => _ = MimeType.Create(new string('a', short.MaxValue + 1), "subtype");
 
 
     [TestMethod]
     public void MimeTypeTest7()
     {
-        MimeTypeInfo mime = MimeTypeBuilder.Create("application", "was").AppendParameter("para", "@").Build();
+        MimeTypeInfo mime = MimeType.Create("application", "was").AppendParameter("para", "@").AsInfo();
         string s = mime.ToString();
         StringAssert.Contains(s, "\"@\"");
     }
@@ -290,10 +290,10 @@ public class MimeTypeInfoTests
             value += "abc";
         }
 
-        MimeTypeInfo mime = MimeTypeBuilder.Create("application", "x-stuff")
+        MimeTypeInfo mime = MimeType.Create("application", "x-stuff")
                                   .AppendParameter("key", value)
                                   .AppendParameter("other", "bla")
-                                  .Build();
+                                  .AsInfo();
         string s = mime.ToString(MimeFormats.LineWrapping);
         Assert.IsFalse(s.Contains('\"'));
         Assert.IsFalse(s.Contains('\''));
@@ -565,13 +565,13 @@ public class MimeTypeInfoTests
     [DataRow("model/3mf", ".3mf")]
     [DataRow("nixda/nüschgefunden", ".bin")]
     public void GetFileTypeExtensionTest1(string mime, string expected)
-        => Assert.AreEqual(expected, MimeType.ToFileExtension(mime));
+        => Assert.AreEqual(expected, MimeConverter.ToFileTypeExtension(mime));
 
     [TestMethod]
     public void GetFileTypeExtensionTest2()
     {  
         string? test = null;
-        Assert.AreEqual(".bin", MimeType.ToFileExtension(test));
+        Assert.AreEqual(".bin", MimeConverter.ToFileTypeExtension(test));
     }
 
     [DataTestMethod]
@@ -587,20 +587,20 @@ public class MimeTypeInfoTests
     [DataRow("chemical/x-cdx", ".cdx")]
     [DataRow("workbook/formulaone", ".vts")]
     public void FromFileTypeExtensionTest1(string expected, string fileTypeExtension)
-        => Assert.AreEqual(expected, MimeType.FromFileExtension(fileTypeExtension));
+        => Assert.AreEqual(expected, MimeConverter.FromFileName(fileTypeExtension));
 
     [TestMethod]
     public void FromFileTypeExtensionTest2()
-        => Assert.AreEqual("application/octet-stream", MimeType.FromFileExtension(""));
+        => Assert.AreEqual("application/octet-stream", MimeConverter.FromFileName(""));
 
     [TestMethod]
     public void FromFileTypeExtensionTest3()
-        => Assert.AreEqual("application/octet-stream", MimeType.FromFileExtension("".AsSpan()));
+        => Assert.AreEqual("application/octet-stream", MimeConverter.FromFileName("".AsSpan()));
 
     [TestMethod]
     public void FromFileTypeExtensionTest4()
     {
-        var mime = MimeTypeInfo.FromFileTypeExtension((string)null!);
+        var mime = MimeTypeInfo.FromFileName((string)null!);
         Assert.AreEqual("application/octet-stream", mime.ToString());
     }
 
