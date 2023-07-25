@@ -12,7 +12,7 @@ The library contains:
     - serializing its content as an Internet Media Type string according to the standards (see [RFC 2045](https://datatracker.ietf.org/doc/html/rfc2045#section-5.1) and [RFC 2231](https://datatracker.ietf.org/doc/html/rfc2231.html)),
     - comparison of its contents with other Internet Media Types for equality,
     - retrieving an appropriate file type extension.
-- The `MimeTypeBuilder` class offers a fluent API to build MimeTypeInfo instances from scratch.
+- The `MimeTypeBuilder` class offers a fluent API to build MimeTypeInfo instances from scratch or to instantiate modified versions of existing MimeTypeInfo instances.
 - The `MimeFormat` enum allows a featured string serialization of MimeTypeInfo instances.
 
 The library is designed to support performance and small heap allocation.

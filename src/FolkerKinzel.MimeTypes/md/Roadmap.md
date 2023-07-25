@@ -1,7 +1,7 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
 ### 4.0.0-beta.1
-
+- [x] see the [Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v4.0.0-rc.1)
 
 ### 3.0.0-beta.1
 - [x] Replace `FormattingOptions` with `MimeFormats`
