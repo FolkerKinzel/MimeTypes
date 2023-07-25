@@ -40,8 +40,8 @@ public class MimeTypeBuilderTests
     public void ClearParametersTest1()
     {
         MimeTypeBuilder builder = MimeTypeBuilder.Create("text", "xml")
-                   .AppendParameter("charset", "utf-8")
-                   .AppendParameter("charset", "UTF-8");
+                   .AddParameter("charset", "utf-8")
+                   .AddParameter("charset", "UTF-8");
 
         MimeTypeInfo mime = builder.Build();
         Assert.AreEqual(1, mime.Parameters().Count());
@@ -56,6 +56,35 @@ public class MimeTypeBuilderTests
         MimeTypeBuilder builder = MimeTypeBuilder.Create("text", "xml").ClearParameters();
         Assert.IsNotNull(builder);
     }
+
+    [TestMethod]
+    [ExpectedException (typeof(ArgumentNullException))]
+    public void RemoveParametersTest1()
+    {
+        MimeTypeBuilder.Create("x", "y").RemoveParameter(null!);
+    }
+
+    [TestMethod]
+    public void RemoveParametersTest2()
+    {
+        MimeTypeBuilder.Create("x", "y").RemoveParameter("nichda").RemoveParameter("");
+    }
+
+    [TestMethod]
+    public void RemoveParametersTest3()
+    {
+        var mime = MimeTypeBuilder.Create("x", "y")
+            .AddParameter("key1", "val")
+            .AddParameter("key2", "val")
+            .RemoveParameter("key1")
+            .Build();
+
+        var paras = mime.Parameters().ToArray();
+        Assert.AreEqual(1, paras.Length);
+        Assert.AreEqual("key2", paras[0].Key.ToString());
+    }
+
+
 
     //[TestMethod()]
     //public void BuildTest()

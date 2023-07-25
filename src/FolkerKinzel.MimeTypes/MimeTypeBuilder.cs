@@ -63,6 +63,25 @@ public sealed class MimeTypeBuilder
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeTypeBuilder Create(string mediaType, string subType) => new(mediaType, subType);
 
+    /// <summary>
+    /// Creates a new <see cref="MimeTypeBuilder"/> object that's filled with the data of an existing <see cref="MimeTypeInfo"/>
+    /// instance.
+    /// </summary>
+    /// <param name="mime">The <see cref="MimeTypeInfo"/> instance whose data will be copied into the 
+    /// <see cref="MimeTypeBuilder"/>.</param>
+    /// <returns>A reference to the <see cref="MimeTypeBuilder"/> that is created.</returns>
+    public static MimeTypeBuilder Create(in MimeTypeInfo mime)
+    {
+        var builder = MimeTypeBuilder.Create(mime.MediaType.ToString(), mime.SubType.ToString());
+
+        foreach (var parameter in mime.Parameters())
+        {
+            var language = parameter.Language;
+            _ = builder.AddParameter(parameter.Key.ToString(), parameter.Value.ToString(), language.Length == 0 ? null : language.ToString());
+        }
+
+        return builder;
+    }
 
     /// <summary>
     /// Adds a <see cref="MimeTypeParameter"/> to the <see cref="MimeTypeInfo"/> instance to create.
@@ -109,7 +128,7 @@ public sealed class MimeTypeBuilder
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     /// <seealso cref="MimeTypeParameter"/>
-    public MimeTypeBuilder AppendParameter(string key, string? value, string? language = null)
+    public MimeTypeBuilder AddParameter(string key, string? value, string? language = null)
     {
         _dic ??= new ParameterModelDictionary();
         var model = new ParameterModel(key, value, language);
@@ -128,6 +147,17 @@ public sealed class MimeTypeBuilder
     public MimeTypeBuilder ClearParameters()
     {
         _dic?.Clear();
+        return this;
+    }
+
+    public MimeTypeBuilder RemoveParameter(string key)
+    {
+        if(key is null)
+        {
+            throw new ArgumentNullException(nameof(key));
+        }
+
+        _dic?.Remove(key);
         return this;
     }
 

@@ -12,8 +12,8 @@
     <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
     <PackageVersion>4.0.0-rc.1</PackageVersion>
-    <FileVersion>3.0.0.14</FileVersion>
-    <AssemblyVersion>3.0.0.0</AssemblyVersion>
+    <FileVersion>4.0.0.2</FileVersion>
+    <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
     <PackageTags>MIME Internet Media Type C# .NET</PackageTags>
     <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v4.0.0-rc.1</PackageReleaseNotes>

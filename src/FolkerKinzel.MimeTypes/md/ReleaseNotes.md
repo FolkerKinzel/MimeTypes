@@ -7,10 +7,11 @@ Extensive changes to the public interface were required to fix this issue. I thi
 The most important changes are:
 - The `MimeTypeStruct` has been renamed to `MimeTypeInfo` in order to show its use more clearly.
 - `MimeType` is a static class now that works on strings and has the task to convert file type extensions into Internet Media Types and vice versa.
+- `MimeTypeBuilder.AppendParameter(string, string)` has been renamed to `MimeTypeBuilder.AddParameter(string, string)`
 - `MimeTypeBuilder` got additional methods:
 ```csharp
 MimeTypeBuilder Create(in MimeTypeInfo info);
-MimeTypeBuilder RemoveKey(string key);
+MimeTypeBuilder RemoveParameter(string key);
 ```
 
 >**Project reference:** On some systems, the content of the CHM file in the Assets is blocked. Before opening the file right click on the file icon, select Properties, and check the "Allow" checkbox - if it is present - in the lower right corner of the General tab in the Properties dialog.
