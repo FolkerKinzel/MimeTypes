@@ -14,6 +14,11 @@
 public static class MimeType
 {
     /// <summary>
+    /// The default Internet Media Type ("MIME type").
+    /// </summary>
+    public const string Default = "application/octet-stream";
+
+    /// <summary>
     /// Gets an appropriate file type extension for <paramref name="mimeType"/>.
     /// </summary>
     /// <param name="mimeType">A <see cref="string"/> that represents an Internet Media Type ("MIME type") or <c>null</c>.</param>
@@ -103,7 +108,7 @@ public static class MimeType
     /// <returns>An appropriate Internet Media Type ("MIME type") for <paramref name="fileTypeExtension"/>.</returns>
     /// <remarks>
     /// <para>
-    /// If no other Internet Media Type could be found, <see cref="MimeCache.DefaultMimeType"/>
+    /// If no other Internet Media Type could be found, <see cref="Default"/>
     /// is returned.
     /// </para>
     /// <para>
@@ -129,7 +134,7 @@ public static class MimeType
     /// <returns>An appropriate Internet Media Type ("MIME type") for <paramref name="fileTypeExtension"/>.</returns>
     /// <remarks>
     /// <para>
-    /// If no other Internet Media Type could be found, <see cref="MimeCache.DefaultMimeType"/>
+    /// If no other Internet Media Type could be found, <see cref="Default"/>
     /// is returned.
     /// </para>
     /// <para>

@@ -29,7 +29,7 @@ internal static class ResourceParser
             }
         }
 
-        return MimeCache.DefaultMimeType;
+        return MimeType.Default;
     }
 
 

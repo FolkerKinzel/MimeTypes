@@ -32,11 +32,6 @@ namespace FolkerKinzel.MimeTypes;
 public static class MimeCache
 {
     /// <summary>
-    /// The Internet Media Type ("MIME type") that is used as a fallback value.
-    /// </summary>
-    public const string DefaultMimeType = "application/octet-stream";
-
-    /// <summary>
     /// The file type extension that is used as a fallback value.
     /// </summary>
     public const string DefaultFileTypeExtension = "bin";
@@ -117,7 +112,7 @@ public static class MimeCache
 
 
     internal static string GetMimeType(string? fileTypeExtension)
-        => string.IsNullOrWhiteSpace(fileTypeExtension) ? DefaultMimeType : DoGetMimeType(fileTypeExtension);
+        => string.IsNullOrWhiteSpace(fileTypeExtension) ? MimeType.Default : DoGetMimeType(fileTypeExtension);
 
 
     [SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
@@ -131,7 +126,7 @@ public static class MimeCache
 
         if (fileTypeExtension.IsWhiteSpace())
         {
-            return DefaultMimeType;
+            return MimeType.Default;
         }
 
         return DoGetMimeType(fileTypeExtension.ToString());

@@ -2,7 +2,7 @@
 
 
 ### .NET Library that supports working with Internet Media Types ("MIME Types")
-[Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v3.0.0-beta.1)
+[Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v4.0.0-rc.1)
 
 The library contains:
 - The static `MimeType` class works on strings and allows to retrieve an appropriate file type extension for a given Internet Media Type ("MIME type") or an appropriate Internet Media Type for a given file type extension.
