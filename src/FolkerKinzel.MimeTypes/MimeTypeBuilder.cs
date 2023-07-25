@@ -4,7 +4,7 @@ using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Fluent API to create <see cref="MimeTypeInfo"/> instances from scratch.
+/// Fluent API to create <see cref="MimeTypeInfo"/> instances from scratch or to instantiate modified versions of existing MimeTypeInfo instances.
 /// </summary>
 /// <example>
 /// <para>
@@ -84,7 +84,7 @@ public sealed class MimeTypeBuilder
     }
 
     /// <summary>
-    /// Adds a <see cref="MimeTypeParameter"/> to the <see cref="MimeTypeInfo"/> instance to create.
+    /// Adds a <see cref="MimeTypeParameter"/>.
     /// </summary>
     /// <param name="key">The name of the parameter.</param>
     /// <param name="value">The value of the parameter.</param>
@@ -150,6 +150,13 @@ public sealed class MimeTypeBuilder
         return this;
     }
 
+    /// <summary>
+    /// Removes the <see cref="MimeTypeParameter"/> with the specified <see cref="MimeTypeParameter.Key"/>
+    /// from the <see cref="MimeTypeBuilder"/> if such a parameter has existed.
+    /// </summary>
+    /// <param name="key">The <see cref="MimeTypeParameter.Key"/> of the <see cref="MimeTypeParameter"/> to remove.</param>
+    ///  <returns>A reference to the <see cref="MimeTypeBuilder"/> instance on which the method was called.</returns>
+    /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
     public MimeTypeBuilder RemoveParameter(string key)
     {
         if(key is null)
