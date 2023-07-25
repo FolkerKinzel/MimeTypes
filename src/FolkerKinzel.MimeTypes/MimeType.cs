@@ -8,9 +8,9 @@ namespace FolkerKinzel.MimeTypes;
 /// </summary>
 /// <example>
 /// <para>
-/// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+/// Build, serialize, and parse a <see cref="MimeType"/> instance:
 /// </para>
-/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
 /// </example>
 /// <seealso cref="MimeTypeInfo"/>
 public sealed class MimeType : IEquatable<MimeType>
@@ -69,12 +69,13 @@ public sealed class MimeType : IEquatable<MimeType>
     /// </exception>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeType Create(string mediaType, string subType) => new(mediaType, subType);
+
 
     /// <summary>
     /// Creates a new <see cref="MimeType"/> object that's filled with the data of an existing <see cref="MimeTypeInfo"/>
@@ -136,9 +137,9 @@ public sealed class MimeType : IEquatable<MimeType>
     /// </exception>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
     /// </example>
     /// <seealso cref="MimeTypeParameterInfo"/>
     public MimeType AppendParameter(string key, string? value, string? language = null)
@@ -187,9 +188,9 @@ public sealed class MimeType : IEquatable<MimeType>
     /// <returns>The new <see cref="MimeTypeInfo"/> instance.</returns>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
     /// </example>
     /// <seealso cref="MimeTypeInfo"/>
     public MimeTypeInfo AsInfo() => new(MediaType, SubType, _dic);
@@ -202,8 +203,8 @@ public sealed class MimeType : IEquatable<MimeType>
     /// <returns>A <see cref="string"/> representation of the instance 
     /// according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Serialize a <see cref="MimeTypeInfo"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
+    /// <para>Serialize a <see cref="MimeType"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample2.cs"/>
     /// </example>
     public override string ToString() => ToString(MimeFormats.Default);
 
@@ -219,8 +220,8 @@ public sealed class MimeType : IEquatable<MimeType>
     /// <see cref="MimeType.MinimumLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Serialize a <see cref="MimeTypeInfo"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
+    /// <para>Serialize a <see cref="MimeType"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample2.cs"/>
     /// </example>
     public string ToString(MimeFormats options,
                            int lineLength = MimeType.MinimumLineLength) => this.AsInfo().ToString(options, lineLength);
@@ -253,9 +254,9 @@ public sealed class MimeType : IEquatable<MimeType>
     /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
     /// </example>
     public static MimeType Parse(string value) => Create(MimeTypeInfo.Parse(value));
 
@@ -344,9 +345,9 @@ public sealed class MimeType : IEquatable<MimeType>
     /// 
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// Comparing <see cref="MimeType"/> instances for equality:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
     /// </example>
     [CLSCompliant(false)]
     public bool Equals(MimeType? other) => Equals(other, false);
@@ -362,9 +363,9 @@ public sealed class MimeType : IEquatable<MimeType>
     /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// Comparing <see cref="MimeType"/> instances for equality:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
     /// </example>
     public bool Equals(MimeType? other, bool ignoreParameters)
     {
@@ -396,9 +397,9 @@ public sealed class MimeType : IEquatable<MimeType>
     /// value is equal to that of this instance; <c>false</c>, otherwise.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// Comparing <see cref="MimeType"/> instances for equality:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
     /// </example>
     public override bool Equals(object? obj) => obj is MimeType type && Equals(type, false);
 
@@ -450,7 +451,7 @@ public sealed class MimeType : IEquatable<MimeType>
     /// <para>
     /// Comparing <see cref="MimeType"/> instances for equality:
     /// </para>
-    /// <code source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
     /// </example>
     public static bool operator ==(MimeType? mimeType1, MimeType? mimeType2) => 
         mimeType1?.Equals(mimeType2, false) ?? mimeType2?.Equals(mimeType1, false) ?? true;
@@ -466,9 +467,9 @@ public sealed class MimeType : IEquatable<MimeType>
     /// otherwise, <c>false</c>.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// Comparing <see cref="MimeType"/> instances for equality:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
     /// </example>
     public static bool operator !=(MimeType? mimeType1, MimeType? mimeType2) =>
         !mimeType1?.Equals(mimeType2, false) ?? !mimeType2?.Equals(mimeType1) ?? false;

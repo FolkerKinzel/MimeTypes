@@ -6,10 +6,14 @@ internal class Program
     {
         //FormattingOptionsExample.Example();
         //Console.WriteLine();
-        FileExtensionExample.Example();
+        //FileExtensionExample.Example();
         //Console.WriteLine();
         //BuildAndParseExample.Example();
+        BuildAndParseExample2.Example();
+
         //Console.WriteLine();
         //EqualityExample.Example();
+        //EqualityExample2.Example();
+
     }
 }
