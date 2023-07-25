@@ -109,7 +109,7 @@ public class MimeTypeInfoTests
         MimeTypeParameter[] arr = mime.Parameters().ToArray();
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
 
-        string s = mime.ToString();
+        string s = mime.ToString(MimeFormats.LineWrapping, 10);
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);
     }

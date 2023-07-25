@@ -1978,7 +1978,7 @@ public class MimeTypeTests
     [DataRow("image/svg+xml", ".svg")]
     [DataRow("message/rfc822", ".eml")]
     [DataRow("text/html", ".htm")]
-    [DataRow("text/plain", ".txt")]
+    [DataRow("text/plain; charset=utf-8", ".txt")]
 
     // Miscellaneous tests:
     [DataRow("x-conference/x-cooltalk", ".ice")]
@@ -1989,8 +1989,23 @@ public class MimeTypeTests
     [DataRow("image/vnd.adobe.photoshop", ".psd")]
     [DataRow("application/json", ".json")]
     [DataRow("blabla/nichda", ".bin")]
+    [DataRow("    ", ".bin")]
     public void GetFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(extension, MimeType.GetFileTypeExtension(mimeType));
 
+
+    [TestMethod]
+    public void GetFileTypeExtensionTest2()
+    {
+        string ext = MimeType.GetFileTypeExtension("text/plain; charset=utf-8".AsSpan());
+        Assert.AreEqual(".txt", ext);
+    }
+
+    [TestMethod]
+    public void GetFileTypeExtensionTest3()
+    {
+        string ext = MimeType.GetFileTypeExtension(ReadOnlySpan<char>.Empty, false);
+        Assert.AreEqual("bin", ext);
+    }
     #endregion
 
     //[TestMethod]

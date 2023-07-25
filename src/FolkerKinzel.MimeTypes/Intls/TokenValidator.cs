@@ -21,7 +21,7 @@ internal static class TokenValidator
     /// Throws if <paramref name="value"/> is an empty string or consists only of white space. Leading 
     /// and trailing white space around a valid token is accepted.
     /// </remarks>
-    internal static void ValidateTokenParameter(this string value, string paraName, bool parameterKeyValidation)
+    internal static void ValidateTokenParameter(this string value, string? paraName, bool parameterKeyValidation)
     {
         if (value is null)
         {

@@ -16,25 +16,20 @@ public class MimeTypeBuilderTests
     [DataRow("media", null)]
     [DataRow(null, null)]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void CreateTest1(string? nedia, string? sub)
+    public void CreateTest1(string? nedia, string? sub) => _ = MimeTypeBuilder.Create(nedia!, sub!);
+
+    [TestMethod]
+    public void CreateTest2()
     {
-        _ = MimeTypeBuilder.Create(nedia!, sub!);
+        MimeTypeInfo mime1 = MimeTypeBuilder.Create("a", "b")
+                                   .AddParameter("c", "d", "en")
+                                   .AddParameter("e", "f")
+                                   .Build();
+
+        MimeTypeInfo mime2 = MimeTypeBuilder.Create(in mime1).Build();
+
+        Assert.AreEqual(mime1.ToString(), mime2.ToString());
     }
-
-    //[TestMethod]
-    //public void MimeTypeBuilderTest2()
-    //{
-    //    var builder = new MimeTypeBuilder();
-    //    Assert.IsTrue(builder.IsEmpty);
-    //    MimeType mime = builder.Build();
-    //    Assert.IsTrue(mime.IsEmpty);
-    //}
-
-    //[TestMethod()]
-    //public void AddParameterTest()
-    //{
-    //    Assert.Fail();
-    //}
 
     [TestMethod()]
     public void ClearParametersTest1()
@@ -58,28 +53,22 @@ public class MimeTypeBuilderTests
     }
 
     [TestMethod]
-    [ExpectedException (typeof(ArgumentNullException))]
-    public void RemoveParametersTest1()
-    {
-        MimeTypeBuilder.Create("x", "y").RemoveParameter(null!);
-    }
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void RemoveParametersTest1() => MimeTypeBuilder.Create("x", "y").RemoveParameter(null!);
 
     [TestMethod]
-    public void RemoveParametersTest2()
-    {
-        MimeTypeBuilder.Create("x", "y").RemoveParameter("nichda").RemoveParameter("");
-    }
+    public void RemoveParametersTest2() => MimeTypeBuilder.Create("x", "y").RemoveParameter("nichda").RemoveParameter("");
 
     [TestMethod]
     public void RemoveParametersTest3()
     {
-        var mime = MimeTypeBuilder.Create("x", "y")
+        MimeTypeInfo mime = MimeTypeBuilder.Create("x", "y")
             .AddParameter("key1", "val")
-            .AddParameter("key2", "val")
+            .AddParameter("key2", "val", "en")
             .RemoveParameter("key1")
             .Build();
 
-        var paras = mime.Parameters().ToArray();
+        MimeTypeParameter[] paras = mime.Parameters().ToArray();
         Assert.AreEqual(1, paras.Length);
         Assert.AreEqual("key2", paras[0].Key.ToString());
     }
