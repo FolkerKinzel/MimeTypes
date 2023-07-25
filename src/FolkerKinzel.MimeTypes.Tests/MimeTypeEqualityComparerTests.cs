@@ -19,13 +19,13 @@ public class MimeTypeEqualityComparerTests
     {
         var dic = new ParameterModelDictionary()
         {
-            new ParameterModel("para1", "the value")
+            new Parameter("para1", "the value")
         };
         var mime1 = new MimeTypeInfo("image", "png", dic);
         var mime2 = new MimeTypeInfo("image", "png");
 
-        MimeTypeEqualityComparer cmp1 = MimeTypeEqualityComparer.IgnoreParameters;
-        MimeTypeEqualityComparer cmp2 = MimeTypeEqualityComparer.Default;
+        MimeTypeInfoEqualityComparer cmp1 = MimeTypeInfoEqualityComparer.IgnoreParameters;
+        MimeTypeInfoEqualityComparer cmp2 = MimeTypeInfoEqualityComparer.Default;
 
         Assert.AreEqual(cmp1.GetHashCode(mime1), cmp1.GetHashCode(mime2));
         Assert.AreNotEqual(cmp2.GetHashCode(mime1), cmp2.GetHashCode(mime2));
@@ -37,8 +37,8 @@ public class MimeTypeEqualityComparerTests
     [TestMethod()]
     public void MimeTypeEqualityComparerTest2()
     {
-        MimeTypeEqualityComparer c1 = MimeTypeEqualityComparer.Default;
-        MimeTypeEqualityComparer c2 = MimeTypeEqualityComparer.Default;
+        MimeTypeInfoEqualityComparer c1 = MimeTypeInfoEqualityComparer.Default;
+        MimeTypeInfoEqualityComparer c2 = MimeTypeInfoEqualityComparer.Default;
 
         Assert.AreSame(c1, c2);
     }
@@ -46,8 +46,8 @@ public class MimeTypeEqualityComparerTests
     [TestMethod()]
     public void MimeTypeEqualityComparerTest3()
     {
-        MimeTypeEqualityComparer c1 = MimeTypeEqualityComparer.IgnoreParameters;
-        MimeTypeEqualityComparer c2 = MimeTypeEqualityComparer.IgnoreParameters;
+        MimeTypeInfoEqualityComparer c1 = MimeTypeInfoEqualityComparer.IgnoreParameters;
+        MimeTypeInfoEqualityComparer c2 = MimeTypeInfoEqualityComparer.IgnoreParameters;
 
         Assert.AreSame(c1, c2);
     }

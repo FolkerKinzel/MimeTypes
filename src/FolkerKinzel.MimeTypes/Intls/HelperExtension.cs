@@ -6,58 +6,35 @@ internal static class HelperExtension
         input == 0 ? 1 : (int)Math.Floor(Math.Log10(input) + 1);
 
 
-    //internal static TokenError ValidateToken(this ReadOnlySpan<char> token)
-    //{
-    //    if (token.Length == 0)
-    //    {
-    //        return TokenError.EmptyString;
-    //    }
+    internal static IEnumerable<MimeTypeParameterInfo> Sort(this IEnumerable<MimeTypeParameterInfo> parameters, bool isTextMimeType)
+    {
+        List<MimeTypeParameterInfo>? list = null;
 
-    //    for (int i = 0; i < token.Length; i++)
-    //    {
-    //        TokenError error = token[i].AnalyzeTokenChar();
+        foreach (MimeTypeParameterInfo parameter in parameters)
+        {
+            if (isTextMimeType && parameter.IsAsciiCharSetParameter)
+            {
+                continue;
+            }
 
-    //        if (error != TokenError.None)
-    //        {
-    //            return error;
-    //        }
-    //    }
+            list ??= new List<MimeTypeParameterInfo>(2);
+            list.Add(parameter);
+        }
 
-    //    return TokenError.None;
-    //}
+        if (list is null)
+        {
+            return Array.Empty<MimeTypeParameterInfo>();
+        }
 
+        if (list.Count == 1)
+        {
+            return list;
+        }
 
-    //[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0066:Switch-Anweisung in Ausdruck konvertieren", Justification = "<Ausstehend>")]
-    //private static EncodingAction AnalyzeTSpecialKind(this char c)
-    //{
-    //    // RFC 2045 Section 5.1 "tspecials" ('.' is not tspecial)
-    //    switch (c)
-    //    {
-    //        case '(':
-    //        case ')':
-    //        case '<':
-    //        case '>':
-    //        case '@':
-    //        case ',':
-    //        case ';':
-    //        case ':':
-    //        case '/':
-    //        case '[':
-    //        case ']':
-    //        case '?':
-    //        case '=':
-    //            return EncodingAction.Quote; 
-                
-    //                                            // There is nothing said in the RFCs about masking of '\"', but:
-    //        case '\\':                          // https://mimesniff.spec.whatwg.org/#parsing-a-mime-type  § 4.5.:
-    //        case '\"':                          // 4.1. Precede each occurrence of U+0022 (") or U+005C (\) in value with U+005C (\).
-    //            return EncodingAction.Mask;  // 4.2. Prepend U+0022 (") to value. // 4.3. Append U+0022 (") to value.
-    //        default:
-    //            return EncodingAction.None;
-    //    }
-    //}
+        list.Sort();
 
-
+        return list;
+    }
 
 
     internal static IEnumerable<MimeTypeParameter> Sort(this IEnumerable<MimeTypeParameter> parameters, bool isTextMimeType)
@@ -89,46 +66,5 @@ internal static class HelperExtension
 
         return list;
     }
-
-
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //private static bool IsTSpecial(this char c) => c.AnalyzeTSpecialKind() != TSpecialKinds.None;
-
-
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //private static bool IsReservedCharacter(this char c) => c is '*' or '\'' or '%'; // RFC 2231
-        
-
-
-    //[System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
-    //private static TokenError AnalyzeTokenChar(this char c)
-    //{
-    //    if (char.IsWhiteSpace(c))
-    //    {
-    //        return TokenError.ContainsWhiteSpace;
-    //    }
-
-    //    if (char.IsControl(c))
-    //    {
-    //        return TokenError.ContainsControl;
-    //    }
-
-    //    if (c.IsTSpecial())
-    //    {
-    //        return TokenError.ContainsTSpecial;
-    //    }
-
-    //    if (!c.IsAscii())
-    //    {
-    //        return TokenError.ContainsNonAscii;
-    //    }
-
-    //    if (c.IsReservedCharacter()) // RFC 2231
-    //    {
-    //        return TokenError.ContainsReservedCharacter;
-    //    }
-
-    //    return TokenError.None;
-    //}
 
 }

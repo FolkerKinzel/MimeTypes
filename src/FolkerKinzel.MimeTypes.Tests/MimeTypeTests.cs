@@ -68,7 +68,7 @@ public class MimeTypeTests
             .RemoveParameter("key1")
             .AsInfo();
 
-        MimeTypeParameter[] paras = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
         Assert.AreEqual(1, paras.Length);
         Assert.AreEqual("key2", paras[0].Key.ToString());
     }

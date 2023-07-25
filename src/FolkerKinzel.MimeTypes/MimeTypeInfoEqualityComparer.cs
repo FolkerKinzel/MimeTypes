@@ -6,7 +6,7 @@ namespace FolkerKinzel.MimeTypes;
 /// Represents a <see cref="MimeTypeInfo"/> comparison operation that uses specific comparison rules.
 /// </summary>
 /// <threadsafety static="true" instance="true"/>
-public abstract class MimeTypeEqualityComparer : IEqualityComparer<MimeTypeInfo>
+public abstract class MimeTypeInfoEqualityComparer : IEqualityComparer<MimeTypeInfo>
 {
     /// <summary>
     /// Compares two <see cref="MimeTypeInfo"/> instances for equality.
@@ -27,15 +27,15 @@ public abstract class MimeTypeEqualityComparer : IEqualityComparer<MimeTypeInfo>
 
 
     /// <summary>
-    /// Gets the <see cref="MimeTypeEqualityComparer"/> object (Singleton) that performs a default comparison of <see cref="MimeTypeInfo"/> structs
-    /// that takes the <see cref="MimeTypeInfo.Parameters"/> into account.
+    /// Gets the <see cref="MimeTypeInfoEqualityComparer"/> object (Singleton) that performs a default comparison of <see cref="MimeTypeInfo"/> structs
+    /// which takes the <see cref="MimeTypeInfo.Parameters"/> into account.
     /// </summary>
-    public static MimeTypeEqualityComparer Default { get; } = new MimeTypeEqualityComparerDefault();
+    public static MimeTypeInfoEqualityComparer Default { get; } = new MimeTypeEqualityComparerDefault();
 
 
     /// <summary>
-    /// Gets the <see cref="MimeTypeEqualityComparer"/> object (Singleton) that performs a comparison of <see cref="MimeTypeInfo"/> structs
-    /// that ignores the <see cref="MimeTypeInfo.Parameters"/>.
+    /// Gets the <see cref="MimeTypeInfoEqualityComparer"/> object (Singleton) that performs a comparison of <see cref="MimeTypeInfo"/> structs
+    /// which ignores the <see cref="MimeTypeInfo.Parameters"/>.
     /// </summary>
-    public static MimeTypeEqualityComparer IgnoreParameters { get; } = new MimeTypeEqualityComparerIgnoreParameters();
+    public static MimeTypeInfoEqualityComparer IgnoreParameters { get; } = new MimeTypeEqualityComparerIgnoreParameters();
 }

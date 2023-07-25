@@ -3,7 +3,7 @@
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
 /// <summary>
-/// Helper class that supports the parsing of <see cref="MimeTypeParameter"/> objects
+/// Helper class that supports the parsing of <see cref="MimeTypeParameterInfo"/> objects
 /// in bringing URL encoded or masked or quoted parameter values in a readable form.
 /// </summary>
 internal static class ParameterValueDecoder

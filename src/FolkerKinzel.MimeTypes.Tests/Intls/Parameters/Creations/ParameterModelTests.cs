@@ -8,31 +8,31 @@ public class ParameterModelTests
 {
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void MimeTypeParameterModelTest1() => _ = new ParameterModel(null!, "something");
+    public void MimeTypeParameterModelTest1() => _ = new MimeTypeParameter(null!, "something");
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeParameterModelTest2() => _ = new ParameterModel("", "something");
+    public void MimeTypeParameterModelTest2() => _ = new MimeTypeParameter("", "something");
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeParameterModelTest3() => _ = new ParameterModel("äöü%@:", "something");
+    public void MimeTypeParameterModelTest3() => _ = new MimeTypeParameter("äöü%@:", "something");
 
     [DataTestMethod]
     [DataRow("äü")]
     [DataRow("{!")]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeParameterModelTest4(string input) => _ = new ParameterModel("key", "something", input);
+    public void MimeTypeParameterModelTest4(string input) => _ = new MimeTypeParameter("key", "something", input);
 
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeParameterModelTest5() => _ = new ParameterModel("key", "something", new string('a', 256));
+    public void MimeTypeParameterModelTest5() => _ = new MimeTypeParameter("key", "something", new string('a', 256));
 
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeParameterModelTest6() => _ = new ParameterModel(new string('a', 5000), "something");
+    public void MimeTypeParameterModelTest6() => _ = new MimeTypeParameter(new string('a', 5000), "something");
 
     //[TestMethod]
     //public void IsEmptyTest1() => Assert.IsTrue(new ParameterModel().IsEmpty);

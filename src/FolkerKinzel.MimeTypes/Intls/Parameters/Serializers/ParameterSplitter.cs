@@ -46,15 +46,15 @@ internal static class ParameterSplitter
     }
 
     /// <summary>
-    /// Splits a long <see cref="MimeTypeParameter"/> into several parts and returns them as a collection of <see cref="StringBuilder"/>
+    /// Splits a long <see cref="MimeTypeParameterInfo"/> into several parts and returns them as a collection of <see cref="StringBuilder"/>
     /// objects.
     /// </summary>
-    /// <param name="parameter">The <see cref="MimeTypeParameter"/> to split.</param>
+    /// <param name="parameter">The <see cref="MimeTypeParameterInfo"/> to split.</param>
     /// <param name="worker">A <see cref="StringBuilder"/> that holds the serialized <paramref name="parameter"/>.</param>
     /// <param name="lineLength">The line length at which the parameter should be splitted.</param>
     /// <param name="enc">The <see cref="EncodingAction"/> the <paramref name="parameter"/> had been serialized to worker.</param>
     /// <returns>A collection of <see cref="StringBuilder"/> objects that represents the splitted <paramref name="parameter"/>.</returns>
-    internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameter parameter, StringBuilder worker, int lineLength, EncodingAction enc)
+    internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameterInfo parameter, StringBuilder worker, int lineLength, EncodingAction enc)
     {
         Debug.Assert(worker.Length > 0);
         Debug.Assert(lineLength >= parameter.Key.Length + parameter.CharSet.Length + parameter.Language.Length + MINIMUM_LINE_LENGTH);
@@ -114,7 +114,7 @@ internal static class ParameterSplitter
     }
 
 
-    private static (int counterIdx, int normalValueStart) PrepareTmp(in MimeTypeParameter parameter, EncodingAction enc, StringBuilder tmp)
+    private static (int counterIdx, int normalValueStart) PrepareTmp(in MimeTypeParameterInfo parameter, EncodingAction enc, StringBuilder tmp)
     {
         _ = tmp.Append(parameter.Key).Append('*');
 

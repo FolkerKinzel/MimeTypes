@@ -27,7 +27,7 @@ public static class BuildAndParseExample
         Console.WriteLine($"Sub Type:   {mimeType2.SubType.ToString()}");
 
         int parameterCounter = 1;
-        foreach (MimeTypeParameter parameter in mimeType2.Parameters())
+        foreach (MimeTypeParameterInfo parameter in mimeType2.Parameters())
         {
             Console.WriteLine();
             Console.WriteLine($"Parameter {parameterCounter++}:");

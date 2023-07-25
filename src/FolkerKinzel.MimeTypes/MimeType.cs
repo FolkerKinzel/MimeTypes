@@ -4,7 +4,7 @@ using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Fluent API to create <see cref="MimeTypeInfo"/> instances from scratch or to instantiate modified versions of existing MimeTypeInfo instances.
+/// Encapsulates the data of an Internet Media Type ("MIME type").
 /// </summary>
 /// <example>
 /// <para>
@@ -13,7 +13,7 @@ namespace FolkerKinzel.MimeTypes;
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
 /// </example>
 /// <seealso cref="MimeTypeInfo"/>
-public sealed class MimeType
+public sealed class MimeType : IEquatable<MimeType>
 {
     /// <summary>
     /// The default Internet Media Type ("MIME type").
@@ -26,8 +26,6 @@ public sealed class MimeType
     public const int MinimumLineLength = 64;
 
     private ParameterModelDictionary? _dic;
-    private readonly string _mediaType;
-    private readonly string _subType;
 
     /// <summary>
     /// Initializes a new <see cref="MimeType"/> object.
@@ -43,10 +41,16 @@ public sealed class MimeType
     /// </exception>
     private MimeType(string mediaType, string subType)
     {
-        _mediaType = mediaType ?? throw new ArgumentNullException(nameof(mediaType));
-        _subType = subType ?? throw new ArgumentNullException(nameof(subType));
+        MediaType = mediaType ?? throw new ArgumentNullException(nameof(mediaType));
+        SubType = subType ?? throw new ArgumentNullException(nameof(subType));
         MimeTypeCtorParametersValidator.Validate(mediaType, subType);
     }
+
+    public string MediaType { get; }
+
+    public string SubType { get; }
+
+    public IList<MimeTypeParameter> Parameters => _dic?.ToArray() ?? Array.Empty<MimeTypeParameter>();
 
 
     /// <summary>
@@ -94,7 +98,7 @@ public sealed class MimeType
     }
 
     /// <summary>
-    /// Appends a <see cref="MimeTypeParameter"/> to the end of the <see cref="MimeType"/>.
+    /// Appends a <see cref="MimeTypeParameterInfo"/> to the end of the <see cref="MimeType"/>.
     /// </summary>
     /// <param name="key">The name of the parameter.</param>
     /// <param name="value">The value of the parameter.</param>
@@ -137,11 +141,11 @@ public sealed class MimeType
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
-    /// <seealso cref="MimeTypeParameter"/>
+    /// <seealso cref="MimeTypeParameterInfo"/>
     public MimeType AppendParameter(string key, string? value, string? language = null)
     {
         _dic ??= new ParameterModelDictionary();
-        var model = new ParameterModel(key, value, language);
+        var model = new MimeTypeParameter(key, value, language);
 
         _ = _dic.Remove(model.Key);
         _dic.Add(model);
@@ -150,10 +154,10 @@ public sealed class MimeType
     }
 
     /// <summary>
-    /// Removes all <see cref="MimeTypeParameter"/>s.
+    /// Removes all <see cref="MimeTypeParameterInfo"/>s.
     /// </summary>
     /// <returns>A reference to the <see cref="MimeType"/> instance on which the method was called.</returns>
-    /// <seealso cref="MimeTypeParameter"/>
+    /// <seealso cref="MimeTypeParameterInfo"/>
     public MimeType ClearParameters()
     {
         _dic?.Clear();
@@ -161,10 +165,10 @@ public sealed class MimeType
     }
 
     /// <summary>
-    /// Removes the <see cref="MimeTypeParameter"/> with the specified <see cref="MimeTypeParameter.Key"/>
+    /// Removes the <see cref="MimeTypeParameterInfo"/> with the specified <see cref="MimeTypeParameterInfo.Key"/>
     /// from the <see cref="MimeType"/> if such a parameter has existed.
     /// </summary>
-    /// <param name="key">The <see cref="MimeTypeParameter.Key"/> of the <see cref="MimeTypeParameter"/> to remove.</param>
+    /// <param name="key">The <see cref="MimeTypeParameterInfo.Key"/> of the <see cref="MimeTypeParameterInfo"/> to remove.</param>
     ///  <returns>A reference to the <see cref="MimeType"/> instance on which the method was called.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
     public MimeType RemoveParameter(string key)
@@ -189,7 +193,7 @@ public sealed class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     /// <seealso cref="MimeTypeInfo"/>
-    public MimeTypeInfo AsInfo() => new(_mediaType, _subType, _dic);
+    public MimeTypeInfo AsInfo() => new(MediaType, SubType, _dic);
 
 
     /// <summary>
@@ -312,7 +316,7 @@ public sealed class MimeType
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MimeType FromFileName(ReadOnlySpan<char> fileName) => Parse(MimeConverter.FromFileName(fileName));
+    public static MimeType FromFileName(ReadOnlySpan<char> fileName) => Parse(MimeStringConverter.FromFileName(fileName));
 
 
     /// <summary>
@@ -329,5 +333,144 @@ public sealed class MimeType
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeType FromFileName(string? fileName) => FromFileName(fileName.AsSpan());
 
+
+    #region IEquatable
+
+    /// <summary>
+    /// Determines whether the value of this instance is equal to the value of <paramref name="other"/>. The <see cref="Parameters"/>
+    /// are taken into account.
+    /// </summary>
+    /// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
+    /// <returns><c>true</c> if this the value of this instance is equal to that of <paramref name="other"/>; <c>false</c>, otherwise.</returns>
+    /// 
+    /// <example>
+    /// <para>
+    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// </example>
+    [CLSCompliant(false)]
+    public bool Equals(MimeType? other) => Equals(other, false);
+
+
+    /// <summary>
+    /// Determines whether this instance is equal to <paramref name="other"/> and allows to specify
+    /// whether or not the <see cref="Parameters"/> are taken into account.
+    /// </summary>
+    /// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
+    /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account;
+    /// <c>true</c>, otherwise.</param>
+    /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
+    /// <example>
+    /// <para>
+    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// </example>
+    public bool Equals(MimeType other, bool ignoreParameters)
+    {
+        if (!MediaType.Equals(other.MediaType, StringComparison.OrdinalIgnoreCase) ||
+           !SubType.Equals(other.SubType, StringComparison.OrdinalIgnoreCase))
+        {
+            return false;
+        }
+
+        if (ignoreParameters)
+        {
+            return true;
+        }
+
+        bool isText = IsText;
+        return this.Parameters.Sort(isText).SequenceEqual(other.Parameters.Sort(isText));
+    }
+
+    private bool IsText => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
+
+    /// <summary>
+    /// Determines whether <paramref name="obj"/> is a <see cref="MimeTypeInfo"/> structure whose
+    /// value is equal to that of this instance. The <see cref="Parameters"/>
+    /// are taken into account.
+    /// </summary>
+    /// <param name="obj">The <see cref="object"/> to compare with.</param>
+    /// <returns><c>true</c> if <paramref name="obj"/> is a <see cref="MimeTypeInfo"/> structure whose
+    /// value is equal to that of this instance; <c>false</c>, otherwise.</returns>
+    /// <example>
+    /// <para>
+    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// </example>
+    public override bool Equals(object? obj) => obj is MimeTypeInfo type && Equals(in type, false);
+
+
+    #endregion
+
+    /// <summary>
+    /// Creates a hash code for this instance, which takes the <see cref="Parameters"/> into account.
+    /// </summary>
+    /// <returns>The hash code.</returns>
+    public override int GetHashCode() => GetHashCode(false);
+
+
+    /// <summary>
+    /// Creates a hash code for this instance and allows to specify whether or not
+    /// the <see cref="Parameters"/> are taken into account.
+    /// </summary>
+    /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account; <c>true</c>, otherwise.</param>
+    /// <returns>The hash code.</returns>
+    /// <seealso cref="MimeTypeParameter"/>
+    public int GetHashCode(bool ignoreParameters)
+    {
+        var hash = new HashCode();
+        hash.Add(MediaType, StringComparer.OrdinalIgnoreCase);
+        hash.Add(SubType, StringComparer.OrdinalIgnoreCase);
+
+        if (ignoreParameters)
+        {
+            return hash.ToHashCode();
+        }
+
+        foreach (MimeTypeParameter parameter in Parameters.Sort(IsText))
+        {
+            hash.Add(parameter);
+        }
+
+        return hash.ToHashCode();
+    }
+
+    /// <summary>
+    /// Returns a value that indicates whether two specified <see cref="MimeType"/> instances are equal.
+    /// The <see cref="Parameters"/> are taken into account.
+    /// </summary>
+    /// <param name="mimeType1">The first <see cref="MimeType"/> to compare.</param>
+    /// <param name="mimeType2">The second <see cref="MimeType"/> to compare.</param>
+    /// <returns><c>true</c> if <paramref name="mimeType1"/> and <paramref name="mimeType2"/> are equal;
+    /// otherwise, <c>false</c>.</returns>
+    /// <example>
+    /// <para>
+    /// Comparing <see cref="MimeType"/> instances for equality:
+    /// </para>
+    /// <code source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// </example>
+    public static bool operator ==(MimeType? mimeType1, MimeType? mimeType2) => 
+        mimeType1?.Equals(mimeType2, false) ?? mimeType2?.Equals(mimeType1, false) ?? true;
+
+
+    /// <summary>
+    /// Returns a value that indicates whether two specified <see cref="MimeTypeInfo"/> instances are not equal.
+    /// The <see cref="Parameters"/> are taken into account.
+    /// </summary>
+    /// <param name="mimeType1">The first <see cref="MimeTypeInfo"/> to compare.</param>
+    /// <param name="mimeType2">The second <see cref="MimeTypeInfo"/> to compare.</param>
+    /// <returns><c>true</c> if <paramref name="mimeType1"/> and <paramref name="mimeType2"/> are not equal;
+    /// otherwise, <c>false</c>.</returns>
+    /// <example>
+    /// <para>
+    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// </example>
+    public static bool operator !=(MimeType? mimeType1, MimeType? mimeType2) =>
+        !mimeType1?.Equals(mimeType2, false) ?? !mimeType2?.Equals(mimeType1) ?? false;
 
 }

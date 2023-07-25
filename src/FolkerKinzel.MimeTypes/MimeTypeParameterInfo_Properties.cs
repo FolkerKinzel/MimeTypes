@@ -1,12 +1,12 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeParameter
+public readonly partial struct MimeTypeParameterInfo
 {
     internal const int STRING_LENGTH = 32;
 
-    private const string CHARSET_KEY = "charset";
+    internal const string CHARSET_KEY = "charset";
     private const string ACCESS_TYPE_KEY = "access-type";
-    private const string ASCII_CHARSET_VALUE = "us-ascii";
+    internal const string ASCII_CHARSET_VALUE = "us-ascii";
 
     internal const char SEPARATOR = '=';
 
@@ -58,7 +58,7 @@ public readonly partial struct MimeTypeParameter
 
 
     /// <summary>
-    /// Gets the <see cref="MimeTypeParameter"/>'s key.
+    /// Gets the <see cref="MimeTypeParameterInfo"/>'s key.
     /// </summary>
     /// <example>
     /// <para>
@@ -70,7 +70,7 @@ public readonly partial struct MimeTypeParameter
 
 
     /// <summary>
-    /// Gets the <see cref="MimeTypeParameter"/>'s value.
+    /// Gets the <see cref="MimeTypeParameterInfo"/>'s value.
     /// </summary>
     /// <example>
     /// <para>
@@ -106,7 +106,7 @@ public readonly partial struct MimeTypeParameter
     /// <summary>
     /// Gets the character set in which <see cref="Value"/> is encoded.
     /// </summary>
-    internal ReadOnlySpan<char> CharSet
+    public ReadOnlySpan<char> CharSet
     {
         get
         {
@@ -127,13 +127,13 @@ public readonly partial struct MimeTypeParameter
 
 
     /// <summary>
-    /// Gets an empty <see cref="MimeTypeParameter"/> structure.
+    /// Gets an empty <see cref="MimeTypeParameterInfo"/> structure.
     /// </summary>
-    public static MimeTypeParameter Empty => default;
+    public static MimeTypeParameterInfo Empty => default;
 
 
     /// <summary>
-    /// Indicates whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "charset". The comparison is case-insensitive.
+    /// Indicates whether the <see cref="MimeTypeParameterInfo"/> has the <see cref="Key"/> "charset". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "charset"; otherwise, <c>false</c>.</value>
     public bool IsCharSetParameter
@@ -141,17 +141,17 @@ public readonly partial struct MimeTypeParameter
 
 
     /// <summary>
-    /// Indicates whether the <see cref="MimeTypeParameter"/> has the <see cref="Key"/> "access-type". The comparison is case-insensitive.
+    /// Indicates whether the <see cref="MimeTypeParameterInfo"/> has the <see cref="Key"/> "access-type". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "access-type"; otherwise, <c>false</c>.</value>
-    private bool IsAccessTypeParameter => Key.Equals(ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
+    public bool IsAccessTypeParameter => Key.Equals(ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
 
 
     /// <summary>
     /// Indicates whether this instance equals "charset=us-ascii". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</value>
-    public bool IsAsciiCharSetParameter
+    internal bool IsAsciiCharSetParameter
         => IsCharSetParameter
            && Value.Equals(ASCII_CHARSET_VALUE, StringComparison.OrdinalIgnoreCase);
 

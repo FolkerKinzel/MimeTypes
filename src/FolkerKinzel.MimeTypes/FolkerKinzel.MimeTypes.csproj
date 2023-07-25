@@ -38,6 +38,11 @@
     <NoWarn>$(NoWarn);8600;8601;8602;8603;8604</NoWarn>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Intls\Comparisons\**" />
+    <EmbeddedResource Remove="Intls\Comparisons\**" />
+    <None Remove="Intls\Comparisons\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Using Remove="System.Net.Http" />
     <Using Include="System.Runtime.CompilerServices" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
@@ -51,6 +56,7 @@
     <Compile Remove="Intls\ThrowHelper.cs" />
     <Compile Remove="Intls\TokenError.cs" />
     <Compile Remove="Intls\UnitTestGenerator.cs" />
+    <Compile Remove="MimeTypeInfoEqualityComparer.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\Extension.csv" />

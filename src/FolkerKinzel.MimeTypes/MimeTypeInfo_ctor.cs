@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Provides the information stored in an Internet Media Type ("MIME type").
+/// Provides the information stored in an Internet Media Type string ("MIME type").
 /// </summary>
 /// <remarks>
 /// <note type="tip">
@@ -63,7 +63,7 @@ public readonly partial struct MimeTypeInfo
         if (hasParameters)
         {
             _idx |= 1;
-            capacity += parameters!.Count * MimeTypeParameter.STRING_LENGTH;
+            capacity += parameters!.Count * MimeTypeParameterInfo.STRING_LENGTH;
         }
 
         var sb = new StringBuilder(capacity);
@@ -75,7 +75,7 @@ public readonly partial struct MimeTypeInfo
             {
                 _ = sb.Append(';');
 
-                ParameterModel para = parameters[i];
+                MimeTypeParameter para = parameters[i];
                 ParameterSerializer.Append(sb, in para);
             }
         }

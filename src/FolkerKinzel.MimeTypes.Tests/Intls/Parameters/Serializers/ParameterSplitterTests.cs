@@ -12,7 +12,7 @@ public class ParameterSplitterTests
     public void SplitParameterTest1()
     {
         ReadOnlyMemory<char> mem = "keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy=utf-8'en'Very%20very%20very%20very%20looooooooooooooooooooong%20text\"".AsMemory();
-        Assert.IsTrue(MimeTypeParameter.TryParse(true, ref mem, out MimeTypeParameter param, out _));
+        Assert.IsTrue(MimeTypeParameterInfo.TryParse(true, ref mem, out MimeTypeParameterInfo param, out _));
 
         var input = new StringBuilder();
         param.AppendTo(input);
@@ -34,7 +34,7 @@ public class ParameterSplitterTests
         string s = "application/x-stuff;key*=utf-8'de'" + Uri.UnescapeDataString(value);
 
         Assert.IsTrue(MimeTypeInfo.TryParse(s, out MimeTypeInfo mime));
-        MimeTypeParameter para = mime.Parameters().First();
+        MimeTypeParameterInfo para = mime.Parameters().First();
         Assert.AreEqual(value, para.Value.ToString(), false);
 
         s = mime.ToString(MimeFormats.LineWrapping);
@@ -59,7 +59,7 @@ public class ParameterSplitterTests
                    key*2="Masked \"3\" ";
                    """;
         Assert.IsTrue(MimeTypeInfo.TryParse(s, out MimeTypeInfo mime));
-        MimeTypeParameter para = mime.Parameters().First();
+        MimeTypeParameterInfo para = mime.Parameters().First();
         Assert.AreEqual(value, para.Value.ToString(), false);
 
         s = mime.ToString(MimeFormats.LineWrapping);

@@ -99,7 +99,7 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     {
         Debug.Assert(options == options.Normalize());
         bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
-        foreach (MimeTypeParameter parameter in Parameters())
+        foreach (MimeTypeParameterInfo parameter in Parameters())
         {
             _ = builder.Append(';');
             if (appendSpace)
@@ -121,7 +121,7 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
         var worker = new StringBuilder(lineLength);
         bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
 
-        foreach (MimeTypeParameter parameter in Parameters())
+        foreach (MimeTypeParameterInfo parameter in Parameters())
         {
             EncodingAction action = worker.Clear().Append(in parameter, false);
 

@@ -61,7 +61,7 @@ public class MimeTypeInfoTests
             key2*2=def
             """;
         var mime = MimeTypeInfo.Parse(mimeString.AsMemory());
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
         Assert.AreEqual(2, arr.Length);
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
     }
@@ -91,7 +91,7 @@ public class MimeTypeInfoTests
         //int size = Marshal.SizeOf(ReadOnlyMemory<char>.Empty);
         //size = Marshal.SizeOf(mediaType);
 
-        MimeTypeParameter[]? arr = mediaType.Parameters().ToArray();
+        MimeTypeParameterInfo[]? arr = mediaType.Parameters().ToArray();
 
         Assert.AreEqual(parametersCount, arr.Length);
     }
@@ -106,7 +106,7 @@ public class MimeTypeInfoTests
             key2*2=def
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
 
         string s = mime.ToString(MimeFormats.LineWrapping, 10);
@@ -124,7 +124,7 @@ public class MimeTypeInfoTests
             key2*2=def
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
 
         string s = mime.ToString();
@@ -143,10 +143,10 @@ public class MimeTypeInfoTests
             key*2="This is %EF 7e\\ / \" @ ? ; quoted.\"
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
-        MimeTypeParameter[] paras = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
         Assert.AreEqual(1, paras.Length);
 
-        MimeTypeParameter par = paras[0];
+        MimeTypeParameterInfo par = paras[0];
         Assert.AreEqual("key", par.Key.ToString());
         StringAssert.Contains(par.Value.ToString(), @"This is %EF 7e\ / "" @ ? ; quoted.\");
         Assert.AreEqual("en", par.Language.ToString());
@@ -163,10 +163,10 @@ public class MimeTypeInfoTests
             key*2=xy%EFz
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
-        MimeTypeParameter[] paras = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
         Assert.AreEqual(1, paras.Length);
 
-        MimeTypeParameter par = paras[0];
+        MimeTypeParameterInfo par = paras[0];
         Assert.AreEqual("key", par.Key.ToString());
         StringAssert.Contains(par.Value.ToString(), "xy%EFz");
         Assert.AreEqual("", par.Language.ToString());
@@ -182,10 +182,10 @@ public class MimeTypeInfoTests
             key*2="xy %EF z"
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
-        MimeTypeParameter[] paras = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
         Assert.AreEqual(1, paras.Length);
 
-        MimeTypeParameter par = paras[0];
+        MimeTypeParameterInfo par = paras[0];
         Assert.AreEqual("key", par.Key.ToString());
         StringAssert.Contains(par.Value.ToString(), "xy %EF z");
         Assert.AreEqual("", par.Language.ToString());
@@ -204,7 +204,7 @@ public class MimeTypeInfoTests
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
 
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
         Assert.AreEqual(1, arr.Length);
         Assert.AreEqual(ab, arr[0].Value.ToString(), false);
     }
@@ -220,7 +220,7 @@ public class MimeTypeInfoTests
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
 
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
         Assert.AreEqual(1, arr.Length);
         Assert.AreEqual(ab, arr[0].Value.ToString(), false);
     }
@@ -236,7 +236,7 @@ public class MimeTypeInfoTests
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
 
-        MimeTypeParameter[] arr = mime.Parameters().ToArray();
+        MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
         Assert.AreEqual(1, arr.Length);
         Assert.AreEqual(ab, arr[0].Value.ToString(), false);
     }
@@ -512,7 +512,7 @@ public class MimeTypeInfoTests
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("application/octet-stream; para*=utf-8'de'Hallo%20Folker", out MimeTypeInfo media1));
 
-        MimeTypeParameter para = media1.Parameters().First();
+        MimeTypeParameterInfo para = media1.Parameters().First();
         Assert.AreEqual(para.Value.ToString(), "Hallo Folker");
         Assert.AreEqual(para.Language.ToString(), "de");
         Assert.AreEqual(para.Key.ToString(), "para");
@@ -528,7 +528,7 @@ public class MimeTypeInfoTests
 
         Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo mimeType));
         Assert.AreEqual(1, mimeType.Parameters().Count());
-        MimeTypeParameter param = mimeType.Parameters().First();
+        MimeTypeParameterInfo param = mimeType.Parameters().First();
 
         Assert.AreEqual("title", param.Key.ToString());
         Assert.AreEqual("en", param.Language.ToString());
@@ -543,7 +543,7 @@ public class MimeTypeInfoTests
 
         Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo mimeType));
         Assert.AreEqual(1, mimeType.Parameters().Count());
-        MimeTypeParameter param = mimeType.Parameters().First();
+        MimeTypeParameterInfo param = mimeType.Parameters().First();
 
         Assert.AreEqual("param", param.Key.ToString());
         Assert.AreEqual(@"directory\file.text", param.Value.ToString());
@@ -565,13 +565,13 @@ public class MimeTypeInfoTests
     [DataRow("model/3mf", ".3mf")]
     [DataRow("nixda/nüschgefunden", ".bin")]
     public void GetFileTypeExtensionTest1(string mime, string expected)
-        => Assert.AreEqual(expected, MimeConverter.ToFileTypeExtension(mime));
+        => Assert.AreEqual(expected, MimeStringConverter.ToFileTypeExtension(mime));
 
     [TestMethod]
     public void GetFileTypeExtensionTest2()
     {  
         string? test = null;
-        Assert.AreEqual(".bin", MimeConverter.ToFileTypeExtension(test));
+        Assert.AreEqual(".bin", MimeStringConverter.ToFileTypeExtension(test));
     }
 
     [DataTestMethod]
@@ -587,15 +587,15 @@ public class MimeTypeInfoTests
     [DataRow("chemical/x-cdx", ".cdx")]
     [DataRow("workbook/formulaone", ".vts")]
     public void FromFileTypeExtensionTest1(string expected, string fileTypeExtension)
-        => Assert.AreEqual(expected, MimeConverter.FromFileName(fileTypeExtension));
+        => Assert.AreEqual(expected, MimeStringConverter.FromFileName(fileTypeExtension));
 
     [TestMethod]
     public void FromFileTypeExtensionTest2()
-        => Assert.AreEqual("application/octet-stream", MimeConverter.FromFileName(""));
+        => Assert.AreEqual("application/octet-stream", MimeStringConverter.FromFileName(""));
 
     [TestMethod]
     public void FromFileTypeExtensionTest3()
-        => Assert.AreEqual("application/octet-stream", MimeConverter.FromFileName("".AsSpan()));
+        => Assert.AreEqual("application/octet-stream", MimeStringConverter.FromFileName("".AsSpan()));
 
     [TestMethod]
     public void FromFileTypeExtensionTest4()
@@ -612,11 +612,11 @@ public class MimeTypeInfoTests
 
         var dic = new ParameterModelDictionary()
         {
-            new ParameterModel("first-parameter",
+            new MimeTypeParameter("first-parameter",
             "This is a very long parameter, which will be wrapped according to RFC 2184." +
             Environment.NewLine +
             "It contains also a few Non-ASCII-Characters: \u00E4\u00D6\u00DF.", "en"),
-            new ParameterModel("second-parameter", "Parameter with  \\, = and \".")
+            new MimeTypeParameter("second-parameter", "Parameter with  \\, = and \".")
         };
 
         var mimeType1 = new MimeTypeInfo(mediaType, subType, dic);

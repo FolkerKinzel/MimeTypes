@@ -4,7 +4,7 @@ internal static class IetfLanguageTag
 {
     internal static bool Validate(string? language)
     {
-        if (string.IsNullOrWhiteSpace(language) || language.Length > MimeTypeParameter.LANGUAGE_LENGTH_MAX_VALUE)
+        if (string.IsNullOrWhiteSpace(language) || language.Length > MimeTypeParameterInfo.LANGUAGE_LENGTH_MAX_VALUE)
         {
             return false;
         }

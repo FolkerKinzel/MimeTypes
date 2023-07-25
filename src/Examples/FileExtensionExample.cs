@@ -8,12 +8,12 @@ public static class FileExtensionExample
     {
         const string path = @"C:\Users\Tester\Desktop\Interesting Text.odt";
 
-        string mimeType = MimeConverter.FromFileName(path);
+        string mimeType = MimeStringConverter.FromFileName(path);
 
         Console.Write($"The MIME type for \"{path}\" is: ");
         Console.WriteLine(mimeType);
         Console.Write("The file type extension for this MIME type is: ");
-        Console.WriteLine(MimeConverter.ToFileTypeExtension(mimeType));
+        Console.WriteLine(MimeStringConverter.ToFileTypeExtension(mimeType));
     }
 }
 /*

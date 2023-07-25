@@ -4,7 +4,7 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Builders;
 
 internal static class KeyBuilder
 {
-    internal const int KEY_VALUE_SEPARATOR_LENGTH = MimeTypeParameter.EQUALS_SIGN_LENGTH;
+    internal const int KEY_VALUE_SEPARATOR_LENGTH = MimeTypeParameterInfo.EQUALS_SIGN_LENGTH;
 
     internal static StringBuilder BuildKey(this StringBuilder builder, ReadOnlySpan<char> keySpan)
     {

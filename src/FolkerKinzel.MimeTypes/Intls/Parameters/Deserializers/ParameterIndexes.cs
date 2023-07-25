@@ -19,7 +19,7 @@ internal readonly ref struct ParameterIndexes
     internal ParameterIndexes(ReadOnlySpan<char> span)
     {
         Span = span;
-        int keyLengthLocal = span.IndexOf(MimeTypeParameter.SEPARATOR);
+        int keyLengthLocal = span.IndexOf(MimeTypeParameterInfo.SEPARATOR);
 
         if (!VerifyKeyLength(keyLengthLocal))
         {
@@ -57,22 +57,22 @@ internal readonly ref struct ParameterIndexes
     internal readonly ReadOnlySpan<char> Span;
 
     /// <summary>
-    /// Returns the length of the <see cref="MimeTypeParameter.Key"/> part.
+    /// Returns the length of the <see cref="MimeTypeParameterInfo.Key"/> part.
     /// </summary>
     /// <returns></returns>
     internal readonly int KeyLength;
 
     /// <summary>
-    /// <c>1</c> indicates that 1 aditional <see cref="char"/> has to be skipped between <see cref="MimeTypeParameter.Key"/>
-    /// and <see cref="MimeTypeParameter.Value"/>.
+    /// <c>1</c> indicates that 1 aditional <see cref="char"/> has to be skipped between <see cref="MimeTypeParameterInfo.Key"/>
+    /// and <see cref="MimeTypeParameterInfo.Value"/>.
     /// </summary>
     /// <returns>The number of additional characters that have to be skipped between 
-    /// <see cref="MimeTypeParameter.Key"/> and <see cref="MimeTypeParameter.Value"/>.</returns>
+    /// <see cref="MimeTypeParameterInfo.Key"/> and <see cref="MimeTypeParameterInfo.Value"/>.</returns>
     internal readonly int KeyValueOffset;
 
     /// <summary>
-    /// Returns the index where the parameter value part starts (<see cref="MimeTypeParameter.Value"/> 
-    /// including <see cref="MimeTypeParameter.CharSet"/> and <see cref="MimeTypeParameter.Language"/>,
+    /// Returns the index where the parameter value part starts (<see cref="MimeTypeParameterInfo.Value"/> 
+    /// including <see cref="MimeTypeParameterInfo.CharSet"/> and <see cref="MimeTypeParameterInfo.Language"/>,
     /// if present.
     /// </summary>
     /// <returns>The index where the parameter value starts.</returns>
@@ -87,19 +87,19 @@ internal readonly ref struct ParameterIndexes
     internal readonly int CharsetLength;
 
     /// <summary>
-    /// Start index of <see cref="MimeTypeParameter.Language"/>.
+    /// Start index of <see cref="MimeTypeParameterInfo.Language"/>.
     /// </summary>
     internal readonly int LanguageStart;
 
     /// <summary>
-    /// Length of <see cref="MimeTypeParameter.Language"/>.
+    /// Length of <see cref="MimeTypeParameterInfo.Language"/>.
     /// </summary>
     internal readonly int LanguageLength;
 
     /// <summary>
-    /// Returns the index, where <see cref="MimeTypeParameter.Value"/> starts.
+    /// Returns the index, where <see cref="MimeTypeParameterInfo.Value"/> starts.
     /// </summary>
-    /// <returns>The index, where <see cref="MimeTypeParameter.Value"/> starts.</returns>
+    /// <returns>The index, where <see cref="MimeTypeParameterInfo.Value"/> starts.</returns>
     internal readonly int ValueStart;
 
     /// <summary>
@@ -132,24 +132,24 @@ internal readonly ref struct ParameterIndexes
     /// <returns><c>true</c> if the instance is valid, otherwise <c>false</c>.</returns>
     internal readonly bool Verify() =>
         VerifyKeyLength(KeyLength) &&
-        CharsetLength <= MimeTypeParameter.CHARSET_LENGTH_MAX_VALUE &&
-        LanguageLength <= MimeTypeParameter.LANGUAGE_LENGTH_MAX_VALUE;
+        CharsetLength <= MimeTypeParameterInfo.CHARSET_LENGTH_MAX_VALUE &&
+        LanguageLength <= MimeTypeParameterInfo.LANGUAGE_LENGTH_MAX_VALUE;
 
     /// <summary>
     /// Prepares all indexes in a single <see cref="int"/> for the use in the
-    /// <see cref="MimeTypeParameter"/> ctor.
+    /// <see cref="MimeTypeParameterInfo"/> ctor.
     /// </summary>
     /// <returns>All indexes in one <see cref="int"/>.</returns>
     internal readonly int InitMimeTypeParameterCtorIdx()
     {
         int parameterIdx = KeyLength;
-        parameterIdx |= KeyValueOffset << MimeTypeParameter.KEY_VALUE_OFFSET_SHIFT;
+        parameterIdx |= KeyValueOffset << MimeTypeParameterInfo.KEY_VALUE_OFFSET_SHIFT;
 
         if (LanguageStart != 0)
         {
-            parameterIdx |= 1 << MimeTypeParameter.CHARSET_LANGUAGE_INDICATOR_SHIFT;
-            parameterIdx |= CharsetLength << MimeTypeParameter.CHARSET_LENGTH_SHIFT;
-            parameterIdx |= LanguageLength << MimeTypeParameter.LANGUAGE_LENGTH_SHIFT;
+            parameterIdx |= 1 << MimeTypeParameterInfo.CHARSET_LANGUAGE_INDICATOR_SHIFT;
+            parameterIdx |= CharsetLength << MimeTypeParameterInfo.CHARSET_LENGTH_SHIFT;
+            parameterIdx |= LanguageLength << MimeTypeParameterInfo.LANGUAGE_LENGTH_SHIFT;
         }
 
         return parameterIdx;
@@ -159,7 +159,7 @@ internal readonly ref struct ParameterIndexes
     /// Returns <c>true</c> if <see cref="KeyLength"/> is valid.
     /// </summary>
     /// <returns><c>true</c> if <see cref="KeyLength"/> is valid, otherwise <c>false</c>.</returns>
-    private static bool VerifyKeyLength(int length) => length is not (< 1 or > MimeTypeParameter.KEY_LENGTH_MAX_VALUE);
+    private static bool VerifyKeyLength(int length) => length is not (< 1 or > MimeTypeParameterInfo.KEY_LENGTH_MAX_VALUE);
 
     private readonly (int LanguageStart, int LanguageLength) GetLanguageIdx()
     {

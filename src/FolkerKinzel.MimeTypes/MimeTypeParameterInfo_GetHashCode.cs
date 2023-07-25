@@ -1,6 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeParameter
+public readonly partial struct MimeTypeParameterInfo
 {
     /// <summary>
     /// Computes a hash code for the instance.

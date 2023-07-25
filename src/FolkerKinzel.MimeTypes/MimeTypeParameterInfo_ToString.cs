@@ -2,7 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeParameter
+public readonly partial struct MimeTypeParameterInfo
 {
     /// <summary>
     /// Creates a <see cref="string"/> representation of the instance.

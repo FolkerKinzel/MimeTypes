@@ -17,7 +17,7 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     /// </summary>
     /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account; <c>true</c>, otherwise.</param>
     /// <returns>The hash code.</returns>
-    /// <seealso cref="MimeTypeParameter"/>
+    /// <seealso cref="MimeTypeParameterInfo"/>
     public int GetHashCode(bool ignoreParameters)
     {
         var hash = new HashCode();
@@ -39,7 +39,7 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
             return hash.ToHashCode();
         }
 
-        foreach (MimeTypeParameter parameter in Parameters().Sort(IsText))
+        foreach (MimeTypeParameterInfo parameter in Parameters().Sort(IsText))
         {
             hash.Add(parameter);
         }

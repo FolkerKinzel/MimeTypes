@@ -6,20 +6,20 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
 internal static class ParameterParser
 {
-    internal static IEnumerable<MimeTypeParameter> ParseParameters(ReadOnlyMemory<char> remainingParameters)
+    internal static IEnumerable<MimeTypeParameterInfo> ParseParameters(ReadOnlyMemory<char> remainingParameters)
     {
         string currentKey = "";
         bool splittedParameterStartedUrlEncoded = false;
 
         StringBuilder? sb = null;
-        MimeTypeParameter concatenated;
+        MimeTypeParameterInfo concatenated;
 
 
         while (!remainingParameters.IsEmpty)
         {
             GetNextParameterMemory(ref remainingParameters, out ReadOnlyMemory<char> nextParameter);
 
-            if (MimeTypeParameter.TryParse(true, ref nextParameter, out MimeTypeParameter parameter, out bool currentParameterStarred))
+            if (MimeTypeParameterInfo.TryParse(true, ref nextParameter, out MimeTypeParameterInfo parameter, out bool currentParameterStarred))
             {
                 ReadOnlySpan<char> keySpan = parameter.Key;
 
@@ -30,7 +30,7 @@ internal static class ParameterParser
                 int splitIndicatorIndex = keySpan.GetSplitIndicatorIndex();
                 if (splitIndicatorIndex != -1) // splitted
                 {
-                    sb ??= new StringBuilder(MimeTypeParameter.STRING_LENGTH);
+                    sb ??= new StringBuilder(MimeTypeParameterInfo.STRING_LENGTH);
 
                     keySpan = keySpan.Slice(0, splitIndicatorIndex + 1); // key*
 
@@ -91,19 +91,19 @@ internal static class ParameterParser
     }
 
     /// <summary>
-    /// Tries to parse the content in a <see cref="StringBuilder"/> as <see cref="MimeTypeParameter"/>.
+    /// Tries to parse the content in a <see cref="StringBuilder"/> as <see cref="MimeTypeParameterInfo"/>.
     /// </summary>
     /// <param name="sb">The <see cref="StringBuilder"/>.</param>
-    /// <param name="concatenated">The parsed <see cref="MimeTypeParameter"/> concatenated.</param>
+    /// <param name="concatenated">The parsed <see cref="MimeTypeParameterInfo"/> concatenated.</param>
     /// <returns><c>false</c> if <paramref name="sb"/> is <c>null</c> or empty or if it doesn't contain valid data, <c>true</c> otherwise.</returns>
-    private static bool TryParseParameter(StringBuilder? sb, out MimeTypeParameter concatenated)
+    private static bool TryParseParameter(StringBuilder? sb, out MimeTypeParameterInfo concatenated)
     {
         if (sb is not null && sb.Length != 0)
         {
             ReadOnlyMemory<char> mem = sb.ToString().AsMemory();
             _ = sb.Clear();
 
-            return MimeTypeParameter.TryParse(false, ref mem, out concatenated, out _);
+            return MimeTypeParameterInfo.TryParse(false, ref mem, out concatenated, out _);
         }
 
         concatenated = default;

@@ -11,7 +11,7 @@
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
 /// </example>
-public static class MimeConverter
+public static class MimeStringConverter
 {
     
 

@@ -9,9 +9,9 @@ public class MimeCacheTests
     public void CapacityTest1()
     {
         MimeCache.Clear();
-        string ext = MimeConverter.ToFileTypeExtension("image/jpeg");
+        string ext = MimeStringConverter.ToFileTypeExtension("image/jpeg");
         Assert.AreEqual(".jpg", ext);
-        string mime = MimeConverter.FromFileName(".odt".AsSpan());
+        string mime = MimeStringConverter.FromFileName(".odt".AsSpan());
         StringAssert.StartsWith(mime, "application/");
         Assert.IsTrue(MimeCache.Capacity >= MimeCache.DefaultCapacity);
         int capacity = MimeCache.Capacity;

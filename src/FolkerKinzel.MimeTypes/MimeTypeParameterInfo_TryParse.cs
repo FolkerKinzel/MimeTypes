@@ -2,23 +2,23 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeParameter
+public readonly partial struct MimeTypeParameterInfo
 {
     /// <summary>
-    /// Tries to parse a read-only character memory as <see cref="MimeTypeParameter"/>.
+    /// Tries to parse a read-only character memory as <see cref="MimeTypeParameterInfo"/>.
     /// </summary>
     /// <param name="sanitizeParameterString"><c>true</c> indicates that the <paramref name="parameterString"/> should be examinated and sanitized.</param>
     /// <param name="parameterString">The ReadOnlyMemory&lt;char&gt; to be parsed.</param>
-    /// <param name="parameter">When the method returns <c>true</c> the parameter holds the parsed <see cref="MimeTypeParameter"/>.</param>
+    /// <param name="parameter">When the method returns <c>true</c> the parameter holds the parsed <see cref="MimeTypeParameterInfo"/>.</param>
     /// <param name="starred">After the method has returned, the argument value indicates whether the MIME type parameter's key have had a 
     /// trailing '*' character that indicates that language
     /// and charset has been present and URL-encoding has been used. This information is important because the trailing '*' is 
     /// eaten by the method.</param>
     /// 
-    /// <returns><c>true</c> if <paramref name="parameterString"/> could be parsed as <see cref="MimeTypeParameter"/>.</returns>
+    /// <returns><c>true</c> if <paramref name="parameterString"/> could be parsed as <see cref="MimeTypeParameterInfo"/>.</returns>
     internal static bool TryParse(bool sanitizeParameterString,
                                   ref ReadOnlyMemory<char> parameterString,
-                                  out MimeTypeParameter parameter,
+                                  out MimeTypeParameterInfo parameter,
                                   out bool starred)
     {
         parameter = default;
@@ -55,7 +55,7 @@ public readonly partial struct MimeTypeParameter
             return false;
         }
 
-        parameter = new MimeTypeParameter(in parameterString, idx.InitMimeTypeParameterCtorIdx());
+        parameter = new MimeTypeParameterInfo(in parameterString, idx.InitMimeTypeParameterCtorIdx());
         starred = idx.Starred;
         return true;    
     }
