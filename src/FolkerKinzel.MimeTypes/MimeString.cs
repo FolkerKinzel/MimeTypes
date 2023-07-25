@@ -1,9 +1,8 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Static class that works on <see cref="string"/>s and offers methods which are able to retrieve an appropriate file type extension 
-/// for a given Internet Media Type ("MIME type") or
-/// an appropriate Internet Media Type for a given file name.
+/// Static class that works on <see cref="string"/>s and offers methods that perform conversions between Internet Media Type strings 
+/// ("MIME types") and file names.
 /// </summary>
 /// <example>
 /// <para>
@@ -11,10 +10,8 @@
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
 /// </example>
-public static class MimeStringConverter
+public static class MimeString
 {
-    
-
     /// <summary>
     /// Converts an Internet Media Type to an appropriate file type extension.
     /// </summary>
@@ -35,7 +32,7 @@ public static class MimeStringConverter
     /// </remarks>
     /// <example>
     /// <para>
-    /// Convert a file name into an Internet Media Type and get a file type extension from an internet media type:
+    /// Convert a file name into an Internet Media Type and get a file type extension from an Internet Media Type:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
@@ -78,7 +75,7 @@ public static class MimeStringConverter
     /// </remarks>
     /// <example>
     /// <para>
-    /// Convert a file name into an Internet Media Type and get a file type extension from an internet media type:
+    /// Convert a file name into an Internet Media Type and get a file type extension from an Internet Media Type:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
@@ -115,7 +112,7 @@ public static class MimeStringConverter
     /// </remarks>
     /// <example>
     /// <para>
-    /// Convert a file name into an Internet Media Type and get a file type extension from an internet media type:
+    /// Convert a file name into an Internet Media Type and get a file type extension from an Internet Media Type:
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>

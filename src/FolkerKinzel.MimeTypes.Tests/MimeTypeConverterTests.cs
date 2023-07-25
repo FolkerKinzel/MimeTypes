@@ -1084,7 +1084,7 @@ public class MimeTypeConverterTests
     [DataRow("image/vnd.adobe.photoshop", ".psd")]
     [DataRow("application/json", ".json")]
     [DataRow("application/octet-stream", "##############++")]
-    public void FromFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeStringConverter.FromFileName(extension));
+    public void FromFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
 
     #endregion
 
@@ -1990,20 +1990,20 @@ public class MimeTypeConverterTests
     [DataRow("application/json", ".json")]
     [DataRow("blabla/nichda", ".bin")]
     [DataRow("    ", ".bin")]
-    public void GetFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(extension, MimeStringConverter.ToFileTypeExtension(mimeType));
+    public void GetFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(extension, MimeString.ToFileTypeExtension(mimeType));
 
 
     [TestMethod]
     public void GetFileTypeExtensionTest2()
     {
-        string ext = MimeStringConverter.ToFileTypeExtension("text/plain; charset=utf-8".AsSpan());
+        string ext = MimeString.ToFileTypeExtension("text/plain; charset=utf-8".AsSpan());
         Assert.AreEqual(".txt", ext);
     }
 
     [TestMethod]
     public void GetFileTypeExtensionTest3()
     {
-        string ext = MimeStringConverter.ToFileTypeExtension(ReadOnlySpan<char>.Empty, false);
+        string ext = MimeString.ToFileTypeExtension(ReadOnlySpan<char>.Empty, false);
         Assert.AreEqual("bin", ext);
     }
     #endregion

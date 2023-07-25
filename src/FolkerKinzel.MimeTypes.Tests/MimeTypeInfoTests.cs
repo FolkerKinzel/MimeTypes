@@ -565,13 +565,13 @@ public class MimeTypeInfoTests
     [DataRow("model/3mf", ".3mf")]
     [DataRow("nixda/nüschgefunden", ".bin")]
     public void GetFileTypeExtensionTest1(string mime, string expected)
-        => Assert.AreEqual(expected, MimeStringConverter.ToFileTypeExtension(mime));
+        => Assert.AreEqual(expected, MimeString.ToFileTypeExtension(mime));
 
     [TestMethod]
     public void GetFileTypeExtensionTest2()
     {  
         string? test = null;
-        Assert.AreEqual(".bin", MimeStringConverter.ToFileTypeExtension(test));
+        Assert.AreEqual(".bin", MimeString.ToFileTypeExtension(test));
     }
 
     [DataTestMethod]
@@ -587,15 +587,15 @@ public class MimeTypeInfoTests
     [DataRow("chemical/x-cdx", ".cdx")]
     [DataRow("workbook/formulaone", ".vts")]
     public void FromFileTypeExtensionTest1(string expected, string fileTypeExtension)
-        => Assert.AreEqual(expected, MimeStringConverter.FromFileName(fileTypeExtension));
+        => Assert.AreEqual(expected, MimeString.FromFileName(fileTypeExtension));
 
     [TestMethod]
     public void FromFileTypeExtensionTest2()
-        => Assert.AreEqual("application/octet-stream", MimeStringConverter.FromFileName(""));
+        => Assert.AreEqual("application/octet-stream", MimeString.FromFileName(""));
 
     [TestMethod]
     public void FromFileTypeExtensionTest3()
-        => Assert.AreEqual("application/octet-stream", MimeStringConverter.FromFileName("".AsSpan()));
+        => Assert.AreEqual("application/octet-stream", MimeString.FromFileName("".AsSpan()));
 
     [TestMethod]
     public void FromFileTypeExtensionTest4()

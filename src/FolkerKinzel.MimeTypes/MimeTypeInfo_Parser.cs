@@ -85,7 +85,7 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneab
     /// </remarks>
     public static MimeTypeInfo FromFileName(ReadOnlySpan<char> fileName)
     {
-        ReadOnlyMemory<char> memory = MimeStringConverter.FromFileName(fileName).AsMemory();
+        ReadOnlyMemory<char> memory = MimeString.FromFileName(fileName).AsMemory();
         _ = TryParseInternal(ref memory, out MimeTypeInfo inetMediaType);
         return inetMediaType;
     }

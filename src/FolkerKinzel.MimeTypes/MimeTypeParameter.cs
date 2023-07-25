@@ -93,7 +93,7 @@ public sealed class MimeTypeParameter : IEquatable<MimeTypeParameter>, IComparab
     /// Determines if the content of <paramref name="other"/> is equal to that of the 
     /// current instance.
     /// </summary>
-    /// <param name="other">A <see cref="MimeTypeParameter"/> object to compare with.</param>
+    /// <param name="other">A <see cref="MimeTypeParameter"/> object to compare with or <c>null</c>.</param>
     /// <returns><c>true</c> if the content of <paramref name="other"/> is equal to that of the 
     /// current instance.</returns>
     public bool Equals(MimeTypeParameter? other)
@@ -107,8 +107,8 @@ public sealed class MimeTypeParameter : IEquatable<MimeTypeParameter>, IComparab
     /// Determines whether <paramref name="obj"/> is a <see cref="MimeTypeParameter"/> object
     /// whose content is equal to that of the current instance.
     /// </summary>
-    /// <param name="obj">A <see cref="MimeTypeParameterInfo"/> structure to compare with.</param>
-    /// <returns><c>true</c> if <paramref name="obj"/> is a <see cref="MimeTypeParameterInfo"/> structure
+    /// <param name="obj">A <see cref="MimeTypeParameter"/> object to compare with or <c>null</c>.</param>
+    /// <returns><c>true</c> if <paramref name="obj"/> is a <see cref="MimeTypeParameter"/> object
     /// whose content is equal to that of the current instance.</returns>
     public override bool Equals(object? obj) => obj is MimeTypeParameter parameter && Equals(parameter);
 
@@ -149,8 +149,8 @@ public sealed class MimeTypeParameter : IEquatable<MimeTypeParameter>, IComparab
     /// <summary>
     /// Returns a value that indicates whether two specified <see cref="MimeTypeParameter"/> instances are equal.
     /// </summary>
-    /// <param name="parameter1">The first <see cref="MimeTypeParameter"/> to compare.</param>
-    /// <param name="parameter2">The second <see cref="MimeTypeParameter"/> to compare.</param>
+    /// <param name="parameter1">The first <see cref="MimeTypeParameter"/> to compare or <c>null</c>.</param>
+    /// <param name="parameter2">The second <see cref="MimeTypeParameter"/> to compare or <c>null</c>.</param>
     /// <returns><c>true</c> if <paramref name="parameter1"/> and <paramref name="parameter2"/> are equal;
     /// otherwise, <c>false</c>.</returns>
     public static bool operator ==(MimeTypeParameter? parameter1, MimeTypeParameter? parameter2)
@@ -160,8 +160,8 @@ public sealed class MimeTypeParameter : IEquatable<MimeTypeParameter>, IComparab
     /// <summary>
     /// Returns a value that indicates whether two specified <see cref="MimeTypeParameter"/> instances are not equal.
     /// </summary>
-    /// <param name="parameter1">The first <see cref="MimeTypeParameter"/> to compare.</param>
-    /// <param name="parameter2">The second <see cref="MimeTypeParameter"/> to compare.</param>
+    /// <param name="parameter1">The first <see cref="MimeTypeParameter"/> to compare or <c>null</c>.</param>
+    /// <param name="parameter2">The second <see cref="MimeTypeParameter"/> to compare or <c>null</c>.</param>
     /// <returns><c>true</c> if <paramref name="parameter1"/> and <paramref name="parameter2"/> are not equal;
     /// otherwise, <c>false</c>.</returns>
     /// <returns></returns>

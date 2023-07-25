@@ -30,8 +30,8 @@ public sealed class MimeType : IEquatable<MimeType>
     /// <summary>
     /// Initializes a new <see cref="MimeType"/> object.
     /// </summary>
-    /// <param name="mediaType">The <see cref="MimeTypeInfo.MediaType"/>.</param>
-    /// <param name="subType">The <see cref="MimeTypeInfo.SubType"/>.</param>
+    /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
+    /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
     /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> 
     /// or <paramref name="subType"/> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException">
@@ -56,8 +56,8 @@ public sealed class MimeType : IEquatable<MimeType>
     /// <summary>
     /// Creates a new <see cref="MimeType"/> object.
     /// </summary>
-    /// <param name="mediaType">The <see cref="MimeTypeInfo.MediaType"/>.</param>
-    /// <param name="subType">The <see cref="MimeTypeInfo.SubType"/>.</param>
+    /// <param name="mediaType">The <see cref="MimeType.MediaType"/>.</param>
+    /// <param name="subType">The <see cref="MimeType.SubType"/>.</param>
     /// <returns>A reference to the <see cref="MimeType"/> that is created.</returns>
     /// 
     /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> 
@@ -73,7 +73,6 @@ public sealed class MimeType : IEquatable<MimeType>
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
-    /// <seealso cref="MimeTypeInfo"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeType Create(string mediaType, string subType) => new(mediaType, subType);
 
@@ -98,7 +97,7 @@ public sealed class MimeType : IEquatable<MimeType>
     }
 
     /// <summary>
-    /// Appends a <see cref="MimeTypeParameterInfo"/> to the end of the <see cref="MimeType"/>.
+    /// Appends a <see cref="MimeTypeParameter"/> to the end of the <see cref="MimeType"/>.
     /// </summary>
     /// <param name="key">The name of the parameter.</param>
     /// <param name="value">The value of the parameter.</param>
@@ -154,10 +153,10 @@ public sealed class MimeType : IEquatable<MimeType>
     }
 
     /// <summary>
-    /// Removes all <see cref="MimeTypeParameterInfo"/>s.
+    /// Removes all <see cref="MimeTypeParameter"/>s.
     /// </summary>
     /// <returns>A reference to the <see cref="MimeType"/> instance on which the method was called.</returns>
-    /// <seealso cref="MimeTypeParameterInfo"/>
+    /// <seealso cref="MimeTypeParameter"/>
     public MimeType ClearParameters()
     {
         _dic?.Clear();
@@ -165,10 +164,10 @@ public sealed class MimeType : IEquatable<MimeType>
     }
 
     /// <summary>
-    /// Removes the <see cref="MimeTypeParameterInfo"/> with the specified <see cref="MimeTypeParameterInfo.Key"/>
+    /// Removes the <see cref="MimeTypeParameter"/> with the specified <see cref="MimeTypeParameter.Key"/>
     /// from the <see cref="MimeType"/> if such a parameter has existed.
     /// </summary>
-    /// <param name="key">The <see cref="MimeTypeParameterInfo.Key"/> of the <see cref="MimeTypeParameterInfo"/> to remove.</param>
+    /// <param name="key">The <see cref="MimeTypeParameter.Key"/> of the <see cref="MimeTypeParameter"/> to remove.</param>
     ///  <returns>A reference to the <see cref="MimeType"/> instance on which the method was called.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
     public MimeType RemoveParameter(string key)
@@ -305,26 +304,26 @@ public sealed class MimeType : IEquatable<MimeType>
 
 
     /// <summary>
-    /// Creates an appropriate <see cref="MimeTypeInfo"/> instance for a given
+    /// Creates an appropriate <see cref="MimeType"/> instance for a given
     /// file name.
     /// </summary>
     /// <param name="fileName">A file path, file name, file type extension (no matter whether with or without the period "."), or <c>null</c>.</param>
-    /// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileName"/>.</returns>
+    /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileName"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to find often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MimeType FromFileName(ReadOnlySpan<char> fileName) => Parse(MimeStringConverter.FromFileName(fileName));
+    public static MimeType FromFileName(ReadOnlySpan<char> fileName) => Parse(MimeString.FromFileName(fileName));
 
 
     /// <summary>
-    /// Creates an appropriate <see cref="MimeTypeInfo"/> instance for a given
+    /// Creates an appropriate <see cref="MimeType"/> instance for a given
     /// file name.
     /// </summary>
     /// <param name="fileName">A file path, file name, file type extension (no matter whether with or without the period "."), or <c>null</c>.</param>
-    /// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileName"/>.</returns>
+    /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileName"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to find often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
@@ -340,7 +339,7 @@ public sealed class MimeType : IEquatable<MimeType>
     /// Determines whether the value of this instance is equal to the value of <paramref name="other"/>. The <see cref="Parameters"/>
     /// are taken into account.
     /// </summary>
-    /// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
+    /// <param name="other">The <see cref="MimeType"/> instance to compare with or <c>null</c>.</param>
     /// <returns><c>true</c> if this the value of this instance is equal to that of <paramref name="other"/>; <c>false</c>, otherwise.</returns>
     /// 
     /// <example>
@@ -357,7 +356,7 @@ public sealed class MimeType : IEquatable<MimeType>
     /// Determines whether this instance is equal to <paramref name="other"/> and allows to specify
     /// whether or not the <see cref="Parameters"/> are taken into account.
     /// </summary>
-    /// <param name="other">The <see cref="MimeType"/> instance to compare with.</param>
+    /// <param name="other">The <see cref="MimeType"/> instance to compare with or <c>null</c>.</param>
     /// <param name="ignoreParameters">Pass <c>false</c> to take the <see cref="Parameters"/> into account;
     /// <c>true</c>, otherwise.</param>
     /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
@@ -367,10 +366,10 @@ public sealed class MimeType : IEquatable<MimeType>
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
-    public bool Equals(MimeType other, bool ignoreParameters)
+    public bool Equals(MimeType? other, bool ignoreParameters)
     {
-        if (!MediaType.Equals(other.MediaType, StringComparison.OrdinalIgnoreCase) ||
-           !SubType.Equals(other.SubType, StringComparison.OrdinalIgnoreCase))
+        if (!MediaType.Equals(other?.MediaType, StringComparison.OrdinalIgnoreCase) ||
+           !SubType.Equals(other?.SubType, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }
@@ -387,12 +386,13 @@ public sealed class MimeType : IEquatable<MimeType>
     private bool IsText => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
 
     /// <summary>
-    /// Determines whether <paramref name="obj"/> is a <see cref="MimeTypeInfo"/> structure whose
+    /// Determines whether <paramref name="obj"/> is a <see cref="MimeType"/> object
+    /// whose
     /// value is equal to that of this instance. The <see cref="Parameters"/>
     /// are taken into account.
     /// </summary>
-    /// <param name="obj">The <see cref="object"/> to compare with.</param>
-    /// <returns><c>true</c> if <paramref name="obj"/> is a <see cref="MimeTypeInfo"/> structure whose
+    /// <param name="obj">The <see cref="object"/> to compare with or <c>null</c>.</param>
+    /// <returns><c>true</c> if <paramref name="obj"/> is a <see cref="MimeType"/> object whose
     /// value is equal to that of this instance; <c>false</c>, otherwise.</returns>
     /// <example>
     /// <para>
@@ -400,7 +400,7 @@ public sealed class MimeType : IEquatable<MimeType>
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
-    public override bool Equals(object? obj) => obj is MimeTypeInfo type && Equals(in type, false);
+    public override bool Equals(object? obj) => obj is MimeType type && Equals(type, false);
 
 
     #endregion
@@ -442,8 +442,8 @@ public sealed class MimeType : IEquatable<MimeType>
     /// Returns a value that indicates whether two specified <see cref="MimeType"/> instances are equal.
     /// The <see cref="Parameters"/> are taken into account.
     /// </summary>
-    /// <param name="mimeType1">The first <see cref="MimeType"/> to compare.</param>
-    /// <param name="mimeType2">The second <see cref="MimeType"/> to compare.</param>
+    /// <param name="mimeType1">The first <see cref="MimeType"/> to compare or <c>null</c>.</param>
+    /// <param name="mimeType2">The second <see cref="MimeType"/> to compare or <c>null</c>.</param>
     /// <returns><c>true</c> if <paramref name="mimeType1"/> and <paramref name="mimeType2"/> are equal;
     /// otherwise, <c>false</c>.</returns>
     /// <example>
@@ -457,11 +457,11 @@ public sealed class MimeType : IEquatable<MimeType>
 
 
     /// <summary>
-    /// Returns a value that indicates whether two specified <see cref="MimeTypeInfo"/> instances are not equal.
+    /// Returns a value that indicates whether two specified <see cref="MimeType"/> instances are not equal.
     /// The <see cref="Parameters"/> are taken into account.
     /// </summary>
-    /// <param name="mimeType1">The first <see cref="MimeTypeInfo"/> to compare.</param>
-    /// <param name="mimeType2">The second <see cref="MimeTypeInfo"/> to compare.</param>
+    /// <param name="mimeType1">The first <see cref="MimeType"/> to compare or <c>null</c>.</param>
+    /// <param name="mimeType2">The second <see cref="MimeType"/> to compare or <c>null</c>.</param>
     /// <returns><c>true</c> if <paramref name="mimeType1"/> and <paramref name="mimeType2"/> are not equal;
     /// otherwise, <c>false</c>.</returns>
     /// <example>
