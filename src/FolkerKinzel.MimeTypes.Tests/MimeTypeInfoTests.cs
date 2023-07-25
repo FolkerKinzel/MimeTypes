@@ -36,7 +36,7 @@ public class MimeTypeInfoTests
     [TestMethod]
     public void MimeTypeTest7()
     {
-        MimeTypeInfo mime = MimeTypeBuilder.Create("application", "was").AddParameter("para", "@").Build();
+        MimeTypeInfo mime = MimeTypeBuilder.Create("application", "was").AppendParameter("para", "@").Build();
         string s = mime.ToString();
         StringAssert.Contains(s, "\"@\"");
     }
@@ -291,8 +291,8 @@ public class MimeTypeInfoTests
         }
 
         MimeTypeInfo mime = MimeTypeBuilder.Create("application", "x-stuff")
-                                  .AddParameter("key", value)
-                                  .AddParameter("other", "bla")
+                                  .AppendParameter("key", value)
+                                  .AppendParameter("other", "bla")
                                   .Build();
         string s = mime.ToString(MimeFormats.LineWrapping);
         Assert.IsFalse(s.Contains('\"'));
@@ -565,13 +565,13 @@ public class MimeTypeInfoTests
     [DataRow("model/3mf", ".3mf")]
     [DataRow("nixda/nüschgefunden", ".bin")]
     public void GetFileTypeExtensionTest1(string mime, string expected)
-        => Assert.AreEqual(expected, MimeType.GetFileTypeExtension(mime));
+        => Assert.AreEqual(expected, MimeType.ToFileExtension(mime));
 
     [TestMethod]
     public void GetFileTypeExtensionTest2()
     {  
         string? test = null;
-        Assert.AreEqual(".bin", MimeType.GetFileTypeExtension(test));
+        Assert.AreEqual(".bin", MimeType.ToFileExtension(test));
     }
 
     [DataTestMethod]
@@ -587,15 +587,15 @@ public class MimeTypeInfoTests
     [DataRow("chemical/x-cdx", ".cdx")]
     [DataRow("workbook/formulaone", ".vts")]
     public void FromFileTypeExtensionTest1(string expected, string fileTypeExtension)
-        => Assert.AreEqual(expected, MimeType.FromFileTypeExtension(fileTypeExtension));
+        => Assert.AreEqual(expected, MimeType.FromFileExtension(fileTypeExtension));
 
     [TestMethod]
     public void FromFileTypeExtensionTest2()
-        => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension(""));
+        => Assert.AreEqual("application/octet-stream", MimeType.FromFileExtension(""));
 
     [TestMethod]
     public void FromFileTypeExtensionTest3()
-        => Assert.AreEqual("application/octet-stream", MimeType.FromFileTypeExtension("".AsSpan()));
+        => Assert.AreEqual("application/octet-stream", MimeType.FromFileExtension("".AsSpan()));
 
     [TestMethod]
     public void FromFileTypeExtensionTest4()

@@ -8,8 +8,8 @@ public static class FormattingOptionsExample
     {
         MimeTypeInfo mime =
             MimeTypeBuilder.Create("application", "x-stuff")
-                           .AddParameter("short", "s")
-                           .AddParameter("key-long",
+                           .AppendParameter("short", "s")
+                           .AppendParameter("key-long",
             "Very very loooong value in order to show the line wrapping")
                            .Build();
 

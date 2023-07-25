@@ -42,7 +42,7 @@ public static class MimeType
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
-    public static string GetFileTypeExtension(string? mimeType, bool includePeriod = true)
+    public static string ToFileExtension(string? mimeType, bool includePeriod = true)
     {
         if (mimeType != null)
         {
@@ -85,7 +85,7 @@ public static class MimeType
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
-    public static string GetFileTypeExtension(ReadOnlySpan<char> mimeType, bool includePeriod = true)
+    public static string ToFileExtension(ReadOnlySpan<char> mimeType, bool includePeriod = true)
     {
         int parameterStartIdx = mimeType.IndexOf(';');
 
@@ -124,7 +124,7 @@ public static class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string FromFileTypeExtension(string? fileTypeExtension) => MimeCache.GetMimeType(fileTypeExtension);
+    public static string FromFileExtension(string? fileTypeExtension) => MimeCache.GetMimeType(fileTypeExtension);
 
 
     /// <summary>
@@ -150,5 +150,5 @@ public static class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static string FromFileTypeExtension(ReadOnlySpan<char> fileTypeExtension) => MimeCache.GetMimeType(fileTypeExtension);
+    public static string FromFileExtension(ReadOnlySpan<char> fileTypeExtension) => MimeCache.GetMimeType(fileTypeExtension);
 }

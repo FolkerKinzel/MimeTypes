@@ -77,14 +77,14 @@ public sealed class MimeTypeBuilder
         foreach (var parameter in mime.Parameters())
         {
             var language = parameter.Language;
-            _ = builder.AddParameter(parameter.Key.ToString(), parameter.Value.ToString(), language.Length == 0 ? null : language.ToString());
+            _ = builder.AppendParameter(parameter.Key.ToString(), parameter.Value.ToString(), language.Length == 0 ? null : language.ToString());
         }
 
         return builder;
     }
 
     /// <summary>
-    /// Adds a <see cref="MimeTypeParameter"/>.
+    /// Appends a <see cref="MimeTypeParameter"/> to the end of the <see cref="MimeTypeBuilder"/>.
     /// </summary>
     /// <param name="key">The name of the parameter.</param>
     /// <param name="value">The value of the parameter.</param>
@@ -128,7 +128,7 @@ public sealed class MimeTypeBuilder
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     /// <seealso cref="MimeTypeParameter"/>
-    public MimeTypeBuilder AddParameter(string key, string? value, string? language = null)
+    public MimeTypeBuilder AppendParameter(string key, string? value, string? language = null)
     {
         _dic ??= new ParameterModelDictionary();
         var model = new ParameterModel(key, value, language);
