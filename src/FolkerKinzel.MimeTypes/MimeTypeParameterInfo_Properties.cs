@@ -2,9 +2,6 @@
 
 public readonly partial struct MimeTypeParameterInfo
 {
-
-    
-
     internal const int KEY_LENGTH_MAX_VALUE = 0xFFF;
 
     internal const int KEY_VALUE_OFFSET_SHIFT = 12;
