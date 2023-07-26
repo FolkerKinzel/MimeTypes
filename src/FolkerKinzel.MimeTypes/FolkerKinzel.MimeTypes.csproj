@@ -57,6 +57,7 @@
     <Compile Remove="Intls\TokenError.cs" />
     <Compile Remove="Intls\UnitTestGenerator.cs" />
     <Compile Remove="MimeTypeInfoEqualityComparer.cs" />
+    <Compile Remove="MimeTypeInfo_ToString_OBSOLETE.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\Extension.csv" />

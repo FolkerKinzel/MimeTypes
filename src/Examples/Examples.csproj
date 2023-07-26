@@ -8,6 +8,10 @@
 	</PropertyGroup>
 
 	<ItemGroup>
+	  <Compile Remove="BuildAndParseExample.cs" />
+	</ItemGroup>
+
+	<ItemGroup>
 		<ProjectReference Include="..\FolkerKinzel.MimeTypes\FolkerKinzel.MimeTypes.csproj" />
 	</ItemGroup>
 

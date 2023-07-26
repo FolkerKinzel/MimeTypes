@@ -31,10 +31,8 @@ public readonly partial struct MimeTypeInfo : ICloneable
             return default;
         }
 
-        ReadOnlyMemory<char> memory = ToString().AsMemory();
-        _ = TryParseInternal(ref memory, out MimeTypeInfo mimeType);
-
-        return mimeType;
+        ReadOnlyMemory<char> memory = this._mimeTypeString.ToString().AsMemory();
+        return new MimeTypeInfo(in memory, this._idx);
     }
 
 }
