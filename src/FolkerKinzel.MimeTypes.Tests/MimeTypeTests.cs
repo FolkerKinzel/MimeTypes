@@ -34,7 +34,7 @@ public class MimeTypeTests
     [TestMethod]
     public void ParseTest1()
     {
-        var mem = "image/jpeg".AsMemory();
+        ReadOnlyMemory<char> mem = "image/jpeg".AsMemory();
         Assert.IsNotNull(MimeType.Parse(in mem));
     }
 
@@ -57,7 +57,7 @@ public class MimeTypeTests
         const string extension = ".png";
 
 
-        var mem = mimeString.AsMemory();
+        ReadOnlyMemory<char> mem = mimeString.AsMemory();
         Assert.IsTrue(MimeType.TryParse(in mem, out MimeType? mime));
         Assert.AreEqual(extension, mime.GetFileTypeExtension());
 
