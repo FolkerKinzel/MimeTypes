@@ -17,7 +17,7 @@ internal static class ParameterSerializer
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="model"></param>
-    internal static void Append(StringBuilder builder, in MimeTypeParameter model)
+    internal static void Append(StringBuilder builder, MimeTypeParameter model)
     {
         Debug.Assert(builder is not null);
 
