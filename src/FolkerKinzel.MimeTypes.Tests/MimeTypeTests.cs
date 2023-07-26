@@ -302,4 +302,27 @@ public class MimeTypeTests
         Assert.IsFalse(MimeType.Create("x", "y").Equals(42));
     }
 
+    [TestMethod]
+    public void EqualsOperatorTest1()
+    {
+        MimeType? m1 = null;
+        MimeType? m2 = null;
+        Assert.IsTrue(m1 == m2);
+        Assert.IsFalse(m1 != m2);
+    }
+
+    [TestMethod]
+    public void EqualsOperatorTest2()
+    {
+        MimeType? m1 = MimeType.Create("x", "y");
+        MimeType? m2 = null;
+        Assert.IsTrue(m1 != m2);
+        Assert.IsTrue(m2 != m1);
+
+        Assert.IsFalse(m1 == m2);
+        Assert.IsFalse(m2 == m1);
+        m2 = m1;
+        Assert.IsTrue(m1 == m2);
+
+    }
 }
