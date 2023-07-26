@@ -2,7 +2,7 @@
 
 namespace Examples;
 
-public static class FormattingOptionsExample2
+public static class FormattingOptionsExample2_OBSOLETE
 {
     public static void Example()
     {

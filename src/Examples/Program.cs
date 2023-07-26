@@ -4,18 +4,18 @@ internal class Program
 {
     private static void Main()
     {
-        //FormattingOptionsExample.Example();
+        FormattingOptionsExample.Example();
         Console.WriteLine();
-        FormattingOptionsExample2.Example();
+        
+        FileExtensionExample.Example();
         Console.WriteLine();
-        //FileExtensionExample.Example();
-        //Console.WriteLine();
-        //BuildAndParseExample.Example();
-        //BuildAndParseExample2.Example();
 
-        //Console.WriteLine();
-        //EqualityExample.Example();
-        //EqualityExample2.Example();
+        BuildAndParseExample.Example();
+        Console.WriteLine();
+        EqualityExample.Example();
+        Console.WriteLine();
+        MimeTypeInfoExample.Example();
+        Console.WriteLine();
 
     }
 }

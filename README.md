@@ -24,6 +24,7 @@ that is part of this repository.
 
 ### Code Examples
 1. [Get an Internet Media Type ("MIME type") string from a file type extension and vice versa](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/FileExtensionExample.cs)
-2. [Build, serialize, and parse a MimeTypeInfo instance](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/BuildAndParseExample.cs)
-3. [Format a MimeTypeInfo instance into a standards-compliant string using several options](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/FormattingOptionsExample.cs)
-4. [Compare MimeTypeInfo instances](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/EqualityExample.cs)
+2. [Build, serialize, and parse a MimeType instance](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/BuildAndParseExample.cs)
+3. [Format a MimeType instance into a standards-compliant string using several options](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/FormattingOptionsExample.cs)
+4. [Compare MimeType instances](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/EqualityExample.cs)
+5. [Efficient parsing of an Internet Media Type String](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/Examples/MimeTypeInfoExample.cs)

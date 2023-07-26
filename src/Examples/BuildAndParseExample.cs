@@ -11,23 +11,22 @@ public static class BuildAndParseExample
         It also contains a few Non-ASCII-Characters: äöß.
         """;
 
-        MimeTypeInfo mimeType1 = 
+        MimeType mimeType1 =
             MimeType.Create("application", "x-stuff")
-                           .AppendParameter("first-parameter", longParameterValue, "en")
-                           .AppendParameter("second-parameter", "Parameter with  \\, = and \".")
-                           .AsInfo();
+                    .AppendParameter("first-parameter", longParameterValue, "en")
+                    .AppendParameter("second-parameter", "Parameter with  \\, = and \".");
 
         string s = mimeType1.ToString(MimeFormats.LineWrapping);
         Console.WriteLine(s);
 
-        var mimeType2 = MimeTypeInfo.Parse(s);
+        var mimeType2 = MimeType.Parse(s);
 
         Console.WriteLine();
-        Console.WriteLine($"Media Type: {mimeType2.MediaType.ToString()}");
-        Console.WriteLine($"Sub Type:   {mimeType2.SubType.ToString()}");
+        Console.WriteLine($"Media Type: {mimeType2.MediaType}");
+        Console.WriteLine($"Sub Type:   {mimeType2.SubType}");
 
         int parameterCounter = 1;
-        foreach (MimeTypeParameterInfo parameter in mimeType2.Parameters())
+        foreach (MimeTypeParameter parameter in mimeType2.Parameters)
         {
             Console.WriteLine();
             Console.WriteLine($"Parameter {parameterCounter++}:");
@@ -35,8 +34,16 @@ public static class BuildAndParseExample
             Console.WriteLine($"Key:      {parameter.Key}");
             Console.WriteLine($"Language: {parameter.Language}");
             Console.WriteLine("Value:");
-            Console.WriteLine(parameter.Value.ToString());
+            Console.WriteLine(parameter.Value);
         }
+
+        // The MimeType class allows to modify the parameters:
+        mimeType2.RemoveParameter("first-parameter")
+                 .AppendParameter("Second-Parameter", "normal");
+
+        Console.WriteLine();
+        Console.Write("mimeType2 modified: ");
+        Console.WriteLine(mimeType2);
     }
 }
 /*
@@ -67,4 +74,6 @@ Key:      second-parameter
 Language:
 Value:
 Parameter with  \, = and ".
+
+mimeType2 modified: application/x-stuff; second-parameter=normal
  */

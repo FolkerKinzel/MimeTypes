@@ -6,34 +6,34 @@ public static class FormattingOptionsExample
 {
     public static void Example()
     {
-        MimeType builder =
+        MimeType mimeType =
             MimeType.Create("application", "x-stuff")
                            .AppendParameter("short", "s")
                            .AppendParameter("key-long",
             "Very very loooong value in order to show the line wrapping");
 
         Console.WriteLine("MimeFormats.Default:");
-        Console.WriteLine(builder.ToString());
+        Console.WriteLine(mimeType.ToString());
         Console.WriteLine();
 
         Console.WriteLine("MimeFormats.IgnoreParameters:");
-        Console.WriteLine(builder.ToString(MimeFormats.IgnoreParameters));
+        Console.WriteLine(mimeType.ToString(MimeFormats.IgnoreParameters));
         Console.WriteLine();
 
         Console.WriteLine("MimeFormats.AvoidSpace:");
-        Console.WriteLine(builder.ToString(MimeFormats.AvoidSpace));
+        Console.WriteLine(mimeType.ToString(MimeFormats.AvoidSpace));
         Console.WriteLine();
 
         Console.WriteLine("MimeFormats.LineWrapping:");
-        Console.WriteLine(builder.ToString(MimeFormats.LineWrapping));
+        Console.WriteLine(mimeType.ToString(MimeFormats.LineWrapping));
         Console.WriteLine();
 
         Console.WriteLine("MimeFormats.LineWrapping | MimeFormats.AvoidSpace:");
-        Console.WriteLine(builder.ToString(MimeFormats.LineWrapping | MimeFormats.AvoidSpace));
+        Console.WriteLine(mimeType.ToString(MimeFormats.LineWrapping | MimeFormats.AvoidSpace));
         Console.WriteLine();
 
         Console.WriteLine("MimeFormats.Url:");
-        Console.WriteLine(builder.ToString(MimeFormats.Url));
+        Console.WriteLine(mimeType.ToString(MimeFormats.Url));
         Console.WriteLine();
     }
 }

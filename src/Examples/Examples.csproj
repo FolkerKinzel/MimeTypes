@@ -8,7 +8,9 @@
 	</PropertyGroup>
 
 	<ItemGroup>
-	  <Compile Remove="BuildAndParseExample.cs" />
+	  <Compile Remove="BuildAndParseExample_OBSOLETE.cs" />
+	  <Compile Remove="EqualityExample_OBSOLETE.cs" />
+	  <Compile Remove="FormattingOptionsExample2_OBSOLETE.cs" />
 	</ItemGroup>
 
 	<ItemGroup>
