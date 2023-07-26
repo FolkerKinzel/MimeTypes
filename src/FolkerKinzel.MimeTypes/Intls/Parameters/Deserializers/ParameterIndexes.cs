@@ -19,7 +19,7 @@ internal readonly ref struct ParameterIndexes
     internal ParameterIndexes(ReadOnlySpan<char> span)
     {
         Span = span;
-        int keyLengthLocal = span.IndexOf(MimeTypeParameterInfo.SEPARATOR);
+        int keyLengthLocal = span.IndexOf(MimeTypeParameter.SEPARATOR);
 
         if (!VerifyKeyLength(keyLengthLocal))
         {

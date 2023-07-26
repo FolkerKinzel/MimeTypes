@@ -25,6 +25,6 @@ public sealed partial class MimeTypeParameter
     /// </summary>
     /// <value><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</value>
     internal bool IsAsciiCharSetParameter
-        => Key.Equals(MimeTypeParameterInfo.CHARSET_KEY, StringComparison.OrdinalIgnoreCase)
-           && StringComparer.OrdinalIgnoreCase.Equals(Value, MimeTypeParameterInfo.ASCII_CHARSET_VALUE);
+        => Key.Equals(MimeTypeParameter.CHARSET_KEY, StringComparison.OrdinalIgnoreCase)
+           && StringComparer.OrdinalIgnoreCase.Equals(Value, MimeTypeParameter.ASCII_CHARSET_VALUE);
 }

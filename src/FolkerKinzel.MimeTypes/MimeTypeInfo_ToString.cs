@@ -33,7 +33,7 @@ public readonly partial struct MimeTypeInfo
     /// </example>
     public string ToString(MimeFormats options, int lineLength = MimeType.MinimumLineLength)
     {
-        var sb = new StringBuilder(STRING_LENGTH);
+        var sb = new StringBuilder(MimeType.STRING_LENGTH);
         AppendTo(sb, options, lineLength);
         return sb.ToString();
     }
@@ -73,7 +73,7 @@ public readonly partial struct MimeTypeInfo
             lineLength = MimeType.MinimumLineLength - 1;
         }
 
-        _ = builder.EnsureCapacity(builder.Length + STRING_LENGTH);
+        _ = builder.EnsureCapacity(builder.Length + MimeType.STRING_LENGTH);
         int insertStartIndex = builder.Length;
         _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(insertStartIndex);
 
@@ -116,8 +116,6 @@ public readonly partial struct MimeTypeInfo
     {
         Debug.Assert(options == options.Normalize());
 
-
-
         var worker = new StringBuilder(lineLength);
         bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
 
@@ -126,7 +124,7 @@ public readonly partial struct MimeTypeInfo
             EncodingAction action = worker.Clear().Append(in parameter, false);
 
             lineLength = ComputeMinimumLineLength(
-                            parameter.Key.Length + parameter.CharSet.Length + parameter.Language.Length,
+                            parameter.Key.Length + parameter.Language.Length,
                             lineLength,
                             action);
 
@@ -134,7 +132,7 @@ public readonly partial struct MimeTypeInfo
             {
                 foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(parameter, worker, lineLength, action))
                 {
-                    _ = builder.Append(';').Append(NEW_LINE).Append(tmp);
+                    _ = builder.Append(';').Append(MimeType.NEW_LINE).Append(tmp);
                 }
             }
             else
@@ -150,7 +148,7 @@ public readonly partial struct MimeTypeInfo
 
                 if (neededLength > lineLength)
                 {
-                    _ = builder.Append(NEW_LINE);
+                    _ = builder.Append(MimeType.NEW_LINE);
                 }
                 else if (appendSpace)
                 {
@@ -178,7 +176,7 @@ public readonly partial struct MimeTypeInfo
 
         if (enc == EncodingAction.UrlEncode)
         {
-            minimumLength += 3; // *''
+            minimumLength += ParameterSerializer.UTF_8.Length + 3; // *''
         }
         else if (enc.HasFlag(EncodingAction.Quote))
         {

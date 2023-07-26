@@ -1,6 +1,5 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Builders;
 using System;
-using System.Reflection.Metadata;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
@@ -23,8 +22,7 @@ internal static class ParameterSerializer
         Debug.Assert(builder is not null);
 
         ReadOnlySpan<char> valueSpan = model.Value.AsSpan();
-        EncodingAction action = valueSpan.EncodingAction();
-        action = model.Language != null ? EncodingAction.UrlEncode : action;
+        EncodingAction action;
 
         if (model.Language != null)
         {
