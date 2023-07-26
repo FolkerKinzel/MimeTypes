@@ -46,46 +46,35 @@ public class ParameterSerializerTests
     [TestMethod]
     public void AppendTest4()
     {
-        ReadOnlyMemory<char> mem = "key=".AsMemory();
-        _ = MimeTypeParameterInfo.TryParse(true, ref mem, out MimeTypeParameterInfo para, out _);
-
-        var sb = new StringBuilder();
-        sb.Append(in para, false);
-        StringAssert.Contains(sb.ToString(), "key=\"\"");
+        ReadOnlyMemory<char> mem = "x/y; key=".AsMemory();
+        Assert.IsTrue( MimeType.TryParse(in mem, out MimeType? mime));
+        StringAssert.Contains(mime.Parameters.First().ToString(), "key=\"\"");
     }
 
     [TestMethod]
     public void AppendTest5()
     {
-        ReadOnlyMemory<char> mem = "key*='en'".AsMemory();
-        _ = MimeTypeParameterInfo.TryParse(true, ref mem, out MimeTypeParameterInfo para, out _);
-
-        var sb = new StringBuilder();
-        sb.Append(in para, false);
-        StringAssert.Contains(sb.ToString(), "key*=utf-8'en'");
+        ReadOnlyMemory<char> mem = "x/y; key*='en'".AsMemory();
+        Assert.IsTrue(MimeType.TryParse(in mem, out MimeType? mime));
+        StringAssert.Contains(mime.ToString(), "key*=utf-8'en'");
     }
 
     [TestMethod]
     public void AppendTest6()
     {
-        ReadOnlyMemory<char> mem = ("key*=''" + Uri.EscapeDataString("äöü")).AsMemory();
-        _ = MimeTypeParameterInfo.TryParse(true, ref mem, out MimeTypeParameterInfo para, out _);
+        ReadOnlyMemory<char> mem = ("x/y; key*=''" + Uri.EscapeDataString("äöü")).AsMemory();
+        Assert.IsTrue(MimeType.TryParse(in mem, out MimeType? mime));
 
-        var sb = new StringBuilder();
-        sb.Append(in para, false);
-        StringAssert.Contains(sb.ToString(), "key*=");
+        StringAssert.Contains(mime.ToString(), "key*=");
     }
 
     [TestMethod]
     public void AppendTest7()
     {
-        const string bla = "charset=\"BLA\\\"BLA\"";
+        const string bla = "x/y; charset=\"BLA\\\"BLA\"";
         ReadOnlyMemory<char> mem = bla.AsMemory();
-        _ = MimeTypeParameterInfo.TryParse(true, ref mem, out MimeTypeParameterInfo para, out _);
-
-        var sb = new StringBuilder();
-        sb.Append(in para, false);
-        StringAssert.Contains(sb.ToString(), bla.ToLowerInvariant());
+        Assert.IsTrue(MimeType.TryParse(in mem, out MimeType? mime));
+        StringAssert.Contains(mime.ToString(), bla.ToLowerInvariant());
     }
 }
 

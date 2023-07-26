@@ -174,7 +174,7 @@ public sealed partial class MimeType
     /// <returns>The minimum length that is needed for a line.</returns>
     private static int ComputeMinimumLineLength(int givenLength, int desiredLineLength, EncodingAction enc)
     {
-        int minimumLength = givenLength + ParameterSplitter.MINIMUM_LINE_LENGTH;
+        int minimumLength = givenLength + ParameterSplitter2.MINIMUM_LINE_LENGTH;
 
         if (enc == EncodingAction.UrlEncode)
         {

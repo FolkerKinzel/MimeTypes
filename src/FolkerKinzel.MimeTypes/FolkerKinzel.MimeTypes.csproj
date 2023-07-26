@@ -53,6 +53,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="FormattingOptions.cs" />
+    <Compile Remove="Intls\Parameters\Serializers\ParameterSplitter.cs" />
     <Compile Remove="Intls\ThrowHelper.cs" />
     <Compile Remove="Intls\TokenError.cs" />
     <Compile Remove="Intls\UnitTestGenerator.cs" />

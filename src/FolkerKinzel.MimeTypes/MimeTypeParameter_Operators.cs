@@ -22,6 +22,6 @@ public sealed partial class MimeTypeParameter
     /// otherwise, <c>false</c>.</returns>
     /// <returns></returns>
     public static bool operator !=(MimeTypeParameter? parameter1, MimeTypeParameter? parameter2)
-        => !parameter1?.Equals(parameter2) ?? !parameter2?.Equals(parameter1) ?? false;
+        => !(parameter1 == parameter2);
 
 }

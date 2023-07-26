@@ -173,7 +173,7 @@ public sealed partial class MimeType
     /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
     /// <seealso cref="Parse(string)"/>
     /// <seealso cref="TryParse(ReadOnlyMemory{char}, out MimeType?)"/>
-    public static MimeType Parse(ReadOnlyMemory<char> value) => Create(MimeTypeInfo.Parse(value));
+    public static MimeType Parse(in ReadOnlyMemory<char> value) => Create(MimeTypeInfo.Parse(value));
 
 
     /// <summary>
@@ -194,7 +194,7 @@ public sealed partial class MimeType
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
     /// <see cref="MimeType"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeType"/>; otherwise, <c>false</c>.</returns>
-    public static bool TryParse(ReadOnlyMemory<char> value, [NotNullWhen(true)] out MimeType? mimeType)
+    public static bool TryParse(in ReadOnlyMemory<char> value, [NotNullWhen(true)] out MimeType? mimeType)
     {
         mimeType = null;
 
@@ -206,6 +206,25 @@ public sealed partial class MimeType
 
         return false;
     }
+
+    /// <summary>
+    /// Gets an appropriate file type extension.
+    /// </summary>
+    /// <param name="includePeriod"><c>true</c> specifies, that the period "." (U+002E) is included in the retrieved file type 
+    /// extension, <c>false</c>, that it's not.</param>
+    /// <returns>An appropriate file type extension.</returns>
+    /// <remarks>
+    /// <para>
+    /// If no other file type extension could be found, <see cref="MimeCache.DefaultFileTypeExtension"/>
+    /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
+    /// </para>
+    /// <para>
+    /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
+    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
+    /// </para>
+    /// </remarks>
+    public string GetFileTypeExtension(bool includePeriod = true) => MimeString.ToFileTypeExtension(ToString(MimeFormats.IgnoreParameters), includePeriod);
 
 
     /// <summary>

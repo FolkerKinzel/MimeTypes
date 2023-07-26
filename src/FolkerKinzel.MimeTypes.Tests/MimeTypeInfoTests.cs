@@ -3,6 +3,7 @@ using System.Diagnostics;
 using FolkerKinzel.Strings.Polyfills;
 using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
+using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 
@@ -308,6 +309,15 @@ public class MimeTypeInfoTests
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
         inetMedia.AppendTo(null!);
+    }
+
+    [TestMethod]
+    public void AppendToTest2()
+    {
+        Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
+        var builder = new StringBuilder();
+        inetMedia.AppendTo(builder);
+        Assert.AreEqual("TEXT/PLAIN; CHARSET=ISO-8859-1", builder.ToString());
     }
 
 

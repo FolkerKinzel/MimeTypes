@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 namespace FolkerKinzel.MimeTypes.Tests;
 
 [TestClass]
-public class MimeTypeParameterTests
+public class MimeTypeParameterInfoTests
 {
     [TestMethod]
     public void CloneTest1()
@@ -21,11 +21,43 @@ public class MimeTypeParameterTests
     }
 
     [TestMethod]
+    public void CloneTest2()
+    {
+        var para = new MimeTypeParameterInfo();
+        MimeTypeParameterInfo clone = para.Clone();
+        Assert.AreEqual(para, clone);
+    }
+
+        [TestMethod]
     public void EqualsTest1()
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=US-ASCII", out MimeTypeInfo media1));
         object o1 = media1.Parameters().First();
         Assert.IsFalse(o1.Equals(42));
+    }
+
+    [TestMethod]
+    public void EqualsTest2()
+    {
+        Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=US-ASCII", out MimeTypeInfo media1));
+        MimeTypeParameterInfo o1 = media1.Parameters().First();
+        Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=us-ascii", out MimeTypeInfo media2));
+        MimeTypeParameterInfo o2 = media2.Parameters().First();
+        Assert.IsTrue(o1.Equals(o2));
+        Assert.IsTrue(o1 == o2);
+        Assert.IsFalse(o1 != o2);
+    }
+
+    [TestMethod]
+    public void EqualsTest3()
+    {
+        Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=US-ASCII", out MimeTypeInfo media1));
+        MimeTypeParameterInfo o1 = media1.Parameters().First();
+        Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; other=US-ASCII", out MimeTypeInfo media2));
+        MimeTypeParameterInfo o2 = media2.Parameters().First();
+        Assert.IsFalse(o1.Equals(o2));
+        Assert.IsTrue(o1 != o2);
+        Assert.IsFalse(o1 == o2);
     }
 
     [TestMethod]
