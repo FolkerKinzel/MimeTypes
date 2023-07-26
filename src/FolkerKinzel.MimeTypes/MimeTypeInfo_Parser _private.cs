@@ -3,7 +3,7 @@ using FolkerKinzel.MimeTypes.Properties;
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
+public readonly partial struct MimeTypeInfo 
 {
     private static MimeTypeInfo ParseInternal(ref ReadOnlyMemory<char> value)
     {

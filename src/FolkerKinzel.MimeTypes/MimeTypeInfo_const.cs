@@ -2,7 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
+public readonly partial struct MimeTypeInfo
 {
 
     internal const int MEDIA_TYPE_LENGTH_MAX_VALUE = short.MaxValue;

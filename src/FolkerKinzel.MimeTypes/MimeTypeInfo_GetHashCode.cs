@@ -2,7 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
+public readonly partial struct MimeTypeInfo
 {
     /// <summary>
     /// Creates a hash code for this instance, which takes the <see cref="Parameters"/> into account.

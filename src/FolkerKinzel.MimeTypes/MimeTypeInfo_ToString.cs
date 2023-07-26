@@ -2,7 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
+public readonly partial struct MimeTypeInfo
 {
     /// <summary>
     /// Serializes the instance into an Internet Media Type <see cref="string"/> ("MIME type") using the 

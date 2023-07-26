@@ -2,7 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
+public readonly partial struct MimeTypeInfo
 {
     private readonly ReadOnlyMemory<char> _mimeTypeString;
 

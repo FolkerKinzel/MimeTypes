@@ -1,6 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
+public readonly partial struct MimeTypeInfo
 {
     /// <summary>
     /// Returns a value that indicates whether two specified <see cref="MimeTypeInfo"/> instances are equal.

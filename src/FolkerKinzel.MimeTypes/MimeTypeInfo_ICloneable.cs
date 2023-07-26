@@ -1,6 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>, ICloneable
+public readonly partial struct MimeTypeInfo : ICloneable
 {
     /// <inheritdoc/>
     /// <remarks>
