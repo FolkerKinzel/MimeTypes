@@ -183,8 +183,18 @@ public sealed partial class MimeType
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
     /// <see cref="MimeType"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeType"/>; otherwise, <c>false</c>.</returns>
-    public static bool TryParse(string? value, [NotNullWhen(true)] out MimeType? mimeType) => TryParse(value.AsMemory(), out mimeType);
-    
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+    public static bool TryParse(string value, [NotNullWhen(true)] out MimeType? mimeType)
+    {
+        if (MimeTypeInfo.TryParse(value, out MimeTypeInfo info))
+        {
+            mimeType = MimeType.Create(in info);
+            return true;
+        }
+        mimeType = null;
+        return false;
+    }
+
 
 
     /// <summary>
@@ -196,14 +206,12 @@ public sealed partial class MimeType
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeType"/>; otherwise, <c>false</c>.</returns>
     public static bool TryParse(in ReadOnlyMemory<char> value, [NotNullWhen(true)] out MimeType? mimeType)
     {
-        mimeType = null;
-
         if (MimeTypeInfo.TryParse(value, out MimeTypeInfo info))
         {
             mimeType = MimeType.Create(in info);
             return true;
         }
-
+        mimeType = null;
         return false;
     }
 

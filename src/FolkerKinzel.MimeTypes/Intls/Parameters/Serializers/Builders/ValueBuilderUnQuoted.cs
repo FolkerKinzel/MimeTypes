@@ -14,7 +14,8 @@ internal static class ValueBuilderUnQuoted
 
         static void PrepareBuilder(StringBuilder builder, MimeTypeParameter parameter)
         {
-            int neededCapacity = parameter.Value?.Length ?? 0 + parameter.Key.Length + KEY_VALUE_SEPARATOR_LENGTH;
+            Debug.Assert(parameter.Value != null);
+            int neededCapacity = parameter.Value.Length + parameter.Key.Length + KEY_VALUE_SEPARATOR_LENGTH;
             _ = builder.EnsureCapacity(builder.Length + neededCapacity);
         }
     }

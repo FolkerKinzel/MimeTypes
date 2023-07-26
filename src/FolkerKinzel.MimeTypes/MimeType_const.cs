@@ -18,7 +18,7 @@ public sealed partial class MimeType
     /// </summary>
     internal const int STRING_LENGTH = 80;
 
-    internal const string NEW_LINE = "\r\n";
+    private const string NEW_LINE = "\r\n";
 
 
 }

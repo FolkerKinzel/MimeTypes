@@ -47,12 +47,12 @@ public readonly partial struct MimeTypeInfo
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
     /// <see cref="MimeTypeInfo"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeTypeInfo"/>; otherwise, <c>false</c>.</returns>
-    public static bool TryParse(string? value, out MimeTypeInfo mimeType)
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+    public static bool TryParse(string value, out MimeTypeInfo mimeType)
     {
         if (value is null)
         {
-            mimeType = default;
-            return false;
+            throw new ArgumentNullException(nameof(value));
         }
 
         ReadOnlyMemory<char> memory = value.AsMemory();
