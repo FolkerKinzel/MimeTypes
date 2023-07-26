@@ -37,8 +37,12 @@ public sealed partial class MimeType : IEquatable<MimeType>
     /// </example>
     public bool Equals(MimeType? other, bool ignoreParameters)
     {
-        if (!MediaType.Equals(other?.MediaType, StringComparison.OrdinalIgnoreCase) ||
-           !SubType.Equals(other?.SubType, StringComparison.OrdinalIgnoreCase))
+        if (other == null)
+        {
+            return false;
+        }
+        if (!MediaType.Equals(other.MediaType, StringComparison.OrdinalIgnoreCase) ||
+           !SubType.Equals(other.SubType, StringComparison.OrdinalIgnoreCase))
         {
             return false;
         }

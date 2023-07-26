@@ -2,13 +2,8 @@
 
 public readonly partial struct MimeTypeParameterInfo
 {
-    internal const int STRING_LENGTH = 32;
 
-    internal const string CHARSET_KEY = "charset";
-    private const string ACCESS_TYPE_KEY = "access-type";
-    internal const string ASCII_CHARSET_VALUE = "us-ascii";
-
-    internal const char SEPARATOR = '=';
+    
 
     internal const int KEY_LENGTH_MAX_VALUE = 0xFFF;
 
@@ -137,14 +132,14 @@ public readonly partial struct MimeTypeParameterInfo
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "charset"; otherwise, <c>false</c>.</value>
     public bool IsCharSetParameter
-        => Key.Equals(CHARSET_KEY, StringComparison.OrdinalIgnoreCase);
+        => Key.Equals(MimeTypeParameter.CHARSET_KEY, StringComparison.OrdinalIgnoreCase);
 
 
     /// <summary>
     /// Indicates whether the <see cref="MimeTypeParameterInfo"/> has the <see cref="Key"/> "access-type". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "access-type"; otherwise, <c>false</c>.</value>
-    public bool IsAccessTypeParameter => Key.Equals(ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
+    public bool IsAccessTypeParameter => Key.Equals(MimeTypeParameter.ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
 
 
     /// <summary>
@@ -153,12 +148,12 @@ public readonly partial struct MimeTypeParameterInfo
     /// <value><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</value>
     internal bool IsAsciiCharSetParameter
         => IsCharSetParameter
-           && Value.Equals(ASCII_CHARSET_VALUE, StringComparison.OrdinalIgnoreCase);
+           && Value.Equals(MimeTypeParameter.ASCII_CHARSET_VALUE, StringComparison.OrdinalIgnoreCase);
 
 
     internal bool IsValueCaseSensitive => !(IsCharSetParameter || IsAccessTypeParameter);
 
-    internal static bool GetIsValueCaseSensitive(string key) => !(key.Equals(CHARSET_KEY, StringComparison.OrdinalIgnoreCase) ||
-                                                                  key.Equals(ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase));
+    internal static bool GetIsValueCaseSensitive(string key) => !(key.Equals(MimeTypeParameter.CHARSET_KEY, StringComparison.OrdinalIgnoreCase) ||
+                                                                  key.Equals(MimeTypeParameter.ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase));
 
 }

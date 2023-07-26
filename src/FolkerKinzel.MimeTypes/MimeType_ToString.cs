@@ -12,6 +12,7 @@ public sealed partial class MimeType
     /// <para>Serialize a <see cref="MimeType"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample2.cs"/>
     /// </example>
+    [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override string ToString() => ToString(MimeFormats.Default);
 
 

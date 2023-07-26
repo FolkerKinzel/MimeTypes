@@ -5,7 +5,7 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 [StructLayout(LayoutKind.Auto)]
 internal ref struct ParameterSanitizer
 {
-    private const char SEPARATOR = MimeTypeParameterInfo.SEPARATOR;
+    private const char SEPARATOR = MimeTypeParameter.SEPARATOR;
 
     private ReadOnlySpan<char> _span;
     private ReadOnlyMemory<char> _parameterString;

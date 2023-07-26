@@ -1,5 +1,6 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Builders;
 using System;
+using System.Reflection.Metadata;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
@@ -17,13 +18,25 @@ internal static class ParameterSerializer
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="model"></param>
-    internal static void Append(StringBuilder builder, MimeTypeParameter model)
+    internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameter model, bool urlFormat)
     {
         Debug.Assert(builder is not null);
 
         ReadOnlySpan<char> valueSpan = model.Value.AsSpan();
         EncodingAction action = valueSpan.EncodingAction();
         action = model.Language != null ? EncodingAction.UrlEncode : action;
+
+        if (model.Language != null)
+        {
+            action = EncodingAction.UrlEncode;
+        }
+        else
+        {
+            action = valueSpan.EncodingAction();
+            action = !urlFormat ? action : action.HasFlag(EncodingAction.Quote)
+                                                    ? EncodingAction.UrlEncode
+                                                    : action;
+        }
 
         _ = action switch
         {
@@ -32,6 +45,8 @@ internal static class ParameterSerializer
             EncodingAction.UrlEncode => builder.BuildUrlEncoded(model.Key.AsSpan(), model.Language.AsSpan(), model.Value ?? ""),
             _ => builder.BuildUnQuoted(model.Key.AsSpan(), valueSpan, MimeTypeParameterInfo.GetIsValueCaseSensitive(model.Key))
         };
+
+        return action;
     }
 
 

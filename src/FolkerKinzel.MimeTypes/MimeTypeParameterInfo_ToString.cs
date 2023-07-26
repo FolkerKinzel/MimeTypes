@@ -20,7 +20,7 @@ public readonly partial struct MimeTypeParameterInfo
     /// <returns>A <see cref="string"/> representation of the instance.</returns>
     public string ToString(bool urlFormat)
     {
-        var sb = new StringBuilder(STRING_LENGTH);
+        var sb = new StringBuilder(MimeTypeParameter.STRING_LENGTH);
         sb.Append(in this, urlFormat);
         return sb.ToString();
     }

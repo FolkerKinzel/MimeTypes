@@ -63,7 +63,7 @@ public readonly partial struct MimeTypeInfo
         if (hasParameters)
         {
             _idx |= 1;
-            capacity += parameters!.Count * MimeTypeParameterInfo.STRING_LENGTH;
+            capacity += parameters!.Count * MimeTypeParameter.STRING_LENGTH;
         }
 
         var sb = new StringBuilder(capacity);
@@ -76,7 +76,7 @@ public readonly partial struct MimeTypeInfo
                 _ = sb.Append(';');
 
                 MimeTypeParameter para = parameters[i];
-                ParameterSerializer.Append(sb, para);
+                sb.Append(para, false);
             }
         }
 
