@@ -40,7 +40,7 @@ public sealed partial class MimeTypeParameter
     /// <paramref name="language"/> is neither <c>null</c> nor empty nor a valid IETF-Language-Tag according to RFC-1766.
     /// </para>
     /// </exception>
-    internal MimeTypeParameter(string key, string? value, string? language = null)
+    internal MimeTypeParameter(string key, string? value, string? language)
     {
         key.ValidateTokenParameter(nameof(key), true);
 

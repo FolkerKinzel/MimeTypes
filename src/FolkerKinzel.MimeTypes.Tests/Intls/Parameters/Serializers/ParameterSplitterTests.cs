@@ -11,14 +11,16 @@ public class ParameterSplitterTests
     [TestMethod]
     public void SplitParameterTest1()
     {
-        ReadOnlyMemory<char> mem = "keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy=utf-8'en'Very%20very%20very%20very%20looooooooooooooooooooong%20text\"".AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(true, ref mem, out MimeTypeParameterInfo param, out _));
+        const string mimeString = "a/b; keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy=utf-8'en'Very%20very%20very%20very%20looooooooooooooooooooong%20text\"";
+        Assert.IsTrue(MimeType.TryParse(mimeString, out MimeType? mime));
 
         var input = new StringBuilder();
-        param.AppendTo(input);
-        EncodingAction enc = input.Append(in param, false);
+        MimeTypeParameter para = mime.Parameters.First();
+        para.AppendTo(input);
+
+        EncodingAction enc = input.Append(para, false);
         string s = "";
-        foreach (StringBuilder sb in ParameterSplitter.SplitParameter(param, input, 70, enc))
+        foreach (StringBuilder sb in ParameterSplitter2.SplitParameter(para, input, 70, enc))
         {
             s += sb.ToString() + Environment.NewLine;
         }
@@ -33,15 +35,15 @@ public class ParameterSplitterTests
         const string value = "äääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääääää";
         string s = "application/x-stuff;key*=utf-8'de'" + Uri.UnescapeDataString(value);
 
-        Assert.IsTrue(MimeTypeInfo.TryParse(s, out MimeTypeInfo mime));
-        MimeTypeParameterInfo para = mime.Parameters().First();
-        Assert.AreEqual(value, para.Value.ToString(), false);
+        Assert.IsTrue(MimeType.TryParse(s, out MimeType? mime));
+        MimeTypeParameter para = mime.Parameters.First();
+        Assert.AreEqual(value, para.Value, false);
 
         s = mime.ToString(MimeFormats.LineWrapping);
 
-        Assert.IsTrue(MimeTypeInfo.TryParse(s, out mime));
-        para = mime.Parameters().First();
-        Assert.AreEqual(value, para.Value.ToString(), false);
+        Assert.IsTrue(MimeType.TryParse(s, out mime));
+        para = mime.Parameters.First();
+        Assert.AreEqual(value, para.Value, false);
     }
 
 
@@ -58,15 +60,15 @@ public class ParameterSplitterTests
                    key*1="Masked \"2\" ";
                    key*2="Masked \"3\" ";
                    """;
-        Assert.IsTrue(MimeTypeInfo.TryParse(s, out MimeTypeInfo mime));
-        MimeTypeParameterInfo para = mime.Parameters().First();
-        Assert.AreEqual(value, para.Value.ToString(), false);
+        Assert.IsTrue(MimeType.TryParse(s, out MimeType? mime));
+        MimeTypeParameter para = mime.Parameters.First();
+        Assert.AreEqual(value, para.Value, false);
 
         s = mime.ToString(MimeFormats.LineWrapping);
 
-        Assert.IsTrue(MimeTypeInfo.TryParse(s, out mime));
-        para = mime.Parameters().First();
-        Assert.AreEqual(value, para.Value.ToString(), false);
+        Assert.IsTrue(MimeType.TryParse(s, out mime));
+        para = mime.Parameters.First();
+        Assert.AreEqual(value, para.Value, false);
     }
 }
 

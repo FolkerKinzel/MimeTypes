@@ -105,9 +105,9 @@ public class MimeTypeInfoTests
             key2*1=abc;
             key2*2=def
             """;
-        Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
-        MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
-        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType? mime));
+        MimeTypeParameter[] arr = mime.Parameters.ToArray();
+        Assert.IsNotNull(arr.FirstOrDefault(x => StringComparer.Ordinal.Equals(x.Key, "key2") && StringComparer.Ordinal.Equals(x.Value, "abcdef")));
 
         string s = mime.ToString(MimeFormats.LineWrapping, 10);
         Assert.IsNotNull(s);
@@ -123,9 +123,9 @@ public class MimeTypeInfoTests
             key2*1=abc;
             key2*2=def
             """;
-        Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
-        MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
-        Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
+        Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType? mime));
+        MimeTypeParameter[] arr = mime.Parameters.ToArray();
+        Assert.IsNotNull(arr.FirstOrDefault(x => StringComparer.Ordinal.Equals(x.Key, "key2") && StringComparer.Ordinal.Equals(x.Value, "abcdef")));
 
         string s = mime.ToString();
         Assert.IsNotNull(s);
@@ -269,14 +269,14 @@ public class MimeTypeInfoTests
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
 
-        Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString());
+        Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString(), true);
     }
 
     [TestMethod]
     public void ToStringTest4()
     {
         string input = "application/x-stuff; p1=normal; p2=\"text loch\"; p3*=utf-8\'\'" + Uri.EscapeDataString("äöü");
-        var mime = MimeTypeInfo.Parse(input);
+        var mime = MimeType.Parse(input);
         Assert.AreEqual("application/x-stuff;p1=normal;p2*=utf-8\'\'text%20loch;p3*=utf-8\'\'" + Uri.EscapeDataString("äöü"), mime.ToString(MimeFormats.Url));
     }
 
@@ -290,16 +290,16 @@ public class MimeTypeInfoTests
             value += "abc";
         }
 
-        MimeTypeInfo mime = MimeType.Create("application", "x-stuff")
+        MimeType mime = MimeType.Create("application", "x-stuff")
                                   .AppendParameter("key", value)
-                                  .AppendParameter("other", "bla")
-                                  .AsInfo();
+                                  .AppendParameter("other", "bla");
+
         string s = mime.ToString(MimeFormats.LineWrapping);
         Assert.IsFalse(s.Contains('\"'));
         Assert.IsFalse(s.Contains('\''));
 
-        mime = MimeTypeInfo.Parse(s);
-        Assert.AreEqual(2, mime.Parameters().Count());
+        mime = MimeType.Parse(s);
+        Assert.AreEqual(2, mime.Parameters.Count());
     }
 
     [TestMethod]
@@ -616,11 +616,11 @@ public class MimeTypeInfoTests
             "This is a very long parameter, which will be wrapped according to RFC 2184." +
             Environment.NewLine +
             "It contains also a few Non-ASCII-Characters: \u00E4\u00D6\u00DF.", "en"),
-            new MimeTypeParameter("second-parameter", "Parameter with  \\, = and \".")
+            new MimeTypeParameter("second-parameter", "Parameter with  \\, = and \".", null)
         };
 
         var mimeType1 = new MimeTypeInfo(mediaType, subType, dic);
-        string s = mimeType1.ToString(MimeFormats.LineWrapping);
+        string s = MimeType.Create(in mimeType1).ToString(MimeFormats.LineWrapping);
 
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);
@@ -647,7 +647,7 @@ public class MimeTypeInfoTests
 
 
         var mimeType1 = MimeTypeInfo.Parse(mimeString);
-        string s = mimeType1.ToString(MimeFormats.LineWrapping, 10);
+        string s = MimeType.Create(in mimeType1).ToString(MimeFormats.LineWrapping, 10);
 
         Assert.IsNotNull(s);
         Assert.AreNotEqual(0, s.Length);

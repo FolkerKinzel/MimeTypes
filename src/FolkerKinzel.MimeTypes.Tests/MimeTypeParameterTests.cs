@@ -17,7 +17,7 @@ public class MimeTypeParameterTests
         ICloneable cloneable = inetMedia.Parameters().First();
         object o = cloneable.Clone();
         Assert.AreEqual(cloneable, o);
-        Assert.AreEqual("charset=iso-8859-1", o.ToString());
+        Assert.AreEqual("charset=iso-8859-1", o.ToString(), true);
     }
 
     [TestMethod]
@@ -58,107 +58,104 @@ public class MimeTypeParameterTests
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void AppendToTest1() => MimeTypeParameterInfo.Empty.AppendTo(null!);
+    public void AppendToTest1() => new MimeTypeParameter("k", null, null).AppendTo(null!);
 
 
     [TestMethod]
     public void AppendToTest2()
     {
-        var sb = new StringBuilder();
-        MimeTypeParameterInfo.Empty.AppendTo(sb);
-        Assert.AreEqual(0, sb.Length);
+        string s = MimeTypeParameterInfo.Empty.ToString();
+        Assert.AreEqual(0, s.Length);
     }
 
     [TestMethod]
     public void AppendToTest3()
     {
-        const string input = "normal=value";
+        const string input = "x/y; normal=value";
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
         var sb = new StringBuilder();
-        _ = para.AppendTo(sb, urlFormat: true);
-        Assert.AreEqual(input, sb.ToString());
+        _ = mime.AppendTo(sb, MimeFormats.Url);
+        Assert.AreEqual("x/y;normal=value", sb.ToString());
     }
 
     [TestMethod]
     public void AppendToTest4()
     {
-        const string input = "quoted=\"text loch\"";
+        const string input = "x/y; quoted=\"text loch\"";
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
         var sb = new StringBuilder();
-        _ = para.AppendTo(sb, urlFormat: true);
-        Assert.AreEqual("quoted*=utf-8''text%20loch", sb.ToString());
+        _ = mime.AppendTo(sb, MimeFormats.Url);
+        Assert.AreEqual("x/y;quoted*=utf-8''text%20loch", sb.ToString());
     }
 
     [TestMethod]
     public void AppendToTest5()
     {
-        const string input = "encoded*=utf-8''value%20continuation";
+        const string input = "y/y; encoded*=utf-8''value%20continuation";
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
-        var sb = new StringBuilder();
-        _ = para.AppendTo(sb, urlFormat: true);
-        Assert.AreEqual(input, sb.ToString());
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
+        Assert.AreEqual("y/y;encoded*=utf-8''value%20continuation", mime.ToString(MimeFormats.Url));
     }
 
 
     [TestMethod]
     public void ToStringTest1()
     {
-        const string input = "normal=value";
+        const string input = "x/y; normal=value";
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
-        Assert.AreEqual(input, para.ToString(urlFormat: true));
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
+        Assert.AreEqual("x/y;normal=value", mime.ToString(MimeFormats.Url));
     }
 
     [TestMethod]
     public void ToStringTest2()
     {
-        const string input = "quoted=\"text loch\"";
+        const string input = "x/y; quoted=\"text loch\"";
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
        
-        Assert.AreEqual("quoted*=utf-8''text%20loch", para.ToString(urlFormat: true));
+        Assert.AreEqual("x/y;quoted*=utf-8''text%20loch", mime.ToString(MimeFormats.Url));
     }
 
     [TestMethod]
     public void ToStringTest3()
     {
-        const string input = "encoded*=utf-8\'\'value%20continuation";
+        const string input = "x/y; encoded*=utf-8\'\'value%20continuation";
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
        
-        Assert.AreEqual(input, para.ToString(urlFormat: true));
+        Assert.AreEqual("x/y;encoded*=utf-8\'\'value%20continuation", mime.ToString(MimeFormats.Url));
     }
 
     [TestMethod]
     public void ToStringTest4()
     {
-        const string input = "normal=value";
+        const string input = "x/y; normal=value";
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
-        Assert.AreEqual(input, para.ToString());
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
+        Assert.AreEqual(input, mime.ToString());
     }
 
     [TestMethod]
     public void ToStringTest5()
     {
-        const string input = "quoted=\"text loch\"";
+        const string input = "x/y; quoted=\"text loch\"";
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
 
-        Assert.AreEqual(input, para.ToString());
+        Assert.AreEqual(input, mime.ToString());
     }
 
     [TestMethod]
     public void ToStringTest6()
     {
-        string input = "encoded*=utf-8\'\'" + Uri.EscapeDataString("äöü");
+        string input = "x/y; encoded*=utf-8\'\'" + Uri.EscapeDataString("äöü");
         ReadOnlyMemory<char> mem = input.AsMemory();
-        Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref mem, out MimeTypeParameterInfo para, out _));
+        Assert.IsTrue(MimeType.TryParse(mem, out MimeType? mime));
 
-        Assert.AreEqual(input, para.ToString());
+        Assert.AreEqual(input, mime.ToString());
     }
 
 

@@ -12,7 +12,7 @@ public class ParameterSerializerTests
     [TestMethod]
     public void AppendTest1()
     {
-        var model = new MimeTypeParameter("key", null);
+        var model = new MimeTypeParameter("key", null, null);
 
         var sb = new StringBuilder();
         ParameterSerializer.Append(sb, model, false);
@@ -36,7 +36,7 @@ public class ParameterSerializerTests
         const string nonAscii = "ä";
         const string ascii = "para";
 
-        ParameterSerializer.Append(sb, new MimeTypeParameter(ascii, nonAscii), false);
+        ParameterSerializer.Append(sb, new MimeTypeParameter(ascii, nonAscii, null), false);
         Assert.AreNotEqual(0, sb.Length);
         string s = sb.ToString();
         Assert.IsTrue(s.Contains(ascii));

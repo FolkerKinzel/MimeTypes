@@ -14,7 +14,7 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Creations.Tests
         public void MimeTypeParameterDataDictionaryTest()
             => _ = new ParameterModelDictionary
             {
-                new MimeTypeParameter("charset", "iso")
+                new MimeTypeParameter("charset", "iso", null)
             //dic.Add(new MimeTypeParameterModel("Charset", "bla"));
             };
     }
