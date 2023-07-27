@@ -13,9 +13,9 @@ public sealed partial class MimeType : IEquatable<MimeType>
     /// 
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeType"/> instances for equality:
+    /// Comparison of <see cref="MimeType"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
     [CLSCompliant(false)]
     public bool Equals(MimeType? other) => Equals(other, false);
@@ -31,9 +31,9 @@ public sealed partial class MimeType : IEquatable<MimeType>
     /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeType"/> instances for equality:
+    /// Comparison of <see cref="MimeType"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
     public bool Equals(MimeType? other, bool ignoreParameters)
     {
@@ -68,9 +68,9 @@ public sealed partial class MimeType : IEquatable<MimeType>
     /// value is equal to that of this instance; <c>false</c>, otherwise.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeType"/> instances for equality:
+    /// Comparison of <see cref="MimeType"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
     public override bool Equals(object? obj) => obj is MimeType type && Equals(type, false);
 

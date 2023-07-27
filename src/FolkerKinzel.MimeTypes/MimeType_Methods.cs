@@ -22,9 +22,9 @@ public sealed partial class MimeType
     /// </exception>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Building, serializing, parsing, and editing of <see cref="MimeType"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeType Create(string mediaType, string subType) => new(mediaType, subType);
@@ -88,11 +88,12 @@ public sealed partial class MimeType
     /// <paramref name="language"/> is neither <c>null</c> nor <see cref="string.Empty"/> nor a valid IETF-Language-Tag according to RFC-1766.
     /// </para>
     /// </exception>
+    /// 
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Building, serializing, parsing, and editing of <see cref="MimeType"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     /// <seealso cref="MimeTypeParameterInfo"/>
     public MimeType AppendParameter(string key, string? value, string? language = null)
@@ -123,6 +124,13 @@ public sealed partial class MimeType
     /// </summary>
     /// <param name="key">The <see cref="MimeTypeParameter.Key"/> of the <see cref="MimeTypeParameter"/> to remove.</param>
     ///  <returns>A reference to the <see cref="MimeType"/> instance on which the method was called.</returns>
+    ///  
+    /// <example>
+    /// <para>
+    /// Building, serializing, parsing, and editing of <see cref="MimeType"/> instances:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
     public MimeType RemoveParameter(string key)
     {
@@ -139,12 +147,7 @@ public sealed partial class MimeType
     /// Gets the <see cref="MimeTypeInfo"/> of the <see cref="MimeType"/>s content.
     /// </summary>
     /// <returns>The new <see cref="MimeTypeInfo"/> instance.</returns>
-    /// <example>
-    /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
-    /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
-    /// </example>
+    /// 
     /// <seealso cref="MimeTypeInfo"/>
     public MimeTypeInfo AsInfo() => new(MediaType, SubType, _dic);
 
@@ -154,14 +157,18 @@ public sealed partial class MimeType
     /// </summary>
     /// <param name="value">The <see cref="string"/> to parse.</param>
     /// <returns>The <see cref="MimeType"/> instance that <paramref name="value"/> represents.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
+    /// 
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeType"/> instance:
+    /// Building, serializing, parsing, and editing of <see cref="MimeType"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
+    /// 
+    /// <seealso cref="TryParse(string?, out MimeType?)"/>
+    /// 
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
     public static MimeType Parse(string value) => Create(MimeTypeInfo.Parse(value));
 
 
@@ -170,9 +177,10 @@ public sealed partial class MimeType
     /// </summary>
     /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse.</param>
     /// <returns>The <see cref="MimeType"/> instance that <paramref name="value"/> represents.</returns>
-    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
-    /// <seealso cref="Parse(string)"/>
+    /// 
     /// <seealso cref="TryParse(ReadOnlyMemory{char}, out MimeType?)"/>
+    /// 
+    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
     public static MimeType Parse(in ReadOnlyMemory<char> value) => Create(MimeTypeInfo.Parse(value));
 
 
@@ -183,8 +191,8 @@ public sealed partial class MimeType
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
     /// <see cref="MimeType"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeType"/>; otherwise, <c>false</c>.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
-    public static bool TryParse(string value, [NotNullWhen(true)] out MimeType? mimeType)
+    /// <seealso cref="Parse(string)"/>
+    public static bool TryParse(string? value, [NotNullWhen(true)] out MimeType? mimeType)
     {
         if (MimeTypeInfo.TryParse(value, out MimeTypeInfo info))
         {
@@ -204,6 +212,7 @@ public sealed partial class MimeType
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
     /// <see cref="MimeType"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeType"/>; otherwise, <c>false</c>.</returns>
+    /// <seealso cref="Parse(in ReadOnlyMemory{char})"/>
     public static bool TryParse(in ReadOnlyMemory<char> value, [NotNullWhen(true)] out MimeType? mimeType)
     {
         if (MimeTypeInfo.TryParse(value, out MimeTypeInfo info))
@@ -262,7 +271,7 @@ public sealed partial class MimeType
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MimeType FromFileName(string? fileName) => FromFileName(fileName.AsSpan());
+    public static MimeType FromFileName(string? fileName) => Parse(MimeString.FromFileName(fileName));
 
 
     private bool IsText => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);

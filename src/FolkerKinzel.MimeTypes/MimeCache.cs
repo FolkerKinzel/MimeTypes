@@ -13,8 +13,8 @@ namespace FolkerKinzel.MimeTypes;
 /// </para>
 /// <para>
 /// The cache is pre-populated with some of the most frequently used file type extensions and MIME types but it "learns" with every query
-/// and stores after some time only the data he is recently asked for. The cache doesn't exceed a given <see cref="Capacity"/>. The
-/// default value for this is <see cref="DefaultCapacity"/>, which is currently 16, but you can enlarge the <see cref="Capacity"/>
+/// and stores after some time only the data it is recently asked for. The cache doesn't exceed a given <see cref="Capacity"/>. The
+/// default value for this is <see cref="DefaultCapacity"/>, but you can enlarge the <see cref="Capacity"/>
 /// with <see cref="EnlargeCapacity(int)"/> if your application uses more than 16 different file types.
 /// </para>
 /// <para>
@@ -53,9 +53,6 @@ public static class MimeCache
     }
 
     ////////////////////////////////////////////
-
-    
-
 
     private const int CACHE_CLEANUP_SIZE = 4;
 
@@ -163,7 +160,7 @@ public static class MimeCache
                     return true;
                 }
             }
-
+             
             return false;
         }
 
@@ -174,7 +171,7 @@ public static class MimeCache
             return mimeType;
         }
     }
-
+   
 
     internal static string GetFileTypeExtension(string? mimeType, bool leadingDot)
     {

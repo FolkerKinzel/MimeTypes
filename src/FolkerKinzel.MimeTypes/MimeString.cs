@@ -6,7 +6,7 @@
 /// </summary>
 /// <example>
 /// <para>
-/// Convert a file name into an Internet Media Type and get a file type extension from an internet media type:
+/// Convert a file name into an Internet Media Type and get a file type extension from an Internet Media Type:
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
 /// </example>
@@ -25,11 +25,20 @@ public static class MimeString
     /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
     /// </para>
     /// <para>
+    /// This method doesn't perform any validation on <paramref name="mimeType"/>. If a strong validation of the input is needed,
+    /// the instance methods <see cref="MimeTypeInfo.GetFileTypeExtension(bool)">MimeTypeInfo.GetFileTypeExtension(bool)</see> and
+    /// <see cref="MimeType.GetFileTypeExtension(bool)">MimeType.GetFileTypeExtension(bool)</see> are better suited.
+    /// </para>
+    /// <para>
     /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    /// 
+    /// <seealso cref="MimeTypeInfo.GetFileTypeExtension(bool)"/>
+    /// <seealso cref="MimeType.GetFileTypeExtension(bool)"/>
+    /// 
     /// <example>
     /// <para>
     /// Convert a file name into an Internet Media Type and get a file type extension from an Internet Media Type:
@@ -68,11 +77,20 @@ public static class MimeString
     /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
     /// </para>
     /// <para>
+    /// This method doesn't perform any validation on <paramref name="mimeType"/>. If a strong validation of the input is needed,
+    /// the instance methods <see cref="MimeTypeInfo.GetFileTypeExtension(bool)">MimeTypeInfo.GetFileTypeExtension(bool)</see> and
+    /// <see cref="MimeType.GetFileTypeExtension(bool)">MimeType.GetFileTypeExtension(bool)</see> are better suited.
+    /// </para>
+    /// <para>
     /// Internally a small memory cache is used to retrieve often used file type extensions faster. You
     /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    ///
+    /// <seealso cref="MimeTypeInfo.GetFileTypeExtension(bool)"/>
+    /// <seealso cref="MimeType.GetFileTypeExtension(bool)"/>
+    /// 
     /// <example>
     /// <para>
     /// Convert a file name into an Internet Media Type and get a file type extension from an Internet Media Type:
@@ -110,6 +128,9 @@ public static class MimeString
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    /// <seealso cref="MimeType.FromFileName(string?)"/>
+    /// <seealso cref="MimeType.FromFileName(ReadOnlySpan{char})"/>
+    /// 
     /// <example>
     /// <para>
     /// Convert a file name into an Internet Media Type and get a file type extension from an Internet Media Type:
@@ -153,6 +174,10 @@ public static class MimeString
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    /// 
+    /// <seealso cref="MimeType.FromFileName(ReadOnlySpan{char})"/>
+    /// <seealso cref="MimeType.FromFileName(string?)"/>
+    /// 
     /// <example>
     /// <para>
     /// Convert a file name into an Internet Media Type and get a file type extension from an internet media type:

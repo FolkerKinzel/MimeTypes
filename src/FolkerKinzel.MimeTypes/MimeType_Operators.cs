@@ -12,9 +12,9 @@ public sealed partial class MimeType
     /// otherwise, <c>false</c>.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeType"/> instances for equality:
+    /// Comparison of MimeType instances:
     /// </para>
-    /// <code source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
+    /// <code source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
     public static bool operator ==(MimeType? mimeType1, MimeType? mimeType2) =>
         mimeType1?.Equals(mimeType2, false) ?? mimeType2?.Equals(mimeType1, false) ?? true;
@@ -30,9 +30,9 @@ public sealed partial class MimeType
     /// otherwise, <c>false</c>.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeType"/> instances for equality:
+    /// Comparison of MimeType instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample2.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
     public static bool operator !=(MimeType? mimeType1, MimeType? mimeType2) =>
         !(mimeType1 == mimeType2);

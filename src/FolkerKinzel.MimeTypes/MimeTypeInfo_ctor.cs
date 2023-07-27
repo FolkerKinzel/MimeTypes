@@ -23,15 +23,9 @@ namespace FolkerKinzel.MimeTypes;
 /// </remarks>
 /// <example>
 /// <para>
-/// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+/// Efficient parsing of an Internet Media Type <see cref="string"/>:
 /// </para>
-/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
-/// <para>Format a <see cref="MimeTypeInfo"/> instance into a standards-compliant string using several options:</para>
-/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
-/// <para>
-/// Comparing <see cref="MimeTypeInfo"/> instances for equality:
-/// </para>
-/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
 /// </example>
 [StructLayout(LayoutKind.Auto)]
 public readonly partial struct MimeTypeInfo

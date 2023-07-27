@@ -11,8 +11,8 @@ public sealed partial class MimeType
     /// <returns>A <see cref="string"/> representation of the instance 
     /// according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Serialize a <see cref="MimeType"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample2.cs"/>
+    /// <para>Formatting a <see cref="MimeType"/> instance into a standards-compliant <see cref="string"/> using several options:</para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override string ToString() => ToString(MimeFormats.Default);
@@ -29,8 +29,8 @@ public sealed partial class MimeType
     /// <see cref="MimeType.MinimumLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Serialize a <see cref="MimeType"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample2.cs"/>
+    /// <para>Formatting a <see cref="MimeType"/> instance into a standards-compliant <see cref="string"/> using several options:</para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
     public string ToString(MimeFormats options, int lineLength = MimeType.MinimumLineLength)
     {
@@ -43,7 +43,7 @@ public sealed partial class MimeType
 
 
     /// <summary>
-    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2231 to a 
+    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2231 to the end of a 
     /// <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>

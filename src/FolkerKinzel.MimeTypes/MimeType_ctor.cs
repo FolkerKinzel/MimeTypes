@@ -7,9 +7,15 @@ namespace FolkerKinzel.MimeTypes;
 /// </summary>
 /// <example>
 /// <para>
-/// Build, serialize, and parse a <see cref="MimeType"/> instance:
+/// Building, serializing, parsing, and editing of  <see cref="MimeType"/> instances:
 /// </para>
-/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample2.cs"/>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+/// <para>Formatting a <see cref="MimeType"/> instance into a standards-compliant <see cref="string"/> using several options:</para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
+/// <para>
+/// Comparison of <see cref="MimeType"/> instances:
+/// </para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
 /// </example>
 /// <seealso cref="MimeTypeInfo"/>
 public sealed partial class MimeType 
