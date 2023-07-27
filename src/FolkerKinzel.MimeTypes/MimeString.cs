@@ -151,7 +151,7 @@ public static class MimeString
             catch { fileName = null; }
         }
         
-        return MimeCache.GetMimeType(fileName);
+        return MimeCache.GetMimeType(fileName.AsSpan());
 #else
         return FromFileName(fileName.AsSpan());
 #endif

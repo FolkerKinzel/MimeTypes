@@ -1,4 +1,5 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.FileTypeExtensions;
+using System.Collections.Concurrent;
 
 namespace FolkerKinzel.MimeTypes;
 
@@ -29,31 +30,14 @@ public static class MimeCache
     /// The file type extension that is used as a fallback value.
     /// </summary>
     public const string DefaultFileTypeExtension = "bin";
-
-    private class Entry
-    {
-        public Entry(string mimeType, string extension)
-        {
-            MimeType = mimeType;
-            Extension = extension;
-        }
-
-        public string MimeType { get; }
-        public string Extension { get; }
-
-
-        [ExcludeFromCodeCoverage]
-        public override string ToString() => $"{MimeType} {Extension}";
-    }
-
-    ////////////////////////////////////////////
-
+    private const string DEFAULT_FILE_TYPE_EXTENSION_DOTTED = "." + DefaultFileTypeExtension;
     private const int CACHE_CLEANUP_SIZE = 4;
 
-    private static readonly object _lockObj = new();
-    private static List<Entry>? _mimeCache;
-    private static List<Entry>? _extCache;
     private static int _capacity;
+
+    private static readonly object _lock = new();
+    private static ConcurrentDictionary<int, string>? _mimeCache;
+    private static ConcurrentDictionary<int, (string Extension, string DottedExtension)>? _extCache;
 
 
     /// <summary>
@@ -68,6 +52,10 @@ public static class MimeCache
     public static int Capacity => _capacity;
 
 
+    private static void EnsureInitialCapacity() => EnlargeCapacity(DefaultCapacity);
+
+
+
     /// <summary>
     /// Enlarges the <see cref="Capacity"/> of the cache to the specified value.
     /// </summary>
@@ -77,7 +65,7 @@ public static class MimeCache
     {
         if (newCapacity >= DefaultCapacity)
         {
-            lock (_lockObj)
+            lock (_lock)
             {
                 if (newCapacity > _capacity)
                 {
@@ -93,20 +81,12 @@ public static class MimeCache
     /// </summary>
     public static void Clear()
     {
-        lock (_lockObj)
-        {
-            _mimeCache = null;
-            _extCache = null;
-            _capacity = 0;
-        }
+        _mimeCache = null;
+        _extCache = null;
+        _capacity = 0;
     }
 
 
-    internal static string GetMimeType(string? fileTypeExtension)
-        => string.IsNullOrWhiteSpace(fileTypeExtension) ? MimeType.Default : DoGetMimeType(fileTypeExtension);
-
-
-    [SuppressMessage("Style", "IDE0046:In bedingten Ausdruck konvertieren", Justification = "<Ausstehend>")]
     internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
     {
         fileTypeExtension = fileTypeExtension.Trim();
@@ -120,191 +100,188 @@ public static class MimeCache
             return MimeType.Default;
         }
 
-        return DoGetMimeType(fileTypeExtension.ToString());
-    }
-
-
-    private static string DoGetMimeType(string extension)
-    {
-        extension = extension.Replace(".", null).Replace(" ", null).ToLowerInvariant();
-
-        return TryGetMimeTypeFromCache(extension, out string? mimeType)
+        return TryGetMimeTypeFromCache(fileTypeExtension, out string? mimeType)
             ? mimeType
-            : GetMimeTypeFromResources(extension);
+            : GetMimeTypeFromResources(fileTypeExtension);
 
-        //////////////////////////////////////////
 
-        static bool TryGetMimeTypeFromCache(string fileTypeExtension, [NotNullWhen(true)] out string? mimeType)
+        static bool TryGetMimeTypeFromCache(ReadOnlySpan<char> fileTypeExtension, [NotNullWhen(true)] out string? mimeType)
         {
             Debug.Assert(!fileTypeExtension.Contains('.'));
             Debug.Assert(!fileTypeExtension.Contains(' '));
-            Debug.Assert(!fileTypeExtension.Any(c => char.IsUpper(c)));
 
             mimeType = default;
 
-            lock (_lockObj)
+            var cache = _mimeCache;
+            if (cache is null)
             {
-                _extCache ??= InitExtCache();
-
-                if (_extCache.Find(x => x.Extension.Equals(fileTypeExtension, StringComparison.Ordinal)) is Entry entry)
-                {
-                    mimeType = entry.MimeType;
-                    AddEntryToExtCache(entry);
-
-                    return true;
-                }
+                cache = CreateMimeCache();
+                _mimeCache = cache;
+                EnsureInitialCapacity();
             }
-             
-            return false;
+
+            return cache.TryGetValue(GetHash(fileTypeExtension), out mimeType);
         }
 
-        static string GetMimeTypeFromResources(string fileTypeExtension)
+
+        static string GetMimeTypeFromResources(ReadOnlySpan<char> fileTypeExtension)
         {
-            string? mimeType = ResourceParser.GetMimeType(fileTypeExtension);
-            AddEntryToExtCache(new Entry(mimeType, fileTypeExtension));
+            string mimeType = ResourceParser.GetMimeType(fileTypeExtension);
+            AddEntryToMimeCache(fileTypeExtension, mimeType);
             return mimeType;
         }
+
     }
-   
 
     internal static string GetFileTypeExtension(string? mimeType, bool leadingDot)
     {
+        mimeType = string.IsNullOrWhiteSpace(mimeType)
+               ? null
+               : mimeType.ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty);
+
         return mimeType is null
-            ? PrepareFileTypeExtension(DefaultFileTypeExtension, leadingDot)
-            : TryGetFileTypeExtensionFromCache(mimeType, out string? fileTypeExtension)
-                    ? PrepareFileTypeExtension(fileTypeExtension, leadingDot)
-                    : PrepareFileTypeExtension(GetFileTypeExtensionFromResources(mimeType), leadingDot);
+            ? leadingDot ? DEFAULT_FILE_TYPE_EXTENSION_DOTTED : DefaultFileTypeExtension
+            : TryGetFileTypeExtensionFromCache(leadingDot, mimeType, out string? fileTypeExtension)
+                    ? fileTypeExtension
+                    : GetFileTypeExtensionFromResources(mimeType, leadingDot);
 
         //////////////////////////////////////////
 
-        static bool TryGetFileTypeExtensionFromCache(string mimeType, [NotNullWhen(true)] out string? fileTypeExtension)
+        static bool TryGetFileTypeExtensionFromCache(bool leadingDot, string mimeType, [NotNullWhen(true)] out string? fileTypeExtension)
         {
             Debug.Assert(!mimeType.Contains(' '));
-            Debug.Assert(!mimeType.Any(c => char.IsUpper(c)));
 
             fileTypeExtension = default;
 
-            lock (_lockObj)
+            var cache = _extCache;
+
+            if (cache is null)
             {
-                _mimeCache ??= InitMimeCache();
+                cache = CreateExtCache();
+                _extCache = cache;
+                EnsureInitialCapacity();
+            }
 
-                if (_mimeCache.Find(x => x.MimeType.Equals(mimeType, StringComparison.Ordinal)) is Entry entry)
-                {
-                    fileTypeExtension = entry.Extension;
-                    AddEntryToMimeCache(entry);
-
-                    return true;
-                }
+            if(cache.TryGetValue(GetHash(fileTypeExtension), out (string Extension, string DottedExtension) value))
+            {
+                fileTypeExtension = leadingDot ? value.DottedExtension : value.Extension;
+                return true;
             }
 
             return false;
         }
         //////////////////////////////////////////////////////////////////
 
-        static string GetFileTypeExtensionFromResources(string mimeType)
+        static string GetFileTypeExtensionFromResources(string mimeType, bool leadingDot)
         {
             string fileTypeExtension = ResourceParser.GetFileType(mimeType);
-            AddEntryToMimeCache(new Entry(mimeType, fileTypeExtension));
-            return fileTypeExtension;
+            string dottedExtension = $".{fileTypeExtension}";
+            AddEntryToExtCache(mimeType, fileTypeExtension, dottedExtension);
+            return leadingDot ? dottedExtension : fileTypeExtension;
         }
     }
 
-
-    [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static string PrepareFileTypeExtension(string fileTypeExtension, bool leadingDot) => leadingDot ? $".{fileTypeExtension}" : fileTypeExtension;
-
-
-    private static void SetCapacity()
+    private static ConcurrentDictionary<int, string> CreateMimeCache()
     {
-        if (_capacity == 0)
+        var dic = new ConcurrentDictionary<int, string>();
+        dic[GetHash("json")] = "application/json";
+        dic[GetHash("pdf")] = "application/pdf";
+        dic[GetHash("rtf")] = "application/rtf";
+        dic[GetHash("xml")] = "application/xml";
+        dic[GetHash("zip")] = "application/zip";
+        dic[GetHash("gif")] = "image/gif";
+        dic[GetHash("jpg")] = "image/jpeg";
+        dic[GetHash("png")] = "image/png";
+        dic[GetHash("svg")] = "image/svg+xml";
+        dic[GetHash("eml")] = "message/rfc822";
+        dic[GetHash("htm")] = "text/html";
+        dic[GetHash("txt")] = "text/plain";
+
+        return dic;
+    }
+
+    private static ConcurrentDictionary<int, (string Extension, string DottedExtension)> CreateExtCache()
+    {
+        var dic = new ConcurrentDictionary<int, (string Extension, string DottedExtension)>();
+        dic[GetHash("application/json")] = ("json", ".json");
+        dic[GetHash("application/pdf")] = ("pdf", ".pdf");
+        dic[GetHash("application/rtf")] = ("rtf", ".rtf");
+        dic[GetHash("application/xml")] = ("xml", ".xml");
+        dic[GetHash("application/zip")] = ("zip", ".zip");
+        dic[GetHash("image/gif")] = ("gif", ".gif");
+        dic[GetHash("image/jpeg")] = ("jpg", ".jpg");
+        dic[GetHash("image/png")] = ("png", ".png");
+        dic[GetHash("image/svg+xml")] = ("svg", ".svg");
+        dic[GetHash("message/rfc822")] = ("eml", ".eml");
+        dic[GetHash("text/html")] = ("htm", ".htm");
+        dic[GetHash("text/plain")] = ("txt", ".txt");
+
+        return dic;
+    }
+
+    private static int GetHash(string value) => value.AsSpan().GetPersistentHashCode(HashType.OrdinalIgnoreCase);
+
+    private static int GetHash(ReadOnlySpan<char> value) => value.GetPersistentHashCode(HashType.OrdinalIgnoreCase);
+
+
+    private static void AddEntryToExtCache(string mimeType, string ext, string dottedExt)
+    {
+        var cache = _extCache ?? CreateExtCache();
+
+        int capacity = Math.Max(_capacity, DefaultCapacity);
+
+        if (_extCache.Count >= (capacity))
         {
-            _capacity = DefaultCapacity;
+            List<KeyValuePair<int, (string Extension, string DottedExtension)>> tmp = cache.ToList();
+
+            do
+            {
+                tmp.RemoveRange(0, CACHE_CLEANUP_SIZE);
+            }
+            while (tmp.Count > capacity);
+
+            cache.Clear();
+
+            foreach (var item in tmp)
+            {
+                cache[item.Key] = item.Value;
+            }
         }
+
+        cache[GetHash(mimeType)] = (ext, dottedExt);
+
+        _extCache = cache;
+        EnsureInitialCapacity();
     }
 
 
-    private static List<Entry> InitMimeCache()
+    private static void AddEntryToMimeCache(ReadOnlySpan<char> ext, string mimeType)
     {
-        SetCapacity();
-        return new(_capacity)
+        var cache = _mimeCache ?? CreateMimeCache();
+
+        int capacity = Math.Max(_capacity, DefaultCapacity);
+
+        if (_extCache.Count >= (capacity))
         {
-            new("application/json", "json"),
-            new("application/pdf", "pdf"),
-            new("application/rtf", "rtf"),
-            new("application/xml", "xml"),
-            new("application/zip", "zip"),
-            new("image/gif", "gif"),
-            new("image/jpeg", "jpg"),
-            new("image/png", "png"),
-            new("image/svg+xml", "svg"),
-            new("message/rfc822", "eml"),
-            new("text/html", "htm"),
-            new("text/plain", "txt"),
-        };
-    }
+            List<KeyValuePair<int, string>> tmp = cache.ToList();
 
-
-    private static List<Entry> InitExtCache()
-    {
-        SetCapacity();
-        return new(_capacity)
-        {
-            new("application/json", "json"),
-            new("application/pdf", "pdf"),
-            new("application/rtf", "rtf"),
-            new("application/xml", "xml"),
-            new("application/zip", "zip"),
-            new("image/gif", "gif"),
-            new("image/jpeg", "jpg"),
-            new("image/png", "png"),
-            new("image/svg+xml", "svg"),
-            new("message/rfc822", "eml"),
-            new("text/html", "htm"),
-            new("text/plain", "txt"),
-        };
-    }
-
-    private static void AddEntryToExtCache(Entry entry)
-    {
-        lock (_lockObj)
-        {
-            _extCache ??= InitExtCache();
-
-            if (_extCache.Capacity < _capacity)
+            do
             {
-                _extCache.Capacity = _capacity;
+                tmp.RemoveRange(0, CACHE_CLEANUP_SIZE);
             }
+            while (tmp.Count > capacity);
 
-            if (_extCache.Count.Equals(_capacity))
+            cache.Clear();
+
+            foreach (var item in tmp)
             {
-                _extCache.RemoveRange(0, CACHE_CLEANUP_SIZE);
+                cache[item.Key] = item.Value;
             }
-
-            _ = _extCache.Remove(entry);
-            _extCache.Add(entry);
         }
-    }
+        cache[GetHash(ext)] = mimeType;
 
-
-    private static void AddEntryToMimeCache(Entry entry)
-    {
-        lock (_lockObj)
-        {
-            _mimeCache ??= InitMimeCache();
-
-            if (_mimeCache.Capacity < _capacity)
-            {
-                _mimeCache.Capacity = _capacity;
-            }
-
-            if (_mimeCache.Count.Equals(_capacity))
-            {
-                _mimeCache.RemoveRange(0, CACHE_CLEANUP_SIZE);
-            }
-
-            _ = _mimeCache.Remove(entry);
-            _mimeCache.Add(entry);
-        }
+        _mimeCache = cache;
+        EnsureInitialCapacity();
     }
 
 }

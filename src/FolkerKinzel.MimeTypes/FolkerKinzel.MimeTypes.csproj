@@ -54,6 +54,7 @@
   <ItemGroup>
     <Compile Remove="Intls\Parameters\Serializers\ParameterSplitter.cs" />
     <Compile Remove="Intls\UnitTestGenerator.cs" />
+    <Compile Remove="MimeCache_OBSOLETE.cs" />
     <Compile Remove="MimeTypeInfoEqualityComparer.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -12,18 +12,17 @@ internal static class ResourceParser
     private static readonly Lazy<ConcurrentDictionary<string, long>> _index = new(IndexFactory.CreateIndex, true);
 
 
-    internal static string GetMimeType(string fileTypeExtension)
+    internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
     {
         using StreamReader reader = ReaderFactory.InitExtensionFileReader();
 
-        ReadOnlySpan<char> fileTypeExtensionSpan = fileTypeExtension.AsSpan();
         string? line;
         while ((line = reader.ReadLine()) is not null)
         {
             int separatorIndex = line.IndexOf(SEPARATOR);
             ReadOnlySpan<char> span = line.AsSpan(separatorIndex + 1);
 
-            if (span.Equals(fileTypeExtensionSpan, StringComparison.Ordinal))
+            if (span.Equals(fileTypeExtension, StringComparison.OrdinalIgnoreCase))
             {
                 return line.Substring(0, separatorIndex);
             }
@@ -63,7 +62,7 @@ internal static class ResourceParser
 
             ReadOnlySpan<char> span = line.AsSpan(0, separatorIndex);
 
-            if (span.Equals(mimeSpan, StringComparison.Ordinal))
+            if (span.Equals(mimeSpan, StringComparison.OrdinalIgnoreCase))
             {
                 return line.Substring(separatorIndex + 1);
             }

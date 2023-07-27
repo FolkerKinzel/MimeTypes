@@ -8,7 +8,7 @@ internal static class IndexFactory
     {
         using StreamReader reader = ReaderFactory.InitIndexFileReader();
 
-        var dic = new ConcurrentDictionary<string, long>(Environment.ProcessorCount * 2, 16, StringComparer.Ordinal);
+        var dic = new ConcurrentDictionary<string, long>(Environment.ProcessorCount * 2, 16, StringComparer.OrdinalIgnoreCase);
         string? line;
         while ((line = reader.ReadLine()) is not null)
         {
