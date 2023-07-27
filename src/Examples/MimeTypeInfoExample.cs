@@ -27,6 +27,7 @@ public static class MimeTypeInfoExample
         Console.WriteLine("Media Type: {0}", info.MediaType.ToString());
         Console.WriteLine("Sub Type:   {0}", info.SubType.ToString());
         Console.WriteLine();
+        Console.WriteLine("Is text media type: {0}", info.IsTextMediaType);
         Console.WriteLine("The file type extension for this MIME type is \"{0}\".",
                            info.GetFileTypeExtension());
 
@@ -47,8 +48,8 @@ public static class MimeTypeInfoExample
 
         // Compare MimeTypeInfo values using options:
         MimeTypeInfo info2 = MimeTypeInfo.Parse("TEXT/PLAIN; CHARSET=UTF-8");
-        Console.WriteLine("Equal with parameters:    {0}", info.Equals(info2));
-        Console.WriteLine("Equal without parameters: {0}", info.Equals(info2, ignoreParameters: true));
+        Console.WriteLine("Equal with parameters:    {0}", info.Equals(in info2));
+        Console.WriteLine("Equal without parameters: {0}", info.Equals(in info2, ignoreParameters: true));
     }
 }
 /*
@@ -57,6 +58,7 @@ Console output:
 Media Type: text
 Sub Type:   plain
 
+Is text media type: True
 The file type extension for this MIME type is ".txt".
 
 Parameter 1:

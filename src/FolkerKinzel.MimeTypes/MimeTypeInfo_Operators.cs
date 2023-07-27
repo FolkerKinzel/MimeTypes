@@ -10,12 +10,7 @@ public readonly partial struct MimeTypeInfo
     /// <param name="mimeType2">The second <see cref="MimeTypeInfo"/> to compare.</param>
     /// <returns><c>true</c> if <paramref name="mimeType1"/> and <paramref name="mimeType2"/> are equal;
     /// otherwise, <c>false</c>.</returns>
-    /// <example>
-    /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
-    /// </para>
-    /// <code source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
-    /// </example>
+    /// <seealso cref="Equals(in MimeTypeInfo)"/>
     public static bool operator ==(MimeTypeInfo mimeType1, MimeTypeInfo mimeType2) => mimeType1.Equals(in mimeType2, false);
 
 
@@ -27,12 +22,7 @@ public readonly partial struct MimeTypeInfo
     /// <param name="mimeType2">The second <see cref="MimeTypeInfo"/> to compare.</param>
     /// <returns><c>true</c> if <paramref name="mimeType1"/> and <paramref name="mimeType2"/> are not equal;
     /// otherwise, <c>false</c>.</returns>
-    /// <example>
-    /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
-    /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
-    /// </example>
+    /// <seealso cref="Equals(in MimeTypeInfo)"/>
     public static bool operator !=(MimeTypeInfo mimeType1, MimeTypeInfo mimeType2) => !mimeType1.Equals(in mimeType2, false);
 
 }

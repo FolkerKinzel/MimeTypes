@@ -5,15 +5,12 @@ namespace FolkerKinzel.MimeTypes;
 public readonly partial struct MimeTypeInfo
 {
     /// <summary>
-    /// Serializes the instance into an Internet Media Type <see cref="string"/> ("MIME type") using the 
-    /// <see cref="MimeFormats.Default"/> format.
+    /// Serializes the instance into a <see cref="string"/>.
     /// </summary>
-    /// <returns>A <see cref="string"/> representation of the instance 
-    /// according to RFC 2045 and RFC 2231.</returns>
-    /// <example>
-    /// <para>Serialize a <see cref="MimeTypeInfo"/> instance into a standards-compliant Internet Media Type <see cref="string"/> using several options:</para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
-    /// </example>
+    /// <returns>The string section from which the structure takes the data. 
+    /// This may differ from the one used to parse the instance and is not guaranteed 
+    /// to conform to Internet Media Type standards. Therefore, only use the 
+    /// return value of this method for debugging!</returns>
     public override string ToString() => this._mimeTypeString.ToString();
 
 

@@ -7,14 +7,17 @@ public readonly partial struct MimeTypeInfo
     /// </summary>
     /// <param name="value">The <see cref="string"/> to parse.</param>
     /// <returns>The <see cref="MimeTypeInfo"/> instance, which <paramref name="value"/> represents.</returns>
-    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
-    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeTypeInfo"/>.</exception>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
+    /// 
+    /// <seealso cref="TryParse(string?, out MimeTypeInfo)"/>
+    /// 
+    /// <exception cref="ArgumentNullException"><paramref name="value"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeTypeInfo"/>.</exception>
     public static MimeTypeInfo Parse(string value)
     {
         if (value is null)
@@ -32,9 +35,9 @@ public readonly partial struct MimeTypeInfo
     /// </summary>
     /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse.</param>
     /// <returns>The <see cref="MimeTypeInfo"/> instance, which <paramref name="value"/> represents.</returns>
-    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeTypeInfo"/>.</exception>
-    /// <seealso cref="Parse(string)"/>
     /// <seealso cref="TryParse(ReadOnlyMemory{char}, out MimeTypeInfo)"/>
+    /// 
+    /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeTypeInfo"/>.</exception>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeTypeInfo Parse(ReadOnlyMemory<char> value) =>
         ParseInternal(ref value);
@@ -47,6 +50,7 @@ public readonly partial struct MimeTypeInfo
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
     /// <see cref="MimeTypeInfo"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeTypeInfo"/>; otherwise, <c>false</c>.</returns>
+    /// <seealso cref="Parse(string)"/>
     public static bool TryParse(string? value, out MimeTypeInfo mimeType)
     {
         ReadOnlyMemory<char> memory = value.AsMemory();
@@ -61,6 +65,7 @@ public readonly partial struct MimeTypeInfo
     /// <param name="mimeType">When the method successfully returns, the parameter contains the
     /// <see cref="MimeTypeInfo"/> parsed from <paramref name="value"/>. The parameter is passed uninitialized.</param>
     /// <returns><c>true</c> if <paramref name="value"/> could be parsed as <see cref="MimeTypeInfo"/>; otherwise, <c>false</c>.</returns>
+    /// <seealso cref="Parse(ReadOnlyMemory{char})"/>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static bool TryParse(ReadOnlyMemory<char> value, out MimeTypeInfo mimeType) =>
         TryParseInternal(ref value, out mimeType);

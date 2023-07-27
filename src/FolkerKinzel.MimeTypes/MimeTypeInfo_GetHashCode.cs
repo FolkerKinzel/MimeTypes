@@ -39,7 +39,7 @@ public readonly partial struct MimeTypeInfo
             return hash.ToHashCode();
         }
 
-        foreach (MimeTypeParameterInfo parameter in Parameters().Sort(IsText))
+        foreach (MimeTypeParameterInfo parameter in Parameters().Sort(IsTextMediaType))
         {
             hash.Add(parameter);
         }

@@ -16,6 +16,7 @@ public sealed partial class MimeType
     /// </para>
     /// <code source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
+    /// <seealso cref="Equals(MimeType?)"/>
     public static bool operator ==(MimeType? mimeType1, MimeType? mimeType2) =>
         mimeType1?.Equals(mimeType2, false) ?? mimeType2?.Equals(mimeType1, false) ?? true;
 
@@ -34,6 +35,7 @@ public sealed partial class MimeType
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
+    /// <seealso cref="Equals(MimeType?)"/>
     public static bool operator !=(MimeType? mimeType1, MimeType? mimeType2) =>
         !(mimeType1 == mimeType2);
 

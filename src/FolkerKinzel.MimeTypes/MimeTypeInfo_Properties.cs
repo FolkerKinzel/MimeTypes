@@ -20,11 +20,23 @@ public readonly partial struct MimeTypeInfo
     /// <summary>
     /// Gets the Top-Level Media Type. (The left part of a MIME-Type.)
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     public ReadOnlySpan<char> MediaType => _mimeTypeString.Span.Slice(0, MediaTypeLength);
 
     /// <summary>
     /// Gets the Sub Type. (The right part of a MIME-Type.)
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     public ReadOnlySpan<char> SubType
         => IsEmpty ? ReadOnlySpan<char>.Empty : _mimeTypeString.Span.Slice(MediaTypeLength + 1, SubTypeLength);
 
@@ -38,9 +50,9 @@ public readonly partial struct MimeTypeInfo
     /// on the return value if you need it more than once.</note></remarks>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     public IEnumerable<MimeTypeParameterInfo> Parameters() => 
         HasParameters
@@ -78,6 +90,12 @@ public readonly partial struct MimeTypeInfo
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     public string GetFileTypeExtension(bool includePeriod = true)
         => MimeString.ToFileTypeExtension(_mimeTypeString.Span, includePeriod);
 
@@ -112,16 +130,16 @@ public readonly partial struct MimeTypeInfo
     /// The comparison is case-insensitive.
     /// </summary>
     /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
-    public bool IsText
+    public bool IsTextMediaType
         => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
 
 
-    /// <summary>
-    /// Indicates whether this instance is equal to the MIME type "text/plain". The parameters are not taken into account.
-    /// The comparison is case-insensitive.
-    /// </summary>
-    /// <value><c>true</c> if this instance is equal to "text/plain".</value>
-    public bool IsTextPlain
-        => IsText && SubType.Equals("plain", StringComparison.OrdinalIgnoreCase);
+    ///// <summary>
+    ///// Indicates whether this instance is equal to the MIME type "text/plain". The parameters are not taken into account.
+    ///// The comparison is case-insensitive.
+    ///// </summary>
+    ///// <value><c>true</c> if this instance is equal to "text/plain".</value>
+    //public bool IsTextPlain
+    //    => IsText && SubType.Equals("plain", StringComparison.OrdinalIgnoreCase);
 
 }

@@ -13,9 +13,9 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>
     /// <returns><c>true</c> if this the value of this instance is equal to that of <paramref name="other"/>; <c>false</c>, otherwise.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// Comparison of <see cref="MimeTypeInfo"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public bool Equals(MimeTypeInfo other) => Equals(in other, false);
@@ -31,9 +31,9 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>
     /// Use it if you can.</remarks>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// Comparison of <see cref="MimeTypeInfo"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     [CLSCompliant(false)]
     public bool Equals(in MimeTypeInfo other) => Equals(in other, false);
@@ -49,9 +49,9 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>
     /// <returns><c>true</c> if this  instance is equal to <paramref name="other"/>; false, otherwise.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// Comparison of <see cref="MimeTypeInfo"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     public bool Equals(in MimeTypeInfo other, bool ignoreParameters)
     {
@@ -66,7 +66,7 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>
             return true;
         }
 
-        bool isText = IsText;
+        bool isText = IsTextMediaType;
         return this.Parameters().Sort(isText).SequenceEqual(other.Parameters().Sort(isText));
     }
 
@@ -81,9 +81,9 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>
     /// value is equal to that of this instance; <c>false</c>, otherwise.</returns>
     /// <example>
     /// <para>
-    /// Comparing <see cref="MimeTypeInfo"/> instances for equality:
+    /// Comparison of <see cref="MimeTypeInfo"/> instances:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     public override bool Equals(object? obj) => obj is MimeTypeInfo type && Equals(in type, false);
 

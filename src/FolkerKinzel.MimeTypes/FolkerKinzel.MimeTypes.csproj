@@ -55,6 +55,7 @@
     <Compile Remove="Intls\Parameters\Serializers\ParameterSplitter.cs" />
     <Compile Remove="Intls\UnitTestGenerator.cs" />
     <Compile Remove="MimeTypeInfoEqualityComparer.cs" />
+    <Compile Remove="MimeTypeInfo_ToString.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Remove="Resources\Extension.csv" />
