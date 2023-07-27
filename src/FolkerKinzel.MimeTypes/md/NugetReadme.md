@@ -2,7 +2,7 @@
 
 
 ### .NET Library that supports working with Internet Media Types ("MIME Types")
-[Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v4.0.0-rc.1)
+[Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v4.0.0-rc.2)
 
 - The static `MimeString` class works on strings and allows to convert file names into Internet Media Types ("MIME types") or Internet Media Types into appropriate file type extensions.
 - The `MimeType` class allows:

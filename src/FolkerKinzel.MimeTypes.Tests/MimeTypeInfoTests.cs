@@ -571,15 +571,14 @@ public class MimeTypeInfoTests
     [DataRow("audio/silk", ".sil")]
     [DataRow("chemical/x-cdx", ".cdx")]
     [DataRow("model/3mf", ".3mf")]
-    [DataRow("nixda/nüschgefunden", ".bin")]
+    [DataRow("nixda/nischgefunden", ".bin")]
     public void GetFileTypeExtensionTest1(string mime, string expected)
-        => Assert.AreEqual(expected, MimeString.ToFileTypeExtension(mime));
+        => Assert.AreEqual(expected, MimeTypeInfo.Parse(mime).GetFileTypeExtension());
 
     [TestMethod]
     public void GetFileTypeExtensionTest2()
     {  
-        string? test = null;
-        Assert.AreEqual(".bin", MimeString.ToFileTypeExtension(test));
+        Assert.AreEqual(".bin", new MimeTypeInfo().GetFileTypeExtension());
     }
 
     [DataTestMethod]

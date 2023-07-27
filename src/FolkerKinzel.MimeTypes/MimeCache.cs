@@ -36,8 +36,8 @@ public static class MimeCache
     private static int _capacity;
 
     private static readonly object _lock = new();
-    private static ConcurrentDictionary<int, string>? _mimeCache;
-    private static ConcurrentDictionary<int, (string Extension, string DottedExtension)>? _extCache;
+    private static Lazy<ConcurrentDictionary<int, string>> _mimeCache = new(CreateMimeCache, true);
+    private static Lazy<ConcurrentDictionary<int, (string Extension, string DottedExtension)>> _extCache = new(CreateExtCache, true);
 
 
     /// <summary>
@@ -53,7 +53,6 @@ public static class MimeCache
 
 
     private static void EnsureInitialCapacity() => EnlargeCapacity(DefaultCapacity);
-
 
 
     /// <summary>
@@ -81,48 +80,40 @@ public static class MimeCache
     /// </summary>
     public static void Clear()
     {
-        _mimeCache = null;
-        _extCache = null;
         _capacity = 0;
+        _mimeCache = new Lazy<ConcurrentDictionary<int, string>>(CreateMimeCache, true);
+        _extCache = new Lazy<ConcurrentDictionary<int, (string Extension, string DottedExtension)>>(CreateExtCache, true);
     }
 
 
     internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
     {
         fileTypeExtension = fileTypeExtension.Trim();
+
         if (fileTypeExtension.StartsWith('.'))
         {
             fileTypeExtension = fileTypeExtension.Slice(1);
         }
 
-        if (fileTypeExtension.IsWhiteSpace())
-        {
-            return MimeType.Default;
-        }
+        return fileTypeExtension.IsWhiteSpace()
+                ? MimeType.Default
+                : TryGetMimeTypeFromCache(fileTypeExtension, out string? mimeType)
+                    ? mimeType
+                    : GetMimeTypeFromResources(fileTypeExtension);
 
-        return TryGetMimeTypeFromCache(fileTypeExtension, out string? mimeType)
-            ? mimeType
-            : GetMimeTypeFromResources(fileTypeExtension);
-
-
+        ///////////////////////////////////////////////////////////////
+        
         static bool TryGetMimeTypeFromCache(ReadOnlySpan<char> fileTypeExtension, [NotNullWhen(true)] out string? mimeType)
         {
             Debug.Assert(!fileTypeExtension.Contains('.'));
             Debug.Assert(!fileTypeExtension.Contains(' '));
 
-            mimeType = default;
-
-            var cache = _mimeCache;
-            if (cache is null)
-            {
-                cache = CreateMimeCache();
-                _mimeCache = cache;
-                EnsureInitialCapacity();
-            }
+            var cache = _mimeCache.Value;
 
             return cache.TryGetValue(GetHash(fileTypeExtension), out mimeType);
         }
 
+        //////////////////////////////////////////////////////////////////////////
 
         static string GetMimeTypeFromResources(ReadOnlySpan<char> fileTypeExtension)
         {
@@ -153,16 +144,9 @@ public static class MimeCache
 
             fileTypeExtension = default;
 
-            var cache = _extCache;
+            var cache = _extCache.Value;
 
-            if (cache is null)
-            {
-                cache = CreateExtCache();
-                _extCache = cache;
-                EnsureInitialCapacity();
-            }
-
-            if(cache.TryGetValue(GetHash(fileTypeExtension), out (string Extension, string DottedExtension) value))
+            if(cache.TryGetValue(GetHash(mimeType), out (string Extension, string DottedExtension) value))
             {
                 fileTypeExtension = leadingDot ? value.DottedExtension : value.Extension;
                 return true;
@@ -197,6 +181,7 @@ public static class MimeCache
         dic[GetHash("htm")] = "text/html";
         dic[GetHash("txt")] = "text/plain";
 
+        EnsureInitialCapacity();
         return dic;
     }
 
@@ -216,21 +201,25 @@ public static class MimeCache
         dic[GetHash("text/html")] = ("htm", ".htm");
         dic[GetHash("text/plain")] = ("txt", ".txt");
 
+        EnsureInitialCapacity();
         return dic;
     }
 
-    private static int GetHash(string value) => value.AsSpan().GetPersistentHashCode(HashType.OrdinalIgnoreCase);
+
+#if NET461 || NETSTANDARD2_0
+    private static int GetHash(string? value) => value.AsSpan().GetPersistentHashCode(HashType.OrdinalIgnoreCase);
+#endif
 
     private static int GetHash(ReadOnlySpan<char> value) => value.GetPersistentHashCode(HashType.OrdinalIgnoreCase);
 
 
     private static void AddEntryToExtCache(string mimeType, string ext, string dottedExt)
     {
-        var cache = _extCache ?? CreateExtCache();
+        var cache = _extCache.Value;
 
         int capacity = Math.Max(_capacity, DefaultCapacity);
 
-        if (_extCache.Count >= (capacity))
+        if (cache.Count >= capacity)
         {
             List<KeyValuePair<int, (string Extension, string DottedExtension)>> tmp = cache.ToList();
 
@@ -249,39 +238,27 @@ public static class MimeCache
         }
 
         cache[GetHash(mimeType)] = (ext, dottedExt);
-
-        _extCache = cache;
-        EnsureInitialCapacity();
     }
 
 
     private static void AddEntryToMimeCache(ReadOnlySpan<char> ext, string mimeType)
     {
-        var cache = _mimeCache ?? CreateMimeCache();
+        Debug.Assert(CACHE_CLEANUP_SIZE < DefaultCapacity);
+
+        var cache = _mimeCache.Value;
 
         int capacity = Math.Max(_capacity, DefaultCapacity);
 
-        if (_extCache.Count >= (capacity))
+        if (cache.Count >= capacity)
         {
-            List<KeyValuePair<int, string>> tmp = cache.ToList();
+            var keys = cache.Keys;
 
-            do
+            foreach (var key in keys.Take(CACHE_CLEANUP_SIZE))
             {
-                tmp.RemoveRange(0, CACHE_CLEANUP_SIZE);
-            }
-            while (tmp.Count > capacity);
-
-            cache.Clear();
-
-            foreach (var item in tmp)
-            {
-                cache[item.Key] = item.Value;
+                _ = cache.TryRemove(key, out _);
             }
         }
         cache[GetHash(ext)] = mimeType;
-
-        _mimeCache = cache;
-        EnsureInitialCapacity();
     }
 
 }

@@ -55,11 +55,8 @@ public static class MimeString
             {
                 mimeType = mimeType.Substring(0, parameterStartIdx);
             }
-
-            mimeType = string.IsNullOrWhiteSpace(mimeType)
-                ? null
-                : mimeType.ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty).ToLowerInvariant();
         }
+
         return MimeCache.GetFileTypeExtension(mimeType, includePeriod);
     }
 
@@ -106,11 +103,7 @@ public static class MimeString
             mimeType = mimeType.Slice(0, parameterStartIdx);
         }
 
-        string? mimeTypeString = mimeType.IsWhiteSpace()
-            ? null
-            : mimeType.ToString().ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty).ToLowerInvariant();
-
-        return MimeCache.GetFileTypeExtension(mimeTypeString, includePeriod);
+        return MimeCache.GetFileTypeExtension(mimeType.ToString(), includePeriod);
     }
 
     /// <summary>
