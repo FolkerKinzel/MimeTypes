@@ -37,7 +37,7 @@ public class MimeTypeInfoTests
     [TestMethod]
     public void MimeTypeTest7()
     {
-        MimeTypeInfo mime = MimeType.Create("application", "was").AppendParameter("para", "@").AsInfo();
+        MimeType mime = MimeType.Create("application", "was").AppendParameter("para", "@");
         string s = mime.ToString();
         StringAssert.Contains(s, "\"@\"");
     }
@@ -249,7 +249,7 @@ public class MimeTypeInfoTests
         string result = new MimeTypeInfo().ToString();
 
         Assert.IsNotNull(result);
-        Assert.AreEqual(0, result.Length);
+        StringAssert.Contains(result.ToString(), nameof(MimeTypeInfo));
     }
 
 
@@ -259,9 +259,7 @@ public class MimeTypeInfoTests
         const string input = "text/plain";
         Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo media));
         string result = media.ToString();
-
-        Assert.IsNotNull(result);
-        Assert.AreEqual(input, result);
+        StringAssert.Contains(result, nameof(MimeTypeInfo));
     }
 
 
@@ -270,7 +268,7 @@ public class MimeTypeInfoTests
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
 
-        Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString(), true);
+        Assert.AreEqual("text/plain; charset=iso-8859-1", MimeType.Create(in inetMedia).ToString(), true);
     }
 
     [TestMethod]
@@ -303,22 +301,22 @@ public class MimeTypeInfoTests
         Assert.AreEqual(2, mime.Parameters.Count());
     }
 
-    [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void AppendToTest1()
-    {
-        Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
-        inetMedia.AppendTo(null!);
-    }
+    //[TestMethod]
+    //[ExpectedException(typeof(ArgumentNullException))]
+    //public void AppendToTest1()
+    //{
+    //    Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
+    //    inetMedia.AppendTo(null!);
+    //}
 
-    [TestMethod]
-    public void AppendToTest2()
-    {
-        Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
-        var builder = new StringBuilder();
-        inetMedia.AppendTo(builder);
-        Assert.AreEqual("TEXT/PLAIN; CHARSET=ISO-8859-1", builder.ToString());
-    }
+    //[TestMethod]
+    //public void AppendToTest2()
+    //{
+    //    Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
+    //    var builder = new StringBuilder();
+    //    inetMedia.AppendTo(builder);
+    //    Assert.AreEqual("TEXT/PLAIN; CHARSET=ISO-8859-1", builder.ToString());
+    //}
 
 
     [TestMethod]
@@ -479,8 +477,8 @@ public class MimeTypeInfoTests
         Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=US-ASCII", out MimeTypeInfo media1));
         Assert.IsTrue(MimeTypeInfo.TryParse("application/octet-stream", out MimeTypeInfo media2));
 
-        Assert.IsTrue(media1.IsTextPlain);
-        Assert.IsFalse(media2.IsTextPlain);
+        //Assert.IsTrue(media1.IsTextPlain);
+        //Assert.IsFalse(media2.IsTextPlain);
 
         Assert.IsFalse(media1.Equals(media2));
         Assert.IsFalse(media1.Equals(in media2));
@@ -558,7 +556,7 @@ public class MimeTypeInfoTests
         Assert.AreEqual("param", param.Key.ToString());
         Assert.AreEqual(@"directory\file.text", param.Value.ToString());
 
-        Assert.AreEqual(input, mimeType.ToString());
+        Assert.AreEqual(input, MimeType.Create(in mimeType).ToString());
     }
 
     [DataTestMethod]
@@ -607,12 +605,12 @@ public class MimeTypeInfoTests
     public void FromFileTypeExtensionTest3()
         => Assert.AreEqual("application/octet-stream", MimeString.FromFileName("".AsSpan()));
 
-    [TestMethod]
-    public void FromFileTypeExtensionTest4()
-    {
-        var mime = MimeTypeInfo.FromFileName((string)null!);
-        Assert.AreEqual("application/octet-stream", mime.ToString());
-    }
+    //[TestMethod]
+    //public void FromFileTypeExtensionTest4()
+    //{
+    //    var mime = MimeTypeInfo.FromFileName((string)null!);
+    //    Assert.AreEqual("application/octet-stream", mime.ToString());
+    //}
 
     [TestMethod]
     public void BuildAndParseTest1()

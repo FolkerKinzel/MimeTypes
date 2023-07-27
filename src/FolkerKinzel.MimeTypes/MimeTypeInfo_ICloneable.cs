@@ -10,7 +10,7 @@ public readonly partial struct MimeTypeInfo : ICloneable
     /// a copy of the <see cref="MimeTypeInfo"/> structure: The copy is built on a separate <see cref="string"/>,
     /// which is case-normalized and only as long as needed.
     /// <note type="tip">
-    /// Use the instance method <see cref="MimeTypeInfo.Clone"/> if you can, to avoid the costs of boxing.
+    /// Use the instance method <see cref="MimeTypeInfo.Clone"/>, if you can, to avoid the costs of boxing.
     /// </note>
     /// </remarks>
     object ICloneable.Clone() => Clone();
@@ -27,15 +27,7 @@ public readonly partial struct MimeTypeInfo : ICloneable
     /// a copy of the <see cref="MimeTypeInfo"/> structure: The copy is built on a separate <see cref="string"/>,
     /// which is case-normalized and only as long as needed.
     /// </remarks>
-    public MimeTypeInfo Clone()
-    {
-        if (this.IsEmpty)
-        {
-            return default;
-        }
-
-        ReadOnlyMemory<char> memory = this._mimeTypeString.ToString().AsMemory();
-        return new MimeTypeInfo(in memory, this._idx);
-    }
+    public MimeTypeInfo Clone() => this.IsEmpty ? default 
+                                                : new MimeTypeInfo(this._mimeTypeString.ToString().AsMemory(), this._idx);
 
 }

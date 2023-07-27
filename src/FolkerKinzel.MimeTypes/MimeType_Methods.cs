@@ -34,14 +34,15 @@ public sealed partial class MimeType
     /// Creates a new <see cref="MimeType"/> object that's filled with the data of an existing <see cref="MimeTypeInfo"/>
     /// instance.
     /// </summary>
-    /// <param name="mime">The <see cref="MimeTypeInfo"/> instance whose data will be copied into the 
+    /// <param name="info">The <see cref="MimeTypeInfo"/> instance whose data will be copied into the 
     /// <see cref="MimeType"/>.</param>
     /// <returns>A reference to the <see cref="MimeType"/> that is created.</returns>
-    public static MimeType Create(in MimeTypeInfo mime)
+    /// <exception cref="ArgumentException"><paramref name="info"/> is empty. (See <see cref="MimeTypeInfo.IsEmpty">MimeTypeInfo.IsEmpty</see>.)</exception>
+    public static MimeType Create(in MimeTypeInfo info)
     {
-        var builder = MimeType.Create(mime.MediaType.ToString(), mime.SubType.ToString());
+        var builder = MimeType.Create(info.MediaType.ToString(), info.SubType.ToString());
 
-        foreach (var parameter in mime.Parameters())
+        foreach (var parameter in info.Parameters())
         {
             var language = parameter.Language;
             _ = builder.AppendParameter(parameter.Key.ToString(), parameter.Value.ToString(), language.Length == 0 ? null : language.ToString());
@@ -178,7 +179,7 @@ public sealed partial class MimeType
     /// <param name="value">The <see cref="ReadOnlyMemory{T}">ReadOnlyMemory&lt;Char&gt;</see> to parse.</param>
     /// <returns>The <see cref="MimeType"/> instance that <paramref name="value"/> represents.</returns>
     /// 
-    /// <seealso cref="TryParse(ReadOnlyMemory{char}, out MimeType?)"/>
+    /// <seealso cref="TryParse(in ReadOnlyMemory{char}, out MimeType?)"/>
     /// 
     /// <exception cref="ArgumentException"><paramref name="value"/> value could not be parsed as <see cref="MimeType"/>.</exception>
     public static MimeType Parse(in ReadOnlyMemory<char> value) => Create(MimeTypeInfo.Parse(value));
@@ -252,8 +253,8 @@ public sealed partial class MimeType
     /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileName"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to find often used file type extensions faster. You
-    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
-    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeType FromFileName(ReadOnlySpan<char> fileName) => Parse(MimeString.FromFileName(fileName));
@@ -267,8 +268,8 @@ public sealed partial class MimeType
     /// <returns>An appropriate <see cref="MimeType"/> instance for <paramref name="fileName"/>.</returns>
     /// <remarks>
     /// Internally a small memory cache is used to find often used file type extensions faster. You
-    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
-    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+    /// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </remarks>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static MimeType FromFileName(string? fileName) => Parse(MimeString.FromFileName(fileName));

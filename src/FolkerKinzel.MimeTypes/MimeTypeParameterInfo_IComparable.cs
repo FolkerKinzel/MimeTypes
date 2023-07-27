@@ -3,7 +3,7 @@
 public readonly partial struct MimeTypeParameterInfo : IComparable<MimeTypeParameterInfo>
 {
     /// <summary>
-    /// Compares the current instance with another <see cref="MimeTypeParameterInfo"/> and returns an integer that indicates whether 
+    /// Compares the current instance with another <see cref="MimeTypeParameterInfo"/> and returns an <see cref="int"/> that indicates whether 
     /// the current instance precedes, follows, or occurs in the same position in the sort order as the other <see cref="MimeTypeParameterInfo"/>.
     /// </summary>
     /// <param name="other">The other <see cref="MimeTypeParameterInfo"/> instance to compare with.</param>

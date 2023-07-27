@@ -108,8 +108,8 @@ public readonly partial struct MimeTypeInfo
     ///// <returns>An appropriate file type extension for <paramref name="mimeTypeString"/>.</returns>
     ///// <remarks>
     ///// Internally a small memory cache is used to retrieve often used file type extensions faster. You
-    ///// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or You can
-    ///// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if Your application does not need it anymore.
+    ///// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
+    ///// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     ///// </remarks>
     ///// <example>
     ///// <para>
@@ -130,6 +130,12 @@ public readonly partial struct MimeTypeInfo
     /// The comparison is case-insensitive.
     /// </summary>
     /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     public bool IsTextMediaType
         => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
 

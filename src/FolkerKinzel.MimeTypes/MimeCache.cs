@@ -23,12 +23,6 @@ namespace FolkerKinzel.MimeTypes;
 /// have called <see cref="EnlargeCapacity(int)"/> before.
 /// </para>
 /// </remarks>
-/// <example>
-/// <para>
-/// Get a <see cref="MimeTypeInfo"/> instance from a file type extension and vice versa:
-/// </para>
-/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
-/// </example>
 public static class MimeCache
 {
     /// <summary>

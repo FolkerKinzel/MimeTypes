@@ -50,25 +50,25 @@ public readonly partial struct MimeTypeParameterInfo
 
 
     /// <summary>
-    /// Gets the <see cref="MimeTypeParameterInfo"/>'s key.
+    /// Gets the name of the parameter.
     /// </summary>
-    /// <example>
+    ///<example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     public ReadOnlySpan<char> Key => _parameterString.Span.Slice(0, KeyLength);
 
 
     /// <summary>
-    /// Gets the <see cref="MimeTypeParameterInfo"/>'s value.
+    /// Gets the value of the parameter.
     /// </summary>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     public ReadOnlySpan<char> Value => _parameterString.Span.Slice(ValueStart);
 
@@ -78,9 +78,9 @@ public readonly partial struct MimeTypeParameterInfo
     /// </summary>
     /// <example>
     /// <para>
-    /// Build, serialize, and parse a <see cref="MimeTypeInfo"/> instance:
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
     /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     public ReadOnlySpan<char> Language
     {
@@ -98,6 +98,12 @@ public readonly partial struct MimeTypeParameterInfo
     /// <summary>
     /// Gets the character set in which <see cref="Value"/> is encoded.
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     public ReadOnlySpan<char> CharSet
     {
         get
@@ -128,6 +134,12 @@ public readonly partial struct MimeTypeParameterInfo
     /// Indicates whether the <see cref="MimeTypeParameterInfo"/> has the <see cref="Key"/> "charset". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "charset"; otherwise, <c>false</c>.</value>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     public bool IsCharSetParameter
         => Key.Equals(MimeTypeParameter.CHARSET_KEY, StringComparison.OrdinalIgnoreCase);
 
@@ -136,6 +148,12 @@ public readonly partial struct MimeTypeParameterInfo
     /// Indicates whether the <see cref="MimeTypeParameterInfo"/> has the <see cref="Key"/> "access-type". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if <see cref="Key"/> equals "access-type"; otherwise, <c>false</c>.</value>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     public bool IsAccessTypeParameter => Key.Equals(MimeTypeParameter.ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
 
 

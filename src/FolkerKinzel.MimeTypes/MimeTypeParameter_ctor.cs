@@ -7,6 +7,18 @@ namespace FolkerKinzel.MimeTypes;
 /// <summary>
 /// Encapsulates the data of an Internet Media Type parameter.
 /// </summary>
+/// <example>
+/// <para>
+/// Building, serializing, parsing, and editing of  <see cref="MimeType"/> instances:
+/// </para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+/// <para>Formatting a <see cref="MimeType"/> instance into a standards-compliant <see cref="string"/> using several options:</para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
+/// <para>
+/// Comparison of <see cref="MimeType"/> instances:
+/// </para>
+/// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
+/// </example>
 public sealed partial class MimeTypeParameter 
 {
     /// <summary>

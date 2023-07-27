@@ -5,7 +5,7 @@ using System.Runtime.InteropServices;
 namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Provides the information stored in an Internet Media Type string ("MIME type").
+/// Provides the information stored in an Internet Media Type <see cref="string"/> ("MIME type").
 /// </summary>
 /// <remarks>
 /// <note type="tip">

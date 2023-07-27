@@ -16,7 +16,7 @@ public class MimeTypeTests
     [DataRow("media", null)]
     [DataRow(null, null)]
     [ExpectedException(typeof(ArgumentNullException))]
-    public void CreateTest1(string? nedia, string? sub) => _ = MimeType.Create(nedia!, sub!);
+    public void CreateTest1(string? media, string? sub) => _ = MimeType.Create(media!, sub!);
 
     [TestMethod]
     public void CreateTest2()
@@ -32,6 +32,11 @@ public class MimeTypeTests
     }
 
     [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void CreateTest3() => _ = MimeType.Create(new MimeTypeInfo());
+
+
+    [TestMethod]
     public void ParseTest1()
     {
         ReadOnlyMemory<char> mem = "image/jpeg".AsMemory();
@@ -39,16 +44,10 @@ public class MimeTypeTests
     }
 
     [TestMethod]
-    public void TryParseTest1()
-    {
-        Assert.IsFalse(MimeType.TryParse("blabla", out _));
-    }
+    public void TryParseTest1() => Assert.IsFalse(MimeType.TryParse("blabla", out _));
 
     [TestMethod]
-    public void TryParseTest1b()
-    {
-        Assert.IsFalse(MimeType.TryParse("blabla".AsMemory(), out _));
-    }
+    public void TryParseTest1b() => Assert.IsFalse(MimeType.TryParse("blabla".AsMemory(), out _));
 
     [TestMethod]
     public void TryParseTest1c()
@@ -65,11 +64,7 @@ public class MimeTypeTests
     }
 
     [TestMethod]
-    [ExpectedException (typeof(ArgumentNullException))]
-    public void TryParseTest2()
-    {
-        Assert.IsFalse(MimeType.TryParse(null!, out _));
-    }
+    public void TryParseTest2() => Assert.IsFalse(MimeType.TryParse(null, out _));
 
     [TestMethod()]
     public void ClearParametersTest1()
@@ -114,17 +109,11 @@ public class MimeTypeTests
     }
 
     [TestMethod]
-    [ExpectedException (typeof(ArgumentNullException))]
-    public void AppendToTest1()
-    {
-        _ = MimeType.Create("x", "y").AppendTo(null!);
-    }
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void AppendToTest1() => _ = MimeType.Create("x", "y").AppendTo(null!);
 
     [TestMethod]
-    public void AppendToTest2()
-    {
-        _ = MimeType.Create("x", "y").AppendParameter("a", "b").AppendTo(new StringBuilder(), MimeFormats.LineWrapping, -42);
-    }
+    public void AppendToTest2() => _ = MimeType.Create("x", "y").AppendParameter("a", "b").AppendTo(new StringBuilder(), MimeFormats.LineWrapping, -42);
 
 
     [TestMethod]
@@ -297,10 +286,7 @@ public class MimeTypeTests
     }
 
     [TestMethod]
-    public void EqualsTest13()
-    {
-        Assert.IsFalse(MimeType.Create("x", "y").Equals(42));
-    }
+    public void EqualsTest13() => Assert.IsFalse(MimeType.Create("x", "y").Equals(42));
 
     [TestMethod]
     public void EqualsOperatorTest1()

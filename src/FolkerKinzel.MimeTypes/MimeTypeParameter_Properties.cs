@@ -5,18 +5,36 @@ public sealed partial class MimeTypeParameter
     /// <summary>
     /// Gets the name of the parameter.
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Building, serializing, parsing, and editing of  <see cref="MimeType"/> instances:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     public string Key { get; }
 
 
     /// <summary>
     /// Gets the value of the parameter.
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Building, serializing, parsing, and editing of  <see cref="MimeType"/> instances:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     public string? Value { get; }
 
 
     /// <summary>
     /// Gets an IETF-Language tag that indicates the language of the parameter's value.
     /// </summary>
+    /// <example>
+    /// <para>
+    /// Building, serializing, parsing, and editing of  <see cref="MimeType"/> instances:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
+    /// </example>
     public string? Language { get; }
 
 
