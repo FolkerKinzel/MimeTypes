@@ -215,29 +215,33 @@ public static class MimeCache
 
     private static void AddEntryToExtCache(string mimeType, string ext, string dottedExt)
     {
+        Debug.Assert(CACHE_CLEANUP_SIZE < DefaultCapacity);
+
         var cache = _extCache.Value;
+        TrimExcess(cache);
+        cache[GetHash(mimeType)] = (ext, dottedExt);
 
-        int capacity = Math.Max(_capacity, DefaultCapacity);
+        /////////////////////////////////////////////////////////////
 
-        if (cache.Count >= capacity)
+        static void TrimExcess(ConcurrentDictionary<int,(string, string)> cache)
         {
-            List<KeyValuePair<int, (string Extension, string DottedExtension)>> tmp = cache.ToList();
+            int capacity = Math.Max(_capacity, DefaultCapacity);
 
-            do
+            if (cache.Count >= capacity)
             {
-                tmp.RemoveRange(0, CACHE_CLEANUP_SIZE);
-            }
-            while (tmp.Count > capacity);
+                ICollection<int> keys = cache.Keys;
 
-            cache.Clear();
-
-            foreach (var item in tmp)
-            {
-                cache[item.Key] = item.Value;
+                // another thread could have been changed
+                // the Count:
+                if (keys.Count >= capacity)
+                {
+                    foreach (int key in keys.Take(CACHE_CLEANUP_SIZE))
+                    {
+                        _ = cache.TryRemove(key, out _);
+                    }
+                }
             }
         }
-
-        cache[GetHash(mimeType)] = (ext, dottedExt);
     }
 
 
@@ -246,19 +250,30 @@ public static class MimeCache
         Debug.Assert(CACHE_CLEANUP_SIZE < DefaultCapacity);
 
         var cache = _mimeCache.Value;
+        TrimExcess(cache);
+        cache[GetHash(ext)] = mimeType;
 
-        int capacity = Math.Max(_capacity, DefaultCapacity);
+        ////////////////////////////////////////////////////////////
 
-        if (cache.Count >= capacity)
+        static void TrimExcess(ConcurrentDictionary<int, string> cache)
         {
-            var keys = cache.Keys;
+            int capacity = Math.Max(_capacity, DefaultCapacity);
 
-            foreach (var key in keys.Take(CACHE_CLEANUP_SIZE))
+            if (cache.Count >= capacity)
             {
-                _ = cache.TryRemove(key, out _);
+                ICollection<int> keys = cache.Keys;
+
+                // another thread could have been changed
+                // the Count:
+                if (keys.Count >= capacity)
+                {
+                    foreach (int key in keys.Take(CACHE_CLEANUP_SIZE))
+                    {
+                        _ = cache.TryRemove(key, out _);
+                    }
+                }
             }
         }
-        cache[GetHash(ext)] = mimeType;
     }
 
 }

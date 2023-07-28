@@ -30,7 +30,7 @@ public class MimeStringTests
 
         Assert.AreEqual("image/png", mime1);
 
-        string[] arr = new string[] { mime2, mime3, mime4, mime5, mime6};
+        string[] arr = new string[] { mime2, mime3, mime4, mime5, mime6 };
         Assert.IsTrue(arr.All(x => x.Equals(mime1)));
 
     }
@@ -41,6 +41,13 @@ public class MimeStringTests
         const string expected = "chemical/x-cdx";
         const string fileName = "MyFile .CDX    ";
         Assert.AreEqual(expected, MimeString.FromFileName(fileName));
+    }
+
+
+    [TestMethod]
+    public void FromFileNameTest4()
+    {
+        Assert.AreEqual(MimeType.Default, MimeString.FromFileName((string?)null));
     }
 
     [TestMethod]

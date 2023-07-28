@@ -372,7 +372,7 @@ public class MimeTypeInfoTests
     [TestMethod]
     public void EqualsTest3()
     {
-        Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=us-ascii", out MimeTypeInfo media1));
+        Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; CharSet=Us-Ascii", out MimeTypeInfo media1));
         Assert.IsTrue(MimeTypeInfo.TryParse("text/plain", out MimeTypeInfo media2));
 
         Assert.IsTrue(media1 == media2);
