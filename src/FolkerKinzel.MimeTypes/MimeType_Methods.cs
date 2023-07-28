@@ -275,7 +275,6 @@ public sealed partial class MimeType
     public static MimeType FromFileName(string? fileName) => Parse(MimeString.FromFileName(fileName));
 
 
-    private bool IsText => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
 
 
 }

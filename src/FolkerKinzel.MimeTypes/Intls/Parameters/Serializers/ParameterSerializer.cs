@@ -17,6 +17,7 @@ internal static class ParameterSerializer
     /// </summary>
     /// <param name="builder"></param>
     /// <param name="parameter"></param>
+    /// <param name="urlFormat"></param>
     internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameter parameter, bool urlFormat)
     {
         Debug.Assert(builder is not null);

@@ -66,7 +66,7 @@ public readonly partial struct MimeTypeInfo : IEquatable<MimeTypeInfo>
             return true;
         }
 
-        bool isText = IsTextMediaType;
+        bool isText = IsText;
         return this.Parameters().Sort(isText).SequenceEqual(other.Parameters().Sort(isText));
     }
 

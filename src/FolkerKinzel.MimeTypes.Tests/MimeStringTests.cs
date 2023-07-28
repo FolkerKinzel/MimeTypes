@@ -9,7 +9,7 @@ public class MimeStringTests
     public void FromFileNameTest1()
     {
 #if NET461 || NETSTANDARD2_0
-        const string expected = MimeType.Default;
+        const string expected = MimeString.OctetStream;
 #else
         const string expected = "text/plain";
 #endif
@@ -45,10 +45,8 @@ public class MimeStringTests
 
 
     [TestMethod]
-    public void FromFileNameTest4()
-    {
-        Assert.AreEqual(MimeType.Default, MimeString.FromFileName((string?)null));
-    }
+    public void FromFileNameTest4() => Assert.AreEqual(MimeString.OctetStream, MimeString.FromFileName((string?)null));
+
 
     [TestMethod]
     public void ToFileTypeExtensionTest1()

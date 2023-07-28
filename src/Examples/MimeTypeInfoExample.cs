@@ -27,7 +27,11 @@ public static class MimeTypeInfoExample
         Console.WriteLine("Media Type: {0}", info.MediaType.ToString());
         Console.WriteLine("Sub Type:   {0}", info.SubType.ToString());
         Console.WriteLine();
-        Console.WriteLine("Is text media type: {0}", info.IsTextMediaType);
+        Console.WriteLine("Is empty:       {0}", info.IsEmpty);
+        Console.WriteLine("Is text:        {0}", info.IsText);
+        Console.WriteLine("Is plain text:  {0}", info.IsTextPlain);
+        Console.WriteLine("Is octet-sream: {0}", info.IsOctetStream);
+
         Console.WriteLine("The file type extension for this MIME type is \"{0}\".",
                            info.GetFileTypeExtension());
 
@@ -58,7 +62,10 @@ Console output:
 Media Type: text
 Sub Type:   plain
 
-Is text media type: True
+Is empty:       False
+Is text:        True
+Is plain text:  True
+Is octet-sream: False
 The file type extension for this MIME type is ".txt".
 
 Parameter 1:

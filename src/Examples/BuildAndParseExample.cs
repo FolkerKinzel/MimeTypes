@@ -22,8 +22,13 @@ public static class BuildAndParseExample
         var mimeType2 = MimeType.Parse(s);
 
         Console.WriteLine();
-        Console.WriteLine($"Media Type: {mimeType2.MediaType}");
-        Console.WriteLine($"Sub Type:   {mimeType2.SubType}");
+        Console.WriteLine("Media Type: {0}", mimeType2.MediaType);
+        Console.WriteLine("Sub Type:   {0}", mimeType2.SubType);
+        Console.WriteLine();
+        Console.WriteLine("Is text:         {0}", mimeType2.IsText);
+        Console.WriteLine("Is plain text:   {0}", mimeType2.IsTextPlain);
+        Console.WriteLine("Is octet-stream: {0}", mimeType2.IsOctetStream);
+
 
         int parameterCounter = 1;
         foreach (MimeTypeParameter parameter in mimeType2.Parameters)
@@ -59,6 +64,10 @@ second-parameter="Parameter with  \\, = and \"."
 
 Media Type: application
 Sub Type:   x-stuff
+
+Is text:         False
+Is plain text:   False
+Is octet-stream: False
 
 Parameter 1:
 ============

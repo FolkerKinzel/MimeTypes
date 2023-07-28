@@ -13,6 +13,11 @@
 public static class MimeString
 {
     /// <summary>
+    /// The default Internet Media Type <see cref="string"/> ("MIME type").
+    /// </summary>
+    public const string OctetStream = "application/octet-stream";
+
+    /// <summary>
     /// Converts an Internet Media Type to an appropriate file type extension.
     /// </summary>
     /// <param name="mimeType">A <see cref="string"/> that represents an Internet Media Type ("MIME type") or <c>null</c>.</param>
@@ -113,7 +118,7 @@ public static class MimeString
     /// <returns>An appropriate Internet Media Type ("MIME type") for <paramref name="fileName"/>.</returns>
     /// <remarks>
     /// <para>
-    /// If no other Internet Media Type could be found, <see cref="MimeType.Default"/> is returned.
+    /// If no other Internet Media Type could be found, <see cref="OctetStream"/> is returned.
     /// </para>
     /// <para>
     /// Internally a small memory cache is used to retrieve often used Internet Media Types faster. You
@@ -158,7 +163,7 @@ public static class MimeString
     /// <returns>An appropriate Internet Media Type ("MIME type") for <paramref name="fileName"/>.</returns>
     /// <remarks>
     /// <para>
-    /// If no other Internet Media Type could be found, <see cref="MimeType.Default"/>
+    /// If no other Internet Media Type could be found, <see cref="OctetStream"/>
     /// is returned.
     /// </para>
     /// <para>

@@ -61,16 +61,67 @@ public readonly partial struct MimeTypeInfo
 
 
     /// <summary>
-    /// Indicates whether the instance contains no data.
-    /// </summary>
-    /// <value><c>true</c> if the instance contains no data, otherwise false.</value>
-    public bool IsEmpty => _idx == 0;
-
-
-    /// <summary>
     /// Gets an empty <see cref="MimeTypeInfo"/> structure.
     /// </summary>
     public static MimeTypeInfo Empty => default;
+
+
+    /// <summary>
+    /// Indicates whether the instance contains no data.
+    /// </summary>
+    /// <value><c>true</c> if the instance contains no data, otherwise false.</value>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsEmpty => _idx == 0;
+
+    
+    /// <summary>
+    /// Determines whether the <see cref="MediaType"/> of this instance equals "text".
+    /// The comparison is case-insensitive.
+    /// </summary>
+    /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsText
+        => _mimeTypeString.Span.StartsWith("text/", StringComparison.OrdinalIgnoreCase);
+
+
+    /// <summary>
+    /// Indicates whether this instance is equal to the MIME type "text/plain". The parameters are not taken into account.
+    /// The comparison is case-insensitive.
+    /// </summary>
+    /// <value><c>true</c> if this instance is equal to "text/plain".</value>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsTextPlain
+        => _mimeTypeString.Span.StartsWith("text/plain", StringComparison.OrdinalIgnoreCase);
+
+
+    /// <summary>
+    /// Indicates whether this instance is equal to <see cref="MimeString.OctetStream"/>. The parameters are not taken into account.
+    /// The comparison is case-insensitive.
+    /// </summary>
+    /// <value><c>true</c> if this instance is equal to <see cref="MimeString.OctetStream"/>, otherwise <c>false</c>.</value>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsOctetStream
+        => _mimeTypeString.Span.StartsWith(MimeString.OctetStream, StringComparison.OrdinalIgnoreCase);
 
 
     /// <summary>
@@ -98,54 +149,4 @@ public readonly partial struct MimeTypeInfo
     /// </example>
     public string GetFileTypeExtension(bool includePeriod = true)
         => MimeString.ToFileTypeExtension(_mimeTypeString.Span, includePeriod);
-
-
-    ///// <summary>
-    ///// Finds an appropriate file type extension for <paramref name="mimeTypeString"/>.
-    ///// </summary>
-    ///// <param name="mimeTypeString">A <see cref="string"/> that represents an Internet Media Type ("MIME type")
-    ///// according to RFC 2045, RFC 2046 and RFC 2231.</param>
-    ///// <returns>An appropriate file type extension for <paramref name="mimeTypeString"/>.</returns>
-    ///// <remarks>
-    ///// Internally a small memory cache is used to retrieve often used file type extensions faster. You
-    ///// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
-    ///// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
-    ///// </remarks>
-    ///// <example>
-    ///// <para>
-    ///// Getting <see cref="MimeTypeInfo"/> instances by parsing file type extensions and getting appropriate file type extensions
-    ///// from <see cref="MimeTypeInfo"/> instances:
-    ///// </para>
-    ///// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FileExtensionExample.cs"/>
-    ///// </example>
-    //public static string GetFileTypeExtension(string? mimeTypeString)
-    //{
-    //    _ = TryParse(mimeTypeString, out MimeTypeInfo mimeType);
-    //    return mimeType.GetFileTypeExtension();
-    //}
-
-
-    /// <summary>
-    /// Determines whether the <see cref="MediaType"/> of this instance equals "text".
-    /// The comparison is case-insensitive.
-    /// </summary>
-    /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
-    /// <example>
-    /// <para>
-    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
-    /// </para>
-    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
-    /// </example>
-    public bool IsTextMediaType
-        => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
-
-
-    ///// <summary>
-    ///// Indicates whether this instance is equal to the MIME type "text/plain". The parameters are not taken into account.
-    ///// The comparison is case-insensitive.
-    ///// </summary>
-    ///// <value><c>true</c> if this instance is equal to "text/plain".</value>
-    //public bool IsTextPlain
-    //    => IsText && SubType.Equals("plain", StringComparison.OrdinalIgnoreCase);
-
 }

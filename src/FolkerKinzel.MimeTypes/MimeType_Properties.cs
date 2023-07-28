@@ -39,4 +39,51 @@ public sealed partial class MimeType
     /// </example>
     public IEnumerable<MimeTypeParameter> Parameters => _dic?.AsEnumerable() ?? Array.Empty<MimeTypeParameter>();
 
+
+    /// <summary>
+    /// Determines whether the <see cref="MediaType"/> of this instance equals "text".
+    /// The comparison is case-insensitive.
+    /// </summary>
+    /// <returns><c>true</c> if the <see cref="MediaType"/> of this instance equals "text".</returns>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsText
+        => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
+
+
+    /// <summary>
+    /// Indicates whether this instance is equal to the MIME type "text/plain". The parameters are not taken into account.
+    /// The comparison is case-insensitive.
+    /// </summary>
+    /// <value><c>true</c> if this instance is equal to "text/plain".</value>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsTextPlain
+        => IsText && SubType.Equals("plain", StringComparison.OrdinalIgnoreCase);
+
+
+    /// <summary>
+    /// Indicates whether this instance is equal to <see cref="MimeString.OctetStream"/>. The parameters are not taken into account.
+    /// The comparison is case-insensitive.
+    /// </summary>
+    /// <value><c>true</c> if this instance is equal to <see cref="MimeString.OctetStream"/>, otherwise <c>false</c>.</value>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsOctetStream
+        => MediaType.Equals("application", StringComparison.OrdinalIgnoreCase) && SubType.Equals("octet-stream", StringComparison.OrdinalIgnoreCase);
+
+
+
 }

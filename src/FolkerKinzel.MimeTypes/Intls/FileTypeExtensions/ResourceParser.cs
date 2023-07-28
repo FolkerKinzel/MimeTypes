@@ -28,7 +28,7 @@ internal static class ResourceParser
             }
         }
 
-        return MimeType.Default;
+        return MimeString.OctetStream;
     }
 
 

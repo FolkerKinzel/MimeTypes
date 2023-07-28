@@ -96,7 +96,7 @@ public static class MimeCache
         }
 
         return fileTypeExtension.IsWhiteSpace()
-                ? MimeType.Default
+                ? MimeString.OctetStream
                 : TryGetMimeTypeFromCache(fileTypeExtension, out string? mimeType)
                     ? mimeType
                     : GetMimeTypeFromResources(fileTypeExtension);

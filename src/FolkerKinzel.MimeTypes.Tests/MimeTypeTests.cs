@@ -125,6 +125,13 @@ public class MimeTypeTests
         var mediaType1 = MimeType.Parse(media1);
         var mediaType2 = MimeType.Parse(media2);
 
+        Assert.IsTrue(mediaType1.IsText);
+        Assert.IsTrue(mediaType1.IsTextPlain);
+        Assert.IsFalse(mediaType1.IsOctetStream);
+        Assert.IsTrue(mediaType2.IsText);
+        Assert.IsTrue(mediaType2.IsTextPlain);
+        Assert.IsFalse(mediaType2.IsOctetStream);
+
         Assert.IsTrue(mediaType1 == mediaType2);
         Assert.IsFalse(mediaType1 != mediaType2);
 
@@ -237,7 +244,14 @@ public class MimeTypeTests
     public void EqualsTest10()
     {
         Assert.IsTrue(MimeType.TryParse("application/octet-stream; charset=US-ASCII", out MimeType? media1));
-        Assert.IsTrue(MimeType.TryParse("application/octet-stream", out MimeType? media2));
+        Assert.IsTrue(MimeType.TryParse("APPLICATION/Octet-Stream", out MimeType? media2));
+
+        Assert.IsTrue(media1.IsOctetStream);
+        Assert.IsFalse(media1.IsText);
+        Assert.IsFalse(media1.IsTextPlain);
+        Assert.IsTrue(media2.IsOctetStream);
+        Assert.IsFalse(media2.IsText);
+        Assert.IsFalse(media2.IsTextPlain);
 
         Assert.IsFalse(media1.Equals(media2));
         Assert.IsFalse(media1.Equals(media2));

@@ -65,6 +65,10 @@ public class MimeTypeInfoTests
         MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
         Assert.AreEqual(2, arr.Length);
         Assert.IsNotNull(arr.FirstOrDefault(x => x.Key.Equals("key2", StringComparison.Ordinal) && x.Value.Equals("abcdef", StringComparison.Ordinal)));
+        Assert.IsFalse(mime.IsText);
+        Assert.IsFalse(mime.IsEmpty);
+        Assert.IsFalse(mime.IsOctetStream);
+        Assert.IsFalse(mime.IsTextPlain);
     }
 
 
@@ -95,6 +99,10 @@ public class MimeTypeInfoTests
         MimeTypeParameterInfo[]? arr = mediaType.Parameters().ToArray();
 
         Assert.AreEqual(parametersCount, arr.Length);
+        Assert.IsTrue(mediaType.IsText);
+        Assert.IsTrue(mediaType.IsTextPlain);
+        Assert.IsFalse(mediaType.IsEmpty);
+        Assert.IsFalse(mediaType.IsOctetStream);
     }
 
 
@@ -576,10 +584,7 @@ public class MimeTypeInfoTests
         => Assert.AreEqual(expected, MimeTypeInfo.Parse(mime).GetFileTypeExtension());
 
     [TestMethod]
-    public void GetFileTypeExtensionTest2()
-    {  
-        Assert.AreEqual(".bin", new MimeTypeInfo().GetFileTypeExtension());
-    }
+    public void GetFileTypeExtensionTest2() => Assert.AreEqual(".bin", new MimeTypeInfo().GetFileTypeExtension());
 
     [DataTestMethod]
     [DataRow("text/cache-manifest", ".appcache")]
