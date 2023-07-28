@@ -39,10 +39,10 @@ internal static class ParameterSerializer
 
         _ = action switch
         {
-            EncodingAction.Mask => builder.BuildQuoted(parameter, true, MimeTypeParameterInfo.GetIsValueCaseSensitive(parameter.Key)),
-            EncodingAction.Quote => builder.BuildQuoted(parameter, false, MimeTypeParameterInfo.GetIsValueCaseSensitive(parameter.Key)),
+            EncodingAction.Mask => builder.BuildQuoted(parameter, true, parameter.IsValueCaseSensitive),
+            EncodingAction.Quote => builder.BuildQuoted(parameter, false, parameter.IsValueCaseSensitive),
             EncodingAction.UrlEncode => builder.BuildUrlEncoded(parameter),
-            _ => builder.BuildUnQuoted(parameter, MimeTypeParameterInfo.GetIsValueCaseSensitive(parameter.Key))
+            _ => builder.BuildUnQuoted(parameter, parameter.IsValueCaseSensitive)
         };
 
         return action;

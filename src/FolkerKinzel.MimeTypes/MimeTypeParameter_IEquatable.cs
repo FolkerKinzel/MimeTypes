@@ -18,7 +18,7 @@ public sealed partial class MimeTypeParameter : IEquatable<MimeTypeParameter>
     /// </example>
     public bool Equals(MimeTypeParameter? other)
         => other is not null && Key.Equals(other.Key, StringComparison.OrdinalIgnoreCase)
-           && (MimeTypeParameterInfo.GetIsValueCaseSensitive(Key)
+           && (IsValueCaseSensitive
                 ? StringComparer.Ordinal.Equals(Value, other.Value)
                 : StringComparer.OrdinalIgnoreCase.Equals(Value, other.Value));
 

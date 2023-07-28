@@ -161,14 +161,25 @@ public readonly partial struct MimeTypeParameterInfo
     /// Indicates whether this instance equals "charset=us-ascii". The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if this instance equals "charset=us-ascii"; otherwise, <c>false</c>.</value>
-    internal bool IsAsciiCharSetParameter
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsAsciiCharSetParameter
         => IsCharSetParameter
            && Value.Equals(MimeTypeParameter.ASCII_CHARSET_VALUE, StringComparison.OrdinalIgnoreCase);
 
-
-    internal bool IsValueCaseSensitive => !(IsCharSetParameter || IsAccessTypeParameter);
-
-    internal static bool GetIsValueCaseSensitive(string key) => !(key.Equals(MimeTypeParameter.CHARSET_KEY, StringComparison.OrdinalIgnoreCase) ||
-                                                                  key.Equals(MimeTypeParameter.ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase));
-
+    /// <summary>
+    /// Indicates whether the <see cref="Value"/> should be treated case sensitive.
+    /// </summary>
+    /// <example>
+    /// <para>
+    /// Efficient parsing of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
+    public bool IsValueCaseSensitive => !(IsCharSetParameter || IsAccessTypeParameter);
+    // Change MimeTypeParameter.IsValueCaseSensitive when this property is edited!
 }

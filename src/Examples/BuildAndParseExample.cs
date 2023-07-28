@@ -27,8 +27,7 @@ public static class BuildAndParseExample
         Console.WriteLine();
         Console.WriteLine("Is text:         {0}", mimeType2.IsText);
         Console.WriteLine("Is plain text:   {0}", mimeType2.IsTextPlain);
-        Console.WriteLine("Is octet-stream: {0}", mimeType2.IsOctetStream);
-
+        Console.WriteLine("Is octet stream: {0}", mimeType2.IsOctetStream);
 
         int parameterCounter = 1;
         foreach (MimeTypeParameter parameter in mimeType2.Parameters)
@@ -40,6 +39,11 @@ public static class BuildAndParseExample
             Console.WriteLine($"Language: {parameter.Language}");
             Console.WriteLine("Value:");
             Console.WriteLine(parameter.Value);
+            Console.WriteLine();
+            Console.WriteLine("Is charset parameter:       {0}", parameter.IsCharSetParameter);
+            Console.WriteLine("Is ASCII charset parameter: {0}", parameter.IsAsciiCharSetParameter);
+            Console.WriteLine("Is access type parameter:   {0}", parameter.IsAccessTypeParameter);
+            Console.WriteLine("Is value case sensitive:    {0}", parameter.IsValueCaseSensitive);
         }
 
         // The MimeType class allows to modify the parameters:
@@ -67,7 +71,7 @@ Sub Type:   x-stuff
 
 Is text:         False
 Is plain text:   False
-Is octet-stream: False
+Is octet stream: False
 
 Parameter 1:
 ============
@@ -77,12 +81,22 @@ Value:
 This is a very long parameter that will be wrapped according to RFC 2231.
 It also contains a few Non-ASCII-Characters: äöß.
 
+Is charset parameter:       False
+Is ASCII charset parameter: False
+Is access type parameter:   False
+Is value case sensitive:    True
+
 Parameter 2:
 ============
 Key:      second-parameter
 Language:
 Value:
 Parameter with  \, = and ".
+
+Is charset parameter:       False
+Is ASCII charset parameter: False
+Is access type parameter:   False
+Is value case sensitive:    True
 
 mimeType2 modified: application/x-stuff; second-parameter=normal
  */

@@ -12,7 +12,7 @@ public sealed partial class MimeTypeParameter
 
         hash.Add(Key, StringComparer.OrdinalIgnoreCase);
 
-        if (MimeTypeParameterInfo.GetIsValueCaseSensitive(Key))
+        if (IsValueCaseSensitive)
         {
             hash.Add(Value, StringComparer.Ordinal);
         }
