@@ -53,6 +53,7 @@ internal static class ResourceParser
         {
             string? line = reader.ReadLine();
 
+            // only testable if Resources/MimeIdx.csv is corrupted:
             if (line is null)
             {
                 break;

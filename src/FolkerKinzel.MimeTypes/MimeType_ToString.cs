@@ -63,8 +63,8 @@ public sealed partial class MimeType
 
 
     private StringBuilder AppendToInternal(StringBuilder builder,
-                              MimeFormats options = MimeFormats.Default,
-                              int lineLength = MimeType.MinimumLineLength)
+                              MimeFormats options,
+                              int lineLength)
     {
 
         Debug.Assert(builder != null);
@@ -117,6 +117,7 @@ public sealed partial class MimeType
     private void AppendWrappedParameters(StringBuilder builder, MimeFormats options, int lineLength)
     {
         Debug.Assert(options == options.Normalize());
+        Debug.Assert(lineLength >= MimeType.MinimumLineLength - 1);
 
         var worker = new StringBuilder(lineLength);
         bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
@@ -126,7 +127,7 @@ public sealed partial class MimeType
             EncodingAction action = worker.Clear().Append(parameter, false);
 
             lineLength = ComputeMinimumLineLength(
-                            parameter.Key.Length + parameter.Language?.Length ?? 0,
+                            parameter.Key.Length + (parameter.Language?.Length ?? 0),
                             lineLength,
                             action);
 
@@ -174,7 +175,7 @@ public sealed partial class MimeType
     /// <returns>The minimum length that is needed for a line.</returns>
     private static int ComputeMinimumLineLength(int givenLength, int desiredLineLength, EncodingAction enc)
     {
-        int minimumLength = givenLength + ParameterSplitter2.MINIMUM_LINE_LENGTH;
+        int minimumLength = givenLength + ParameterSplitter2.MINIMUM_VARIABLE_LINE_LENGTH;
 
         if (enc == EncodingAction.UrlEncode)
         {

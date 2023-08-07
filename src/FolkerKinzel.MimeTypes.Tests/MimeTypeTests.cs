@@ -115,6 +115,15 @@ public class MimeTypeTests
     [TestMethod]
     public void AppendToTest2() => _ = MimeType.Create("x", "y").AppendParameter("a", "b").AppendTo(new StringBuilder(), MimeFormats.LineWrapping, -42);
 
+    [TestMethod]
+    public void ToStringTest1()
+    {
+        var mime = MimeType.Create("application", "x-stuff")
+            .AppendParameter("keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", "valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+
+        string s = mime.ToString(options: MimeFormats.LineWrapping, lineLength: 10);
+        Assert.AreNotEqual(0, s.Length);
+    }
 
     [TestMethod]
     public void EqualsTest1()
@@ -324,5 +333,38 @@ public class MimeTypeTests
         m2 = m1;
         Assert.IsTrue(m1 == m2);
 
+    }
+
+
+    [TestMethod]
+    public void AsInfoTest1()
+    {
+        MimeTypeInfo info = MimeType.Create("application", "x-stuff").AppendParameter("key", "value").ClearParameters().AsInfo();
+        Assert.AreEqual(0, info.Parameters().Count());
+    }
+
+    [TestMethod]
+    public void AsInfoTest2()
+    {
+        MimeTypeInfo info = MimeType.Create("application", "x-stuff").AsInfo();
+        Assert.AreEqual(0, info.Parameters().Count());
+    }
+
+    [TestMethod]
+    public void FromFileNameTest1()
+    {
+        var mime = MimeType.FromFileName("test.jpg");
+        Assert.AreEqual("image", mime.MediaType);
+        Assert.AreEqual("jpeg", mime.SubType);
+        Assert.AreEqual(0, mime.Parameters.Count());
+    }
+
+    [TestMethod]
+    public void FromFileNameTest2()
+    {
+        var mime = MimeType.FromFileName("test.jpg".AsSpan());
+        Assert.AreEqual("image", mime.MediaType);
+        Assert.AreEqual("jpeg", mime.SubType);
+        Assert.AreEqual(0, mime.Parameters.Count());
     }
 }

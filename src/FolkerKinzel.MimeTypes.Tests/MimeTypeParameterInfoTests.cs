@@ -86,6 +86,21 @@ public class MimeTypeParameterInfoTests
         Assert.IsFalse(MimeTypeParameterInfo.TryParse(true, ref mem, out _, out _));
     }
 
+    [TestMethod]
+    public void TryParseTest2()
+    {
+        string lang = new('a', 300);
+        ReadOnlyMemory<char> mem = $"key*=utf-8'{lang}'value".AsMemory();
+        Assert.IsFalse(MimeTypeParameterInfo.TryParse(true, ref mem, out _, out _));
+    }
+
+    [TestMethod]
+    public void TryParseTest3()
+    {
+        ReadOnlyMemory<char> mem = "key*=utf-8'en'%EF%AB%CD".AsMemory();
+        Assert.IsFalse(MimeTypeParameterInfo.TryParse(true, ref mem, out _, out _));
+    }
+
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]

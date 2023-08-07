@@ -70,39 +70,4 @@ public readonly partial struct MimeTypeInfo
     public static bool TryParse(ReadOnlyMemory<char> value, [NotNull] out MimeTypeInfo info) =>
         TryParseInternal(ref value, out info);
 
-
-    ///// <summary>
-    ///// Creates an appropriate <see cref="MimeTypeInfo"/> instance for a given
-    ///// file name.
-    ///// </summary>
-    ///// <param name="fileName">A file path, file name, file type extension (no matter whether with or without the period "."), or <c>null</c>.</param>
-    ///// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileName"/>.</returns>
-    ///// <remarks>
-    ///// Internally a small memory cache is used to find often used file type extensions faster. You
-    ///// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
-    ///// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
-    ///// </remarks>
-    //public static MimeTypeInfo FromFileName(ReadOnlySpan<char> fileName)
-    //{
-    //    ReadOnlyMemory<char> memory = MimeString.FromFileName(fileName).AsMemory();
-    //    _ = TryParseInternal(ref memory, out MimeTypeInfo inetMediaType);
-    //    return inetMediaType;
-    //}
-
-
-    ///// <summary>
-    ///// Creates an appropriate <see cref="MimeTypeInfo"/> instance for a given
-    ///// file name.
-    ///// </summary>
-    ///// <param name="fileName">A file path, file name, file type extension (no matter whether with or without the period "."), or <c>null</c>.</param>
-    ///// <returns>An appropriate <see cref="MimeTypeInfo"/> instance for <paramref name="fileName"/>.</returns>
-    ///// <remarks>
-    ///// Internally a small memory cache is used to find often used file type extensions faster. You
-    ///// can enlarge the size of this cache with <see cref="MimeCache.EnlargeCapacity(int)">MimeCache.EnlargeCapacity(int)</see> or you can
-    ///// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
-    ///// </remarks>
-    //[MethodImpl(MethodImplOptions.AggressiveInlining)]
-    //public static MimeTypeInfo FromFileName(string? fileName) => FromFileName(fileName.AsSpan());
-    
-
 }

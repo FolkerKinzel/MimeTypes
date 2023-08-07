@@ -74,7 +74,6 @@
 	  <Folder Include="Intls\Comparisons\" />
 	  <Folder Include="Intls\FileTypeExtensions\" />
 	  <Folder Include="Intls\Parameters\Encodings\" />
-	  <Folder Include="Intls\Parameters\Serializers\Builders\" />
 	</ItemGroup>
 
 

@@ -12,11 +12,11 @@ public class MimeTypeInfoTests
 {
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest3() => _ = MimeType.Create("", "subtype");
+    public void MimeTypeInfoTest3() => _ = MimeType.Create("", "subtype");
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest4() => _ = MimeType.Create("type", "");
+    public void MimeTypeInfoTest4() => _ = MimeType.Create("type", "");
 
     [DataTestMethod]
     [DataRow("?")]
@@ -26,16 +26,16 @@ public class MimeTypeInfoTests
     [DataRow("ö")]
     [DataRow("\0")]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest5(string type) => _ = MimeType.Create(type, "");
+    public void MimeTypeInfoTest5(string type) => _ = MimeType.Create(type, "");
 
 
     [TestMethod]
     [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeTest6() => _ = MimeType.Create(new string('a', short.MaxValue + 1), "subtype");
+    public void MimeTypeInfoTest6() => _ = MimeType.Create(new string('a', short.MaxValue + 1), "subtype");
 
 
     [TestMethod]
-    public void MimeTypeTest7()
+    public void MimeTypeInfoTest7()
     {
         MimeType mime = MimeType.Create("application", "was").AppendParameter("para", "@");
         string s = mime.ToString();
@@ -82,6 +82,31 @@ public class MimeTypeInfoTests
         var mime = MimeTypeInfo.Parse(s);
         Assert.AreEqual(media, mime.MediaType.ToString());
         Assert.AreEqual(subType, subType.ToString());
+    }
+
+    [TestMethod()]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ParseTest6() => _ = MimeTypeInfo.Parse("ääääääää/jpeg");
+
+
+    [TestMethod()]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ParseTest7() => _ = MimeTypeInfo.Parse("image/ääääääää");
+
+    [TestMethod()]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ParseTest8()
+    {
+        string veryLong = new('a', short.MaxValue + 1);
+        _ = MimeTypeInfo.Parse($"image/{veryLong}");
+    }
+
+    [TestMethod()]
+    [ExpectedException(typeof(ArgumentException))]
+    public void ParseTest9()
+    {
+        string veryLong = new('a', short.MaxValue + 1);
+        _ = MimeTypeInfo.Parse($"{veryLong}/jpeg");
     }
 
     [DataTestMethod]

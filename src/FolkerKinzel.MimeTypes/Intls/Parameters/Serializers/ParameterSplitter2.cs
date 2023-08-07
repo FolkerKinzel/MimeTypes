@@ -7,7 +7,11 @@ internal static class ParameterSplitter2
 {
     private const int DOUBLE_QUOTES_COUNT = 2;
     private const int COUNTER_INITIAL_LENGTH = 1;
-    internal const int MINIMUM_LINE_LENGTH = 9; // *0= and 6 value chars per line at least
+
+    /// <summary>
+    /// *0= and 6 value chars per line at least
+    /// </summary>
+    internal const int MINIMUM_VARIABLE_LINE_LENGTH = 9;
 
 
     /// <summary>
@@ -57,7 +61,7 @@ internal static class ParameterSplitter2
     internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameter parameter, StringBuilder worker, int lineLength, EncodingAction enc)
     {
         Debug.Assert(worker.Length > 0);
-        Debug.Assert(lineLength >= Math.Max(parameter.Key.Length + parameter.Language?.Length ?? 0, MINIMUM_LINE_LENGTH));
+        Debug.Assert(lineLength >= Math.Max(parameter.Key.Length + parameter.Language?.Length ?? 0, MINIMUM_VARIABLE_LINE_LENGTH));
 
         RemoveKeyFromWorker(worker, enc);
 
