@@ -20,7 +20,7 @@ public class ParameterSplitterTests
 
         EncodingAction enc = input.Append(para, false);
         string s = "";
-        foreach (StringBuilder sb in ParameterSplitter2.SplitParameter(para, input, 70, enc))
+        foreach (StringBuilder sb in ParameterSplitter.SplitParameter(para, input, 70, enc))
         {
             s += sb.ToString() + Environment.NewLine;
         }

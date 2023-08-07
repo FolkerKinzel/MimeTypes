@@ -7,46 +7,50 @@ internal static class ParameterSplitter
 {
     private const int DOUBLE_QUOTES_COUNT = 2;
     private const int COUNTER_INITIAL_LENGTH = 1;
-    internal const int MINIMUM_LINE_LENGTH = 9; // *0= and 6 value chars per line at least
-
-
-    ///// <summary>
-    ///// Indicates whether the parameter is splitted.
-    ///// </summary>
-    ///// <param name="keySpan"></param>
-    ///// <returns></returns>
-    //internal static bool IsParameterSplitted(this ReadOnlySpan<char> keySpan) => keySpan.GetSplitIndicatorIndex() != -1;
-
-    ///// <summary>
-    ///// Gets the index of the first '*' sign after the key name, which indicates that the parameter is splitted. ("key*0" or "key*0*" or "key*42*")
-    ///// </summary>
-    ///// <param name="keySpan">A span that contains the parameters key without the equals sign.</param>
-    ///// <returns>The index of the split indicator if found, otherwise -1.</returns>
-    //internal static int GetSplitIndicatorIndex(this ReadOnlySpan<char> keySpan)
-    //{
-    //    int idx = keySpan.Length - 2;
-
-    //    // At least one letter has the key name to be long.
-    //    while (idx > 0)
-    //    {
-    //        char c = keySpan[idx];
-    //        if (c == '*')
-    //        {
-    //            return idx;
-    //        }
-    //        else if (!c.IsDecimalDigit())
-    //        {
-    //            return -1;
-    //        }
-
-    //        idx--;
-    //    }
-
-    //    return -1;
-    //}
 
     /// <summary>
-    /// Splits a long <see cref="MimeTypeParameterInfo"/> into several parts and returns them as a collection of <see cref="StringBuilder"/>
+    /// *0= and 6 value chars per line at least
+    /// </summary>
+    internal const int MINIMUM_VARIABLE_LINE_LENGTH = 9;
+
+
+    /// <summary>
+    /// Indicates whether the parameter is splitted.
+    /// </summary>
+    /// <param name="keySpan"></param>
+    /// <returns></returns>
+    internal static bool IsParameterSplitted(this ReadOnlySpan<char> keySpan) => keySpan.GetSplitIndicatorIndex() != -1;
+
+    /// <summary>
+    /// Gets the index of the first '*' sign after the key name, which indicates that the parameter is splitted. ("key*0" or "key*0*" or "key*42*")
+    /// </summary>
+    /// <param name="keySpan">A span that contains the parameters key without the equals sign.</param>
+    /// <returns>The index of the split indicator if found, otherwise -1.</returns>
+    internal static int GetSplitIndicatorIndex(this ReadOnlySpan<char> keySpan)
+    {
+        int idx = keySpan.Length - 2;
+
+        // At least one letter has the key name to be long.
+        while (idx > 0)
+        {
+            char c = keySpan[idx];
+            if (c == '*')
+            {
+                return idx;
+            }
+            else if (!c.IsDecimalDigit())
+            {
+                return -1;
+            }
+
+            idx--;
+        }
+
+        return -1;
+    }
+
+    /// <summary>
+    /// Splits a long <see cref="MimeTypeParameter"/> into several parts and returns them as a collection of <see cref="StringBuilder"/>
     /// objects.
     /// </summary>
     /// <param name="parameter">The <see cref="MimeTypeParameterInfo"/> to split.</param>
@@ -54,15 +58,15 @@ internal static class ParameterSplitter
     /// <param name="lineLength">The line length at which the parameter should be splitted.</param>
     /// <param name="enc">The <see cref="EncodingAction"/> the <paramref name="parameter"/> had been serialized to worker.</param>
     /// <returns>A collection of <see cref="StringBuilder"/> objects that represents the splitted <paramref name="parameter"/>.</returns>
-    internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameterInfo parameter, StringBuilder worker, int lineLength, EncodingAction enc)
+    internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameter parameter, StringBuilder worker, int lineLength, EncodingAction enc)
     {
         Debug.Assert(worker.Length > 0);
-        Debug.Assert(lineLength >= Math.Max(parameter.Key.Length + parameter.Language.Length, MINIMUM_LINE_LENGTH));
+        Debug.Assert(lineLength >= Math.Max(parameter.Key.Length + parameter.Language?.Length ?? 0, MINIMUM_VARIABLE_LINE_LENGTH));
 
         RemoveKeyFromWorker(worker, enc);
 
         var tmp = new StringBuilder(lineLength);
-        (int counterIdx, int normalValueStart) = PrepareTmp(in parameter, enc, tmp);
+        (int counterIdx, int normalValueStart) = PrepareTmp(parameter, enc, tmp);
 
         int valueStart = tmp.Length;
         bool quoted = enc.HasFlag(EncodingAction.Quote);
@@ -114,7 +118,7 @@ internal static class ParameterSplitter
     }
 
 
-    private static (int counterIdx, int normalValueStart) PrepareTmp(in MimeTypeParameterInfo parameter, EncodingAction enc, StringBuilder tmp)
+    private static (int counterIdx, int normalValueStart) PrepareTmp(MimeTypeParameter parameter, EncodingAction enc, StringBuilder tmp)
     {
         _ = tmp.Append(parameter.Key).Append('*');
 
@@ -136,6 +140,7 @@ internal static class ParameterSplitter
 
         return (counterIdx, normalValueStart);
     }
+
 
     private static int UpdateLineLength(int workerLength, int lineLength, bool quoted, int valueStart)
     {

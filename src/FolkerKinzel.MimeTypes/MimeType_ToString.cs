@@ -133,7 +133,7 @@ public sealed partial class MimeType
 
             if (worker.Length > lineLength)
             {
-                foreach (StringBuilder tmp in ParameterSplitter2.SplitParameter(parameter, worker, lineLength, action))
+                foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(parameter, worker, lineLength, action))
                 {
                     _ = builder.Append(';').Append(NEW_LINE).Append(tmp);
                 }
@@ -175,7 +175,7 @@ public sealed partial class MimeType
     /// <returns>The minimum length that is needed for a line.</returns>
     private static int ComputeMinimumLineLength(int givenLength, int desiredLineLength, EncodingAction enc)
     {
-        int minimumLength = givenLength + ParameterSplitter2.MINIMUM_VARIABLE_LINE_LENGTH;
+        int minimumLength = givenLength + ParameterSplitter.MINIMUM_VARIABLE_LINE_LENGTH;
 
         if (enc == EncodingAction.UrlEncode)
         {
