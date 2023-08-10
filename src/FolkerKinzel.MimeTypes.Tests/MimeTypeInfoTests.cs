@@ -275,6 +275,14 @@ public class MimeTypeInfoTests
         Assert.AreEqual(ab, arr[0].Value.ToString(), false);
     }
 
+    [TestMethod]
+    public void TryParseTest8()
+    {
+        const string input = "ibm pm metafile";
+
+        Assert.IsFalse(MimeTypeInfo.TryParse(input, out MimeTypeInfo mime));
+    }
+
 
     [TestMethod()]
     public void ToStringTest1()

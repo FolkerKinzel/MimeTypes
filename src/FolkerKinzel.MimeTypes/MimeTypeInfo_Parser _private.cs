@@ -45,7 +45,7 @@ public readonly partial struct MimeTypeInfo
             return ReAllocate(capacity:      value.Length,
                               hasParameters: hasParameters,
                               mediaPartSpan: mediaPartSpan,
-                              parameterSpan: span.Slice(parameterSeparatorIndex),
+                              parameterSpan: hasParameters ? span.Slice(parameterSeparatorIndex) : ReadOnlySpan<char>.Empty,
                               out mimeType);
         }
 
