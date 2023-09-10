@@ -6,6 +6,8 @@ public sealed partial class MimeType
 {
     private ParameterModelDictionary? _dic;
 
+    private bool HasParameters => _dic?.Count != 0;
+
     /// <summary>
     /// Gets the Top-Level Media Type. (The left part of a MIME-Type.)
     /// </summary>

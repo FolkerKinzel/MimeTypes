@@ -34,11 +34,16 @@ public sealed partial class MimeType
     /// </example>
     public string ToString(MimeFormats options, int lineLength = MimeType.MinimumLineLength)
     {
-
-        var sb = new StringBuilder(STRING_LENGTH);
-        AppendToInternal(sb, options, lineLength);
-        return sb.ToString();
-
+        if (!HasParameters)
+        {
+            return MediaType + '/' + SubType;
+        }
+        else
+        {
+            var sb = new StringBuilder(STRING_LENGTH);
+            AppendToInternal(sb, options, lineLength);
+            return sb.ToString();
+        }
     }
 
 
@@ -76,8 +81,7 @@ public sealed partial class MimeType
         }
 
         _ = builder.EnsureCapacity(builder.Length + STRING_LENGTH);
-        int insertStartIndex = builder.Length;
-        _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(insertStartIndex);
+        _ = builder.Append(MediaType).Append('/').Append(SubType);
 
         Debug.Assert(options == options.Normalize());
 
@@ -101,9 +105,11 @@ public sealed partial class MimeType
     {
         Debug.Assert(options == options.Normalize());
         bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
+
         foreach (MimeTypeParameter parameter in Parameters)
         {
             _ = builder.Append(';');
+
             if (appendSpace)
             {
                 _ = builder.Append(' ');
