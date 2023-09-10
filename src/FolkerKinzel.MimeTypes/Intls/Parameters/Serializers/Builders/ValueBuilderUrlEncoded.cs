@@ -29,6 +29,6 @@ internal static class ValueBuilderUrlEncoded
                                                        string? language,
                                                        string value)
     {
-        return builder.Append('*').Append('=').Append(UTF_8).Append('\'').Append(language).Append('\'').AppendValueUnQuoted(value, true);
+        return builder.Append('*').Append('=').Append(UTF_8).Append('\'').Append(language).Append('\'').Append(value);
     }
 }

@@ -10,8 +10,9 @@ internal class Program
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Nicht verwendete Parameter entfernen", Justification = "<Ausstehend>")]
     private static void Main(string[] args)
     {
+        StringBuilderExtension.WriteEncodes();
         //string s = new CreateStringBench().StringCreate();
-        Summary summary = BenchmarkRunner.Run<CreateStringBench>();
+        // Summary summary = BenchmarkRunner.Run<CreateStringBench>();
             //ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
     }
 }
