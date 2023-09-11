@@ -4,6 +4,7 @@ using FolkerKinzel.Strings.Polyfills;
 using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 using System.Text;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 
@@ -187,6 +188,29 @@ public class MimeTypeInfoTests
         StringAssert.Contains(value, @"This is %EF 7e\ / "" @+? ; quoted.\1+2 %A5");
         Assert.AreEqual("en", par.Language.ToString());
         Assert.AreEqual("utf-8", par.CharSet.ToString());
+    }
+
+    [TestMethod]
+    public void TryParseTest4d()
+    {
+        const string charSet = "iso-8859-1";
+        string urlEncoded = UrlEncoding.UrlEncodeWithCharset(charSet, "äöü");
+        string mimeString = $"""
+            application/x-stuff;
+            key*1*={charSet}'en'{urlEncoded} ;
+            key*2="This is %EF 7e\\ / \" @+? ; quoted.\";
+            key*3=1+2 %A5
+            """;
+        Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
+        MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
+        Assert.AreEqual(1, paras.Length);
+
+        MimeTypeParameterInfo par = paras[0];
+        Assert.AreEqual("key", par.Key.ToString());
+        string value = par.Value.ToString();
+        StringAssert.Contains(value, @"This is %EF 7e\ / "" @+? ; quoted.\1+2 %A5");
+        Assert.AreEqual("en", par.Language.ToString());
+        Assert.AreEqual(charSet, par.CharSet.ToString());
     }
 
 

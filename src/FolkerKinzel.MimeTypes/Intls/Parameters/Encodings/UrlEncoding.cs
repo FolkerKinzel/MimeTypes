@@ -65,7 +65,7 @@ internal static class UrlEncoding
     internal static string UrlEncodeWithCharset(string? charSet, string value)
     {
         Encoding encoding = TextEncodingConverter.GetEncoding(charSet);
-        var bytes = encoding.GetBytes("%");
+        var bytes = encoding.GetBytes(value);
 
         return StaticStringMethod.Create(bytes.Length * 3, bytes,
             static (chars, bts) =>
@@ -92,5 +92,5 @@ internal static class UrlEncoding
     }
 
     private static char ToHexDigit(int i) =>
-        (char)(i < 10 ? i + '0' : i + 'a' - 10);
+        (char)(i < 10 ? i + '0' : i + 'A' - 10);
 }

@@ -134,7 +134,7 @@ internal static class ParameterParser
             charSet.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ||
             charSet.Contains("ascii", StringComparison.OrdinalIgnoreCase)
             ? "%2B"
-            : UrlEncoding.UrlEncodeWithCharset(charSet, "%");
+            : UrlEncoding.UrlEncodeWithCharset(charSet, "+");
 
         sb.Replace("+", replacement, currentValueStart);
     }

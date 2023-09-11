@@ -3,6 +3,7 @@ using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
 using System.Net;
 using System.Text;
+using FolkerKinzel.Strings;
 
 namespace Benchmarks;
 
@@ -93,5 +94,5 @@ internal static class UrlEncoding
     }
 
     private static char ToHexDigit(int i) =>
-        (char)(i < 10 ? i + '0' : i + 'a' - 10);
+        (char)(i < 10 ? i + '0' : i + 'A' - 10);
 }

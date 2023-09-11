@@ -57,7 +57,7 @@ public static class StringBuilderExtension
     }
 
     private static char ToHexDigit(int i) =>
-        (char)(i < 10 ? i + '0' : i + 'a' - 10);
+        (char)(i < 10 ? i + '0' : i + 'A' - 10);
 
     private static bool MustEncode(char c) =>
          !(c.IsAsciiLetter() || c.IsDecimalDigit() || c is '.' or '-' or '_' or '~');
