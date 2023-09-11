@@ -64,9 +64,11 @@ public sealed partial class MimeTypeParameter
         Language = string.IsNullOrEmpty(language) ? null : language;
         ValidateLanguageParameter(Language, nameof(language));
 
-        Key = key.Trim();
-        Value = string.IsNullOrEmpty(value) ? null : value;
-
+        Key = key.Trim().ToLowerInvariant();
+        Value = string.IsNullOrEmpty(value) ? null 
+                                            : IsValueCaseSensitive 
+                                                 ? value 
+                                                 : value.ToLowerInvariant();
     }
 
     private static void ValidateLanguageParameter(string? language, string paraName)

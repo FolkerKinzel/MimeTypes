@@ -57,10 +57,10 @@ internal static class ParameterValueDecoder
         int valueStart = idx.ValueStart;
         var valueSpan = idx.Span.Slice(valueStart);
 
-        if (valueSpan.Contains('%'))
+        if (valueSpan.ContainsAny("%+"))
         {
             var charsetSpan = idx.Span.Slice(idx.ValuePartStart, idx.CharsetLength);
-            if (!UrlEncoding.TryDecode(valueSpan.ToString(), charsetSpan, out string? decoded))
+            if (!UrlEncoding.TryDecode(valueSpan, charsetSpan, out string? decoded))
             {
                 return false;
             }

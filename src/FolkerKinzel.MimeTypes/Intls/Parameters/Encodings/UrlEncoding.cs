@@ -22,8 +22,8 @@ internal static class UrlEncoding
         return true;
     }
 
-    [ExcludeFromCodeCoverage]
-    internal static bool TryDecode(string value, ReadOnlySpan<char> charSet, [NotNullWhen(true)] out string? decoded)
+    
+    internal static bool TryDecode(ReadOnlySpan<char> value, ReadOnlySpan<char> charSet, [NotNullWhen(true)] out string? decoded)
     {
         try
         {
@@ -46,7 +46,7 @@ internal static class UrlEncoding
     /// <returns></returns>
     /// <exception cref="DecoderFallbackException"></exception>
     /// <exception cref="EncoderFallbackException"></exception>
-    private static string UnescapeValueFromUrlEncoding(string value, string? charSet)
+    private static string UnescapeValueFromUrlEncoding(ReadOnlySpan<char> value, string? charSet)
     {
         string result;
 

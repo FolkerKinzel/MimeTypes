@@ -104,8 +104,6 @@ internal static class ParameterParser
             string charSet = sb.ToString(lengthOfKeyAndEqualsSign, sb.IndexOf('\'') - lengthOfKeyAndEqualsSign);
             return charSet;
         }
-
-        
     }
 
     private static void ReplacePercentSignsUrlEncoded(this StringBuilder sb, string charSet, int currentValueStart)

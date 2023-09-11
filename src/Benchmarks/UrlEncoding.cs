@@ -81,16 +81,6 @@ internal static class UrlEncoding
                     chars[idx++] = ToHexDigit(b & 0x0F);
                 }
             });
-
-
-        //StringBuilder sb = new StringBuilder(3);
-
-        //for (int i = 0; i < bytes.Length; i++)
-        //{
-        //    sb.Append('%');
-        //    sb.Append(bytes[i].ToString("X2"));
-        //}
-        //return sb.ToString();
     }
 
     private static char ToHexDigit(int i) =>
