@@ -52,12 +52,12 @@ internal static class ParameterParser
                     // concat with the previous:
                     _ = sb.Append(parameter.Value);
 
-                    if (splittedParameterStartedUrlEncoded && !currentParameterStarred && parameter.Value.Contains('%'))
+                    if (splittedParameterStartedUrlEncoded && !currentParameterStarred)
                     {
                         // Quoted parts of a splitted parameter that starts URL encoded 
-                        // could contain URL escape sequences like "%C7. That's why the 
-                        // '%' chars have to be UrlEncoded before the value is appended.
-                        sb.ReplacePercentSignsUrlEncoded(currentKey.Length, parameter.Value.Length);
+                        // could contain URL escape sequences like "%C7" or "+". That's why the 
+                        // '%' chars and the '+' chars have to be UrlEncoded before the value is appended.
+                        UrlEncodeUrlEscapeSigns(currentKey.Length, sb, parameter.Value);
                     }
                 }
                 else // not splitted; NOTE: This MUST be a different parameter than the previous because "key*1" and "key" are different keys.
@@ -81,14 +81,65 @@ internal static class ParameterParser
         }
     }
 
-    private static void ReplacePercentSignsUrlEncoded(this StringBuilder sb, int currentKeyLength, int currentValueLength)
+    private static void UrlEncodeUrlEscapeSigns(int currentKeyLength, StringBuilder sb, ReadOnlySpan<char> currentValue)
+    {
+        int currentValueStartIndex = sb.Length - currentValue.Length;
+
+        string? charSet = null;
+        if (currentValue.Contains('%'))
+        {
+            charSet = GetCharSet(sb, currentKeyLength);
+            sb.ReplacePercentSignsUrlEncoded(charSet, currentValueStartIndex);
+        }
+
+        if (currentValue.Contains('+'))
+        {
+            charSet ??= GetCharSet(sb, currentKeyLength);
+            sb.ReplacePlusSignsUrlEncoded(charSet, currentValueStartIndex);
+        }
+
+        static string GetCharSet(StringBuilder sb, int currentKeyLength)
+        {
+            int lengthOfKeyAndEqualsSign = currentKeyLength + 1;
+            string charSet = sb.ToString(lengthOfKeyAndEqualsSign, sb.IndexOf('\'') - lengthOfKeyAndEqualsSign);
+            return charSet;
+        }
+
+        
+    }
+
+    private static void ReplacePercentSignsUrlEncoded(this StringBuilder sb, string charSet, int currentValueStart)
     {
         Debug.Assert(sb != null);
         Debug.Assert(sb.IndexOf('\'') != -1);
-        int lengthOfKeyAndEqualsSign = currentKeyLength + 1;
-        string charSet = sb.ToString(lengthOfKeyAndEqualsSign, sb.IndexOf('\'') - lengthOfKeyAndEqualsSign);
-        sb.Replace("%", UrlEncoding.UrlEncodeValueWithCharset("%", charSet), sb.Length - currentValueLength, currentValueLength);
+
+        string replacement =
+            charSet.Length == 0 ||
+            charSet.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ||
+            charSet.Contains("ascii", StringComparison.OrdinalIgnoreCase)
+            ? "%25"
+            : UrlEncoding.UrlEncodeWithCharset(charSet, "%");
+
+        sb.Replace("%", replacement, currentValueStart);
     }
+
+
+    private static void ReplacePlusSignsUrlEncoded(this StringBuilder sb, string charSet, int currentValueStart)
+    {
+        Debug.Assert(sb != null);
+        Debug.Assert(sb.IndexOf('\'') != -1);
+
+        string replacement =
+            charSet.Length == 0 ||
+            charSet.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ||
+            charSet.Contains("ascii", StringComparison.OrdinalIgnoreCase)
+            ? "%2B"
+            : UrlEncoding.UrlEncodeWithCharset(charSet, "%");
+
+        sb.Replace("+", replacement, currentValueStart);
+    }
+
+
 
     /// <summary>
     /// Tries to parse the content in a <see cref="StringBuilder"/> as <see cref="MimeTypeParameterInfo"/>.

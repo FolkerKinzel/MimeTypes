@@ -1,4 +1,5 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
+using System.Linq;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
@@ -63,10 +64,16 @@ internal static class ParameterValueDecoder
             {
                 return false;
             }
-            var sb = new StringBuilder(valueStart + decoded.Length);
-            sb.Append(idx.Span.Slice(0, valueStart)).Append(decoded);
+            //var sb = new StringBuilder(valueStart + decoded.Length);
+            //sb.Append(idx.Span.Slice(0, valueStart)).Append(decoded);
 
-            parameterString = sb.ToString().AsMemory();
+            //parameterString = sb.ToString().AsMemory();
+
+#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+            parameterString = string.Concat(idx.Span.Slice(0, valueStart).ToString(), decoded).AsMemory();
+#else
+            parameterString = string.Concat(idx.Span.Slice(0, valueStart), decoded).AsMemory();
+#endif
         }
         return true;
     }

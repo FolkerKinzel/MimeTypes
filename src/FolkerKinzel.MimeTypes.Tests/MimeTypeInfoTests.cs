@@ -174,7 +174,8 @@ public class MimeTypeInfoTests
         string mimeString = $"""
             application/x-stuff;
             key*1*=utf-8'en'{urlEncoded} ;
-            key*2="This is %EF 7e\\ / \" @ ? ; quoted.\"
+            key*2="This is %EF 7e\\ / \" @+? ; quoted.\";
+            key*3=1+2 %A5
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
         MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
@@ -182,7 +183,8 @@ public class MimeTypeInfoTests
 
         MimeTypeParameterInfo par = paras[0];
         Assert.AreEqual("key", par.Key.ToString());
-        StringAssert.Contains(par.Value.ToString(), @"This is %EF 7e\ / "" @ ? ; quoted.\");
+        string value = par.Value.ToString();
+        StringAssert.Contains(value, @"This is %EF 7e\ / "" @+? ; quoted.\1+2 %A5");
         Assert.AreEqual("en", par.Language.ToString());
         Assert.AreEqual("utf-8", par.CharSet.ToString());
     }

@@ -53,10 +53,11 @@ public static class StringBuilderExtension
     {
         _ = sb.Append('%').Append(ToHexDigit(c >> 4)).Append(ToHexDigit(c & 0x0F));
 
-        static char ToHexDigit(int i) =>
-        (char)(i < 10 ? i + '0' : i + 'a' - 10);
+        
     }
 
+    private static char ToHexDigit(int i) =>
+        (char)(i < 10 ? i + '0' : i + 'a' - 10);
 
     private static bool MustEncode(char c) =>
          !(c.IsAsciiLetter() || c.IsDecimalDigit() || c is '.' or '-' or '_' or '~');

@@ -1,12 +1,14 @@
-﻿using System.Net;
+﻿using System;
+using System.Diagnostics;
+using System.Diagnostics.CodeAnalysis;
+using System.Net;
 using System.Text;
 
-namespace FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
+namespace Benchmarks;
 
 
 internal static class UrlEncoding
 {
-    [ExcludeFromCodeCoverage]
     internal static bool TryEncode(string input, [NotNullWhen(true)] out string? output)
     {
         Debug.Assert(input != null);
@@ -27,8 +29,7 @@ internal static class UrlEncoding
     {
         try
         {
-            decoded = UnescapeValueFromUrlEncoding(value, 
-            charSet.IsEmpty || charSet.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ? null : charSet.ToString());
+            decoded = UnescapeValueFromUrlEncoding(value, charSet.IsEmpty || charSet.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ? null : charSet.ToString());
             return true;
         }
         catch
@@ -62,7 +63,7 @@ internal static class UrlEncoding
         return result;
     }
 
-    internal static string UrlEncodeWithCharset(string? charSet, string value)
+    internal static string UrlEncodePercentSignWithCharset(string? charSet)
     {
         Encoding encoding = TextEncodingConverter.GetEncoding(charSet);
         var bytes = encoding.GetBytes("%");
