@@ -3,32 +3,61 @@ using System.Text;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
 
-
 internal static class UrlEncoding
 {
-    [ExcludeFromCodeCoverage]
-    internal static bool TryEncode(string input, [NotNullWhen(true)] out string? output)
+    public static StringBuilder AppendUrlEncodedTo(StringBuilder sb, ReadOnlySpan<char> value)
     {
-        Debug.Assert(input != null);
-        try
+        if (sb is null)
         {
-            output = Uri.EscapeDataString(input);
+            throw new ArgumentNullException(nameof(sb));
         }
-        catch
+
+        _ = sb.EnsureCapacity((int)(sb.Length + value.Length * 2.3));
+
+#if NET461 || NETSTANDARD2_0
+        byte[] encoded = Encoding.UTF8.GetBytes(value);
+#else
+        const int shortArray = 256;
+        int length = Encoding.UTF8.GetByteCount(value);
+        Span<byte> encoded = length > shortArray ? new byte[length] : stackalloc byte[length];
+        Encoding.UTF8.GetBytes(value, encoded);
+#endif
+        for (int i = 0; i < encoded.Length; i++)
         {
-            output = null;
-            return false;
+            sb.AppendCharacter((char)encoded[i]);
         }
-        return true;
+
+        return sb;
     }
 
-    
-    internal static bool TryDecode(ReadOnlySpan<char> value, ReadOnlySpan<char> charSet, [NotNullWhen(true)] out string? decoded)
+
+    private static void AppendCharacter(this StringBuilder sb, char c)
+    {
+        if (MustEncode(c))
+        {
+            sb.AppendHexEncoded(c);
+        }
+        else
+        {
+            _ = sb.Append(c);
+        }
+    }
+
+    private static void AppendHexEncoded(this StringBuilder sb, char c)
+        => _ = sb.Append('%').Append(ToHexDigit(c >> 4)).Append(ToHexDigit(c & 0x0F));
+
+    private static char ToHexDigit(int i) =>
+        (char)(i < 10 ? i + '0' : i + 'A' - 10);
+
+    private static bool MustEncode(char c) =>
+         !(c.IsAsciiLetter() || c.IsDecimalDigit() || c is '.' or '-' or '_' or '~');
+
+
+    internal static bool TryDecode(ReadOnlySpan<char> value, string? charSet, [NotNullWhen(true)] out string? decoded)
     {
         try
         {
-            decoded = UnescapeValueFromUrlEncoding(value, 
-            charSet.IsEmpty || charSet.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ? null : charSet.ToString());
+            decoded = UnescapeValueFromUrlEncoding(value, string.IsNullOrEmpty(charSet) ? "utf-8" : charSet);
             return true;
         }
         catch
@@ -46,21 +75,52 @@ internal static class UrlEncoding
     /// <returns></returns>
     /// <exception cref="DecoderFallbackException"></exception>
     /// <exception cref="EncoderFallbackException"></exception>
-    private static string UnescapeValueFromUrlEncoding(ReadOnlySpan<char> value, string? charSet)
+    private static string UnescapeValueFromUrlEncoding(ReadOnlySpan<char> value, string charSet)
     {
-        string result;
+        const int shortString = 256;
+        const byte spaceChar = (byte)' ';
 
-        EncoderFallback encoderFallback = EncoderFallback.ExceptionFallback;
-        DecoderFallback decoderFallback = DecoderFallback.ExceptionFallback;
+        Encoding encoding = TextEncodingConverter.GetEncoding(charSet,
+                                                              EncoderFallback.ExceptionFallback,
+                                                              DecoderFallback.ExceptionFallback,
+                                                              true);
 
-        Encoding encoding = TextEncodingConverter.GetEncoding(charSet, encoderFallback, decoderFallback);
-        Encoding ascii = TextEncodingConverter.GetEncoding(20127, encoderFallback, decoderFallback);
+        Span<byte> bytes = value.Length > shortString ? new byte[value.Length]
+                                                      : stackalloc byte[value.Length];
 
-        byte[] bytes = ascii.GetBytes(value);
+        int byteIndex = 0;
 
-        result = encoding.GetString(WebUtility.UrlDecodeToBytes(bytes, 0, bytes.Length));
-        return result;
+        for (int i = 0; i < value.Length; i++)
+        {
+            char c = value[i];
+
+            if (c > 127)
+            {
+                throw new EncoderFallbackException();
+            }
+
+            switch (c)
+            {
+                case '+':
+                    bytes[byteIndex++] = spaceChar;
+                    continue;
+                case '%':
+#if NET461 || NETSTANDARD2_0
+                    bytes[byteIndex++] = byte.Parse(value.Slice(i + 1, 2).ToString(), System.Globalization.NumberStyles.AllowHexSpecifier);
+#else
+                    bytes[byteIndex++] = byte.Parse(value.Slice(i + 1, 2), System.Globalization.NumberStyles.AllowHexSpecifier);
+#endif
+                    i += 2;
+                    continue;
+                default:
+                    bytes[byteIndex++] = (byte)c;
+                    continue;
+            }
+        }
+
+        return encoding.GetString(bytes.Slice(0, byteIndex));
     }
+
 
     internal static string UrlEncodeWithCharset(string? charSet, string value)
     {
@@ -79,18 +139,7 @@ internal static class UrlEncoding
                     chars[idx++] = ToHexDigit(b & 0x0F);
                 }
             });
-
-
-        //StringBuilder sb = new StringBuilder(3);
-
-        //for (int i = 0; i < bytes.Length; i++)
-        //{
-        //    sb.Append('%');
-        //    sb.Append(bytes[i].ToString("X2"));
-        //}
-        //return sb.ToString();
     }
 
-    private static char ToHexDigit(int i) =>
-        (char)(i < 10 ? i + '0' : i + 'A' - 10);
+    
 }

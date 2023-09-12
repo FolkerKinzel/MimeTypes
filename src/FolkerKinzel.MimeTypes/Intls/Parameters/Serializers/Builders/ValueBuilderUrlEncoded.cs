@@ -11,24 +11,26 @@ internal static class ValueBuilderUrlEncoded
 
     internal static StringBuilder BuildUrlEncoded(this StringBuilder builder, MimeTypeParameter parameter)
     {
-        if (!UrlEncoding.TryEncode(parameter.Value ?? "", out string? encoded))
-        {
-            return builder;
-        }
+        //if (!UrlEncoding.TryEncode(parameter.Value ?? "", out string? encoded))
+        //{
+        //    return builder;
+        //}
+        string value = parameter.Value ?? "";
+
         _ = builder.EnsureCapacity(
-            builder.Length + parameter.Key.Length + STAR_LENGTH + KEY_VALUE_SEPARATOR_LENGTH + UTF_8.Length + parameter.Language?.Length ?? 0 + SINGLE_QUOTES_LENGTH + encoded.Length);
+            builder.Length + parameter.Key.Length + STAR_LENGTH + KEY_VALUE_SEPARATOR_LENGTH + UTF_8.Length + parameter.Language?.Length ?? 0 + SINGLE_QUOTES_LENGTH + (int)(value.Length * 2.5));
 
         return builder.BuildKey(parameter.Key) // adds '='
                       .Remove(builder.Length - 1, 1) // removes '='
-                      .AppendValueUrlEncoded(parameter.Language, encoded); // adds "*="
+                      .AppendValueAndLanguage(parameter.Language, value); // adds "*="
     }
 
 
 
-    private static StringBuilder AppendValueUrlEncoded(this StringBuilder builder,
+    private static StringBuilder AppendValueAndLanguage(this StringBuilder builder,
                                                        string? language,
                                                        string value)
     {
-        return builder.Append('*').Append('=').Append(UTF_8).Append('\'').Append(language).Append('\'').Append(value);
+        return builder.Append('*').Append('=').Append(UTF_8).Append('\'').Append(language).Append('\'').AppendUrlEncoded(value);
     }
 }

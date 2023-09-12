@@ -33,6 +33,7 @@
 		<Compile Remove="DataUrlTests.cs" />
 		<Compile Remove="Intls\AsciiDataDecoder.cs" />
 		<Compile Remove="Intls\HelperExtensionTests.cs" />
+		<Compile Remove="Intls\Parameters\Serializers\Builders\ValueBuilderUrlEncodedTests.cs" />
 		<Compile Remove="Intls\TextEncodingConverterTests.cs" />
 		<Compile Remove="MimeTypeEqualityComparerTests.cs" />
 	</ItemGroup>
@@ -74,6 +75,7 @@
 	  <Folder Include="Intls\Comparisons\" />
 	  <Folder Include="Intls\FileTypeExtensions\" />
 	  <Folder Include="Intls\Parameters\Encodings\" />
+	  <Folder Include="Intls\Parameters\Serializers\Builders\" />
 	</ItemGroup>
 
 
