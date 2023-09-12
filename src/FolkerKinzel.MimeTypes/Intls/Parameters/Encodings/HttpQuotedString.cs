@@ -15,7 +15,7 @@ internal static class HttpQuotedString
 {
     internal static StringBuilder AppendMasked(this StringBuilder sb, ReadOnlySpan<char> value)
     {
-        sb.EnsureCapacity(sb.Length + value.Length * 2);
+        sb.EnsureCapacity(sb.Length + (int)(value.Length * 1.5));
 
         for (int i = 0; i < value.Length; i++)
         {
