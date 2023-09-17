@@ -19,19 +19,28 @@ internal static class ParameterSerializer
     /// <param name="parameter"></param>
     /// <param name="urlFormat"></param>
     internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameter parameter, bool urlFormat)
+    => Append(builder, parameter.Key.AsSpan(), parameter.Value.AsSpan(), parameter.Language.AsSpan(), urlFormat, true);
+    
+
+
+    private static EncodingAction Append(StringBuilder builder,
+                                         ReadOnlySpan<char> key,
+                                         ReadOnlySpan<char> value,
+                                         ReadOnlySpan<char> language,
+                                         bool urlFormat,
+                                         bool caseSensitive)
     {
         Debug.Assert(builder is not null);
 
-        ReadOnlySpan<char> valueSpan = parameter.Value.AsSpan();
         EncodingAction action;
 
-        if (parameter.Language != null)
+        if (!language.IsEmpty)
         {
             action = EncodingAction.UrlEncode;
         }
         else
         {
-            action = valueSpan.EncodingAction();
+            action = value.EncodingAction();
             action = !urlFormat ? action : action.HasFlag(EncodingAction.Quote)
                                                     ? EncodingAction.UrlEncode
                                                     : action;
@@ -39,10 +48,10 @@ internal static class ParameterSerializer
 
         _ = action switch
         {
-            EncodingAction.Mask => builder.BuildQuoted(parameter, true, parameter.IsValueCaseSensitive),
-            EncodingAction.Quote => builder.BuildQuoted(parameter, false, parameter.IsValueCaseSensitive),
-            EncodingAction.UrlEncode => builder.BuildUrlEncoded(parameter),
-            _ => builder.BuildUnQuoted(parameter, parameter.IsValueCaseSensitive)
+            EncodingAction.Mask => builder.BuildQuoted(key, value, true, caseSensitive),
+            EncodingAction.Quote => builder.BuildQuoted(key, value, false, caseSensitive),
+            EncodingAction.UrlEncode => builder.BuildUrlEncoded(key, value, language),
+            _ => builder.BuildUnQuoted(key, value, caseSensitive)
         };
 
         return action;
