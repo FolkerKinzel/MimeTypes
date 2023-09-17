@@ -11,10 +11,6 @@ internal static class ValueBuilderUrlEncoded
 
     internal static StringBuilder BuildUrlEncoded(this StringBuilder builder, MimeTypeParameter parameter)
     {
-        //if (!UrlEncoding.TryEncode(parameter.Value ?? "", out string? encoded))
-        //{
-        //    return builder;
-        //}
         string value = parameter.Value ?? "";
 
         _ = builder.EnsureCapacity(

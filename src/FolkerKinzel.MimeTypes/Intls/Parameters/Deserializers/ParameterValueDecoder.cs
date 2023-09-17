@@ -47,7 +47,6 @@ internal static class ParameterValueDecoder
 
         // If the the value is not quoted and the key is not starred (key*) the value shall remain as it is
         // (RFC 2231).
-
         return true;
     }
 
@@ -64,10 +63,6 @@ internal static class ParameterValueDecoder
             {
                 return false;
             }
-            //var sb = new StringBuilder(valueStart + decoded.Length);
-            //sb.Append(idx.Span.Slice(0, valueStart)).Append(decoded);
-
-            //parameterString = sb.ToString().AsMemory();
 
 #if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
             parameterString = string.Concat(idx.Span.Slice(0, valueStart).ToString(), decoded).AsMemory();
