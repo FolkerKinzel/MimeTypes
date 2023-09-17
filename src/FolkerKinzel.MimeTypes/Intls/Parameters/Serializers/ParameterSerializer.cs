@@ -57,46 +57,4 @@ internal static class ParameterSerializer
         return action;
     }
 
-
-    ///// <summary>
-    ///// Appends a serialized <see cref="MimeTypeParameterInfo"/> oject to a <see cref="StringBuilder"/>
-    ///// and allows to choose whether the value should be URL encoded in any case.
-    ///// </summary>
-    ///// <param name="builder"></param>
-    ///// <param name="parameter"></param>
-    ///// <param name="urlFormat"></param>
-    ///// <returns>The <see cref="EncodingAction"/> which has been used to serialize the <paramref name="parameter"/>.</returns>
-    //internal static EncodingAction Append(this StringBuilder builder, in MimeTypeParameterInfo parameter, bool urlFormat)
-    //{
-    //    if(parameter.IsEmpty)
-    //    {
-    //        return EncodingAction.None;
-    //    }
-
-    //    ReadOnlySpan<char> valueSpan = parameter.Value;
-    //    EncodingAction action;
-
-    //    if (!parameter.Language.IsEmpty)
-    //    {
-    //        action = EncodingAction.UrlEncode;
-    //    }
-    //    else
-    //    {
-    //        action = valueSpan.EncodingAction();
-    //        action = !urlFormat ? action : action.HasFlag(EncodingAction.Quote)
-    //                                                ? EncodingAction.UrlEncode
-    //                                                : action;
-    //    }
-
-    //    _ = action switch
-    //    {
-    //        EncodingAction.Mask => builder.BuildQuoted(parameter.Key, valueSpan, true, parameter.IsValueCaseSensitive),
-    //        EncodingAction.Quote => builder.BuildQuoted(parameter.Key, valueSpan, false, parameter.IsValueCaseSensitive),
-    //        EncodingAction.UrlEncode => builder.BuildUrlEncoded(parameter.Key, parameter.Language, parameter.Value.ToString()),
-    //        _ => builder.BuildUnQuoted(parameter.Key, parameter.Value, parameter.IsValueCaseSensitive)
-    //    };
-
-    //    return action;
-    //}
-
 }

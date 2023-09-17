@@ -4,12 +4,6 @@ internal static class ValueBuilderUnQuoted
 {
     private const int KEY_VALUE_SEPARATOR_LENGTH = KeyBuilder.KEY_VALUE_SEPARATOR_LENGTH;
 
-    //internal static StringBuilder BuildUnQuoted(this StringBuilder builder,
-    //                                            MimeTypeParameter parameter,
-    //                                            bool caseSensitive)
-    //    => BuildUnQuoted(builder, parameter.Key, parameter.Value, caseSensitive);
-
-
     internal static StringBuilder BuildUnQuoted(this StringBuilder builder,
                                             ReadOnlySpan<char> key,
                                             ReadOnlySpan<char> value,

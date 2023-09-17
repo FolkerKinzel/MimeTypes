@@ -10,10 +10,6 @@ internal static class ValueBuilderUrlEncoded
     private const int SINGLE_QUOTES_LENGTH = 2;
     private const string UTF_8 = ParameterSerializer.UTF_8;
 
-    //internal static StringBuilder BuildUrlEncoded(this StringBuilder builder, MimeTypeParameter parameter)
-    //    => BuildUrlEncoded(builder, parameter.Key, parameter.Value, parameter.Language);
-
-
     internal static StringBuilder BuildUrlEncoded(this StringBuilder builder,
                                                  ReadOnlySpan<char> key,
                                                  ReadOnlySpan<char> value,
