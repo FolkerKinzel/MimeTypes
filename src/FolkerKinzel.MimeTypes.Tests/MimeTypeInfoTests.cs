@@ -194,7 +194,7 @@ public class MimeTypeInfoTests
     public void TryParseTest4d()
     {
         const string charSet = "iso-8859-1";
-        string urlEncoded = UrlEncoding.UrlEncodeWithCharset(charSet, "äöü");
+        string urlEncoded = UrlEncodingHelper.UrlEncodeWithCharset(charSet, "äöü");
         string mimeString = $"""
             application/x-stuff;
             key*1*={charSet}'en'{urlEncoded} ;

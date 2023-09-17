@@ -40,11 +40,11 @@ public class UrlEncodingBench
         return output;
     }
 
-    [Benchmark]
-    public string? DecodeLibrary()
-    {
-        _ = FolkerKinzel.MimeTypes.Intls.Parameters.Encodings.UrlEncoding.TryDecode(_urlEncoded, CHARSET, out var output);
-        return output;
-    }
+    //[Benchmark]
+    //public string? DecodeLibrary()
+    //{
+    //    _ = FolkerKinzel.MimeTypes.Intls.Parameters.Encodings.UrlEncodingHelper.TryDecode(_urlEncoded, CHARSET, out var output);
+    //    return output;
+    //}
 
 }

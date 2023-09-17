@@ -60,7 +60,7 @@ internal static class ParameterValueDecoder
         if (valueSpan.ContainsAny("%+"))
         {
             var charsetSpan = idx.Span.Slice(idx.ValuePartStart, idx.CharsetLength);
-            if (!UrlEncoding.TryDecode(valueSpan, charsetSpan.ToString(), out string? decoded))
+            if (!UrlEncoding.TryDecode(valueSpan, charsetSpan.ToString(), decodePlusChars: true, out string? decoded))
             {
                 return false;
             }

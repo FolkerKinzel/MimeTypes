@@ -116,7 +116,7 @@ internal static class ParameterParser
             charSet.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ||
             charSet.Contains("ascii", StringComparison.OrdinalIgnoreCase)
             ? "%25"
-            : UrlEncoding.UrlEncodeWithCharset(charSet, "%");
+            : UrlEncodingHelper.UrlEncodeWithCharset(charSet, "%");
 
         sb.Replace("%", replacement, currentValueStart);
     }
@@ -132,7 +132,7 @@ internal static class ParameterParser
             charSet.Equals("utf-8", StringComparison.OrdinalIgnoreCase) ||
             charSet.Contains("ascii", StringComparison.OrdinalIgnoreCase)
             ? "%2B"
-            : UrlEncoding.UrlEncodeWithCharset(charSet, "+");
+            : UrlEncodingHelper.UrlEncodeWithCharset(charSet, "+");
 
         sb.Replace("+", replacement, currentValueStart);
     }

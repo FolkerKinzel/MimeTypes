@@ -8,11 +8,11 @@ internal static class StringBuilderExtension
         => builder.Replace(oldValue, newValue, startIndex, builder.Length - startIndex);
 
     public static StringBuilder AppendUrlEncoded(this StringBuilder sb, ReadOnlySpan<char> value)
-        => UrlEncoding.AppendUrlEncodedTo(sb, value);
+        => UrlEncodingHelper.AppendUrlEncodedTo(sb, value);
 
 #if NET461 || NETSTANDARD2_0
     public static StringBuilder AppendUrlEncoded(this StringBuilder sb, string? value)
-        => UrlEncoding.AppendUrlEncodedTo(sb, value.AsSpan());
+        => UrlEncodingHelper.AppendUrlEncodedTo(sb, value.AsSpan());
 #endif
 
 }

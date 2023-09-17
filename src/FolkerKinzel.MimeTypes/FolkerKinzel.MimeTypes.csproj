@@ -12,7 +12,7 @@
     <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
     <PackageVersion>4.0.2</PackageVersion>
-    <FileVersion>4.0.2.9</FileVersion>
+    <FileVersion>4.0.2.13</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
     <PackageTags>MIME Internet Media Type C# .NET</PackageTags>
@@ -52,6 +52,7 @@
     <Using Include="FolkerKinzel.Strings.Polyfills" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Remove="Intls\StringBuilderExtension.cs" />
     <Compile Remove="Intls\UnitTestGenerator.cs" />
     <Compile Remove="MimeCache_OBSOLETE.cs" />
     <Compile Remove="MimeTypeInfoEqualityComparer.cs" />
@@ -83,7 +84,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FolkerKinzel.Strings" Version="6.0.0" />
+    <PackageReference Include="FolkerKinzel.Strings" Version="6.1.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />
