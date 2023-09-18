@@ -12,8 +12,7 @@ internal ref struct ParameterSanitizer
 
     internal bool RepairParameterString(ref ReadOnlyMemory<char> parameterString)
     {
-        _parameterString = parameterString;
-        _parameterString = _parameterString.Trim();
+        _parameterString = parameterString.Trim();
 
         if (_parameterString.Length == 0)
         {
@@ -72,12 +71,17 @@ internal ref struct ParameterSanitizer
         if (_span[idxBeforeKeyValueSeparator].IsWhiteSpace() ||
            (_span.Length > idxAfterKeyValueSeparator && _span[idxAfterKeyValueSeparator].IsWhiteSpace()))
         {
-            var sb = new StringBuilder(_span.Length);
-            _ = sb.Append(_span.Slice(0, keyValueSeparatorIndex).TrimEnd())
-                  .Append('=')
-                  .Append(_span.Slice(idxAfterKeyValueSeparator).TrimStart());
+            var keySpan = _span.Slice(0, keyValueSeparatorIndex).TrimEnd();
+            var valueSpan = _span.Slice(idxAfterKeyValueSeparator).TrimStart();
 
+#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+            var sb = new StringBuilder(_span.Length);
+            _ = sb.Append(keySpan).Append('=').Append(valueSpan);
             _parameterString = sb.ToString().AsMemory();
+#else
+            _parameterString = string.Concat(keySpan, "=", valueSpan).AsMemory();
+#endif
+
             keyValueSeparatorIndex = UpdateKeyLength();
         }
         return keyValueSeparatorIndex;

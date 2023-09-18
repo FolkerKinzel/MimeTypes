@@ -1,8 +1,9 @@
 ﻿- **Important update:**
-    Fixes a 2 bugs in `MimeTypeInfo`:
+    Fixes two bugs in `MimeTypeInfo`:
     1. A plus sign in a not URL-encoded continuation of a URL-encoded splitted parameter could have accidentally been changed to a SPACE sign by the decoder.
     2. A URL-encoded parameter value was not encoded if '+' signs had been the only escape characters.
 
+- More thorough validation of IETF-Language-Tags
 - Dependency update
 - Performance optimizations
 
