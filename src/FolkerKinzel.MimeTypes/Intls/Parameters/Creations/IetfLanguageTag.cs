@@ -13,7 +13,7 @@ internal static class IetfLanguageTag
         {
             char current = language[i];
 
-            if (!(current.IsAsciiLetter() || current.IsDecimalDigit() || current == '-'))
+            if (!(current.IsAsciiLetterOrDigit() || current == '-'))
             {
                 return false;
             }

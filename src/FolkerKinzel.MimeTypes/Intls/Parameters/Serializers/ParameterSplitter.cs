@@ -38,7 +38,7 @@ internal static class ParameterSplitter
             {
                 return idx;
             }
-            else if (!c.IsDecimalDigit())
+            else if (!c.IsAsciiDigit())
             {
                 return -1;
             }

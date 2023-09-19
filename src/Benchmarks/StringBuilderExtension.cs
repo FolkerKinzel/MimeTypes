@@ -81,7 +81,7 @@ public static class StringBuilderExtension
         (char)(i < 10 ? i + '0' : i + 'A' - 10);
 
     private static bool MustEncode(char c) =>
-         !(c.IsAsciiLetter() || c.IsDecimalDigit() || c is '.' or '-' or '_' or '~');
+         !(c.IsAsciiLetterOrDigit() || c is '.' or '-' or '_' or '~');
 
 
     public static void WriteEncodes()
