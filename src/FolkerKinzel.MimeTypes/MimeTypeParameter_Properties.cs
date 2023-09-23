@@ -50,7 +50,7 @@ public sealed partial class MimeTypeParameter
     /// </example>
     public bool IsAsciiCharSetParameter
         => IsCharSetParameter
-           && StringComparer.OrdinalIgnoreCase.Equals(Value, MimeTypeParameter.ASCII_CHARSET_VALUE);
+           && StringComparer.Ordinal.Equals(Value, MimeTypeParameter.ASCII_CHARSET_VALUE);
 
 
     /// <summary>
@@ -64,7 +64,7 @@ public sealed partial class MimeTypeParameter
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     public bool IsCharSetParameter
-        => Key.Equals(MimeTypeParameter.CHARSET_KEY, StringComparison.OrdinalIgnoreCase);
+        => Key.Equals(MimeTypeParameter.CHARSET_KEY, StringComparison.Ordinal);
 
 
     /// <summary>
@@ -77,7 +77,7 @@ public sealed partial class MimeTypeParameter
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
-    public bool IsAccessTypeParameter => Key.Equals(MimeTypeParameter.ACCESS_TYPE_KEY, StringComparison.OrdinalIgnoreCase);
+    public bool IsAccessTypeParameter => Key.Equals(MimeTypeParameter.ACCESS_TYPE_KEY, StringComparison.Ordinal);
 
 
     /// <summary>

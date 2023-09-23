@@ -1,4 +1,5 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
+﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
 namespace FolkerKinzel.MimeTypes;
 

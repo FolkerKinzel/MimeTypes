@@ -35,6 +35,17 @@ public class MimeTypeTests
     [ExpectedException(typeof(ArgumentException))]
     public void CreateTest3() => _ = MimeType.Create(new MimeTypeInfo());
 
+    [TestMethod]
+    public void CreateTest4()
+    {
+        const string input = "key/value; äöü=äöü";
+
+        Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo mimeTypeInfo));
+
+        var mime = MimeType.Create(in mimeTypeInfo);
+        Assert.AreEqual(0, mime.Parameters.Count());
+    }
+
 
     [TestMethod]
     public void ParseTest1()

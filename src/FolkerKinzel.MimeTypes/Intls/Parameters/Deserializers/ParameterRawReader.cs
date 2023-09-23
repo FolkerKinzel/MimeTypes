@@ -3,6 +3,8 @@
 internal static class ParameterRawReader
 {
     const char SEPARATOR = ';';
+    private const int SEPARATOR_NOT_FOUND = -1;
+
     internal static int GetNextParameterSeparatorIndex(ReadOnlySpan<char> value)
     {
         bool isInQuotes = false;
@@ -45,7 +47,7 @@ internal static class ParameterRawReader
             {
                 if (attributeValueSeparatorFound)
                 {
-                    return -1;
+                    return SEPARATOR_NOT_FOUND;
                 }
 
                 attributeValueSeparatorFound = true;
@@ -62,14 +64,14 @@ internal static class ParameterRawReader
 
         }
 
-        return -1;
+        return SEPARATOR_NOT_FOUND;
     }
 
     private static bool IsBackSlashLastChar(ReadOnlySpan<char> value, ref int current)
     {
         int next = current + 1;
         if (next < value.Length &&
-            value[next] == '"' &&
+            value[next++] == '"' &&
             TryFindSeparatorSkipWhiteSpace(value, ref next))
         {
             current = next;
@@ -79,14 +81,14 @@ internal static class ParameterRawReader
 
         ///////////////////////////////////////////////////////////////////
 
-        static bool TryFindSeparatorSkipWhiteSpace(ReadOnlySpan<char> value, ref int next)
+        static bool TryFindSeparatorSkipWhiteSpace(ReadOnlySpan<char> value, ref int separatorIndex)
         {
-            for (int i = next + 1; i < value.Length; i++)
+            for (int i = separatorIndex; i < value.Length; i++)
             {
                 char c = value[i];
                 if (c == SEPARATOR)
                 {
-                    next = i;
+                    separatorIndex = i;
                     return true;
                 }
                 if (!c.IsWhiteSpace())
@@ -94,7 +96,10 @@ internal static class ParameterRawReader
                     return false;
                 }
             }
-            return false;
+
+            // End of value (last parameter):
+            separatorIndex = SEPARATOR_NOT_FOUND;
+            return true;
         }
     }
 }

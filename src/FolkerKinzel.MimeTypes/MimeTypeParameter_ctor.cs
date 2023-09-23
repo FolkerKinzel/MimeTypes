@@ -67,8 +67,8 @@ public sealed partial class MimeTypeParameter
         Key = key.Trim().ToLowerInvariant();
         Value = string.IsNullOrEmpty(value) ? null 
                                             : IsValueCaseSensitive 
-                                                 ? value 
-                                                 : value.ToLowerInvariant();
+                                                 ? value
+                                                 : value.Trim().ToLowerInvariant();
     }
 
     private static void ValidateLanguageParameter(string? language, string paraName)

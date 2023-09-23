@@ -31,7 +31,7 @@ internal static class ValueBuilderUrlEncoded
                                       UTF_8.Length + 
                                       languageLength + 
                                       SINGLE_QUOTES_LENGTH + 
-                                      (int)(valueLength * 2.5));
+                                      (int)(valueLength * UrlEncoding.EncodedLengthFactor));
     }
 
     private static StringBuilder AppendValueAndLanguage(this StringBuilder builder,

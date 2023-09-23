@@ -191,6 +191,28 @@ public class MimeTypeInfoTests
     }
 
     [TestMethod]
+    public void TryParseTest4e()
+    {
+        string urlEncoded = Uri.EscapeDataString("äöü");
+        string mimeString = $"""
+            application/x-stuff;
+            key*1*=utf-8'en'{urlEncoded} ;
+            key*2="1+2 A5";
+            key*3="This is %EF 7e\\ / \" @+? ; quoted.\";
+            """;
+        Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
+        MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
+        Assert.AreEqual(1, paras.Length);
+
+        MimeTypeParameterInfo par = paras[0];
+        Assert.AreEqual("key", par.Key.ToString());
+        string value = par.Value.ToString();
+        StringAssert.Contains(value, @"1+2 A5This is %EF 7e\ / "" @+? ; quoted.\");
+        Assert.AreEqual("en", par.Language.ToString());
+        Assert.AreEqual("utf-8", par.CharSet.ToString());
+    }
+
+    [TestMethod]
     public void TryParseTest4d()
     {
         const string charSet = "iso-8859-1";
@@ -307,6 +329,54 @@ public class MimeTypeInfoTests
         const string input = "ibm pm metafile";
 
         Assert.IsFalse(MimeTypeInfo.TryParse(input, out MimeTypeInfo mime));
+    }
+
+    [TestMethod]
+    public void TryParseTest9()
+    {
+        const string input = "media/sub; äöü*0=abc; äöü*1=def; key=value";
+        Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo info));
+        Assert.IsFalse(info.Parameters().Any());
+    }
+
+    [TestMethod]
+    public void TryParseTest10()
+    {
+        const string input = "media/sub; äöü*0=abc; äöü*1=def; key*0=value0; key*1=value1;";
+        Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo info));
+        Assert.IsFalse(info.Parameters().Any());
+    }
+
+    [TestMethod]
+    public void TryParseTest11()
+    {
+        const string input = "media/sub; key=value; äöü*0=abc; äöü*1=def";
+        Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo info));
+        Assert.AreEqual(1, info.Parameters().Count());
+    }
+
+    [TestMethod]
+    public void TryParseTest12()
+    {
+        const string input = "media/sub; key*0=value0; key*1=value1; äöü*0=abc; äöü*1=def";
+        Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo info));
+        Assert.AreEqual(1, info.Parameters().Count());
+    }
+
+    [TestMethod]
+    public void TryParseTest13()
+    {
+        const string input = "media/sub; par*0*=nixda'en'a%42c; par*1=def; key=value";
+        Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo info));
+        Assert.IsFalse(info.Parameters().Any());
+    }
+
+    [TestMethod]
+    public void TryParseTest14()
+    {
+        const string input = "media/sub; par*0*=nixda'en'a%42c; par*1=def; key*0=value0; key*1=value1;";
+        Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo info));
+        Assert.IsFalse(info.Parameters().Any());
     }
 
 

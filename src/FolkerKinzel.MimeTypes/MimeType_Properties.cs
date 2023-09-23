@@ -54,7 +54,7 @@ public sealed partial class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     public bool IsText
-        => MediaType.Equals("text", StringComparison.OrdinalIgnoreCase);
+        => MediaType.Equals("text", StringComparison.Ordinal);
 
 
     /// <summary>
@@ -69,7 +69,7 @@ public sealed partial class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     public bool IsTextPlain
-        => IsText && SubType.Equals("plain", StringComparison.OrdinalIgnoreCase);
+        => IsText && SubType.Equals("plain", StringComparison.Ordinal);
 
 
     /// <summary>
@@ -84,7 +84,7 @@ public sealed partial class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     public bool IsOctetStream
-        => MediaType.Equals("application", StringComparison.OrdinalIgnoreCase) && SubType.Equals("octet-stream", StringComparison.OrdinalIgnoreCase);
+        => MediaType.Equals("application", StringComparison.OrdinalIgnoreCase) && SubType.Equals("octet-stream", StringComparison.Ordinal);
 
 
 

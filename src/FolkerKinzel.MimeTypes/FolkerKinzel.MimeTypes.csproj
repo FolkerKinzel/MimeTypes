@@ -11,12 +11,12 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
-    <PackageVersion>4.0.3</PackageVersion>
-    <FileVersion>4.0.3.2</FileVersion>
+    <PackageVersion>4.0.4</PackageVersion>
+    <FileVersion>4.0.4.2</FileVersion>
     <AssemblyVersion>4.0.0.0</AssemblyVersion>
     <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
     <PackageTags>MIME Internet Media Type C# .NET</PackageTags>
-    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v4.0.3</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v4.0.4</PackageReleaseNotes>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>
     <RepositoryUrl>https://github.com/FolkerKinzel/MimeTypes.git</RepositoryUrl>
@@ -32,7 +32,7 @@
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)'=='Release'">
     <GenerateDocumentationFile>true</GenerateDocumentationFile>
-    <ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+    <GeneratePackageOnBuild>true</GeneratePackageOnBuild>
   </PropertyGroup>
   <PropertyGroup Condition="'$(TargetFramework)' == 'net461' OR '$(TargetFramework)' == 'netstandard2.0'">
     <NoWarn>$(NoWarn);8600;8601;8602;8603;8604</NoWarn>
@@ -84,7 +84,7 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FolkerKinzel.Strings" Version="6.3.0" />
+    <PackageReference Include="FolkerKinzel.Strings" Version="6.4.0" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net461'">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="1.1.1" />

@@ -11,7 +11,7 @@ public class ParameterSplitterTests
     [TestMethod]
     public void SplitParameterTest1()
     {
-        const string mimeString = "a/b; keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy=utf-8'en'Very%20very%20very%20very%20looooooooooooooooooooong%20text\"";
+        const string mimeString = "a/b; keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy*=utf-8'en'Very%20very%20very%20very%20looooooooooooooooooooong%20text\"";
         Assert.IsTrue(MimeType.TryParse(mimeString, out MimeType? mime));
 
         var input = new StringBuilder();
