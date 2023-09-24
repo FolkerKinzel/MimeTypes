@@ -2,7 +2,7 @@
 
 public sealed partial class MimeTypeParameter
 {
-    internal const int STRING_LENGTH = 32;
+    
     internal const string CHARSET_KEY = "charset";
     internal const string ACCESS_TYPE_KEY = "access-type";
     internal const string ASCII_CHARSET_VALUE = "us-ascii";

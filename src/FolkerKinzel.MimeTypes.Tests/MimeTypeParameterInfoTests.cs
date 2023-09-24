@@ -111,7 +111,8 @@ public class MimeTypeParameterInfoTests
     public void AppendToTest2()
     {
         string s = MimeTypeParameterInfo.Empty.ToString();
-        StringAssert.Contains(s, nameof(MimeTypeParameterInfo));
+        Assert.IsNotNull(s);
+        Assert.AreEqual(0, s.Length);
     }
 
     [TestMethod]

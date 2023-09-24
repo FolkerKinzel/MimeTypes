@@ -26,11 +26,14 @@ namespace FolkerKinzel.MimeTypes;
 /// </remarks>
 public static class MimeCache
 {
+    
+    internal const string DEFAULT_EXTENSION_WITHOUT_PERIOD = "bin";
+
     /// <summary>
     /// The file type extension that is used as a fallback value.
     /// </summary>
-    public const string DefaultFileTypeExtension = "bin";
-    private const string DEFAULT_FILE_TYPE_EXTENSION_DOTTED = "." + DefaultFileTypeExtension;
+    public const string DefaultFileTypeExtension = "." + DEFAULT_EXTENSION_WITHOUT_PERIOD;
+
     private const int CACHE_CLEANUP_SIZE = 4;
 
     private static int _capacity;
@@ -131,7 +134,7 @@ public static class MimeCache
                : mimeType.ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty);
 
         return mimeType is null
-            ? leadingDot ? DEFAULT_FILE_TYPE_EXTENSION_DOTTED : DefaultFileTypeExtension
+            ? leadingDot ? DefaultFileTypeExtension : DEFAULT_EXTENSION_WITHOUT_PERIOD
             : TryGetFileTypeExtensionFromCache(leadingDot, mimeType, out string? fileTypeExtension)
                     ? fileTypeExtension
                     : GetFileTypeExtensionFromResources(mimeType, leadingDot);

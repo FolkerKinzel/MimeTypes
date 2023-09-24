@@ -1,4 +1,5 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
 namespace FolkerKinzel.MimeTypes;
 
@@ -68,17 +69,12 @@ public sealed partial class MimeType
 
 
     private StringBuilder AppendToInternal(StringBuilder builder,
-                              MimeFormats options,
-                              int lineLength)
+                                           MimeFormats options,
+                                           int lineLength)
     {
 
         Debug.Assert(builder != null);
         options = options.Normalize();
-
-        if (--lineLength < MimeType.MinimumLineLength)
-        {
-            lineLength = MimeType.MinimumLineLength - 1;
-        }
 
         _ = builder.EnsureCapacity(builder.Length + STRING_LENGTH);
         _ = builder.Append(MediaType).Append('/').Append(SubType);
@@ -89,6 +85,11 @@ public sealed partial class MimeType
         {
             if (options.HasFlag(MimeFormats.LineWrapping))
             {
+                if (--lineLength < MimeType.MinimumLineLength)
+                {
+                    lineLength = MimeType.MinimumLineLength - 1;
+                }
+
                 AppendWrappedParameters(builder, options, lineLength);
             }
             else
@@ -120,7 +121,9 @@ public sealed partial class MimeType
     }
 
 
-    private void AppendWrappedParameters(StringBuilder builder, MimeFormats options, int lineLength)
+    private void AppendWrappedParameters(StringBuilder builder,
+                                         MimeFormats options,
+                                         int lineLength)
     {
         Debug.Assert(options == options.Normalize());
         Debug.Assert(lineLength >= MimeType.MinimumLineLength - 1);
@@ -132,72 +135,12 @@ public sealed partial class MimeType
         {
             EncodingAction action = worker.Clear().Append(parameter, false);
 
-            lineLength = ComputeMinimumLineLength(
-                            parameter.Key.Length + (parameter.Language?.Length ?? 0),
-                            lineLength,
-                            action);
+            int keyLength = parameter.Key.Length;
+            int languageLength = parameter.Language?.Length ?? 0;
 
-            if (worker.Length > lineLength)
-            {
-                foreach (StringBuilder tmp in ParameterSplitter.SplitParameter(parameter, worker, lineLength, action))
-                {
-                    _ = builder.Append(';').Append(NEW_LINE).Append(tmp);
-                }
-            }
-            else
-            {
-                _ = builder.Append(';');
-
-                int neededLength = worker.Length + builder.Length - (builder.LastIndexOf('\n') + 1);
-
-                if (appendSpace)
-                {
-                    neededLength++;
-                }
-
-                if (neededLength > lineLength)
-                {
-                    _ = builder.Append(NEW_LINE);
-                }
-                else if (appendSpace)
-                {
-                    _ = builder.Append(' ');
-                }
-
-                _ = builder.Append(worker);
-            }
-
+            ParameterSerializer.SplitParameter(
+                builder, worker, lineLength, keyLength, languageLength, appendSpace, action);
         }
-    }
-
-
-    /// <summary>
-    /// Computes the minimum length that is needed for a line. (Depends on key, charset,
-    /// language and the <see cref="EncodingAction"/>.)
-    /// </summary>
-    /// <param name="givenLength">The length that can't be wrapped (key, language, charset).</param>
-    /// <param name="desiredLineLength"></param>
-    /// <param name="enc"></param>
-    /// <returns>The minimum length that is needed for a line.</returns>
-    private static int ComputeMinimumLineLength(int givenLength, int desiredLineLength, EncodingAction enc)
-    {
-        int minimumLength = givenLength + ParameterSplitter.MINIMUM_VARIABLE_LINE_LENGTH;
-
-        if (enc == EncodingAction.UrlEncode)
-        {
-            minimumLength += ParameterSerializer.UTF_8.Length + 3; // *''
-        }
-        else if (enc.HasFlag(EncodingAction.Quote))
-        {
-            minimumLength += 2; // ""
-        }
-
-        if (desiredLineLength < minimumLength)
-        {
-            desiredLineLength = minimumLength;
-        }
-
-        return desiredLineLength;
     }
 
 }

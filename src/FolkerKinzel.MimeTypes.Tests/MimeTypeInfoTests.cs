@@ -451,7 +451,7 @@ public class MimeTypeInfoTests
         string result = new MimeTypeInfo().ToString();
 
         Assert.IsNotNull(result);
-        StringAssert.Contains(result.ToString(), nameof(MimeTypeInfo));
+        Assert.AreEqual(0, result.Length);
     }
 
 
@@ -461,7 +461,7 @@ public class MimeTypeInfoTests
         const string input = "text/plain";
         Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo media));
         string result = media.ToString();
-        StringAssert.Contains(result, nameof(MimeTypeInfo));
+        Assert.AreEqual(input, result);
     }
 
 

@@ -26,7 +26,7 @@ public static class MimeString
     /// <returns>An appropriate file type extension for <paramref name="mimeType"/>.</returns>
     /// <remarks>
     /// <para>
-    /// If no other file type extension could be found, <see cref="MimeCache.DefaultFileTypeExtension"/>
+    /// If no other file type extension could be found, <see cref="MimeCache.DEFAULT_EXTENSION_WITHOUT_PERIOD"/>
     /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
     /// </para>
     /// <para>
@@ -75,7 +75,7 @@ public static class MimeString
     /// <returns>An appropriate file type extension for <paramref name="mimeType"/>.</returns>
     /// <remarks>
     /// <para>
-    /// If no other file type extension could be found, <see cref="MimeCache.DefaultFileTypeExtension"/>
+    /// If no other file type extension could be found, <see cref="MimeCache.DEFAULT_EXTENSION_WITHOUT_PERIOD"/>
     /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
     /// </para>
     /// <para>

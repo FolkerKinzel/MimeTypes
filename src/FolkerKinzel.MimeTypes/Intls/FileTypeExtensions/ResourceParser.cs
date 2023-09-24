@@ -42,7 +42,7 @@ internal static class ResourceParser
         }
         else
         {
-            return MimeCache.DefaultFileTypeExtension;
+            return MimeCache.DEFAULT_EXTENSION_WITHOUT_PERIOD;
         }
 
         using StreamReader reader = ReaderFactory.InitMimeFileReader();
@@ -69,7 +69,7 @@ internal static class ResourceParser
             }
         }
 
-        return MimeCache.DefaultFileTypeExtension;
+        return MimeCache.DEFAULT_EXTENSION_WITHOUT_PERIOD;
 
         ////////////////////////////////////
 

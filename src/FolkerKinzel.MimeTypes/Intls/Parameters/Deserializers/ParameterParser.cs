@@ -40,7 +40,7 @@ internal static class ParameterParser
 
             if (splitIndicatorIndex != -1) // splitted
             {
-                sb ??= new StringBuilder(MimeTypeParameter.STRING_LENGTH);
+                sb ??= new StringBuilder(ParameterSerializer.STRING_LENGTH);
 
                 int startOfSplitIndex = splitIndicatorIndex + 1;
                 keySpan = keySpan.Slice(0, startOfSplitIndex); // key*

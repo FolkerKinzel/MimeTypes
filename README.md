@@ -12,7 +12,7 @@
   -  Editing Internet Media Type parameters,
   -  Serializing Internet Media Types as strings according to the standards (see [RFC 2045](https://datatracker.ietf.org/doc/html/rfc2045#section-5.1) and [RFC 2231](https://datatracker.ietf.org/doc/html/rfc2231.html)) using several formatting options,
   -  Retrieving a file type extension.
-- The `MimeTypeInfo` struct allows memory efficient parsing and validating of Internet Media Type strings and allows to retrieve an appropriate file type extension.
+- The `MimeTypeInfo` struct allows memory efficient memory efficient parsing, validating and reformatting of Internet Media Type strings and allows to retrieve an appropriate file type extension.
 
 The library is designed to support performance and small heap allocation. To have a a detailed explanation where the data for the file type extension parser comes from and how it is compiled, have a look at [MimeResourceCompiler](https://github.com/FolkerKinzel/MimeTypes/blob/master/src/MimeResourceCompiler/Program.cs) 
 that is part of this repository.

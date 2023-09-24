@@ -20,9 +20,9 @@ public sealed partial class MimeType
     /// <summary>
     /// The estimated length of the <see cref="string"/> that is created when <see cref="ToString()"/> is called.
     /// </summary>
-    private const int STRING_LENGTH = 80;
+    internal const int STRING_LENGTH = 80;
 
-    private const string NEW_LINE = "\r\n";
+    internal const string NEW_LINE = "\r\n";
 
 
 }

@@ -30,7 +30,7 @@ internal static class ParameterSplitter
     {
         int idx = keySpan.Length - 2;
 
-        // At least one letter has the key name to be long.
+        // One letter is the minimum length of a key.
         while (idx > 0)
         {
             char c = keySpan[idx];
@@ -50,23 +50,23 @@ internal static class ParameterSplitter
     }
 
     /// <summary>
-    /// Splits a long <see cref="MimeTypeParameter"/> into several parts and returns them as a collection of <see cref="StringBuilder"/>
+    /// Splits a long Internet Media Type parameter into several parts and returns them as a collection of <see cref="StringBuilder"/>
     /// objects.
     /// </summary>
-    /// <param name="parameter">The <see cref="MimeTypeParameterInfo"/> to split.</param>
-    /// <param name="worker">A <see cref="StringBuilder"/> that holds the serialized <paramref name="parameter"/>.</param>
+    /// <param name="worker">A <see cref="StringBuilder"/> that holds the serialized parameter.</param>
     /// <param name="lineLength">The line length at which the parameter should be splitted.</param>
-    /// <param name="enc">The <see cref="EncodingAction"/> the <paramref name="parameter"/> had been serialized to worker.</param>
-    /// <returns>A collection of <see cref="StringBuilder"/> objects that represents the splitted <paramref name="parameter"/>.</returns>
-    internal static IEnumerable<StringBuilder> SplitParameter(MimeTypeParameter parameter, StringBuilder worker, int lineLength, EncodingAction enc)
+    /// <param name="enc">The <see cref="EncodingAction"/> the parameter had been serialized to worker.</param>
+    /// 
+    /// 
+    /// <returns>A collection of <see cref="StringBuilder"/> objects that represents the splitted parameter.</returns>
+    internal static IEnumerable<StringBuilder> SplitParameter(StringBuilder worker,
+                                                              int lineLength,
+                                                              EncodingAction enc)
     {
-        Debug.Assert(worker.Length > 0);
-        Debug.Assert(lineLength >= Math.Max(parameter.Key.Length + parameter.Language?.Length ?? 0, MINIMUM_VARIABLE_LINE_LENGTH));
-
-        RemoveKeyFromWorker(worker, enc);
+        Debug.Assert(worker.Length > lineLength);
 
         var tmp = new StringBuilder(lineLength);
-        (int counterIdx, int normalValueStart) = PrepareTmp(parameter, enc, tmp);
+        (int counterIdx, int normalValueStart) = PrepareBuilders(worker, tmp, enc);
 
         int valueStart = tmp.Length;
         bool quoted = enc.HasFlag(EncodingAction.Quote);
@@ -93,6 +93,78 @@ internal static class ParameterSplitter
         } while (valLength > 5); // Security: if counter gets too large valLength could become negative
     }
 
+    private static (int counterIdx, int normalValueStart) PrepareBuilders(StringBuilder worker,
+                                                                          StringBuilder tmp,
+                                                                          EncodingAction enc)
+    {
+        var tpl = PrepareTmp(worker, tmp, enc);
+        RemoveKeyFromWorker(worker, enc);
+        return tpl;
+    }
+
+    private static (int counterIdx, int normalValueStart) PrepareTmp(StringBuilder worker,
+                                                                     StringBuilder tmp,
+                                                                     EncodingAction enc)
+    {
+        CopyKeyIntoTmp(worker, tmp);
+        _ = tmp.Append('*');
+
+        int counterIdx = tmp.Length;
+        _ = tmp.Append('0');
+
+        if (enc == EncodingAction.UrlEncode)
+        {
+            _ = tmp.Append('*');
+        }
+        _ = tmp.Append('=');
+
+        int normalValueStart = tmp.Length - COUNTER_INITIAL_LENGTH;
+
+        if (enc == EncodingAction.UrlEncode)
+        {
+            _ = tmp.Append(ParameterSerializer.UTF_8);
+                CopyLanguageIntoTmp(worker, tmp);
+        }
+
+        return (counterIdx, normalValueStart);
+
+        //////////////////////////////////////////////
+
+        static void CopyKeyIntoTmp(StringBuilder source, StringBuilder tmp)
+        {
+            for (int i = 0; i < source.Length; i++)
+            {
+                char c = source[i];
+                if (c.IsTokenChar(true))
+                {
+                    tmp.Append(c); 
+                }
+                else
+                {
+                    return;
+                }
+            }
+        }
+
+        static void CopyLanguageIntoTmp(StringBuilder source, StringBuilder tmp)
+        {
+            const char languageIndicator = '\'';
+
+            _ = tmp.Append(languageIndicator);
+                   
+            for (int i = source.IndexOf(languageIndicator) + 1; i < source.Length; i++)
+            {
+                char c = source[i];
+                tmp.Append(c);
+
+                if (c == languageIndicator)
+                {
+                    return;
+                }
+            }
+        }
+    }
+
     /// <summary>
     /// Removes anything from worker except the parameter value.
     /// </summary>
@@ -115,30 +187,6 @@ internal static class ParameterSplitter
         }
 
         _ = worker.Remove(0, startOfValue);
-    }
-
-
-    private static (int counterIdx, int normalValueStart) PrepareTmp(MimeTypeParameter parameter, EncodingAction enc, StringBuilder tmp)
-    {
-        _ = tmp.Append(parameter.Key).Append('*');
-
-        int counterIdx = tmp.Length;
-        _ = tmp.Append('0');
-
-        if (enc == EncodingAction.UrlEncode)
-        {
-            _ = tmp.Append('*');
-        }
-        _ = tmp.Append('=');
-
-        int normalValueStart = tmp.Length - COUNTER_INITIAL_LENGTH;
-
-        if (enc == EncodingAction.UrlEncode)
-        {
-            _ = tmp.Append(ParameterSerializer.UTF_8).Append('\'').Append(parameter.Language).Append('\'');
-        }
-
-        return (counterIdx, normalValueStart);
     }
 
 
@@ -195,6 +243,7 @@ internal static class ParameterSplitter
         _ = builder.Remove(valueStart, builder.Length - valueStart);
         return builder;
     }
+
 
     /// <summary>
     /// Updates the <paramref name="counter"/> in <paramref name="builder"/> to be prepared

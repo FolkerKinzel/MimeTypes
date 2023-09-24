@@ -16,16 +16,14 @@ public class ParameterSplitterTests
 
         var input = new StringBuilder();
         MimeTypeParameter para = mime.Parameters.First();
-        para.AppendTo(input);
 
         EncodingAction enc = input.Append(para, false);
         string s = "";
-        foreach (StringBuilder sb in ParameterSplitter.SplitParameter(para, input, 70, enc))
-        {
-            s += sb.ToString() + Environment.NewLine;
-        }
 
-        Assert.AreNotEqual(1, s.GetLinesCount());   
+        var builder = new StringBuilder();
+        ParameterSerializer.SplitParameter(builder, input, 70, para.Key.Length, para.Language?.Length ?? 0, false, enc);
+
+        Assert.AreNotEqual(1, builder.ToString().GetLinesCount());   
     }
 
 

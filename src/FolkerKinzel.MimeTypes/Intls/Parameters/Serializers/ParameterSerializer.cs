@@ -10,6 +10,7 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 internal static class ParameterSerializer
 {
     internal const string UTF_8 = "utf-8";
+    internal const int STRING_LENGTH = 32;
 
     /// <summary>
     /// Appends a RFC 2231 serialized <see cref="MimeTypeParameter"/>
@@ -33,29 +34,29 @@ internal static class ParameterSerializer
     }
 
 
-    ///// <summary>
-    ///// Appends a RFC 2231 serialized <see cref="MimeTypeParameterInfo"/>
-    ///// to a <see cref="StringBuilder"/>.
-    ///// </summary>
-    ///// <param name="builder"></param>
-    ///// <param name="parameter"></param>
-    ///// <param name="urlFormat"></param>
-    //internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameterInfo parameter, bool urlFormat)
-    //{
-    //    var key = parameter.Key;
-    //    var value = parameter.Value;
-    //    var language = parameter.Language;
+    /// <summary>
+    /// Appends a RFC 2231 serialized <see cref="MimeTypeParameterInfo"/>
+    /// to a <see cref="StringBuilder"/>.
+    /// </summary>
+    /// <param name="builder"></param>
+    /// <param name="parameter"></param>
+    /// <param name="urlFormat"></param>
+    internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameterInfo parameter, bool urlFormat)
+    {
+        var key = parameter.Key;
+        var value = parameter.Value;
+        var language = parameter.Language;
 
-    //    PrepareBuilder(builder, key.Length, value.Length, language.Length);
+        PrepareBuilder(builder, key.Length, value.Length, language.Length);
 
-    //    int keyStart = builder.Length;
+        int keyStart = builder.Length;
 
-    //    return AppendValueTo(builder.Append(parameter.Key).ToLowerInvariant(keyStart),
-    //                         parameter.Value,
-    //                         parameter.Language,
-    //                         urlFormat,
-    //                         parameter.IsValueCaseSensitive);
-    //}
+        return AppendValueTo(builder.Append(parameter.Key).ToLowerInvariant(keyStart),
+                             parameter.Value,
+                             parameter.Language,
+                             urlFormat,
+                             parameter.IsValueCaseSensitive);
+    }
 
 
     private static EncodingAction AppendValueTo(StringBuilder builder,
@@ -99,5 +100,82 @@ internal static class ParameterSerializer
                                       keyLength +
                                       languageLength +
                                       valueLength);
+
+
+    internal static void SplitParameter(StringBuilder builder,
+                                        StringBuilder worker,
+                                        int lineLength,
+                                        int keyLength,
+                                        int languageLength,
+                                        bool appendSpace,
+                                        EncodingAction action)
+    {
+        lineLength = ComputeMinimumLineLength(keyLength + languageLength,
+                                              lineLength,
+                                              action);
+
+        if (worker.Length > lineLength)
+        {
+            foreach (StringBuilder tmp in
+                ParameterSplitter.SplitParameter(worker,
+                                                 lineLength,
+                                                 action))
+            {
+                _ = builder.Append(';').Append(MimeType.NEW_LINE).Append(tmp);
+            }
+        }
+        else
+        {
+            _ = builder.Append(';');
+
+            int neededLength = worker.Length + builder.Length - (builder.LastIndexOf('\n') + 1);
+
+            if (appendSpace)
+            {
+                neededLength++;
+            }
+
+            if (neededLength > lineLength)
+            {
+                _ = builder.Append(MimeType.NEW_LINE);
+            }
+            else if (appendSpace)
+            {
+                _ = builder.Append(' ');
+            }
+
+            _ = builder.Append(worker);
+        }
+    }
+
+
+    /// <summary>
+    /// Computes the minimum length that is needed for a line. (Depends on key, charset,
+    /// language and the <see cref="EncodingAction"/>.)
+    /// </summary>
+    /// <param name="givenLength">The length that can't be wrapped (key, language, charset).</param>
+    /// <param name="desiredLineLength"></param>
+    /// <param name="enc"></param>
+    /// <returns>The minimum length that is needed for a line.</returns>
+    private static int ComputeMinimumLineLength(int givenLength, int desiredLineLength, EncodingAction enc)
+    {
+        int minimumLength = givenLength + ParameterSplitter.MINIMUM_VARIABLE_LINE_LENGTH;
+
+        if (enc == EncodingAction.UrlEncode)
+        {
+            minimumLength += ParameterSerializer.UTF_8.Length + 3; // *''
+        }
+        else if (enc.HasFlag(EncodingAction.Quote))
+        {
+            minimumLength += 2; // ""
+        }
+
+        if (desiredLineLength < minimumLength)
+        {
+            desiredLineLength = minimumLength;
+        }
+
+        return desiredLineLength;
+    }
 
 }

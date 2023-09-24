@@ -28,14 +28,14 @@ public sealed partial class MimeTypeParameter
     /// </example>
     public string ToString(bool urlFormat)
     {
-        var sb = new StringBuilder(STRING_LENGTH);
+        var sb = new StringBuilder(ParameterSerializer.STRING_LENGTH);
         sb.Append(this, urlFormat);
         return sb.ToString();
     }
 
 
     /// <summary>
-    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045, RFC 2046 and RFC 2231
+    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2231
     /// to a <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>
