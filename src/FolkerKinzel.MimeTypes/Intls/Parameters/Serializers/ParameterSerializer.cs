@@ -19,12 +19,46 @@ internal static class ParameterSerializer
     /// <param name="parameter"></param>
     /// <param name="urlFormat"></param>
     internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameter parameter, bool urlFormat)
-    => Append(builder, parameter.Key.AsSpan(), parameter.Value.AsSpan(), parameter.Language.AsSpan(), urlFormat, true);
-    
+    {
+        var value = parameter.Value.AsSpan();
+        var language = parameter.Language.AsSpan();
+
+        PrepareBuilder(builder, parameter.Key.Length, value.Length, language.Length);
+
+        return AppendValueTo(builder.Append(parameter.Key),
+                             value,
+                             language,
+                             urlFormat,
+                             true);
+    }
 
 
-    private static EncodingAction Append(StringBuilder builder,
-                                         ReadOnlySpan<char> key,
+    ///// <summary>
+    ///// Appends a RFC 2231 serialized <see cref="MimeTypeParameterInfo"/>
+    ///// to a <see cref="StringBuilder"/>.
+    ///// </summary>
+    ///// <param name="builder"></param>
+    ///// <param name="parameter"></param>
+    ///// <param name="urlFormat"></param>
+    //internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameterInfo parameter, bool urlFormat)
+    //{
+    //    var key = parameter.Key;
+    //    var value = parameter.Value;
+    //    var language = parameter.Language;
+
+    //    PrepareBuilder(builder, key.Length, value.Length, language.Length);
+
+    //    int keyStart = builder.Length;
+
+    //    return AppendValueTo(builder.Append(parameter.Key).ToLowerInvariant(keyStart),
+    //                         parameter.Value,
+    //                         parameter.Language,
+    //                         urlFormat,
+    //                         parameter.IsValueCaseSensitive);
+    //}
+
+
+    private static EncodingAction AppendValueTo(StringBuilder builder,
                                          ReadOnlySpan<char> value,
                                          ReadOnlySpan<char> language,
                                          bool urlFormat,
@@ -46,15 +80,24 @@ internal static class ParameterSerializer
                                                     : action;
         }
 
+        builder.Append('=');
+
         _ = action switch
         {
-            EncodingAction.Mask => builder.BuildQuoted(key, value, true, caseSensitive),
-            EncodingAction.Quote => builder.BuildQuoted(key, value, false, caseSensitive),
-            EncodingAction.UrlEncode => builder.BuildUrlEncoded(key, value, language),
-            _ => builder.BuildUnQuoted(key, value, caseSensitive)
+            EncodingAction.Mask => builder.BuildQuoted(value, true, caseSensitive),
+            EncodingAction.Quote => builder.BuildQuoted(value, false, caseSensitive),
+            EncodingAction.UrlEncode => builder.BuildUrlEncoded(value, language),
+            _ => builder.BuildUnQuoted(value, caseSensitive)
         };
 
         return action;
     }
+
+    static void PrepareBuilder(StringBuilder builder, int keyLength, int valueLength, int languageLength)
+        => _ = builder.EnsureCapacity(builder.Length +
+                                      10 +
+                                      keyLength +
+                                      languageLength +
+                                      valueLength);
 
 }

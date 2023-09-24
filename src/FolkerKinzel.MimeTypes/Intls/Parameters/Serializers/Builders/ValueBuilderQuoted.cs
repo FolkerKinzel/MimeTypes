@@ -4,45 +4,25 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Builders;
 
 internal static class ValueBuilderQuoted
 {
-    private const int KEY_VALUE_SEPARATOR_LENGTH = KeyBuilder.KEY_VALUE_SEPARATOR_LENGTH;
-
     internal static StringBuilder BuildQuoted(this StringBuilder builder,
-                                         ReadOnlySpan<char> key,
-                                         ReadOnlySpan<char> value,
-                                         bool masked,
-                                         bool caseSensitive)
+                                              ReadOnlySpan<char> value,
+                                              bool masked,
+                                              bool caseSensitive)
     {
-        PrepareBuilder(builder, key.Length, value.Length, masked);
-
-        _ = builder.BuildKey(key); // adds '='
-        return masked ? builder.AppendValueQuotedAndMasked(value, caseSensitive)
-                      : builder.AppendValueQuoted(value, caseSensitive);
-
-        ///////////////////////////////////////////////////////////////////////////////////////
-
-        static void PrepareBuilder(StringBuilder builder, int keyLength, int valueLength, bool masked)
-        {
-            //int valueLength = parameter.Value?.Length ?? 0;
-            int neededCapacity = 2 + (masked ? valueLength + 2 : valueLength) + keyLength + KEY_VALUE_SEPARATOR_LENGTH;
-            _ = builder.EnsureCapacity(builder.Length + neededCapacity);
-        }
+        builder.Append('\"');
+        _ = masked ? builder.AppendValueMasked(value, caseSensitive)
+                   : builder.BuildUnQuoted(value, caseSensitive);
+        return builder.Append('\"');
     }
 
-    private static StringBuilder AppendValueQuoted(this StringBuilder builder, ReadOnlySpan<char> value, bool isValueCaseSensitive) =>
-        builder.Append('\"').AppendValueUnQuoted(value, isValueCaseSensitive).Append('\"');
 
-
-    private static StringBuilder AppendValueQuotedAndMasked(this StringBuilder builder,
+    private static StringBuilder AppendValueMasked(this StringBuilder builder,
                                                      ReadOnlySpan<char> value,
                                                      bool isValueCaseSensitive)
     {
-        _ = builder.Append('\"');
-
         int valueStart = builder.Length;
-        _ = isValueCaseSensitive
+        return isValueCaseSensitive
                 ? builder.AppendMasked(value)
                 : builder.AppendMasked(value).ToLowerInvariant(valueStart);
-
-        return builder.Append('\"');
     }
 }

@@ -77,6 +77,35 @@ public class MimeTypeTests
     [TestMethod]
     public void TryParseTest2() => Assert.IsFalse(MimeType.TryParse(null, out _));
 
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void AppendParameterTest1() => _ = MimeType.Create("image", "png").AppendParameter(null!, "something", null);
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void AppendParameterTest2() => _ = MimeType.Create("image", "png").AppendParameter("", "something", null);
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void AppendParameterTest3() => _ = MimeType.Create("image", "png").AppendParameter("äöü%@:", "something", null);
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void AppendParameterTest4() => _ = MimeType.Create("image", "png").AppendParameter(new string('a', 5000), "something", null);
+
+
+    [DataTestMethod]
+    [DataRow("äü")]
+    [DataRow("{!")]
+    [ExpectedException(typeof(ArgumentException))]
+    public void AppendParameterTest5(string input) => _ = MimeType.Create("image", "png").AppendParameter("key", "something", input);
+
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentException))]
+    public void AppendParameterTest6() => _ = MimeType.Create("image", "png").AppendParameter("key", "something", new string('a', 256));
+
+
     [TestMethod()]
     public void ClearParametersTest1()
     {
@@ -135,6 +164,9 @@ public class MimeTypeTests
         string s = mime.ToString(options: MimeFormats.LineWrapping, lineLength: 10);
         Assert.AreNotEqual(0, s.Length);
     }
+
+    [TestMethod]
+    public void ToStringTest2() => Assert.AreEqual("image/png", MimeType.Create("image", "png").ToString());
 
     [TestMethod]
     public void EqualsTest1()

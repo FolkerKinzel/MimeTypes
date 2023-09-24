@@ -48,6 +48,7 @@ internal static class TokenValidator
     internal static bool IsToken(this ReadOnlySpan<char> value, bool parameterKeyValidation)
     {
         value = value.Trim();
+
         if (value.IsEmpty)
         {
             return false; 

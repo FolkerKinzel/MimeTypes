@@ -2,9 +2,9 @@
 
 internal static class IetfLanguageTag
 {
-    internal static bool Validate(string? language)
+    internal static bool Validate(ReadOnlySpan<char> language)
     {
-        if (string.IsNullOrWhiteSpace(language) || language.Length > MimeTypeParameterInfo.LANGUAGE_LENGTH_MAX_VALUE)
+        if (language.IsEmpty)
         {
             return false;
         }

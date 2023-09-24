@@ -61,6 +61,15 @@ namespace FolkerKinzel.MimeTypes.Properties {
         }
         
         /// <summary>
+        ///   Sucht eine lokalisierte Zeichenfolge, die The struct is empty. ähnelt.
+        /// </summary>
+        internal static string EmptyStruct {
+            get {
+                return ResourceManager.GetString("EmptyStruct", resourceCulture);
+            }
+        }
+        
+        /// <summary>
         ///   Sucht eine lokalisierte Zeichenfolge, die {0} is not a valid IETF language tag. ähnelt.
         /// </summary>
         internal static string InvalidIetfLanguageTag {

@@ -34,8 +34,10 @@ public sealed partial class MimeType
     /// </exception>
     private MimeType(string mediaType, string subType)
     {
-        MediaType = mediaType?.ToLowerInvariant() ?? throw new ArgumentNullException(nameof(mediaType));
-        SubType = subType?.ToLowerInvariant() ?? throw new ArgumentNullException(nameof(subType));
-        MimeTypeCtorParametersValidator.Validate(mediaType, subType);
+        Debug.Assert(mediaType != null);
+        Debug.Assert(subType != null);
+
+        MediaType = mediaType.ToLowerInvariant();
+        SubType = subType.ToLowerInvariant();
     }
 }

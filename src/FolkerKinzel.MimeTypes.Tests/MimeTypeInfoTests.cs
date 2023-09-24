@@ -57,10 +57,10 @@ public class MimeTypeInfoTests
     {
         string mimeString = """
             application/x-stuff;
-            key1*1=123;
-            key1*2=456;
-            key2*1=abc;
-            key2*2=def
+            key1*0=123;
+            key1*1=456;
+            key2*0=abc;
+            key2*1=def
             """;
         var mime = MimeTypeInfo.Parse(mimeString.AsMemory());
         MimeTypeParameterInfo[] arr = mime.Parameters().ToArray();
@@ -137,8 +137,8 @@ public class MimeTypeInfoTests
     {
         string mimeString = """
             application/x-stuff;k=val1;
-            key2*1=abc;
-            key2*2=def
+            key2*0=abc;
+            key2*1=def
             """;
         Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType? mime));
         MimeTypeParameter[] arr = mime.Parameters.ToArray();
@@ -149,14 +149,62 @@ public class MimeTypeInfoTests
         Assert.AreNotEqual(0, s.Length);
     }
 
+    [TestMethod]
+    public void TryParseTest2b()
+    {
+        string mimeString = """
+            application/x-stuff;
+            key2*1=abc;
+            key2*2=def
+            """;
+        Assert.IsTrue(MimeTypeInfo.TryParse(mimeString, out MimeTypeInfo mime));
+        Assert.IsFalse(mime.Parameters().Any());
+    }
+
+    [TestMethod]
+    public void TryParseTest2c()
+    {
+        string mimeString = """
+            application/x-stuff;
+            key2*0=abc;
+            key2*2=def
+            """;
+        Assert.IsTrue(MimeTypeInfo.TryParse(mimeString, out MimeTypeInfo mime));
+        Assert.IsFalse(mime.Parameters().Any());
+    }
+
+    [TestMethod]
+    public void TryParseTest2d()
+    {
+        string mimeString = """
+            application/x-stuff;
+            key2*0=abc;
+            key2*0=def
+            """;
+        Assert.IsTrue(MimeTypeInfo.TryParse(mimeString, out MimeTypeInfo mime));
+        Assert.IsFalse(mime.Parameters().Any());
+    }
+
+    [TestMethod]
+    public void TryParseTest2e()
+    {
+        string mimeString = """
+            application/x-stuff;
+            key2*x=abc;
+            key2*1=def
+            """;
+        Assert.IsTrue(MimeTypeInfo.TryParse(mimeString, out MimeTypeInfo mime));
+        Assert.IsFalse(mime.Parameters().Any());
+    }
+
 
     [TestMethod]
     public void TryParseTest3()
     {
         string mimeString = """
             application/x-stuff;k=val1;
-            key2*1=abc;
-            key2*2=def
+            key2*0=abc;
+            key2*1=def
             """;
         Assert.IsTrue(MimeType.TryParse(mimeString.AsMemory(), out MimeType? mime));
         MimeTypeParameter[] arr = mime.Parameters.ToArray();
@@ -174,9 +222,9 @@ public class MimeTypeInfoTests
         string urlEncoded = Uri.EscapeDataString("äöü");
         string mimeString = $"""
             application/x-stuff;
-            key*1*=utf-8'en'{urlEncoded} ;
-            key*2="This is %EF 7e\\ / \" @+? ; quoted.\";
-            key*3=1+2 %A5
+            key*0*=utf-8'en'{urlEncoded} ;
+            key*1="This is %EF 7e\\ / \" @+? ; quoted.\";
+            key*2=1+2 %A5
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
         MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
@@ -196,9 +244,9 @@ public class MimeTypeInfoTests
         string urlEncoded = Uri.EscapeDataString("äöü");
         string mimeString = $"""
             application/x-stuff;
-            key*1*=utf-8'en'{urlEncoded} ;
-            key*2="1+2 A5";
-            key*3="This is %EF 7e\\ / \" @+? ; quoted.\";
+            key*0*=utf-8'en'{urlEncoded} ;
+            key*1="1+2 A5";
+            key*2="This is %EF 7e\\ / \" @+? ; quoted.\";
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
         MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
@@ -219,9 +267,9 @@ public class MimeTypeInfoTests
         string urlEncoded = UrlEncodingHelper.UrlEncodeWithCharset(charSet, "äöü");
         string mimeString = $"""
             application/x-stuff;
-            key*1*={charSet}'en'{urlEncoded} ;
-            key*2="This is %EF 7e\\ / \" @+? ; quoted.\";
-            key*3=1+2 %A5
+            key*0*={charSet}'en'{urlEncoded} ;
+            key*1="This is %EF 7e\\ / \" @+? ; quoted.\";
+            key*2=1+2 %A5
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
         MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
@@ -241,8 +289,8 @@ public class MimeTypeInfoTests
     {
         string mimeString = $"""
             application/x-stuff;
-            key*1=abc;
-            key*2=xy%EFz
+            key*0=abc;
+            key*1=xy%EFz
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
         MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
@@ -260,8 +308,8 @@ public class MimeTypeInfoTests
     {
         string mimeString = $"""
             application/x-stuff;
-            key*1="abc def";
-            key*2="xy %EF z"
+            key*0="abc def";
+            key*1="xy %EF z"
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
         MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
@@ -281,8 +329,8 @@ public class MimeTypeInfoTests
         const string ab = @"a\\b";
         string mimeString = $"""
             application/x-stuff;
-            key*1="a\\\";
-            key*2="\b"
+            key*0="a\\\";
+            key*1="\b"
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
 
@@ -297,8 +345,8 @@ public class MimeTypeInfoTests
         const string ab = @"a\\b";
         string mimeString = $"""
             application/x-stuff;
-            key*1="a\\";
-            key*2="\\b"
+            key*0="a\\";
+            key*1="\\b"
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
 
@@ -313,8 +361,8 @@ public class MimeTypeInfoTests
         const string ab = @"a\\b";
         string mimeString = $"""
             application/x-stuff;
-            key*1="a\"        ;
-            key*2="\\\b"
+            key*0="a\"        ;
+            key*1="\\\b"
             """;
         Assert.IsTrue(MimeTypeInfo.TryParse(mimeString.AsMemory(), out MimeTypeInfo mime));
 
@@ -379,6 +427,23 @@ public class MimeTypeInfoTests
         Assert.IsFalse(info.Parameters().Any());
     }
 
+    [DataTestMethod]
+    [DataRow("äü")]
+    [DataRow("{!")]
+    public void TryParseTest15(string input)
+    {
+        string media = $"media/sub; par*=utf-8'{input}'abc;";
+        Assert.IsTrue(MimeTypeInfo.TryParse(media, out MimeTypeInfo info));
+        Assert.IsFalse(info.Parameters().Any());
+    }
+
+    [TestMethod]
+    public void TryParseTest16()
+    {
+        string media = $"media/sub; par*=utf-8'{new string('a', 256)}'abc;";
+        Assert.IsTrue(MimeTypeInfo.TryParse(media, out MimeTypeInfo info));
+        Assert.IsFalse(info.Parameters().Any());
+    }
 
     [TestMethod()]
     public void ToStringTest1()
@@ -474,7 +539,7 @@ public class MimeTypeInfoTests
         Assert.IsTrue(o.IsEmpty);
     }
 
-    
+
 
     [TestMethod]
     public void EqualsTest1()
@@ -607,7 +672,7 @@ public class MimeTypeInfoTests
         Assert.AreNotEqual(media1.GetHashCode(), media2.GetHashCode());
         Assert.AreEqual(media1.GetHashCode(true), media2.GetHashCode(true));
     }
-    
+
     [TestMethod]
     public void EqualsTest11()
     {
@@ -649,7 +714,7 @@ public class MimeTypeInfoTests
         MimeTypeInfo.Parse(media4) != MimeTypeInfo.Parse(media6) &&
         MimeTypeInfo.Parse(media6) == MimeTypeInfo.Parse(media7) &&
         MimeTypeInfo.Parse(media6) != MimeTypeInfo.Parse(media8));
-        
+
     }
 
     [TestMethod]
@@ -667,9 +732,9 @@ public class MimeTypeInfoTests
     public void ParseParametersTest1()
     {
         string input = "application/x-stuff;" + Environment.NewLine +
-                        "title*1*=us-ascii'en'This%20is%20even%20more%20;" + Environment.NewLine +
-                        "title*2*=%2A%2A%2Afun%2A%2A%2A%20;" + Environment.NewLine +
-                        "title*3=\"isn't it!\"";
+                        "title*0*=us-ascii'en'This%20is%20even%20more%20;" + Environment.NewLine +
+                        "title*1*=%2A%2A%2Afun%2A%2A%2A%20;" + Environment.NewLine +
+                        "title*2=\"isn't it!\"";
 
         Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo mimeType));
         Assert.AreEqual(1, mimeType.Parameters().Count());
@@ -802,6 +867,6 @@ public class MimeTypeInfoTests
         Assert.AreEqual(1, mimeType2.Parameters().Count());
     }
 
-    
+
 
 }

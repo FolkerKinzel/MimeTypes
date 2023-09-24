@@ -10,6 +10,7 @@ internal static class IndexFactory
 
         var dic = new ConcurrentDictionary<string, long>(Environment.ProcessorCount * 2, 16, StringComparer.OrdinalIgnoreCase);
         string? line;
+
         while ((line = reader.ReadLine()) is not null)
         {
             const char separator = ' ';
@@ -20,10 +21,10 @@ internal static class IndexFactory
             string mediaType = line.Substring(0, separatorIndex1);
 
             ++separatorIndex1;
-            int start = line.AsSpan(separatorIndex1, separatorIndex2 - separatorIndex1).Parse();
+            int start = _Int.Parse(line.AsSpan(separatorIndex1, separatorIndex2 - separatorIndex1));
 
             ++separatorIndex2;
-            int count = line.AsSpan(separatorIndex2).Parse();
+            int count = _Int.Parse(line.AsSpan(separatorIndex2));
 
             dic.TryAdd(mediaType, PackIndex(start, count));
         }

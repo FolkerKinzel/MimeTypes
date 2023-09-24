@@ -54,33 +54,16 @@ public sealed partial class MimeTypeParameter
     /// </exception>
     internal MimeTypeParameter(string key, string? value, string? language)
     {
-        key.ValidateTokenParameter(nameof(key), true);
+        Debug.Assert(key != null);
 
-        if (key.Length > MimeTypeParameterInfo.KEY_LENGTH_MAX_VALUE)
-        {
-            throw new ArgumentException(Res.StringTooLong, nameof(key));
-        }
 
-        Language = string.IsNullOrEmpty(language) ? null : language;
-        ValidateLanguageParameter(Language, nameof(language));
-
-        Key = key.Trim().ToLowerInvariant();
+        Key = key.ToLowerInvariant();
         Value = string.IsNullOrEmpty(value) ? null 
                                             : IsValueCaseSensitive 
                                                  ? value
                                                  : value.Trim().ToLowerInvariant();
+
+        Language = language;
     }
 
-    private static void ValidateLanguageParameter(string? language, string paraName)
-    {
-        if (language is null)
-        {
-            return;
-        }
-
-        if (!IetfLanguageTag.Validate(language))
-        {
-            throw new ArgumentException(string.Format(Res.InvalidIetfLanguageTag, paraName), paraName);
-        }
-    }
 }

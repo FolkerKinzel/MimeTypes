@@ -1,5 +1,6 @@
 ﻿using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
+using FolkerKinzel.MimeTypes.Properties;
 
 namespace FolkerKinzel.MimeTypes;
 
@@ -27,7 +28,14 @@ public sealed partial class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    public static MimeType Create(string mediaType, string subType) => new(mediaType, subType);
+    public static MimeType Create(string mediaType, string subType)
+    {
+        mediaType = mediaType ?? throw new ArgumentNullException(nameof(mediaType));
+        subType = subType ?? throw new ArgumentNullException(nameof(subType));
+        MimeTypeCtorParametersValidator.Validate(mediaType, subType);
+
+        return new(mediaType, subType);
+    }
 
 
     /// <summary>
@@ -40,15 +48,23 @@ public sealed partial class MimeType
     /// <exception cref="ArgumentException"><paramref name="info"/> is empty. (See <see cref="MimeTypeInfo.IsEmpty">MimeTypeInfo.IsEmpty</see>.)</exception>
     public static MimeType Create(in MimeTypeInfo info)
     {
-        var builder = MimeType.Create(info.MediaType.ToString(), info.SubType.ToString());
+        if(info.IsEmpty)
+        {
+            throw new ArgumentException(Res.EmptyStruct, nameof(info));
+        }
+
+        var mime = new MimeType(info.MediaType.ToString(), info.SubType.ToString());
 
         foreach (var parameter in info.Parameters())
         {
             var language = parameter.Language;
-            _ = builder.AppendParameter(parameter.Key.ToString(), parameter.Value.ToString(), language.Length == 0 ? null : language.ToString());
+            var value = parameter.Value;
+            mime.AppendToDictionary(parameter.Key.ToString(),
+                                    value.Length == 0 ? null : value.ToString(),
+                                    language.Length == 0 ? null : language.ToString());
         }
 
-        return builder;
+        return mime;
     }
 
     /// <summary>
@@ -99,14 +115,36 @@ public sealed partial class MimeType
     /// <seealso cref="MimeTypeParameterInfo"/>
     public MimeType AppendParameter(string key, string? value, string? language = null)
     {
-        _dic ??= new ParameterModelDictionary();
-        var model = new MimeTypeParameter(key, value, language);
+        key.ValidateTokenParameter(nameof(key), true);
 
-        _ = _dic.Remove(model.Key);
-        _dic.Add(model);
+        if (key.Length > MimeTypeParameterInfo.KEY_LENGTH_MAX_VALUE)
+        {
+            throw new ArgumentException(Res.StringTooLong, nameof(key));
+        }
+
+        language = string.IsNullOrEmpty(language) ? null : language;
+        ValidateLanguageParameter(language, nameof(language));
+
+        AppendToDictionary(key.Trim(), value, language);
 
         return this;
+
+        /////////////////////////////////////////////////////////////////
+
+        static void ValidateLanguageParameter(string? language, string paraName)
+        {
+            if (language is null)
+            {
+                return;
+            }
+
+            if (language.Length > MimeTypeParameterInfo.LANGUAGE_LENGTH_MAX_VALUE || !IetfLanguageTag.Validate(language.AsSpan()))
+            {
+                throw new ArgumentException(string.Format(Res.InvalidIetfLanguageTag, paraName), paraName);
+            }
+        }
     }
+    
 
     /// <summary>
     /// Removes all <see cref="MimeTypeParameter"/>s.
@@ -276,5 +314,14 @@ public sealed partial class MimeType
 
 
 
+    private void AppendToDictionary(string key, string? value, string? language)
+    {
+        var model = new MimeTypeParameter(key, value, language);
+
+        _dic ??= new ParameterModelDictionary();
+
+        _ = _dic.Remove(model.Key);
+        _dic.Add(model);
+    }
 
 }

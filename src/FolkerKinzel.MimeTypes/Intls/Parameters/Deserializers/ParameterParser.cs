@@ -6,9 +6,12 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
 internal static class ParameterParser
 {
+    private const int SPLIT_INDEX_INITIAL_VALUE = -1;
+
     internal static IEnumerable<MimeTypeParameterInfo> ParseParameters(ReadOnlyMemory<char> remainingParameters)
     {
         string currentKey = "";
+        int previousSplitIndex = SPLIT_INDEX_INITIAL_VALUE;
         bool splittedParameterStartedUrlEncoded = false;
 
         StringBuilder? sb = null;
@@ -34,14 +37,17 @@ internal static class ParameterParser
             // language and/or charset information is present, has yet been eaten by
             // MimeTypeParameter.TryParse
             int splitIndicatorIndex = keySpan.GetSplitIndicatorIndex();
+
             if (splitIndicatorIndex != -1) // splitted
             {
                 sb ??= new StringBuilder(MimeTypeParameter.STRING_LENGTH);
 
-                keySpan = keySpan.Slice(0, splitIndicatorIndex + 1); // key*
+                int startOfSplitIndex = splitIndicatorIndex + 1;
+                keySpan = keySpan.Slice(0, startOfSplitIndex); // key*
 
                 if (!currentKey.AsSpan().Equals(keySpan, StringComparison.OrdinalIgnoreCase)) // next parameter
                 {
+                    previousSplitIndex = SPLIT_INDEX_INITIAL_VALUE;
                     splittedParameterStartedUrlEncoded = currentParameterStarred;
                     currentKey = keySpan.ToString();
 
@@ -57,10 +63,15 @@ internal static class ParameterParser
                         }
                     }
 
-
                     _ = currentParameterStarred
                         ? sb.Append(currentKey).Append('=').Append(parameter.CharSet).Append('\'').Append(parameter.Language).Append('\'')
                         : sb.Append(currentKey.AsSpan(0, currentKey.Length - 1)).Append('=');
+                }
+
+                if(!_Int.TryParse(parameter.Key.Slice(startOfSplitIndex), out int currentSplitIndex) ||
+                    ++previousSplitIndex != currentSplitIndex)
+                {
+                    yield break;
                 }
 
                 // concat with the previous:

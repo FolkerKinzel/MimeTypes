@@ -1,4 +1,5 @@
 ﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
 namespace FolkerKinzel.MimeTypes;
@@ -47,6 +48,11 @@ public readonly partial struct MimeTypeParameterInfo
         }
 
         if(!idx.Verify())
+        {
+            return false;
+        }
+
+        if(idx.LanguageLength != 0 && !IetfLanguageTag.Validate(idx.Span.Slice(idx.LanguageStart, idx.LanguageLength)))
         {
             return false;
         }
