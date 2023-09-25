@@ -51,6 +51,7 @@ internal static class ParameterSerializer
 
         int keyStart = builder.Length;
 
+        // keys are case-insensitive (RFC 2231/7.)
         return AppendValueTo(builder.Append(parameter.Key).ToLowerInvariant(keyStart),
                              parameter.Value,
                              parameter.Language,

@@ -56,7 +56,7 @@ public sealed partial class MimeTypeParameter
     {
         Debug.Assert(key != null);
 
-
+        // keys are case-insensitive (RFC 2231/7.)
         Key = key.ToLowerInvariant();
         Value = string.IsNullOrEmpty(value) ? null 
                                             : IsValueCaseSensitive 

@@ -37,6 +37,7 @@ public sealed partial class MimeType
         Debug.Assert(mediaType != null);
         Debug.Assert(subType != null);
 
+        // Matching of media type and subtype is ALWAYS case-insensitive. (RFC 2045/5.1.)
         MediaType = mediaType.ToLowerInvariant();
         SubType = subType.ToLowerInvariant();
     }

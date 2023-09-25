@@ -30,6 +30,7 @@ public readonly partial struct MimeTypeInfo
     {
         if (!HasParameters)
         {
+            // Matching of media type and subtype is ALWAYS case-insensitive. (RFC 2045/5.1.)
             return this._mimeTypeString.ToString().ToLowerInvariant();
         }
         else
@@ -69,7 +70,11 @@ public readonly partial struct MimeTypeInfo
         options = options.Normalize();
 
         _ = builder.EnsureCapacity(builder.Length + MimeType.STRING_LENGTH);
-        _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant();
+
+        int startOfOutput = builder.Length;
+
+        // Matching of media type and subtype is ALWAYS case-insensitive. (RFC 2045/5.1.)
+        _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(startOfOutput);
 
         Debug.Assert(options == options.Normalize());
 
