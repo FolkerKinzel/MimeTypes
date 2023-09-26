@@ -1,5 +1,7 @@
 ﻿- **Breaking Change:** The content of the public constant `MimeCache.DefaultFileTypeExtension` 
 has been changed to `.bin` in order to be aligned to the behavior of `System.IO.Path.GetExtension`. (In former versions it was `bin`.) **Don't forget to check existing code whether the constant had been used in it.**
+- **Breaking Change:** The constant `MimeType.MinimumLineLength` has been renamed to `MimeType.MinLineLength`
+- **Breaking Change:** The parameter `int lineLength` in `MimeType.AppendTo` has been renamed to `maxLineLength`
 - **Breaking Change:** `MimeTypeInfo.ToString()` and `MimeTypeParameterInfo.ToString()` now return
 a standard formatted string representation of their content rather than their struct names.
 - Dependency update

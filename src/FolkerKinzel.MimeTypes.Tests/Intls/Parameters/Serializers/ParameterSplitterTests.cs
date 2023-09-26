@@ -21,7 +21,7 @@ public class ParameterSplitterTests
         string s = "";
 
         var builder = new StringBuilder();
-        ParameterSerializer.SplitParameter(builder, input, 70, para.Key.Length, para.Language?.Length ?? 0, false, enc);
+        ParameterSerializer.SplitParameter(builder, input, 70, para.Key.Length, para.Language?.Length ?? 0, false, enc, 0);
 
         Assert.AreNotEqual(1, builder.ToString().GetLinesCount());   
     }

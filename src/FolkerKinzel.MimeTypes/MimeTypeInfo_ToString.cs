@@ -23,10 +23,10 @@ public readonly partial struct MimeTypeInfo
     /// flags can be combined.</param>
     /// <param name="lineLength">The number of characters in a single line of the serialized instance
     /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeFormats.LineWrapping"/>
-    /// is not set. If the value of the argument is smaller than <see cref="MimeType.MinimumLineLength"/>, the value of 
-    /// <see cref="MimeType.MinimumLineLength"/> is taken instead.</param>
+    /// is not set. If the value of the argument is smaller than <see cref="MimeType.MinLineLength"/>, the value of 
+    /// <see cref="MimeType.MinLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2231.</returns>
-    public string ToString(MimeFormats options, int lineLength = MimeType.MinimumLineLength)
+    public string ToString(MimeFormats options, int lineLength = MimeType.MinLineLength)
     {
         if (!HasParameters)
         {
@@ -49,45 +49,38 @@ public readonly partial struct MimeTypeInfo
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>
     /// <param name="options">Named constants to specify options for the serialization of the instance. The
     /// flags can be combined.</param>
-    /// <param name="lineLength">The number of characters in a single line of the serialized instance
+    /// <param name="maxLineLength">The number of characters in a single line of the serialized instance
     /// before a line-wrapping occurs. The parameter is ignored, if the flag <see cref="MimeFormats.LineWrapping"/>
-    /// is not set. If the value of the argument is smaller than <see cref="MimeType.MinimumLineLength"/>, the value of 
-    /// <see cref="MimeType.MinimumLineLength"/> is taken instead.</param>
+    /// is not set. If the value of the argument is smaller than <see cref="MimeType.MinLineLength"/>, the value of 
+    /// <see cref="MimeType.MinLineLength"/> is taken instead.</param>
     /// <returns>A reference to <paramref name="builder"/>.</returns>
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
     public StringBuilder AppendTo(StringBuilder builder,
                                   MimeFormats options = MimeFormats.Default,
-                                  int lineLength = MimeType.MinimumLineLength) =>
+                                  int maxLineLength = MimeType.MinLineLength) =>
         builder is null ? throw new ArgumentNullException(nameof(builder))
-                        : AppendToInternal(builder, options, lineLength);
+                        : AppendToInternal(builder, options, maxLineLength);
 
 
     private StringBuilder AppendToInternal(StringBuilder builder,
                                            MimeFormats options,
-                                           int lineLength)
+                                           int maxLineLength)
     {
         Debug.Assert(builder != null);
         options = options.Normalize();
 
         _ = builder.EnsureCapacity(builder.Length + MimeType.STRING_LENGTH);
 
-        int startOfOutput = builder.Length;
+        int startOfMimeType = builder.Length;
 
         // Matching of media type and subtype is ALWAYS case-insensitive. (RFC 2045/5.1.)
-        _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(startOfOutput);
-
-        Debug.Assert(options == options.Normalize());
+        _ = builder.Append(MediaType).Append('/').Append(SubType).ToLowerInvariant(startOfMimeType);
 
         if (options != MimeFormats.IgnoreParameters)
         {
             if (options.HasFlag(MimeFormats.LineWrapping))
             {
-                if (--lineLength < MimeType.MinimumLineLength)
-                {
-                    lineLength = MimeType.MinimumLineLength - 1;
-                }
-
-                AppendWrappedParameters(builder, options, lineLength);
+                AppendWrappedParameters(builder, options, maxLineLength, startOfMimeType);
             }
             else
             {
@@ -97,6 +90,8 @@ public readonly partial struct MimeTypeInfo
 
         return builder;
     }
+
+    
 
     private void AppendUnWrappedParameters(StringBuilder builder, MimeFormats options)
     {
@@ -119,13 +114,19 @@ public readonly partial struct MimeTypeInfo
 
     private void AppendWrappedParameters(StringBuilder builder,
                                          MimeFormats options,
-                                         int lineLength)
+                                         int maxLineLength,
+                                         int startOfMimeType)
     {
         Debug.Assert(options == options.Normalize());
-        Debug.Assert(lineLength >= MimeType.MinimumLineLength - 1);
 
-        var worker = new StringBuilder(lineLength);
+        MimeTypeSerializer.NormalizeIndexes(builder,
+                                            startOfMimeType,
+                                            ref maxLineLength,
+                                            out int startOfCurrentLine);
+
+        var worker = new StringBuilder(maxLineLength);
         bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
+        int currentLineLength = builder.Length - startOfCurrentLine;
 
         foreach (MimeTypeParameterInfo parameter in Parameters())
         {
@@ -133,8 +134,14 @@ public readonly partial struct MimeTypeInfo
 
             int keyLength = parameter.Key.Length;
             int languageLength = parameter.Language.Length;
-            ParameterSerializer.SplitParameter(
-                builder, worker, lineLength, keyLength, languageLength, appendSpace, action);
+            currentLineLength = ParameterSerializer.SplitParameter(builder,
+                                                                   worker,
+                                                                   maxLineLength,
+                                                                   keyLength,
+                                                                   languageLength,
+                                                                   appendSpace,
+                                                                   action,
+                                                                   currentLineLength);
 
         }
     }

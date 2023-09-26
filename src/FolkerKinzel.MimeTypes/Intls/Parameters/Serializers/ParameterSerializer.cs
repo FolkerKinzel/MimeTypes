@@ -103,50 +103,57 @@ internal static class ParameterSerializer
                                       valueLength);
 
 
-    internal static void SplitParameter(StringBuilder builder,
+    internal static int SplitParameter(StringBuilder builder,
                                         StringBuilder worker,
-                                        int lineLength,
+                                        int maxLineLength,
                                         int keyLength,
                                         int languageLength,
                                         bool appendSpace,
-                                        EncodingAction action)
+                                        EncodingAction action,
+                                        int currentLineLength)
     {
-        lineLength = ComputeMinimumLineLength(keyLength + languageLength,
-                                              lineLength,
+        maxLineLength = ComputeMinimumLineLength(keyLength + languageLength,
+                                              maxLineLength,
                                               action);
 
-        if (worker.Length > lineLength)
+        if (worker.Length > maxLineLength)
         {
             foreach (StringBuilder tmp in
                 ParameterSplitter.SplitParameter(worker,
-                                                 lineLength,
+                                                 maxLineLength,
                                                  action))
             {
                 _ = builder.Append(';').Append(MimeType.NEW_LINE).Append(tmp);
+                currentLineLength = tmp.Length;
             }
         }
         else
         {
             _ = builder.Append(';');
+            currentLineLength++;
 
-            int neededLength = worker.Length + builder.Length - (builder.LastIndexOf('\n') + 1);
+            int neededLength = worker.Length + currentLineLength;
 
             if (appendSpace)
             {
                 neededLength++;
             }
 
-            if (neededLength > lineLength)
+            if (neededLength > maxLineLength)
             {
                 _ = builder.Append(MimeType.NEW_LINE);
+                currentLineLength = 0;
             }
             else if (appendSpace)
             {
                 _ = builder.Append(' ');
+                currentLineLength++;
             }
 
             _ = builder.Append(worker);
+            currentLineLength += worker.Length;
         }
+        return currentLineLength;
     }
 
 
