@@ -130,7 +130,6 @@ public sealed partial class MimeType
                                             out int startOfCurrentLine);
 
         var worker = new StringBuilder(maxLineLength);
-        bool appendSpace = !options.HasFlag(MimeFormats.AvoidSpace);
         int currentLineLength = builder.Length - startOfCurrentLine;
 
 
@@ -146,7 +145,7 @@ public sealed partial class MimeType
                                                                    maxLineLength,
                                                                    keyLength,
                                                                    languageLength,
-                                                                   appendSpace,
+                                                                   !options.HasFlag(MimeFormats.AvoidSpace),
                                                                    action,
                                                                    currentLineLength);
         }

@@ -104,17 +104,17 @@ internal static class ParameterSerializer
 
 
     internal static int SplitParameter(StringBuilder builder,
-                                        StringBuilder worker,
-                                        int maxLineLength,
-                                        int keyLength,
-                                        int languageLength,
-                                        bool appendSpace,
-                                        EncodingAction action,
-                                        int currentLineLength)
+                                       StringBuilder worker,
+                                       int maxLineLength,
+                                       int keyLength,
+                                       int languageLength,
+                                       bool appendSpace,
+                                       EncodingAction action,
+                                       int currentLineLength)
     {
         maxLineLength = ComputeMinimumLineLength(keyLength + languageLength,
-                                              maxLineLength,
-                                              action);
+                                                 maxLineLength,
+                                                 action);
 
         if (worker.Length > maxLineLength)
         {
