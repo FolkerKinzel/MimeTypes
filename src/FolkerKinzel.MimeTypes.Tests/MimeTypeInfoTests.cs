@@ -503,22 +503,49 @@ public class MimeTypeInfoTests
         Assert.AreEqual(2, mime.Parameters.Count());
     }
 
-    //[TestMethod]
-    //[ExpectedException(typeof(ArgumentNullException))]
-    //public void AppendToTest1()
-    //{
-    //    Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
-    //    inetMedia.AppendTo(null!);
-    //}
+    [TestMethod]
+    public void ToStringTest6()
+    {
+        const string charSet = "UTF-8";
+        string result = MimeTypeInfo.Parse($"application/x-stuff; charset={charSet}").ToString();
+        Assert.IsFalse(result.Contains(charSet, StringComparison.Ordinal));
+        Assert.IsTrue(result.Contains(charSet, StringComparison.OrdinalIgnoreCase));
+    }
 
-    //[TestMethod]
-    //public void AppendToTest2()
-    //{
-    //    Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
-    //    var builder = new StringBuilder();
-    //    inetMedia.AppendTo(builder);
-    //    Assert.AreEqual("TEXT/PLAIN; CHARSET=ISO-8859-1", builder.ToString());
-    //}
+
+    [TestMethod]
+    public void ToStringTest7()
+    {
+        const string accessType = "\"ABC\\\\42\"";
+        string result = MimeTypeInfo.Parse($"application/x-stuff; access-type={accessType}").ToString();
+        Assert.IsFalse(result.Contains(accessType, StringComparison.Ordinal));
+        Assert.IsTrue(result.Contains(accessType, StringComparison.OrdinalIgnoreCase));
+    }
+
+    [TestMethod]
+    public void ToStringTest8()
+    {
+        const string otherValue = "\"ABC\\\\42\"";
+        string result = MimeTypeInfo.Parse($"application/x-stuff; other={otherValue}").ToString();
+        Assert.IsTrue(result.Contains(otherValue, StringComparison.Ordinal));
+    }
+
+    [TestMethod]
+    [ExpectedException(typeof(ArgumentNullException))]
+    public void AppendToTest1()
+    {
+        Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
+        inetMedia.AppendTo(null!);
+    }
+
+    [TestMethod]
+    public void AppendToTest2()
+    {
+        Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
+        var builder = new StringBuilder();
+        inetMedia.AppendTo(builder);
+        Assert.AreEqual("text/plain; charset=iso-8859-1", builder.ToString());
+    }
 
 
     [TestMethod]

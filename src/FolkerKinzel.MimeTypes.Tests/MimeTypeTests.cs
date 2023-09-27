@@ -152,8 +152,20 @@ public class MimeTypeTests
     [ExpectedException(typeof(ArgumentNullException))]
     public void AppendToTest1() => _ = MimeType.Create("x", "y").AppendTo(null!);
 
+
     [TestMethod]
     public void AppendToTest2() => _ = MimeType.Create("x", "y").AppendParameter("a", "b").AppendTo(new StringBuilder(), MimeFormats.LineWrapping, -42);
+
+
+    [TestMethod]
+    public void AppendToTest3()
+    {
+        var mime = MimeType.Create("application", "x-veeeeeeeeeeeeryyyyyyyyyyyyyyveryyyyyyyyyyyyyyyyyylooooooooong");
+        var builder = new StringBuilder("Content-type: ");
+        string result = mime.AppendTo(builder, options: MimeFormats.LineWrapping).ToString();
+        Assert.AreEqual(2, result.GetLinesCount());
+    }
+
 
     [TestMethod]
     public void ToStringTest1()
@@ -167,6 +179,18 @@ public class MimeTypeTests
 
     [TestMethod]
     public void ToStringTest2() => Assert.AreEqual("image/png", MimeType.Create("image", "png").ToString());
+
+
+    [TestMethod]
+    public void ToStringTest3()
+    {
+        string result = MimeType.Create("application", "x-stuff")
+                                .AppendParameter("mypara", "UPPERCASE")
+                                .ToString();
+        StringAssert.Contains(result, "UPPERCASE", StringComparison.Ordinal);
+    }
+
+    
 
     [TestMethod]
     public void EqualsTest1()
