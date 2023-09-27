@@ -12,6 +12,12 @@ public readonly partial struct MimeTypeInfo
     /// </summary>
     /// <returns>A <see cref="string"/> representation of the instance 
     /// according to RFC 2045 and RFC 2231.</returns>
+    /// <example>
+    /// <para>
+    /// Efficient parsing, comparing and reformatting of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override string ToString() => ToString(MimeFormats.Default);
 
@@ -26,6 +32,12 @@ public readonly partial struct MimeTypeInfo
     /// is not set. If the value of the argument is smaller than <see cref="MimeType.MinLineLength"/>, the value of 
     /// <see cref="MimeType.MinLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2231.</returns>
+    /// <example>
+    /// <para>
+    /// Efficient parsing, comparing and reformatting of an Internet Media Type <see cref="string"/>:
+    /// </para>
+    /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
+    /// </example>
     public string ToString(MimeFormats options, int lineLength = MimeType.MinLineLength)
     {
         if (!HasParameters)

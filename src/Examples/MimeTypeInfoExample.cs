@@ -56,6 +56,10 @@ public static class MimeTypeInfoExample
         MimeTypeInfo info2 = MimeTypeInfo.Parse("TEXT/PLAIN; CHARSET=UTF-8");
         Console.WriteLine("Equal with parameters:      {0}", info.Equals(in info2));
         Console.WriteLine("Equal without parameters:   {0}", info.Equals(in info2, ignoreParameters: true));
+
+        Console.WriteLine();
+        Console.WriteLine("Default:           {0}", info2.ToString());
+        Console.WriteLine("Ignore Parameters: {0}", info2.ToString(MimeFormats.IgnoreParameters));
     }
 }
 /*
@@ -94,4 +98,7 @@ Is value case sensitive:    True
 
 Equal with parameters:      False
 Equal without parameters:   True
+
+Default:           text/plain; charset=utf-8
+Ignore Parameters: text/plain
  */
