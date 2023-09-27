@@ -102,7 +102,6 @@ public readonly partial struct MimeTypeInfo
 
         return builder;
     }
-
     
 
     private void AppendUnWrappedParameters(StringBuilder builder, MimeFormats options)
