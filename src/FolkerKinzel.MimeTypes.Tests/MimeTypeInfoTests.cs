@@ -110,6 +110,13 @@ public class MimeTypeInfoTests
         _ = MimeTypeInfo.Parse($"{veryLong}/jpeg");
     }
 
+    [TestMethod]
+    public void ParseTest10() => Assert.AreEqual("image/png", MimeTypeInfo.Parse("image / png").ToString(), false);
+
+    [TestMethod]
+    public void ParseTest11() => Assert.AreEqual("image/png", MimeTypeInfo.Parse("image/png (Comment); key=value").ToString(MimeFormats.IgnoreParameters), false);
+
+
     [DataTestMethod]
     [DataRow("text/plain; charset=iso-8859-1", true, 1)]
     [DataRow("text / plain; charset=iso-8859-1;;", true, 1)]
@@ -531,6 +538,17 @@ public class MimeTypeInfoTests
     }
 
     [TestMethod]
+    public void ToStringTest9()
+    {
+        MimeType mime = MimeType.Create("application", "x-stuff")
+            .AppendParameter("keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", "valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+
+        string s = mime.AsInfo().ToString(options: MimeFormats.LineWrapping, lineLength: 10);
+        Assert.AreNotEqual(0, s.Length);
+    }
+
+
+    [TestMethod]
     [ExpectedException(typeof(ArgumentNullException))]
     public void AppendToTest1()
     {
@@ -894,6 +912,7 @@ public class MimeTypeInfoTests
         Assert.AreEqual(1, mimeType2.Parameters().Count());
     }
 
-
+    [TestMethod]
+    public void SubTypeTest1() => Assert.AreEqual(0, new MimeTypeInfo().SubType.Length);
 
 }

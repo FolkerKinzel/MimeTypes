@@ -21,6 +21,7 @@ internal static class ParameterSplitter
     /// <returns></returns>
     internal static bool IsParameterSplitted(this ReadOnlySpan<char> keySpan) => keySpan.GetSplitIndicatorIndex() != -1;
 
+
     /// <summary>
     /// Gets the index of the first '*' sign after the key name, which indicates that the parameter is splitted. ("key*0" or "key*0*" or "key*42*")
     /// </summary>
@@ -48,6 +49,7 @@ internal static class ParameterSplitter
 
         return -1;
     }
+
 
     /// <summary>
     /// Splits a long Internet Media Type parameter into several parts and returns them as a collection of <see cref="StringBuilder"/>
