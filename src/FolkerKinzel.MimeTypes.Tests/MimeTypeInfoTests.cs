@@ -383,7 +383,7 @@ public class MimeTypeInfoTests
     {
         const string input = "ibm pm metafile";
 
-        Assert.IsFalse(MimeTypeInfo.TryParse(input, out MimeTypeInfo mime));
+        Assert.IsFalse(MimeTypeInfo.TryParse(input, out _));
     }
 
     [TestMethod]

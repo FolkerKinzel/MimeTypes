@@ -18,7 +18,6 @@ public class ParameterSplitterTests
         MimeTypeParameter para = mime.Parameters.First();
 
         EncodingAction enc = input.Append(para, false);
-        string s = "";
 
         var builder = new StringBuilder();
         ParameterSerializer.SplitParameter(builder, input, 70, para.Key.Length, para.Language?.Length ?? 0, false, enc, 0);

@@ -22,9 +22,6 @@ public class MimeCacheTests
     }
 
     [TestMethod]
-    public void GetFileTypeExtension1()
-    {
-        Assert.AreEqual("bin", MimeCache.GetFileTypeExtension("abcd", false));
-    }
+    public void GetFileTypeExtension1() => Assert.AreEqual("bin", MimeCache.GetFileTypeExtension("abcd", false));
 
 }

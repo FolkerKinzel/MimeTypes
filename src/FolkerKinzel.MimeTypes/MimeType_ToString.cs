@@ -6,7 +6,7 @@ namespace FolkerKinzel.MimeTypes;
 public sealed partial class MimeType
 {
     /// <summary>
-    /// Serializes the instance into an Internet Media Type <see cref="string"/> ("MIME type") using the 
+    /// Serializes the instance as Internet Media Type <see cref="string"/> ("MIME type") using the 
     /// <see cref="MimeFormats.Default"/> format.
     /// </summary>
     /// <returns>A <see cref="string"/> representation of the instance 
@@ -20,7 +20,7 @@ public sealed partial class MimeType
 
 
     /// <summary>
-    /// Serializes the instance into an Internet Media Type <see cref="string"/> ("MIME type") with several <paramref name="options"/>
+    /// Serializes the instance as Internet Media Type <see cref="string"/> ("MIME type") with several <paramref name="options"/>
     /// </summary>
     /// <param name="options">Named constants to specify options for the serialization of the instance. The
     /// flags can be combined.</param>

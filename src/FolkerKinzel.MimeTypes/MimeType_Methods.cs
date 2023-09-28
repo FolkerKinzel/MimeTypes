@@ -271,7 +271,7 @@ public sealed partial class MimeType
     /// <returns>An appropriate file type extension.</returns>
     /// <remarks>
     /// <para>
-    /// If no other file type extension could be found, <see cref="MimeCache.DEFAULT_EXTENSION_WITHOUT_PERIOD"/>
+    /// If no other file type extension can be found, <see cref="MimeCache.DefaultFileTypeExtension"/>
     /// is returned. <paramref name="includePeriod"/> specifies whether the period is included.
     /// </para>
     /// <para>
@@ -280,7 +280,8 @@ public sealed partial class MimeType
     /// delete it with <see cref="MimeCache.Clear()">MimeCache.Clear()</see> if your application does not need it anymore.
     /// </para>
     /// </remarks>
-    public string GetFileTypeExtension(bool includePeriod = true) => MimeString.ToFileTypeExtension(ToString(MimeFormats.IgnoreParameters), includePeriod);
+    public string GetFileTypeExtension(bool includePeriod = true)
+        => MimeString.ToFileTypeExtension(ToString(MimeFormats.IgnoreParameters), includePeriod);
 
 
     /// <summary>

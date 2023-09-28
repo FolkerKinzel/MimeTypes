@@ -170,7 +170,7 @@ public class MimeTypeTests
     [TestMethod]
     public void ToStringTest1()
     {
-        var mime = MimeType.Create("application", "x-stuff")
+        MimeType mime = MimeType.Create("application", "x-stuff")
             .AppendParameter("keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", "valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 
         string s = mime.ToString(options: MimeFormats.LineWrapping, lineLength: 10);

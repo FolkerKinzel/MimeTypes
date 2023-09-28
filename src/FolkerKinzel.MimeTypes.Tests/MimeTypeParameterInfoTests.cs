@@ -224,7 +224,7 @@ public class MimeTypeParameterInfoTests
     [TestMethod]
     public void ToStringTest7()
     {
-        var para = "key=value".AsMemory();
+        ReadOnlyMemory<char> para = "key=value".AsMemory();
         Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref para, out MimeTypeParameterInfo info, out _));
         Assert.AreEqual(para.ToString(), info.ToString());
     }
