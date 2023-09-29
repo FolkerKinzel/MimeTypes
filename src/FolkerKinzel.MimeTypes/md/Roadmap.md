@@ -1,5 +1,10 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
+### 5.0.1
+- [ ] Dependency update
+- [ ] Performance: Calculate StringBuilder.Capacity rather than estimate it.
+- [ ] Performance: ToString(options) should not allocate a StringBuilder if `MimeFormats.IgnoreParameters` is set.
+
 ### 4.0.0
 - [ ] Look whether MimeCache could work with less string allocation.
 
