@@ -8,4 +8,5 @@ public sealed partial class MimeTypeParameter
     internal const string ASCII_CHARSET_VALUE = "us-ascii";
 
     internal const char SEPARATOR = '=';
+    internal const int STRING_LENGTH = 32;
 }

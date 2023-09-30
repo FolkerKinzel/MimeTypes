@@ -15,7 +15,7 @@ public class ParameterSerializerTests
         var model = new MimeTypeParameter("key", null, null);
 
         var sb = new StringBuilder();
-        ParameterSerializer.Append(sb, model, false);
+        ParameterSerializer.AppendTo(sb, model, false);
         StringAssert.Contains(sb.ToString(), "key=\"\"");
     }
 
@@ -25,7 +25,7 @@ public class ParameterSerializerTests
         var model = new MimeTypeParameter("key", null, "en");
 
         var sb = new StringBuilder();
-        ParameterSerializer.Append(sb, model, false);
+        ParameterSerializer.AppendTo(sb, model, false);
         StringAssert.Contains(sb.ToString(), "key*=utf-8'en'");
     }
 
@@ -36,7 +36,7 @@ public class ParameterSerializerTests
         const string nonAscii = "ä";
         const string ascii = "para";
 
-        ParameterSerializer.Append(sb, new MimeTypeParameter(ascii, nonAscii, null), false);
+        ParameterSerializer.AppendTo(sb, new MimeTypeParameter(ascii, nonAscii, null), false);
         Assert.AreNotEqual(0, sb.Length);
         string s = sb.ToString();
         Assert.IsTrue(s.Contains(ascii));

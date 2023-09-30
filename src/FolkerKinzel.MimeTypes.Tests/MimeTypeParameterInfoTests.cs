@@ -162,6 +162,9 @@ public class MimeTypeParameterInfoTests
         _ = MimeTypeParameterInfo.Empty.AppendTo(sb!);
     }
 
+    [TestMethod]
+    public void AppendToTest8() => Assert.AreEqual(0, MimeTypeParameterInfo.Empty.AppendTo(new StringBuilder()).Length);
+
 
     [TestMethod]
     public void ToStringTest1()
@@ -228,6 +231,9 @@ public class MimeTypeParameterInfoTests
         Assert.IsTrue(MimeTypeParameterInfo.TryParse(false, ref para, out MimeTypeParameterInfo info, out _));
         Assert.AreEqual(para.ToString(), info.ToString());
     }
+
+    [TestMethod]
+    public void ToStringTest8() => Assert.AreEqual(0, new MimeTypeParameterInfo().ToString().Length);
 
 
 

@@ -10,7 +10,7 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 internal static class ParameterSerializer
 {
     internal const string UTF_8 = "utf-8";
-    internal const int STRING_LENGTH = 32;
+    
 
     /// <summary>
     /// Appends a RFC 2231 serialized <see cref="MimeTypeParameter"/>
@@ -19,7 +19,7 @@ internal static class ParameterSerializer
     /// <param name="builder"></param>
     /// <param name="parameter"></param>
     /// <param name="urlFormat"></param>
-    internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameter parameter, bool urlFormat)
+    internal static EncodingAction AppendTo(StringBuilder builder, MimeTypeParameter parameter, bool urlFormat)
     {
         var value = parameter.Value.AsSpan();
         var language = parameter.Language.AsSpan();
@@ -41,8 +41,10 @@ internal static class ParameterSerializer
     /// <param name="builder"></param>
     /// <param name="parameter"></param>
     /// <param name="urlFormat"></param>
-    internal static EncodingAction Append(this StringBuilder builder, MimeTypeParameterInfo parameter, bool urlFormat)
+    internal static EncodingAction AppendTo(StringBuilder builder, MimeTypeParameterInfo parameter, bool urlFormat)
     {
+        Debug.Assert(!parameter.IsEmpty);
+
         var key = parameter.Key;
         var value = parameter.Value;
         var language = parameter.Language;

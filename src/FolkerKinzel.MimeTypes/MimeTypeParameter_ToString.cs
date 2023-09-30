@@ -28,8 +28,8 @@ public sealed partial class MimeTypeParameter
     /// </example>
     public string ToString(bool urlFormat)
     {
-        var sb = new StringBuilder(ParameterSerializer.STRING_LENGTH);
-        sb.Append(this, urlFormat);
+        var sb = new StringBuilder();
+        ParameterSerializer.AppendTo(sb, this, urlFormat);
         return sb.ToString();
     }
 
@@ -54,7 +54,7 @@ public sealed partial class MimeTypeParameter
             throw new ArgumentNullException(nameof(builder));
         }
 
-        builder.Append(this, urlFormat);
+        _ = ParameterSerializer.AppendTo(builder, this, urlFormat);
         return builder;
     }
 

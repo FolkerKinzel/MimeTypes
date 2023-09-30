@@ -6,6 +6,7 @@ public sealed partial class MimeType
 {
     private ParameterModelDictionary? _dic;
 
+    [MemberNotNullWhen(true, nameof(_dic))]
     private bool HasParameters => _dic is not null && _dic.Count != 0;
 
     /// <summary>

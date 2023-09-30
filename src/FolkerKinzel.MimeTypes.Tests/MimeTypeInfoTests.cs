@@ -477,7 +477,7 @@ public class MimeTypeInfoTests
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
 
-        Assert.AreEqual("text/plain; charset=iso-8859-1", MimeType.Create(in inetMedia).ToString(), true);
+        Assert.AreEqual("text/plain; charset=iso-8859-1", inetMedia.ToString(), true);
     }
 
     [TestMethod]
@@ -565,8 +565,18 @@ public class MimeTypeInfoTests
         Assert.AreEqual("text/plain; charset=iso-8859-1", builder.ToString());
     }
 
+    [TestMethod]
+    public void AppendToTest3() => Assert.AreEqual(0, new MimeTypeInfo().AppendTo(new StringBuilder()).Length);
 
     [TestMethod]
+    public void AppendToTest4()
+    {
+        const string input = "text/plain";
+        Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo media));
+        Assert.AreEqual(input, media.AppendTo(new StringBuilder()).ToString(), false);
+    }
+
+        [TestMethod]
     public void CloneTest1()
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=US-ASCII", out MimeTypeInfo media1));

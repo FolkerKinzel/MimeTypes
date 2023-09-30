@@ -21,10 +21,13 @@ public readonly partial struct MimeTypeParameterInfo
     /// <returns>A <see cref="string"/> representation of the instance.</returns>
     public string ToString(bool urlFormat)
     {
-        if(IsEmpty) { return string.Empty; }
+        if(IsEmpty) 
+        {
+            return string.Empty; 
+        }
 
-        var sb = new StringBuilder(ParameterSerializer.STRING_LENGTH);
-        sb.Append(this, urlFormat);
+        var sb = new StringBuilder();
+        _ = ParameterSerializer.AppendTo(sb, this, urlFormat);
         return sb.ToString();
     }
 
@@ -45,7 +48,12 @@ public readonly partial struct MimeTypeParameterInfo
             throw new ArgumentNullException(nameof(builder));
         }
 
-        builder.Append(this, urlFormat);
+        if(IsEmpty)
+        {
+            return builder;
+        }
+
+        _ = ParameterSerializer.AppendTo(builder, this, urlFormat);
         return builder;
     }
 }

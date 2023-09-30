@@ -40,17 +40,20 @@ public readonly partial struct MimeTypeInfo
     /// </example>
     public string ToString(MimeFormats options, int lineLength = MimeType.MinLineLength)
     {
+        if (IsEmpty)
+        {
+            return string.Empty;
+        }
+
         if (!HasParameters)
         {
             // Matching of media type and subtype is ALWAYS case-insensitive. (RFC 2045/5.1.)
             return this._mimeTypeString.ToString().ToLowerInvariant();
         }
-        else
-        {
-            var sb = new StringBuilder(MimeType.STRING_LENGTH);
-            AppendToInternal(sb, options, lineLength);
-            return sb.ToString();
-        }
+
+        return options.HasFlag(MimeFormats.IgnoreParameters)
+            ? StaticStringMethod.Concat(MediaType, "/".AsSpan(), SubType)
+            : AppendToInternal(new StringBuilder(), options, lineLength).ToString();
     }
 
 
@@ -79,9 +82,15 @@ public readonly partial struct MimeTypeInfo
                                            int maxLineLength)
     {
         Debug.Assert(builder != null);
+
+        if (IsEmpty)
+        {
+            return builder;
+        }
+
         options = options.Normalize();
 
-        _ = builder.EnsureCapacity(builder.Length + MimeType.STRING_LENGTH);
+        _ = builder.EnsureCapacity(builder.Length + MediaType.Length + 1 + SubTypeLength + (HasParameters ? MimeTypeParameter.STRING_LENGTH : 0));
 
         int startOfMimeType = builder.Length;
 
@@ -102,7 +111,7 @@ public readonly partial struct MimeTypeInfo
 
         return builder;
     }
-    
+
 
     private void AppendUnWrappedParameters(StringBuilder builder, MimeFormats options)
     {
@@ -118,7 +127,7 @@ public readonly partial struct MimeTypeInfo
                 _ = builder.Append(' ');
             }
 
-            builder.Append(parameter, options == MimeFormats.Url);
+            ParameterSerializer.AppendTo(builder, parameter, options == MimeFormats.Url);
         }
     }
 
@@ -141,7 +150,7 @@ public readonly partial struct MimeTypeInfo
 
         foreach (MimeTypeParameterInfo parameter in Parameters())
         {
-            EncodingAction action = worker.Clear().Append(parameter, false);
+            EncodingAction action = ParameterSerializer.AppendTo(worker.Clear(), parameter, false);
 
             int keyLength = parameter.Key.Length;
             int languageLength = parameter.Language.Length;
@@ -157,5 +166,5 @@ public readonly partial struct MimeTypeInfo
         }
     }
 
-    
+
 }

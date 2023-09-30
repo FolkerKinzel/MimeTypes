@@ -34,18 +34,9 @@ public sealed partial class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
     public string ToString(MimeFormats options, int lineLength = MimeType.MinLineLength)
-    {
-        if (!HasParameters)
-        {
-            return MediaType + '/' + SubType;
-        }
-        else
-        {
-            var sb = new StringBuilder(STRING_LENGTH);
-            AppendToInternal(sb, options, lineLength);
-            return sb.ToString();
-        }
-    }
+        => !HasParameters || options.HasFlag(MimeFormats.IgnoreParameters)
+            ? MediaType + '/' + SubType
+            : AppendToInternal(new StringBuilder(), options, lineLength).ToString();
 
 
     /// <summary>
@@ -78,7 +69,11 @@ public sealed partial class MimeType
 
         int startOfMimeType = builder.Length;
 
-        _ = builder.EnsureCapacity(builder.Length + STRING_LENGTH);
+        _ = builder.EnsureCapacity(builder.Length + 
+                                   MediaType.Length + 
+                                   1 + // "/"
+                                   SubType.Length + 
+                                   (HasParameters ? _dic.Count : 0) * MimeTypeParameter.STRING_LENGTH);
         _ = builder.Append(MediaType).Append('/').Append(SubType);
         
 
@@ -112,7 +107,7 @@ public sealed partial class MimeType
                 _ = builder.Append(' ');
             }
 
-            builder.Append(parameter, options == MimeFormats.Url);
+            ParameterSerializer.AppendTo(builder, parameter, options == MimeFormats.Url);
         }
     }
 
@@ -129,13 +124,13 @@ public sealed partial class MimeType
                                             ref maxLineLength,
                                             out int startOfCurrentLine);
 
-        var worker = new StringBuilder(maxLineLength);
+        var worker = new StringBuilder(maxLineLength * 3);
         int currentLineLength = builder.Length - startOfCurrentLine;
 
 
         foreach (MimeTypeParameter parameter in Parameters)
         {
-            EncodingAction action = worker.Clear().Append(parameter, false);
+            EncodingAction action = ParameterSerializer.AppendTo(worker.Clear(), parameter, false);
 
             int keyLength = parameter.Key.Length;
             int languageLength = parameter.Language?.Length ?? 0;

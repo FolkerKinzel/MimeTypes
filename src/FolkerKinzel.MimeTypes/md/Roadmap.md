@@ -1,9 +1,14 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
-### 5.0.1
+### 5.0.2
 - [ ] Dependency update
-- [ ] Performance: Calculate StringBuilder.Capacity rather than estimate it.
-- [ ] Performance: ToString(options) should not allocate a StringBuilder if `MimeFormats.IgnoreParameters` is set.
+- [ ] Cleanup: Remove obsolete symbols
+
+### 5.0.1
+- [x] Performance: Calculate StringBuilder.Capacity rather than estimate it.
+- [x] Performance: ToString(options) should not allocate a StringBuilder if `MimeFormats.IgnoreParameters` is set.
+- [x] Fixes a bug, that `MimeTypeInfo.AppendTo` produces unexpected results when called on `MimeTypeInfo.Empty`
+- [x] Fixes a bug, that `MimeTypeParameterInfo.AppendTo` produces unexpected results when called on `MimeTypeParameterInfo.Empty`
 
 ### 4.0.0
 - [ ] Look whether MimeCache could work with less string allocation.
