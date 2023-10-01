@@ -11,10 +11,11 @@ public class CreateStringBench
     private readonly string MEDIA_TYPE = "image";
     private readonly string SUB_TYPE = "png";
 
-
+    [Benchmark]
+    public string PlusSignStrings() => (MEDIA_TYPE + "/" + SUB_TYPE).ToLowerInvariant();
 
     [Benchmark]
-    public string PlusSign() => (MEDIA_TYPE + '/' + SUB_TYPE).ToLowerInvariant();
+    public string PlusSignWithChar() => (MEDIA_TYPE + '/' + SUB_TYPE).ToLowerInvariant();
 
 
     [Benchmark]

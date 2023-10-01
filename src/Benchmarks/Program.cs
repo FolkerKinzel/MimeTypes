@@ -20,7 +20,7 @@ internal class Program
 
         //StringBuilderExtension.WriteEncodes();
         //string s = new CreateStringBench().StringCreate();
-        Summary summary = BenchmarkRunner.Run<UrlEncodingBench>();
+        Summary summary = BenchmarkRunner.Run<CreateStringBench>();
         //ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
     }
 }
