@@ -16,6 +16,12 @@ public readonly partial struct MimeTypeInfo
     private static bool TryParseInternal(ref ReadOnlyMemory<char> value, out MimeTypeInfo mimeType)
     {
         mimeType = default;
+
+        if(value.IsEmpty)
+        {
+            return false;
+        }
+
         value = value.TrimStart();
         ReadOnlySpan<char> span = value.Span;
         int parameterSeparatorIndex = span.IndexOf(';');
