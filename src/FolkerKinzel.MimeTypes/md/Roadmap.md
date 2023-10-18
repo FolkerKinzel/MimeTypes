@@ -1,8 +1,8 @@
 ﻿# FolkerKinzel.MimeTypes
 ## Roadmap
 ### 5.0.2
-- [ ] Dependency update
-- [ ] Cleanup: Remove obsolete symbols
+- [x] Dependency update
+- [x] Cleanup: Remove obsolete symbols
 - [x] Performance: Let `MimeTypeInfo.TryParseInternal` fail faster when called with `null` or an empty string.
 
 ### 5.0.1
