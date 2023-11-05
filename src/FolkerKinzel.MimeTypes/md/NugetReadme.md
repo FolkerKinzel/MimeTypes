@@ -1,8 +1,9 @@
 [![GitHub](https://img.shields.io/github/license/FolkerKinzel/MimeTypes)](https://github.com/FolkerKinzel/MimeTypes/blob/master/LICENSE)
 
 
-### .NET Library that supports working with Internet Media Types ("MIME Types")
-[Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v5.0.3)
+## .NET Library that supports working with Internet Media Types ("MIME Types")
+
+[Project Reference and Release Notes](https://github.com/FolkerKinzel/MimeTypes/releases/tag/v5.0.4)
 
 - The static `MimeString` class works on strings and allows to convert file names into Internet Media Types ("MIME types") or Internet Media Types into appropriate file type extensions.
 - The `MimeType` class allows:
