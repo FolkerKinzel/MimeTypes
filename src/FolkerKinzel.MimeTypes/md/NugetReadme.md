@@ -16,7 +16,7 @@
 
 The library is designed to support performance and small heap allocation.
 
-[See code examples at GitHub](https://github.com/FolkerKinzel/MimeTypes)
+[See code examples on GitHub](https://github.com/FolkerKinzel/MimeTypes)
 
 [Version History](https://github.com/FolkerKinzel/MimeTypes/releases)
 
