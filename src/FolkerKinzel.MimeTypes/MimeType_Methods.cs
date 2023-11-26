@@ -173,10 +173,7 @@ public sealed partial class MimeType
     /// <exception cref="ArgumentNullException"><paramref name="key"/> is <c>null</c>.</exception>
     public MimeType RemoveParameter(string key)
     {
-        if(key is null)
-        {
-            throw new ArgumentNullException(nameof(key));
-        }
+        _ArgumentNullException.ThrowIfNull(key, nameof(key));
 
         _dic?.Remove(key);
         return this;
@@ -319,7 +316,7 @@ public sealed partial class MimeType
     {
         var model = new MimeTypeParameter(key, value, language);
 
-        _dic ??= new ParameterModelDictionary();
+        _dic ??= [];
 
         _ = _dic.Remove(model.Key);
         _dic.Add(model);

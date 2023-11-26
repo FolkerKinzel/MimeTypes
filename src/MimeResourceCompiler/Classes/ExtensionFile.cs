@@ -3,9 +3,8 @@
 /// <summary>
 /// Represents the compiled file "Extension.csv".
 /// </summary>
-public sealed class ExtensionFile : CompiledFile
+public sealed class ExtensionFile(IStreamFactory streamFactory, ILogger log) : CompiledFile(streamFactory, log)
 {
-    public ExtensionFile(IStreamFactory streamFactory, ILogger log) : base(streamFactory, log) { }
 
     /// <summary>
     /// The filename of the compiled file. (Without path information.)

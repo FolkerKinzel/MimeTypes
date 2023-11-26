@@ -3,16 +3,10 @@
 /// <summary>
 /// Encapsulates functionality to create FileStreams to write the output.
 /// </summary>
-public sealed class StreamFactory : IStreamFactory
+public sealed class StreamFactory(IOutputDirectory outputDirectory, ILogger log) : IStreamFactory
 {
-    private readonly IOutputDirectory _outputDirectory;
-    private readonly ILogger _log;
-
-    public StreamFactory(IOutputDirectory outputDirectory, ILogger log)
-    {
-        _outputDirectory = outputDirectory;
-        this._log = log;
-    }
+    private readonly IOutputDirectory _outputDirectory = outputDirectory;
+    private readonly ILogger _log = log;
 
     /// <summary>
     /// Creates a FileStream to write a file named like <paramref name="fileName"/>.

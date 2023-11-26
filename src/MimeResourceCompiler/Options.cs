@@ -5,22 +5,13 @@ namespace MimeResourceCompiler;
 /// <summary>
 /// Encapsulates the command line options.
 /// </summary>
-public class Options
+public class Options(string outputPath, bool createWrapper, bool createReadme, bool createLogFile, bool logToConsole)
 {
-    private readonly string? _outputPath;
-    private readonly bool _createReadme;
-    private readonly bool _createLogFile;
-    private readonly bool _logToConsole;
-    private readonly bool _createWrapper;
-
-    public Options(string outputPath, bool createWrapper, bool createReadme, bool createLogFile, bool logToConsole)
-    {
-        _outputPath = outputPath;
-        _createWrapper = createWrapper;
-        _createReadme = createReadme;
-        _createLogFile = createLogFile;
-        _logToConsole = logToConsole;
-    }
+    private readonly string? _outputPath = outputPath;
+    private readonly bool _createReadme = createReadme;
+    private readonly bool _createLogFile = createLogFile;
+    private readonly bool _logToConsole = logToConsole;
+    private readonly bool _createWrapper = createWrapper;
 
     [Option('p', "path", Required = false, HelpText = "Path to the directory, which gets the compiled output.")]
     public string OutputPath => _outputPath ?? Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);

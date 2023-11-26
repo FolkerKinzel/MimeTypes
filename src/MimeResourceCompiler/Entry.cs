@@ -1,4 +1,5 @@
-﻿using System.Text.RegularExpressions;
+﻿using MimeResourceCompiler.Classes;
+using System.Text.RegularExpressions;
 
 namespace MimeResourceCompiler;
 
@@ -18,15 +19,8 @@ public class Entry : IEquatable<Entry?>
     /// <paramref name="fileTypeExtension"/> is empty or consists only of whitespace.</exception>
     public Entry(string mimeType, string fileTypeExtension)
     {
-        if (mimeType is null)
-        {
-            throw new ArgumentNullException(nameof(mimeType));
-        }
-
-        if (fileTypeExtension is null)
-        {
-            throw new ArgumentNullException(nameof(fileTypeExtension));
-        }
+        ArgumentNullException.ThrowIfNull(mimeType);
+        ArgumentNullException.ThrowIfNull(fileTypeExtension);
 
         this.MimeType = PrepareMimeType(mimeType);
         int mediaTypeLength = MimeType.IndexOf('/');
@@ -61,10 +55,10 @@ public class Entry : IEquatable<Entry?>
     public string TopLevelMediaType { get; }
 
     private static string PrepareMimeType(string mimeType)
-        => Regex.Replace(mimeType, @"\s+", "").ToLowerInvariant();
+        => Regexes.WhiteSpace().Replace(mimeType, "").ToLowerInvariant();
 
     private static string PrepareFileTypeExtension(string fileTypeExtension)
-        => Regex.Replace(fileTypeExtension, @"\s+", "").Replace(".", null, StringComparison.Ordinal).ToLowerInvariant();
+        => Regexes.WhiteSpace().Replace(fileTypeExtension, "").Replace(".", null, StringComparison.Ordinal).ToLowerInvariant();
 
     public override string ToString() => $"{MimeType} {Extension}";
 

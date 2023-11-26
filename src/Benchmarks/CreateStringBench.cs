@@ -8,8 +8,8 @@ namespace Benchmarks;
 [MemoryDiagnoser]
 public class CreateStringBench
 {
-    private readonly string MEDIA_TYPE = "image";
-    private readonly string SUB_TYPE = "png";
+    private const string MEDIA_TYPE = "image";
+    private const string SUB_TYPE = "png";
 
     [Benchmark]
     public string PlusSignStrings() => (MEDIA_TYPE + "/" + SUB_TYPE).ToLowerInvariant();

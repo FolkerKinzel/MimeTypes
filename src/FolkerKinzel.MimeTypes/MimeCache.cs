@@ -131,7 +131,7 @@ public static class MimeCache
     {
         mimeType = string.IsNullOrWhiteSpace(mimeType)
                ? null
-               : mimeType.ReplaceWhiteSpaceWith(ReadOnlySpan<char>.Empty);
+               : mimeType.ReplaceWhiteSpaceWith([]);
 
         return mimeType is null
             ? leadingDot ? DefaultFileTypeExtension : DEFAULT_EXTENSION_WITHOUT_PERIOD

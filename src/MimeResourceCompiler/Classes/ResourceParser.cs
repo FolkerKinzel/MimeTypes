@@ -35,7 +35,7 @@ public abstract class ResourceParser : IResourceParser
                 continue;
             }
 
-            string[] parts = Regex.Split(line, @"\s+");
+            string[] parts = Regexes.WhiteSpace().Split(line);
 
             if (parts.Length < 2)
             {

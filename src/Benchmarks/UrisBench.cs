@@ -33,6 +33,7 @@ public class UrisBench
     }
 
     [Benchmark(Baseline = true)]
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0302:Simplify collection initialization", Justification = "<Pending>")]
     public bool ContainsTSpecials()
     {
         // RFC 2045 Section 5.1 "tspecials"

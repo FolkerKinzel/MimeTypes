@@ -38,7 +38,7 @@ public readonly partial struct MimeTypeInfo
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
     public ReadOnlySpan<char> SubType
-        => IsEmpty ? ReadOnlySpan<char>.Empty : _mimeTypeString.Span.Slice(MediaTypeLength + 1, SubTypeLength);
+        => IsEmpty ? [] : _mimeTypeString.Span.Slice(MediaTypeLength + 1, SubTypeLength);
 
     /// <summary>
     /// Gets the parameters.

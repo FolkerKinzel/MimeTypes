@@ -1,4 +1,5 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+﻿using FolkerKinzel.MimeTypes.Intls;
+using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
 namespace FolkerKinzel.MimeTypes;
 
@@ -43,12 +44,9 @@ public readonly partial struct MimeTypeParameterInfo
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
     public StringBuilder AppendTo(StringBuilder builder, bool urlFormat = false)
     {
-        if (builder is null)
-        {
-            throw new ArgumentNullException(nameof(builder));
-        }
+        _ArgumentNullException.ThrowIfNull(builder, nameof(builder));
 
-        if(IsEmpty)
+        if (IsEmpty)
         {
             return builder;
         }

@@ -1,10 +1,8 @@
 ﻿namespace MimeResourceCompiler.Classes;
 
-public class Compressor : ICompressor
+public class Compressor(ILogger log) : ICompressor
 {
-    private readonly ILogger _log;
-
-    public Compressor(ILogger log) => this._log = log;
+    private readonly ILogger _log = log;
 
     public void RemoveUnreachableEntries(List<Entry> list)
     {

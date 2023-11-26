@@ -89,7 +89,7 @@ public readonly partial struct MimeTypeParameterInfo
             int languageLength = LanguageLength;
 
             return languageLength == 0
-                    ? ReadOnlySpan<char>.Empty
+                    ? []
                     : _parameterString.Span.Slice(LanguageStart, languageLength);
         }
     }
@@ -111,7 +111,7 @@ public readonly partial struct MimeTypeParameterInfo
             int charsetLength = CharSetLength;
 
             return charsetLength == 0
-                ? ReadOnlySpan<char>.Empty
+                ? []
                 : _parameterString.Span.Slice(CharSetStart, charsetLength);
         }
     }

@@ -11,6 +11,7 @@ public static class HelperExtension
 {
     public static IEnumerable<TSource> AsWeakEnumerable<TSource>(this IEnumerable<TSource> source) => source.EnumerateWeak().Cast<TSource>();
 
+    [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1510:Use ArgumentNullException throw helper", Justification = "<Pending>")]
     private static IEnumerable EnumerateWeak(this IEnumerable source)
     {
         if (source == null)

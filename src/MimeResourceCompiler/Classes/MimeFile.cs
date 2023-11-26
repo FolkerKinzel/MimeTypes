@@ -3,9 +3,9 @@
 /// <summary>
 /// Represents the compiled file "Mime.csv".
 /// </summary>
-public sealed class MimeFile : CompiledFile, IMimeFile
+public sealed class MimeFile(IStreamFactory streamFactory, ILogger log) 
+    : CompiledFile(streamFactory, log), IMimeFile
 {
-    public MimeFile(IStreamFactory streamFactory, ILogger log) : base(streamFactory, log) { }
 
     /// <summary>
     /// The filename of the compiled file. (Without path information.)
