@@ -1,12 +1,12 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <OutputType>Exe</OutputType>
-    <TargetFramework>net7.0</TargetFramework>
+    <TargetFramework>net8.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
     <Copyright>Folker Kinzel</Copyright>
     <Version>1.1.0</Version>
-    <FileVersion>1.1.0.84</FileVersion>
+    <FileVersion>1.1.0.85</FileVersion>
     <AssemblyVersion>1.1.0.0</AssemblyVersion>
     <Authors>Folker Kinzel</Authors>
     <Copyright>Copyright © 2021 Folker Kinzel</Copyright>
