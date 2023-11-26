@@ -9,7 +9,7 @@
 
 # SYNTAX:
 # MIME/type FileTypeExtension
-# (Take one space character as separator.) The file type extension MUST NOT contain the period (".") and should be lowercase.
+# (Take one SPACE character as separator.) The file type extension MUST NOT contain the period (".") and should be lowercase.
 # A line MUST contain exactly one MIME type and one file type extension.
 
 # Lines, which begin with the '#' character are treated as comments.

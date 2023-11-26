@@ -8,7 +8,7 @@ public class MimeStringTests
     [TestMethod]
     public void FromFileNameTest1()
     {
-#if NET461 || NETSTANDARD2_0
+#if NET48
         const string expected = MimeString.OctetStream;
 #else
         const string expected = "text/plain";
@@ -30,7 +30,7 @@ public class MimeStringTests
 
         Assert.AreEqual("image/png", mime1);
 
-        string[] arr = new string[] { mime2, mime3, mime4, mime5, mime6 };
+        string[] arr = [mime2, mime3, mime4, mime5, mime6];
         Assert.IsTrue(arr.All(x => x.Equals(mime1)));
 
     }
@@ -2058,7 +2058,7 @@ public class MimeStringTests
     [TestMethod]
     public void GetFileTypeExtensionTest3()
     {
-        string ext = MimeString.ToFileTypeExtension(ReadOnlySpan<char>.Empty, false);
+        string ext = MimeString.ToFileTypeExtension([], false);
         Assert.AreEqual("bin", ext);
     }
     #endregion
