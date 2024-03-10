@@ -81,6 +81,10 @@ video/jpm jpm
 video/jpm jpgm
 video/mj2 mj2
 video/mj2 mjp2
+video/mp2t ts
+video/mp2t m2t
+video/mp2t m2ts
+video/mp2t mts
 video/mp4 mp4
 video/mp4 mp4v
 video/mp4 mpg4
@@ -1035,7 +1039,6 @@ model/vnd.collada+xml dae
 model/vnd.dwf dwf
 model/vnd.gdl gdl
 model/vnd.gtw gtw
-model/vnd.mts mts
 model/vnd.vtu vtu
 model/vrml wrl
 model/vrml vrml

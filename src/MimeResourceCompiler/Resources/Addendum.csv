@@ -15,6 +15,8 @@
 # Lines, which begin with the '#' character are treated as comments.
 # Empty lines are allowed.
 
+model/vnd.mts mts
+
 # https://wiki.selfhtml.org/wiki/MIME-Type/%C3%9Cbersicht :
 application/acad dwg
 application/astound asd

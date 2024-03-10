@@ -62,6 +62,7 @@ video/h264 h264
 video/jpeg jpgv
 video/jpm jpm
 video/mj2 mj2
+video/mp2t ts
 video/mp4 mp4
 video/mpeg mpeg
 video/ogg ogv
@@ -859,12 +860,12 @@ model/vnd.collada+xml dae
 model/vnd.dwf dwf
 model/vnd.gdl gdl
 model/vnd.gtw gtw
-model/vnd.mts mts
 model/vnd.vtu vtu
 model/vrml wrl
 model/x3d+binary x3db
 model/x3d+vrml x3dv
 model/x3d+xml x3d
+model/vnd.mts mts
 model/3mf 3mf
 model/gltf+json gltf
 model/gltf-binary glb
