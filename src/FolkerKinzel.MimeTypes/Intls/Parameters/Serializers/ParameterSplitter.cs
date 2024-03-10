@@ -137,6 +137,7 @@ internal static class ParameterSplitter
             for (int i = 0; i < source.Length; i++)
             {
                 char c = source[i];
+
                 if (c.IsTokenChar(true))
                 {
                     tmp.Append(c); 
