@@ -196,6 +196,7 @@ internal static class ParameterSplitter
     private static int UpdateLineLength(int workerLength, int lineLength, bool quoted, int valueStart)
     {
         int valLength = lineLength - valueStart;
+
         if (quoted)
         {
             valLength -= DOUBLE_QUOTES_COUNT;
@@ -260,6 +261,7 @@ internal static class ParameterSplitter
     {
         builder.Remove(counterIdx, counter.DigitsCount());
         int i = ++counter;
+
         do
         {
             builder.Insert(counterIdx, (char)(i % 10 + '0'));
