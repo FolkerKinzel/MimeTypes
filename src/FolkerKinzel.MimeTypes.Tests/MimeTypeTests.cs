@@ -1,11 +1,14 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
+﻿
+/* Unmerged change from project 'FolkerKinzel.MimeTypes.Tests (net48)'
+Before:
+using Microsoft.VisualStudio.TestTools.UnitTesting;
 using FolkerKinzel.MimeTypes;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
+After:
+using FolkerKinzel.MimeTypes;
+using Microsoft.VisualStudio.TestTools.UnitTesting;
+using System;
+*/
 namespace FolkerKinzel.MimeTypes.Tests;
 
 [TestClass()]
@@ -190,7 +193,7 @@ public class MimeTypeTests
         StringAssert.Contains(result, "UPPERCASE", StringComparison.Ordinal);
     }
 
-    
+
 
     [TestMethod]
     public void EqualsTest1()
@@ -377,6 +380,10 @@ public class MimeTypeTests
 
     [TestMethod]
     public void EqualsTest13() => Assert.IsFalse(MimeType.Create("x", "y").Equals(42));
+
+    [TestMethod]
+    public void EqualsTest14() => Assert.IsFalse(MimeType.Create("x", "y").Equals((object)MimeType.Create("a", "b")));
+
 
     [TestMethod]
     public void EqualsOperatorTest1()

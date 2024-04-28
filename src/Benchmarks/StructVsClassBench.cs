@@ -1,11 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
-using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 
 namespace Benchmarks;
 
@@ -36,7 +29,7 @@ public class StructVsClassBench
         for (int i = 0; i < 3; i++)
         {
             var testKvp = dic[i];
-            if(testKvp.Key != null) { counter++; }
+            if (testKvp.Key != null) { counter++; }
         }
 
         return counter;

@@ -104,7 +104,7 @@ public sealed class ApacheData : IApacheData, IDisposable
         GC.SuppressFinalize(this);
     }
 
-    
+
 
 
     ///// <summary>

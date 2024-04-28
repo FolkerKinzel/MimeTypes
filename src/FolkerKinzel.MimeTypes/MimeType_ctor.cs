@@ -1,6 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
-
-namespace FolkerKinzel.MimeTypes;
+﻿namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
 /// Encapsulates the data of an Internet Media Type ("MIME type").
@@ -18,7 +16,7 @@ namespace FolkerKinzel.MimeTypes;
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
 /// </example>
 /// <seealso cref="MimeTypeInfo"/>
-public sealed partial class MimeType 
+public sealed partial class MimeType
 {
     /// <summary>
     /// Initializes a new <see cref="MimeType"/> object.

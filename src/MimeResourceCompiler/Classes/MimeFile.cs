@@ -3,7 +3,7 @@
 /// <summary>
 /// Represents the compiled file "Mime.csv".
 /// </summary>
-public sealed class MimeFile(IStreamFactory streamFactory, ILogger log) 
+public sealed class MimeFile(IStreamFactory streamFactory, ILogger log)
     : CompiledFile(streamFactory, log), IMimeFile
 {
 

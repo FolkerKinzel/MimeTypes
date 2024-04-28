@@ -1,10 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
-using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-using System.Text;
-
-namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Tests;
+﻿namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Tests;
 
 [TestClass]
 public class ParameterSerializerTests
@@ -47,7 +41,7 @@ public class ParameterSerializerTests
     public void AppendTest4()
     {
         ReadOnlyMemory<char> mem = "x/y; key=".AsMemory();
-        Assert.IsTrue( MimeType.TryParse(in mem, out MimeType? mime));
+        Assert.IsTrue(MimeType.TryParse(in mem, out MimeType? mime));
         StringAssert.Contains(mime.Parameters.First().ToString(), "key=\"\"");
     }
 

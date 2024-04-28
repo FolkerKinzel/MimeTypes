@@ -1,6 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
-
-namespace FolkerKinzel.MimeTypes.Intls;
+﻿namespace FolkerKinzel.MimeTypes.Intls;
 
 internal static class MimeTypeSerializer
 {
@@ -20,8 +18,8 @@ internal static class MimeTypeSerializer
         }
 
         if (mimeTypeLength > maxLineLength)
-        { 
-            maxLineLength = mimeTypeLength; 
+        {
+            maxLineLength = mimeTypeLength;
         }
 
         if (builder.Length - startOfCurrentLine > maxLineLength)

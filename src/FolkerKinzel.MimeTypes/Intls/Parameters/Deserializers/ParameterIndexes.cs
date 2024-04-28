@@ -1,5 +1,5 @@
-﻿using System.Runtime.InteropServices;
-using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+using System.Runtime.InteropServices;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 

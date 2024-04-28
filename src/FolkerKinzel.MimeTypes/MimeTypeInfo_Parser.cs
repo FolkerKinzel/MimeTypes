@@ -1,6 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo 
+public readonly partial struct MimeTypeInfo
 {
     /// <summary>
     /// Parses a <see cref="string"/> as <see cref="MimeTypeInfo"/>.

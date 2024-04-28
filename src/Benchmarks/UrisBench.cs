@@ -1,8 +1,6 @@
-﻿using System;
-using System.Runtime.CompilerServices;
+﻿using BenchmarkDotNet.Attributes;
+using System;
 using System.Text;
-using BenchmarkDotNet.Attributes;
-using FolkerKinzel.MimeTypes.Intls;
 
 namespace Benchmarks;
 

@@ -48,7 +48,7 @@ public sealed partial class MimeType
     /// <exception cref="ArgumentException"><paramref name="info"/> is empty. (See <see cref="MimeTypeInfo.IsEmpty">MimeTypeInfo.IsEmpty</see>.)</exception>
     public static MimeType Create(in MimeTypeInfo info)
     {
-        if(info.IsEmpty)
+        if (info.IsEmpty)
         {
             throw new ArgumentException(Res.EmptyStruct, nameof(info));
         }
@@ -144,7 +144,7 @@ public sealed partial class MimeType
             }
         }
     }
-    
+
 
     /// <summary>
     /// Removes all <see cref="MimeTypeParameter"/>s.

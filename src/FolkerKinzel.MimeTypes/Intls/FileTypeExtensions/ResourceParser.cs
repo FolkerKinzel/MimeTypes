@@ -49,15 +49,19 @@ internal static class ResourceParser
         reader.BaseStream.Position = mediaTypeIndex.Start;
 
         ReadOnlySpan<char> mimeSpan = mimeType.AsSpan();
+
         for (int i = 0; i < mediaTypeIndex.LinesCount; i++)
         {
             string? line = reader.ReadLine();
 
+#if DEBUG
             // only testable if Resources/MimeIdx.csv is corrupted:
             if (line is null)
             {
                 break;
             }
+#endif
+            Debug.Assert(line != null);
 
             int separatorIndex = line.IndexOf(SEPARATOR);
 

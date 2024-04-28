@@ -6,7 +6,7 @@ internal class Program
     {
         //FormattingOptionsExample.Example();
         //Console.WriteLine();
-        
+
         //FileExtensionExample.Example();
         //Console.WriteLine();
 

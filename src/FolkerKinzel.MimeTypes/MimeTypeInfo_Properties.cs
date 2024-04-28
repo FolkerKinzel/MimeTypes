@@ -54,7 +54,7 @@ public readonly partial struct MimeTypeInfo
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/MimeTypeInfoExample.cs"/>
     /// </example>
-    public IEnumerable<MimeTypeParameterInfo> Parameters() => 
+    public IEnumerable<MimeTypeParameterInfo> Parameters() =>
         HasParameters
         ? ParameterParser.ParseParameters(_mimeTypeString.Slice(MediaTypeLength + SubTypeLength + 2))
         : Array.Empty<MimeTypeParameterInfo>();
@@ -78,7 +78,7 @@ public readonly partial struct MimeTypeInfo
     /// </example>
     public bool IsEmpty => _idx == 0;
 
-    
+
     /// <summary>
     /// Determines whether the <see cref="MediaType"/> of this instance equals "text".
     /// The comparison is case-insensitive.

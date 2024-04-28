@@ -1,6 +1,6 @@
-﻿using System;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using FolkerKinzel.Strings;
+using System;
 
 namespace Benchmarks;
 

@@ -2,7 +2,7 @@
 
 namespace FolkerKinzel.MimeTypes;
 
-public sealed partial class MimeType 
+public sealed partial class MimeType
 {
     /// <summary>
     /// Creates a hash code for this instance, which takes the <see cref="Parameters"/> into account.

@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Tests;
+﻿namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Tests;
 
 [TestClass]
 public class MimeFormatsNormalizerTests

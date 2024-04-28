@@ -1,10 +1,6 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Diagnostics;
-using FolkerKinzel.Strings.Polyfills;
-using FolkerKinzel.MimeTypes.Intls;
-using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
-using System.Text;
+﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
+using System.Diagnostics;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 
@@ -576,7 +572,7 @@ public class MimeTypeInfoTests
         Assert.AreEqual(input, media.AppendTo(new StringBuilder()).ToString(), false);
     }
 
-        [TestMethod]
+    [TestMethod]
     public void CloneTest1()
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("text/plain; charset=US-ASCII", out MimeTypeInfo media1));

@@ -1,7 +1,4 @@
-﻿using System.IO;
-
-
-namespace FolkerKinzel.MimeTypes.Tests
+﻿namespace FolkerKinzel.MimeTypes.Tests
 {
     internal static class TestFiles
     {

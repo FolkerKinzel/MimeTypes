@@ -1,7 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
-
-
-namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Builders;
+﻿namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Builders;
 
 internal static class ValueBuilderUrlEncoded
 {
@@ -14,17 +11,17 @@ internal static class ValueBuilderUrlEncoded
                                                   ReadOnlySpan<char> language)
     {
         PrepareBuilder(builder, value.Length, language.Length);
-            
-        return builder.Insert(builder.Length - 1,'*').AppendValueAndLanguage(language, value);
+
+        return builder.Insert(builder.Length - 1, '*').AppendValueAndLanguage(language, value);
 
         /////////////////////////////////////////////////////////////
-        
+
         static void PrepareBuilder(StringBuilder builder, int valueLength, int languageLength)
-        => _ = builder.EnsureCapacity(builder.Length + 
+        => _ = builder.EnsureCapacity(builder.Length +
                                       STAR_LENGTH +
-                                      UTF_8.Length + 
-                                      languageLength + 
-                                      SINGLE_QUOTES_LENGTH + 
+                                      UTF_8.Length +
+                                      languageLength +
+                                      SINGLE_QUOTES_LENGTH +
                                       (int)(valueLength * UrlEncoding.EncodedLengthFactor));
     }
 

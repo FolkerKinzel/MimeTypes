@@ -1,5 +1,4 @@
 ﻿using MimeResourceCompiler.Classes;
-using System.Text.RegularExpressions;
 
 namespace MimeResourceCompiler;
 

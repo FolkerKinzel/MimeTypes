@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Collections;
 
 namespace FolkerKinzel.MimeTypes.Tests;
 
@@ -26,14 +21,14 @@ public static class HelperExtension
     }
 
 
-    public static int GetLinesCount(this string? source) 
+    public static int GetLinesCount(this string? source)
     {
         int count = 0;
         if (source == null) { return count; }
         if (source.Length == 0) { return 1; }
 
         using var reader = new StringReader(source);
-        while(reader.ReadLine() != null) { count++; }
+        while (reader.ReadLine() != null) { count++; }
         return count;
     }
 
@@ -46,8 +41,8 @@ public static class HelperExtension
 
         string? s;
         while ((s = reader.ReadLine()) != null)
-        { 
-            if(s.Length == 0)
+        {
+            if (s.Length == 0)
             {
                 return true;
             }

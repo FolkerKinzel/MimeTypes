@@ -1,8 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
-using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
-using FolkerKinzel.MimeTypes.Properties;
-
-namespace FolkerKinzel.MimeTypes;
+﻿namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
 /// Encapsulates the data of an Internet Media Type parameter.
@@ -19,7 +15,7 @@ namespace FolkerKinzel.MimeTypes;
 /// </para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
 /// </example>
-public sealed partial class MimeTypeParameter 
+public sealed partial class MimeTypeParameter
 {
     /// <summary>
     /// Initializes a new <see cref="MimeTypeParameter"/> instance.
@@ -58,8 +54,8 @@ public sealed partial class MimeTypeParameter
 
         // keys are case-insensitive (RFC 2231/7.)
         Key = key.ToLowerInvariant();
-        Value = string.IsNullOrEmpty(value) ? null 
-                                            : IsValueCaseSensitive 
+        Value = string.IsNullOrEmpty(value) ? null
+                                            : IsValueCaseSensitive
                                                  ? value
                                                  : value.Trim().ToLowerInvariant();
 

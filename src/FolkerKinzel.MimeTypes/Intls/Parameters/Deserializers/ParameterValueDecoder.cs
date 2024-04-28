@@ -1,5 +1,4 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
-using System.Linq;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 

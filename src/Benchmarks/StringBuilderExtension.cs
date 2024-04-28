@@ -1,8 +1,7 @@
-﻿using System;
+﻿using FolkerKinzel.Strings;
+using System;
 using System.Diagnostics;
-using System.Net;
 using System.Text;
-using FolkerKinzel.Strings;
 
 namespace Benchmarks;
 
@@ -74,7 +73,7 @@ public static class StringBuilderExtension
         }
     }
 
-    private static void AppendHexEncoded(this StringBuilder sb, char c) 
+    private static void AppendHexEncoded(this StringBuilder sb, char c)
         => _ = sb.Append('%').Append(ToHexDigit(c >> 4)).Append(ToHexDigit(c & 0x0F));
 
     private static char ToHexDigit(int i) =>

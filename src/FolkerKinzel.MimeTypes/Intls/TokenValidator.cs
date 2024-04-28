@@ -51,7 +51,7 @@ internal static class TokenValidator
 
         if (value.IsEmpty)
         {
-            return false; 
+            return false;
         }
 
         for (int i = 0; i < value.Length; i++)
@@ -68,9 +68,9 @@ internal static class TokenValidator
     {
         // RFC 2231 defines 3 additional characters that are not allowed
         // in a parameter key:
-        if(parameterKeyValidation)
+        if (parameterKeyValidation)
         {
-            switch (c) 
+            switch (c)
             {
                 case '*':
                 case '\'':
@@ -78,7 +78,7 @@ internal static class TokenValidator
                     return false;
                 default:
                     break;
-            
+
             }
         }
 

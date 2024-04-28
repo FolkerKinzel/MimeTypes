@@ -1,6 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-
-namespace FolkerKinzel.MimeTypes.Intls.Tests;
+﻿namespace FolkerKinzel.MimeTypes.Intls.Tests;
 
 [TestClass]
 public class TokenValidatorTests

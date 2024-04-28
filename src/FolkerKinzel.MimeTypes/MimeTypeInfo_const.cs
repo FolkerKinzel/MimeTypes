@@ -1,6 +1,4 @@
-﻿using System.ComponentModel;
-
-namespace FolkerKinzel.MimeTypes;
+﻿namespace FolkerKinzel.MimeTypes;
 
 public readonly partial struct MimeTypeInfo
 {
@@ -12,8 +10,8 @@ public readonly partial struct MimeTypeInfo
     private const int MEDIA_TYPE_LENGTH_SHIFT = 16;
 
 
-    
 
 
-    
+
+
 }

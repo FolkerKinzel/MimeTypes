@@ -24,7 +24,7 @@ public readonly partial struct MimeTypeParameterInfo : ICloneable
     /// The copy is built on a separate <see cref="string"/>,
     /// which is case-normalized and only as long as needed.
     /// </remarks>
-    public MimeTypeParameterInfo Clone() => IsEmpty ? default 
+    public MimeTypeParameterInfo Clone() => IsEmpty ? default
                                                     : new MimeTypeParameterInfo(_parameterString.ToString().AsMemory(), _idx);
 
 }

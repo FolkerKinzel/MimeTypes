@@ -1,6 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
-public sealed partial class MimeTypeParameter 
+public sealed partial class MimeTypeParameter
 {
     /// <summary>
     /// Computes a hash code for the instance.

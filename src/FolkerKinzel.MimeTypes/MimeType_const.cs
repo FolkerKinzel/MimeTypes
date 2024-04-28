@@ -1,8 +1,6 @@
-﻿using System.ComponentModel;
+﻿namespace FolkerKinzel.MimeTypes;
 
-namespace FolkerKinzel.MimeTypes;
-
-public sealed partial class MimeType 
+public sealed partial class MimeType
 {
     /// <summary>
     /// Minimum count of characters at which a line of an Internet Media Type <see cref="string"/> is wrapped.

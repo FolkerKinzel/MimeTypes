@@ -18,6 +18,9 @@
 
 	<ItemGroup>
 		<Using Remove="System.Net.Http" />
+    <Using Include="FolkerKinzel.Strings"/>
+    <Using Include="Microsoft.VisualStudio.TestTools.UnitTesting"/>
+    <Using Include="System.Text"/>
 	</ItemGroup>
 
 	<ItemGroup>

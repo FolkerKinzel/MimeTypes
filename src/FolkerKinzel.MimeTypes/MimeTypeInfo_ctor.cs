@@ -76,7 +76,7 @@ public readonly partial struct MimeTypeInfo
 
         this._mimeTypeString = sb.ToString().AsMemory();
     }
- 
+
 
     private MimeTypeInfo(in ReadOnlyMemory<char> mimeTypeString, int idx)
     {

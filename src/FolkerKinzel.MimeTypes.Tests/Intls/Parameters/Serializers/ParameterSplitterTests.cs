@@ -1,7 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
-using FolkerKinzel.MimeTypes.Tests;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text;
+﻿using FolkerKinzel.MimeTypes.Tests;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Tests;
 
@@ -22,7 +19,7 @@ public class ParameterSplitterTests
         var builder = new StringBuilder();
         ParameterSerializer.SplitParameter(builder, input, 70, para.Key.Length, para.Language?.Length ?? 0, false, enc, 0);
 
-        Assert.AreNotEqual(1, builder.ToString().GetLinesCount());   
+        Assert.AreNotEqual(1, builder.ToString().GetLinesCount());
     }
 
 

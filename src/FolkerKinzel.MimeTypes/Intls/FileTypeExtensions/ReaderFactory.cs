@@ -1,5 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Properties;
-using System.Reflection;
+﻿using System.Reflection;
 
 namespace FolkerKinzel.MimeTypes.Intls.FileTypeExtensions;
 
@@ -28,7 +27,7 @@ internal static class ReaderFactory
             ? throw new InvalidDataException(string.Format("The resource {0} was not found.", resourcePath))
             : new StreamReader(stream);
 #else
-            return new StreamReader(stream!);
+        return new StreamReader(stream!);
 #endif
     }
 }

@@ -1,6 +1,5 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
-using FolkerKinzel.Strings;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
@@ -40,10 +39,10 @@ internal static class ParameterParser
 
             if (splitIndicatorIndex != -1) // splitted
             {
-                sb ??= new StringBuilder(parameter.Key.Length + 
-                                         parameter.Value.Length + 
-                                         parameter.Language.Length + 
-                                         parameter.CharSet.Length + 
+                sb ??= new StringBuilder(parameter.Key.Length +
+                                         parameter.Value.Length +
+                                         parameter.Language.Length +
+                                         parameter.CharSet.Length +
                                          10);
 
                 int startOfSplitIndex = splitIndicatorIndex + 1;
@@ -72,7 +71,7 @@ internal static class ParameterParser
                         : sb.Append(currentKey.AsSpan(0, currentKey.Length - 1)).Append('=');
                 }
 
-                if(!_Int.TryParse(parameter.Key.Slice(startOfSplitIndex), out int currentSplitIndex) ||
+                if (!_Int.TryParse(parameter.Key.Slice(startOfSplitIndex), out int currentSplitIndex) ||
                     ++previousSplitIndex != currentSplitIndex)
                 {
                     yield break;
@@ -94,7 +93,7 @@ internal static class ParameterParser
                 if (!StringBuilderIsNullOrEmpty(sb))
                 {
                     // return previous splitted parameter that might be in the StringBuilder
-                    if (TryParseParameter(sb, out concatenated) && concatenated.Key.IsToken(true)) 
+                    if (TryParseParameter(sb, out concatenated) && concatenated.Key.IsToken(true))
                     {
                         yield return concatenated;
                     }
@@ -117,7 +116,7 @@ internal static class ParameterParser
 
 
         // The last parameter, which might be in the StringBuilder:
-        if (!StringBuilderIsNullOrEmpty(sb) && 
+        if (!StringBuilderIsNullOrEmpty(sb) &&
             TryParseParameter(sb, out concatenated) &&
             concatenated.Key.IsToken(true))
         {

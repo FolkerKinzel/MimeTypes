@@ -1,7 +1,4 @@
-﻿using System.Net;
-using System.Text;
-
-namespace FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
+﻿namespace FolkerKinzel.MimeTypes.Intls.Parameters.Encodings;
 
 internal static class UrlEncodingHelper
 {
@@ -11,7 +8,7 @@ internal static class UrlEncodingHelper
         var bytes = encoding.GetBytes(value);
 
         return StaticStringMethod.Create(bytes.Length * 3, bytes, encodeContent);
-        
+
         ///////////////////////////////////////////////////////////////
 
         static void encodeContent(Span<char> chars, byte[] bts)

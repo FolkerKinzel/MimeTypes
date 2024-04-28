@@ -22,9 +22,9 @@ public readonly partial struct MimeTypeParameterInfo
     /// <returns>A <see cref="string"/> representation of the instance.</returns>
     public string ToString(bool urlFormat)
     {
-        if(IsEmpty) 
+        if (IsEmpty)
         {
-            return string.Empty; 
+            return string.Empty;
         }
 
         var sb = new StringBuilder();

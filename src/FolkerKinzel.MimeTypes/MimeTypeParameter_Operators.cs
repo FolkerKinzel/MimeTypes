@@ -1,6 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
-public sealed partial class MimeTypeParameter 
+public sealed partial class MimeTypeParameter
 {
     /// <summary>
     /// Returns a value that indicates whether two specified <see cref="MimeTypeParameter"/> instances are equal.

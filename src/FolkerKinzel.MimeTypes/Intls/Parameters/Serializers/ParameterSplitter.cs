@@ -1,7 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
-using System.Runtime.ConstrainedExecution;
-
-namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
+﻿namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
 internal static class ParameterSplitter
 {
@@ -125,7 +122,7 @@ internal static class ParameterSplitter
         if (enc == EncodingAction.UrlEncode)
         {
             _ = tmp.Append(ParameterSerializer.UTF_8);
-                CopyLanguageIntoTmp(worker, tmp);
+            CopyLanguageIntoTmp(worker, tmp);
         }
 
         return (counterIdx, normalValueStart);
@@ -140,7 +137,7 @@ internal static class ParameterSplitter
 
                 if (c.IsTokenChar(true))
                 {
-                    tmp.Append(c); 
+                    tmp.Append(c);
                 }
                 else
                 {
@@ -154,7 +151,7 @@ internal static class ParameterSplitter
             const char languageIndicator = '\'';
 
             _ = tmp.Append(languageIndicator);
-                   
+
             for (int i = source.IndexOf(languageIndicator) + 1; i < source.Length; i++)
             {
                 char c = source[i];

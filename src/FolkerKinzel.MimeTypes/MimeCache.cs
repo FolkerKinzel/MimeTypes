@@ -26,7 +26,7 @@ namespace FolkerKinzel.MimeTypes;
 /// </remarks>
 public static class MimeCache
 {
-    
+
     internal const string DEFAULT_EXTENSION_WITHOUT_PERIOD = "bin";
 
     /// <summary>
@@ -105,7 +105,7 @@ public static class MimeCache
                     : GetMimeTypeFromResources(fileTypeExtension);
 
         ///////////////////////////////////////////////////////////////
-        
+
         static bool TryGetMimeTypeFromCache(ReadOnlySpan<char> fileTypeExtension, [NotNullWhen(true)] out string? mimeType)
         {
             Debug.Assert(!fileTypeExtension.Contains('.'));
@@ -149,7 +149,7 @@ public static class MimeCache
 
             var cache = _extCache.Value;
 
-            if(cache.TryGetValue(GetHash(mimeType), out (string Extension, string DottedExtension) value))
+            if (cache.TryGetValue(GetHash(mimeType), out (string Extension, string DottedExtension) value))
             {
                 fileTypeExtension = leadingDot ? value.DottedExtension : value.Extension;
                 return true;
@@ -226,7 +226,7 @@ public static class MimeCache
 
         /////////////////////////////////////////////////////////////
 
-        static void TrimExcess(ConcurrentDictionary<int,(string, string)> cache)
+        static void TrimExcess(ConcurrentDictionary<int, (string, string)> cache)
         {
             int capacity = Math.Max(_capacity, DefaultCapacity);
 

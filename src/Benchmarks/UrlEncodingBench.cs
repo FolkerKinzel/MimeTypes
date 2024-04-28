@@ -1,7 +1,7 @@
-﻿using System.Net;
-using System.Text;
-using BenchmarkDotNet.Attributes;
+﻿using BenchmarkDotNet.Attributes;
 using FolkerKinzel.Strings;
+using System.Net;
+using System.Text;
 
 namespace Benchmarks;
 

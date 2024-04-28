@@ -1,5 +1,4 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
-using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
+﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
 namespace FolkerKinzel.MimeTypes;
@@ -26,12 +25,12 @@ public readonly partial struct MimeTypeParameterInfo
         parameterInfo = default;
         starred = false;
 
-        ParameterIndexes idx; 
+        ParameterIndexes idx;
 
         if (sanitizeParameterString)
         {
             var sanitizer = new ParameterSanitizer();
-            
+
             if (!sanitizer.RepairParameterString(ref parameterString))
             {
                 return false;
@@ -47,12 +46,12 @@ public readonly partial struct MimeTypeParameterInfo
             Debug.Assert(!idx.Span.Slice(0, idx.KeyLength).ContainsWhiteSpace()); // removed in the first run
         }
 
-        if(!idx.Verify())
+        if (!idx.Verify())
         {
             return false;
         }
 
-        if(idx.LanguageLength != 0 && !IetfLanguageTag.Validate(idx.Span.Slice(idx.LanguageStart, idx.LanguageLength)))
+        if (idx.LanguageLength != 0 && !IetfLanguageTag.Validate(idx.Span.Slice(idx.LanguageStart, idx.LanguageLength)))
         {
             return false;
         }
@@ -64,7 +63,7 @@ public readonly partial struct MimeTypeParameterInfo
 
         parameterInfo = new MimeTypeParameterInfo(in parameterString, idx.InitMimeTypeParameterCtorIdx());
         starred = idx.Starred;
-        return true;    
+        return true;
     }
 
 }

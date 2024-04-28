@@ -54,7 +54,7 @@ public sealed partial class MimeType
     /// <exception cref="ArgumentNullException"><paramref name="builder"/> is <c>null</c>.</exception>
     public StringBuilder AppendTo(StringBuilder builder,
                                   MimeFormats options = MimeFormats.Default,
-                                  int maxLineLength = MimeType.MinLineLength) => 
+                                  int maxLineLength = MimeType.MinLineLength) =>
         builder is null ? throw new ArgumentNullException(nameof(builder))
                         : AppendToInternal(builder, options, maxLineLength);
 
@@ -69,13 +69,13 @@ public sealed partial class MimeType
 
         int startOfMimeType = builder.Length;
 
-        _ = builder.EnsureCapacity(builder.Length + 
-                                   MediaType.Length + 
+        _ = builder.EnsureCapacity(builder.Length +
+                                   MediaType.Length +
                                    1 + // "/"
-                                   SubType.Length + 
+                                   SubType.Length +
                                    (HasParameters ? _dic.Count : 0) * MimeTypeParameter.STRING_LENGTH);
         _ = builder.Append(MediaType).Append('/').Append(SubType);
-        
+
 
         if (options != MimeFormats.IgnoreParameters)
         {

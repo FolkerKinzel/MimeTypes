@@ -1,5 +1,4 @@
 ﻿using FolkerKinzel.MimeTypes.Intls.Parameters.Serializers.Builders;
-using System;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
@@ -10,7 +9,7 @@ namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 internal static class ParameterSerializer
 {
     internal const string UTF_8 = "utf-8";
-    
+
 
     /// <summary>
     /// Appends a RFC 2231 serialized <see cref="MimeTypeParameter"/>

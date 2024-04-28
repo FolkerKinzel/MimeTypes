@@ -3,7 +3,7 @@ using FolkerKinzel.MimeTypes.Properties;
 
 namespace FolkerKinzel.MimeTypes;
 
-public readonly partial struct MimeTypeInfo 
+public readonly partial struct MimeTypeInfo
 {
     private static MimeTypeInfo ParseInternal(ref ReadOnlyMemory<char> value)
     {
@@ -17,7 +17,7 @@ public readonly partial struct MimeTypeInfo
     {
         mimeType = default;
 
-        if(value.IsEmpty)
+        if (value.IsEmpty)
         {
             return false;
         }
@@ -48,7 +48,7 @@ public readonly partial struct MimeTypeInfo
         // If the mediaPartSpan contains whitespace, repair it:
         if ((hasParameters && hasComment) || mediaPartSpan.ContainsWhiteSpace())
         {
-            return ReAllocate(capacity:      value.Length,
+            return ReAllocate(capacity: value.Length,
                               hasParameters: hasParameters,
                               mediaPartSpan: mediaPartSpan,
                               parameterSpan: hasParameters ? span.Slice(parameterSeparatorIndex) : [],

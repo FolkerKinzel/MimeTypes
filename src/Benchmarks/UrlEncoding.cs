@@ -1,10 +1,8 @@
-﻿using System;
+﻿using FolkerKinzel.Strings;
+using System;
 using System.Diagnostics;
 using System.Diagnostics.CodeAnalysis;
-using System.Net;
 using System.Text;
-using FolkerKinzel.Strings;
-using Microsoft.Diagnostics.Tracing.Stacks.Formats;
 
 namespace Benchmarks;
 
@@ -73,7 +71,7 @@ internal static class UrlEncoding
                 throw new EncoderFallbackException();
             }
 
-            switch(c)
+            switch (c)
             {
                 case '+':
                     bytes[byteIndex++] = spaceChar;
@@ -92,6 +90,6 @@ internal static class UrlEncoding
     }
 
 
-    
+
 
 }

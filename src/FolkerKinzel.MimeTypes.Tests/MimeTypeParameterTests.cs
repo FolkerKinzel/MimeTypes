@@ -1,7 +1,4 @@
-﻿using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System.Text;
-
-namespace FolkerKinzel.MimeTypes.Tests;
+﻿namespace FolkerKinzel.MimeTypes.Tests;
 
 [TestClass]
 public class MimeTypeParameterTests
@@ -61,7 +58,7 @@ public class MimeTypeParameterTests
         var mime = MimeType.Create("application", "x-stuff").AppendParameter("key", "value");
         var sb = new StringBuilder();
         mime.Parameters.First().AppendTo(sb);
-        Assert.AreEqual("key=value", sb.ToString()); 
+        Assert.AreEqual("key=value", sb.ToString());
     }
 
 }

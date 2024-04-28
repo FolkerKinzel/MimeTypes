@@ -1,6 +1,4 @@
-﻿using System.Text.RegularExpressions;
-
-namespace MimeResourceCompiler.Classes;
+﻿namespace MimeResourceCompiler.Classes;
 
 public abstract class ResourceParser : IResourceParser
 {
