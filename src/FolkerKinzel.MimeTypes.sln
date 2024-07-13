@@ -20,6 +20,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Examples", "Examples\Examples.csproj", "{3E377407-790E-47E7-9E09-77E54B314F31}"
 EndProject
+Project("{7CF6DF6D-3B04-46F8-A40B-537D21BCA0B4}") = "FolkerKinzel.MimeTypes.Reference.Website", "FolkerKinzel.MimeTypes.Reference.Website\FolkerKinzel.MimeTypes.Reference.Website.shfbproj", "{93679F4B-3B37-49FB-B621-FFFD40E37092}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -48,6 +50,8 @@ Global
 		{3E377407-790E-47E7-9E09-77E54B314F31}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E377407-790E-47E7-9E09-77E54B314F31}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E377407-790E-47E7-9E09-77E54B314F31}.Release|Any CPU.Build.0 = Release|Any CPU
+		{93679F4B-3B37-49FB-B621-FFFD40E37092}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{93679F4B-3B37-49FB-B621-FFFD40E37092}.Release|Any CPU.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
