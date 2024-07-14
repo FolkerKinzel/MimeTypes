@@ -13,18 +13,18 @@ public class Options(string outputPath, bool createWrapper, bool createReadme, b
     private readonly bool _logToConsole = logToConsole;
     private readonly bool _createWrapper = createWrapper;
 
-    [Option('p', "path", Required = false, HelpText = "Path to the directory, which gets the compiled output.")]
+    [Option('p', "path", Required = false, HelpText = "Path to the directory that gets the compiled output.")]
     public string OutputPath => _outputPath ?? Environment.GetFolderPath(Environment.SpecialFolder.DesktopDirectory);
 
-    [Option('w', "wrapper", Required = false, Default = true, HelpText = "False, to not wrap the output in a separate directory.")]
+    [Option('w', "wrapper", Required = false, Default = true, HelpText = "Set the argument to not wrap the output in a separate directory.")]
     public bool CreateWrapper => _createWrapper;
 
-    [Option('r', "readme", Required = false, Default = true, HelpText = "False, to create no Readme.txt file.")]
+    [Option('r', "readme", Required = false, Default = true, HelpText = "Set the argument to create no Readme.txt file.")]
     public bool CreateReadme => _createReadme;
 
-    [Option('l', "logfile", Required = false, Default = false, HelpText = "True, to create a log file.")]
+    [Option('l', "logfile", Required = false, Default = false, HelpText = "Set the argument to create a log file.")]
     public bool CreateLogFile => _createLogFile;
 
-    [Option('c', "consolelog", Required = false, Default = false, HelpText = "True, to log to the console.")]
+    [Option('c', "consolelog", Required = false, Default = false, HelpText = "Set the argument to write debug logging to the console.")]
     public bool LogToConsole => _logToConsole;
 }
