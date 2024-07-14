@@ -8,6 +8,7 @@ public sealed class Compiler : IDisposable
     private const string DEFAULT_MIME_TYPE = "application/octet-stream";
     private const int LIST_CAPACITY = 2048;
     private readonly IApacheData _apacheData;
+    private readonly IMimeDBData _mimeDBData;
     private readonly IMimeFile _mimeFile;
     private readonly IIndexFile _indexFile;
     private readonly ICompiledFile _extensionFile;
@@ -18,6 +19,7 @@ public sealed class Compiler : IDisposable
     private bool _disposedValue;
 
     public Compiler(IApacheData apacheData,
+                    IMimeDBData mimeDBData,
                     IMimeFile mimeFile,
                     IIndexFile indexFile,
                     ICompiledFile extensionFile,
@@ -27,6 +29,7 @@ public sealed class Compiler : IDisposable
                     ICompressor compressor)
     {
         _apacheData = apacheData;
+        _mimeDBData = mimeDBData;
         _mimeFile = mimeFile;
         _indexFile = indexFile;
         this._extensionFile = extensionFile;
@@ -93,6 +96,7 @@ public sealed class Compiler : IDisposable
         var list = new List<Entry>(LIST_CAPACITY);
         CollectResourceFile(list, _defaultEntry);
         CollectApacheData(list);
+        CollectMimeDBData(list);
         CollectResourceFile(list, _addendum);
 
         _log.Debug("Data completely collected.");
@@ -125,6 +129,15 @@ public sealed class Compiler : IDisposable
         _log.Debug("Apache data completely parsed.");
         _apacheData.Dispose();
 
+    }
+
+    private void CollectMimeDBData(List<Entry> list)
+    {
+        _log.Debug("Start parsing the mime-db data.");
+
+        list.AddRange(_mimeDBData.GetData());
+
+        _log.Debug("mime-db data completely parsed.");
     }
 
     private void Dispose(bool disposing)

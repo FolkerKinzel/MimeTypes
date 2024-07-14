@@ -7,6 +7,8 @@ namespace MimeResourceCompiler;
 /// </summary>
 internal sealed class Factory : IDisposable
 {
+    private static readonly HttpClient _httpClient = new();
+
     private readonly IOutputDirectory _outputDirectory;
     private readonly Compiler _compiler;
     private readonly ReadmeFile _readmeFile;
@@ -16,7 +18,8 @@ internal sealed class Factory : IDisposable
         //throw new ArgumentNullException("name");
 
         _outputDirectory = new OutputDirectory(options.OutputPath, options.CreateWrapper, logger.ForContext<OutputDirectory>());
-        var apacheData = new ApacheData(logger.ForContext<ApacheData>());
+        var apacheData = new ApacheData(_httpClient, logger.ForContext<ApacheData>());
+        var mimeDBData = new MimeDBData(_httpClient, logger.ForContext<MimeDBData>());
         var streamFactory = new StreamFactory(_outputDirectory, logger.ForContext<StreamFactory>());
         var mimeFile = new MimeFile(streamFactory, logger.ForContext<MimeFile>());
         var indexFile = new IndexFile(streamFactory, logger.ForContext<IndexFile>());
@@ -26,7 +29,7 @@ internal sealed class Factory : IDisposable
         var defaultEntry = new DefaultEntry(resourceLoader, logger.ForContext<Addendum>());
         var addendum = new Addendum(resourceLoader, logger.ForContext<Addendum>());
         var compressor = new Compressor(logger.ForContext<Compressor>());
-        _compiler = new Compiler(apacheData, mimeFile, indexFile, extensionFile, defaultEntry, addendum, logger.ForContext<Compiler>(), compressor);
+        _compiler = new Compiler(apacheData, mimeDBData, mimeFile, indexFile, extensionFile, defaultEntry, addendum, logger.ForContext<Compiler>(), compressor);
         _readmeFile = new ReadmeFile(_outputDirectory, resourceLoader, logger.ForContext<ReadmeFile>());
     }
 

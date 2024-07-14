@@ -1,4 +1,7 @@
-﻿namespace MimeResourceCompiler.Classes;
+﻿using System.Net.Http;
+using System.Text.Json;
+
+namespace MimeResourceCompiler.Classes;
 
 /// <summary>
 /// Represents the Apache file http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types.
@@ -7,7 +10,7 @@ public sealed class ApacheData : IApacheData, IDisposable
 {
     private const string APACHE_URL = @"http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types";
 
-    private static readonly HttpClient _httpClient = new();
+    private readonly HttpClient _httpClient;
     private readonly StreamReader _reader;
     private readonly ILogger _log;
     private readonly List<Entry> _list = new(8);
@@ -16,12 +19,13 @@ public sealed class ApacheData : IApacheData, IDisposable
     /// <summary>
     /// ctor
     /// </summary>
-    public ApacheData(ILogger log)
+    public ApacheData(HttpClient client, ILogger log)
     {
-        this._log = log;
+        _httpClient = client;
+        _log = log;
 
         _log.Debug("Start connecting to Apache data.");
-        Stream data = _httpClient.GetStreamAsync(APACHE_URL).GetAwaiter().GetResult();
+        Stream data = _httpClient.GetStreamAsync(APACHE_URL).Result;
         _log.Debug("Apache data successfully connected.");
         _reader = new StreamReader(data);
     }
