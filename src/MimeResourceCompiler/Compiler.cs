@@ -107,13 +107,15 @@ public sealed class Compiler : IDisposable
     private void CollectResourceFile(List<Entry> list, IResourceParser parser)
     {
         _log.Debug("Start parsing the resource {0}.", parser.FileName);
-
+        
+        int initialCount = list.Count;
         Entry? entry;
         while ((entry = parser.GetNextLine()) is not null)
         {
             list.Add(entry);
         }
 
+        _log.Information("{0} entries parsed from {1} file.", list.Count - initialCount, parser.FileName);
         _log.Debug("The resource {0} has been completely parsed.", parser.FileName);
     }
 
@@ -121,13 +123,26 @@ public sealed class Compiler : IDisposable
     private void CollectApacheData(List<Entry> list)
     {
         _log.Debug("Start parsing the Apache data.");
+        int initialCount = list.Count;
         IEnumerable<Entry>? line;
         while ((line = _apacheData.GetNextLine()) != null)
         {
             list.AddRange(line);
         }
-        _log.Debug("Apache data completely parsed.");
+
         _apacheData.Dispose();
+
+        int count = list.Count - initialCount;
+
+        if (count == 0)
+        {
+            throw new FormatException("The Apache file probably has a new format.");
+        }
+
+        _log.Information("{0} entries parsed from the Apache file.", count);
+
+        _log.Debug("Apache data completely parsed.");
+
 
     }
 
@@ -135,7 +150,7 @@ public sealed class Compiler : IDisposable
     {
         _log.Debug("Start parsing the mime-db data.");
 
-        list.AddRange(_mimeDBData.GetData());
+        _mimeDBData.GetData(list);
 
         _log.Debug("mime-db data completely parsed.");
     }

@@ -2,5 +2,5 @@
 
 public interface IMimeDBData
 {
-    List<Entry> GetData();
+    void GetData(List<Entry> list);
 }

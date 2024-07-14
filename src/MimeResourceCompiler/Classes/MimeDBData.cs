@@ -21,35 +21,72 @@ public sealed class MimeDBData : IMimeDBData
         _log = log;
     }
 
-    public List<Entry> GetData()
+    public void GetData(List<Entry> list)
     {
-        var list = new List<Entry>();
-
         _log.Debug("Start connecting to mime-db data.");
         byte[] bytes = _httpClient.GetByteArrayAsync(MIME_DB_URL).Result;
         _log.Debug("Successfully connected to mime-db data.");
-        var entry = new MimeDBEntry();
-        Utf8JsonReader reader = new Utf8JsonReader(bytes);
 
+        var reader = new Utf8JsonReader(bytes);
         string mimeType = "";
+
+        ReadOnlySpan<byte> extKey = "extensions"u8;
+
+        int count = 0;
 
         while (reader.Read())
         {
-            string s = Encoding.UTF8.GetString(reader.ValueSpan);
-
-            if (reader.CurrentDepth == 1 && reader.TokenType == JsonTokenType.PropertyName)
+            if (reader.CurrentDepth == 1)
             {
-                entry.Clear();
-                entry.MimeType = s;
+                if (reader.TokenType == JsonTokenType.PropertyName)
+                {
+                    mimeType = Encoding.UTF8.GetString(reader.ValueSpan);
+                }
             }
-            else if(reader.CurrentDepth == 2 && reader.TokenType == JsonTokenType.PropertyName && StringComparer.Ordinal.Equals("extensions", s))
+            else if (reader.CurrentDepth == 2)
             {
+                if (reader.TokenType != JsonTokenType.PropertyName)
+                {
+                    continue;
+                }
 
+                if (!extKey.SequenceEqual(reader.ValueSpan))
+                {
+                    continue;
+                }
+
+                reader.Read();
+
+                if (reader.TokenType != JsonTokenType.StartArray)
+                {
+                    throw new FormatException("mime-DB probably changed the schema.");
+                }
+
+                while (true)
+                {
+                    reader.Read();
+
+                    if (reader.TokenType != JsonTokenType.String)
+                    {
+                        break;
+                    }
+
+                    string? ext = reader.GetString();
+
+                    if (ext != null)
+                    {
+                        list.Add(new Entry(mimeType, ext));
+                        count++;
+                    }
+                }
             }
         }
 
-        
+        if (count == 0)
+        {
+            throw new FormatException("mime-DB probably changed the schema.");
+        }
 
-        return list;
+        _log.Information("{0} mime-db entries parsed.", count);
     }
 }
