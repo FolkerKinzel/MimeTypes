@@ -11,19 +11,40 @@ namespace MimeResourceCompiler;
 /// <remarks>
 /// <para>
 /// The main part of the data used to find appropriate file type extensions for MIME types or to find an appropriate
-/// MIME type for a file type extension comes from http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types .
-/// (Change log at: https://svn.apache.org/viewvc/httpd/httpd/trunk/docs/conf/mime.types?view=log .)
-/// The program loads the current version of this file from the internet each time it runs and enriches these data with the
-/// entries from the resource file Resources\Addendum.csv. The data in this file is collected at https://wiki.selfhtml.org/wiki/MIME-Type/%C3%9Cbersicht ,
-/// at https://mimesniff.spec.whatwg.org/  and from several articles in WIKIPEDIA.
+/// MIME type for a file type extension comes from
 /// </para>
+/// <list type="number">
+/// <item>
+/// Apache (http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types) 
+/// [Change log at: https://svn.apache.org/viewvc/httpd/httpd/trunk/docs/conf/mime.types?view=log].
+/// The program loads the current version of this file from the internet each time it runs and enriches these data with the
+/// entries from
+/// </item>
+/// <item>
+/// mime-db (https://cdn.jsdelivr.net/gh/jshttp/mime-db@master/db.json) [Change log: https://cdn.jsdelivr.net/gh/jshttp/mime-db@master/HISTORY.md],
+/// </item>
+/// <item>
+/// and the resource file Resources\Addendum.csv. The data in this file is self collected
+/// <list type="bullet">
+/// <item>
+/// at https://wiki.selfhtml.org/wiki/MIME-Type/%C3%9Cbersicht ,
+/// </item>
+/// <item>
+/// at https://mimesniff.spec.whatwg.org/,
+/// </item>
+/// <item>
+/// and from several articles in WIKIPEDIA.
+/// </item>
+/// </list>
+/// </item>
+/// </list>
 /// <para>
-/// The resource file Resources\Addendum.csv allows to add entries that are missing in the Apache file. Entries in Addendum.csv don't produce
-/// duplicates even if they are already present in the Apache file.
+/// The resource file Resources\Addendum.csv allows to add entries that are missing in the Apache file and in mime-db. Entries in Addendum.csv don't produce
+/// duplicates even if they are already present in the Apache file or mime-db.
 /// </para>
 /// <para>
 /// The resource file Resources\Default.csv allows to determine the order in which entries are selected. The Apache file is mostly in alphabetical
-/// order: That produces not always the expected results.
+/// order: That produces not always the expected results. Entries in Resources\Default.csv can never be overwritten by data from external sources.
 /// </para>
 /// </remarks>
 internal class Program
