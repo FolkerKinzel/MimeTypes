@@ -1,5 +1,6 @@
 text/html htm
 text/javascript js
+text/vnd.dvb.subtitle sub
 text/cache-manifest appcache
 text/calendar ics
 text/css css
@@ -18,7 +19,6 @@ text/vnd.curl curl
 text/vnd.curl.dcurl dcurl
 text/vnd.curl.mcurl mcurl
 text/vnd.curl.scurl scurl
-text/vnd.dvb.subtitle sub
 text/vnd.fly fly
 text/vnd.fmi.flexstor flx
 text/vnd.graphviz gv
