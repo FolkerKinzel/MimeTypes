@@ -87,6 +87,6 @@ public sealed class MimeDBData : IMimeDBData
             throw new FormatException("mime-DB probably changed the schema.");
         }
 
-        _log.Information("{0} mime-db entries parsed.", count);
+        _log.Information("{0} entries parsed from mime-db.", count);
     }
 }

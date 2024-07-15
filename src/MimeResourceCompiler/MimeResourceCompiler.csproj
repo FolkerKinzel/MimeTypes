@@ -21,7 +21,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Remove="Classes\DllCache.cs" />
+    <Compile Remove="Classes\OutputDirectory.cs" />
     <Compile Remove="IDllCache.cs" />
+    <Compile Remove="IOutputDirectory.cs" />
     <Compile Remove="Records.cs" />
     <Compile Remove="StringExtension.cs" />
   </ItemGroup>
@@ -31,7 +33,7 @@
   <ItemGroup>
     <EmbeddedResource Include="Resources\Addendum.csv" />
     <EmbeddedResource Include="Resources\Default.csv" />
-    <EmbeddedResource Include="Resources\Readme.txt" />
+    <EmbeddedResource Include="Resources\_Readme.txt" />
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="CommandLineParser" Version="2.9.1" />

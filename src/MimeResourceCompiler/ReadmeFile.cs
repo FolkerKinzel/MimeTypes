@@ -3,10 +3,10 @@
 /// <summary>
 /// Represents the readme file Readme.txt.
 /// </summary>
-public class ReadmeFile(IOutputDirectory outputDirectory, IResourceLoader resourceLoader, ILogger log)
+public class ReadmeFile(string outputDirectory, IResourceLoader resourceLoader, ILogger log)
 {
-    private const string FILENAME = "Readme.txt";
-    private readonly IOutputDirectory _outputDirectory = outputDirectory;
+    private const string FILENAME = "_Readme.txt";
+    private readonly string _outputDirectory = outputDirectory;
     private readonly IResourceLoader _resourceLoader = resourceLoader;
     private readonly ILogger _log = log;
 
@@ -15,7 +15,7 @@ public class ReadmeFile(IOutputDirectory outputDirectory, IResourceLoader resour
     /// </summary>
     public void Create()
     {
-        string path = Path.Combine(_outputDirectory.FullName, FILENAME);
+        string path = Path.Combine(_outputDirectory, FILENAME);
         File.WriteAllBytes(path, LoadReadmeFile());
         _log.Debug("{0} successfully created.", path);
     }

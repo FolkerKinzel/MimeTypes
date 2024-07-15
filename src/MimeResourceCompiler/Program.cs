@@ -49,7 +49,7 @@ namespace MimeResourceCompiler;
 /// </remarks>
 internal class Program
 {
-    private const string LOG_FILE_NAME = "LastBuild.log";
+    private const string DIRECTORY_NAME = "Mime Resources";
 
     private static void Main(string[] args)
     {
@@ -61,13 +61,10 @@ internal class Program
 
     private static void RunCompiler(Options options)
     {
-        string? logFilePath = Path.Combine(Environment.CurrentDirectory, LOG_FILE_NAME);
-        using Logger log = InitializeLogger(options.CreateLogFile ? logFilePath : null, options.LogToConsole);
-
         try
         {
-
-            using var factory = new Factory(options, log);
+            string outDir = CreateOutputDirectory(options.OutputPath, options.CreateWrapper);
+            using var factory = new Factory(outDir, options);
 
             using (Compiler compiler = factory.ResolveCompiler())
             {
@@ -79,22 +76,39 @@ internal class Program
                 factory.ResolveReadmeFile().Create();
             }
 
-            log.Information("Mime resources successfully created at {outDir}.", factory.ResolveOutputDirectory().FullName);
-            log.Information("A log file has been created at {logFilePath}.", logFilePath);
+            ILogger log = factory.ResolveLogger();
+
+            log.Information("Mime resources successfully created at {outDir}.", outDir);
+            log.Information("A log file has been created at {logFilePath}.", factory.LogFilePath);
         }
         catch (Exception e)
         {
-            log.Fatal(e.Message);
-            log.Debug(e, "");
+#if DEBUG
+            Console.WriteLine(e);
+#else
+            Console.Error.WriteLine(e.Message);
+#endif
             Environment.ExitCode = -1;
         }
+    }
+
+    private static string CreateOutputDirectory(string rootDirectory, bool createWrapper)
+    {
+        rootDirectory = Path.GetFullPath(rootDirectory);
+
+        if (createWrapper)
+        {
+            rootDirectory = Path.Combine(rootDirectory, DIRECTORY_NAME);
+        }
+
+        _ = Directory.CreateDirectory(rootDirectory);
+
+        return rootDirectory;
     }
 
 
     private static void OnCommandLineParseErrors(IEnumerable<Error> errs)
     {
-        using Logger log = InitializeLogger(null, false);
-
         foreach (Error err in errs)
         {
             switch (err.Tag)
@@ -107,35 +121,12 @@ internal class Program
                     break;
             }
 
-            log.Fatal(err?.ToString() ?? "");
+            Console.Error.WriteLine(err);
             Environment.ExitCode = -1;
         }
     }
 
 
-    private static Logger InitializeLogger(string? logFilePath, bool logToConsole)
-    {
-        LogEventLevel consoleLogEventLevel = logToConsole ? LogEventLevel.Debug : LogEventLevel.Information;
-
-        LoggerConfiguration config = new LoggerConfiguration()
-                                    .MinimumLevel.Debug()
-                                    .WriteTo.Console(restrictedToMinimumLevel: consoleLogEventLevel);
-
-        if (logFilePath is not null)
-        {
-            if (File.Exists(logFilePath))
-            {
-                try
-                {
-                    File.Delete(logFilePath);
-                }
-                catch
-                { }
-            }
-            _ = config.WriteTo.File(logFilePath);
-        }
-
-        return config.CreateLogger();
-    }
+    
 
 }

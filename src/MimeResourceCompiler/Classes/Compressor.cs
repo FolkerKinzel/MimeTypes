@@ -6,6 +6,8 @@ public class Compressor(ILogger log) : ICompressor
 
     public void RemoveUnreachableEntries(List<Entry> list)
     {
+        int removedItemsCount = 0;
+
         for (int i = list.Count - 1; i >= 1; i--)
         {
             bool equalsMimeType = false;
@@ -30,9 +32,12 @@ public class Compressor(ILogger log) : ICompressor
                 {
                     list.RemoveAt(i);
                     _log.Debug("  {0} removed.", currentEntry);
+                    removedItemsCount++;
                     break;
                 }
             }
         }
+
+        _log.Information("{0} unreachable entries removed.", removedItemsCount);
     }
 }
