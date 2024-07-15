@@ -1,7 +1,7 @@
 ﻿namespace MimeResourceCompiler.Classes;
 
 /// <summary>
-/// Represents the compiled file "Mime.csv".
+/// Represents the resource file "Mime.csv", which is used to retrieve an appropriate file type extension for a given MIME type.
 /// </summary>
 public sealed class MimeFile(IStreamFactory streamFactory, ILogger log)
     : CompiledFile(streamFactory, log), IMimeFile

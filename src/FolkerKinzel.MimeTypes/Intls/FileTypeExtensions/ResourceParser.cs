@@ -15,8 +15,8 @@ internal static class ResourceParser
     internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
     {
         using StreamReader reader = ReaderFactory.InitExtensionFileReader();
-
         string? line;
+
         while ((line = reader.ReadLine()) is not null)
         {
             int separatorIndex = line.IndexOf(SEPARATOR);
@@ -54,13 +54,6 @@ internal static class ResourceParser
         {
             string? line = reader.ReadLine();
 
-#if DEBUG
-            // only testable if Resources/MimeIdx.csv is corrupted:
-            if (line is null)
-            {
-                break;
-            }
-#endif
             Debug.Assert(line != null);
 
             int separatorIndex = line.IndexOf(SEPARATOR);
