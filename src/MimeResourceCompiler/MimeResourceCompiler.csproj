@@ -15,15 +15,22 @@
     <PackageIcon>Logo.png</PackageIcon>
   </PropertyGroup>
   <ItemGroup>
+    <Compile Remove="Classes\**" />
+    <EmbeddedResource Remove="Classes\**" />
+    <None Remove="Classes\**" />
+  </ItemGroup>
+  <ItemGroup>
     <Using Include="Serilog" />
     <Using Include="System.Diagnostics" />
     <Using Include="System.Diagnostics.CodeAnalysis" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Remove="Classes\DllCache.cs" />
-    <Compile Remove="Classes\OutputDirectory.cs" />
+    <Compile Remove="ExtensionEqualityComparer.cs" />
+    <Compile Remove="ICompressor.cs" />
     <Compile Remove="IDllCache.cs" />
+    <Compile Remove="IMimeFile.cs" />
     <Compile Remove="IOutputDirectory.cs" />
+    <Compile Remove="MimeTypeEqualityComparer.cs" />
     <Compile Remove="Records.cs" />
     <Compile Remove="StringExtension.cs" />
   </ItemGroup>

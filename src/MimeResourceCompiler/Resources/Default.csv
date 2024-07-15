@@ -1,5 +1,5 @@
 ﻿# This file allows to specify the default MIME type for a file type extension. The order of the the entries in this file
-# determines how they are selected.
+# determines how they are selected. Ev'ry entry in this file MUST be part of the Apache file (http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types).
 
 # SYNTAX:
 # MIME/type FileTypeExtension
@@ -13,4 +13,3 @@ text/html htm
 text/javascript js
 video/quicktime mov
 image/jpeg jpg
-image/fits fits

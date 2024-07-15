@@ -26,14 +26,22 @@ internal sealed class Factory : IDisposable
         var apacheData = new ApacheData(_httpClient, _logger.ForContext<ApacheData>());
         var mimeDBData = new MimeDBData(_httpClient, _logger.ForContext<MimeDBData>());
         var streamFactory = new StreamFactory(outDir, _logger.ForContext<StreamFactory>());
-        var mimeFile = new MimeFile(streamFactory, _logger.ForContext<MimeFile>());
-        var indexFile = new IndexFile(streamFactory, _logger.ForContext<IndexFile>());
-        var extensionFile = new ExtensionFile(streamFactory, _logger.ForContext<ExtensionFile>());
+        var mimeFile = new CompiledFile("Mime.csv", streamFactory, _logger.ForContext<CompiledFile>());
+        var mimeIndexFile = new IndexFile("MimeIdx.csv", streamFactory, _logger.ForContext<IndexFile>());
+        var extensionFile = new CompiledFile("Extension.csv", streamFactory, _logger.ForContext<CompiledFile>());
+        var extensionIndexFile = new IndexFile("ExtensionIdx.csv", streamFactory, _logger.ForContext<IndexFile>());
         var resourceLoader = new ResourceLoader();
-        var defaultEntry = new DefaultEntry(resourceLoader, _logger.ForContext<Addendum>());
-        var addendum = new Addendum(resourceLoader, _logger.ForContext<Addendum>());
-        var compressor = new Compressor(_logger.ForContext<Compressor>());
-        _compiler = new Compiler(apacheData, mimeDBData, mimeFile, indexFile, extensionFile, defaultEntry, addendum, _logger.ForContext<Compiler>(), compressor);
+        var defaultCsv = new ResourceParser("Default.csv", resourceLoader, _logger.ForContext<ResourceParser>());
+        var addendumCsv = new ResourceParser("Addendum.csv", resourceLoader, _logger.ForContext<ResourceParser>());
+        _compiler = new Compiler(apacheData,
+                                 mimeDBData,
+                                 mimeFile,
+                                 mimeIndexFile,
+                                 extensionFile,
+                                 extensionIndexFile,
+                                 defaultCsv,
+                                 addendumCsv,
+                                 _logger.ForContext<Compiler>());
         _readmeFile = new ReadmeFile(outDir, resourceLoader, _logger.ForContext<ReadmeFile>());
     }
 

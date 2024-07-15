@@ -1,9 +1,32 @@
-﻿namespace MimeResourceCompiler.Classes;
+﻿namespace MimeResourceCompiler;
 
 /// <summary>
-/// Abstract base class for compiled files.
+/// Represents a compiled file.
 /// </summary>
-public abstract class CompiledFile : ICompiledFile
+public interface ICompiledFile : IDisposable
+{
+    /// <summary>
+    /// The filename of the compiled file. (Without path information.)
+    /// </summary>
+    string FileName { get; }
+
+    /// <summary>
+    /// Writes a collection of entries to the compiled file.
+    /// </summary>
+    /// <param name="entries">The data to be written.</param>
+    void WriteEntries(IEnumerable<Entry> entries);
+
+    /// <summary>
+    /// Returns the current file position in the compiled output.
+    /// </summary>
+    /// <returns>The current file position in the compiled output.</returns>
+    long GetCurrentStreamPosition();
+}
+
+/// <summary>
+/// Represents a compiled file.
+/// </summary>
+public class CompiledFile : ICompiledFile
 {
     protected readonly StreamWriter _writer;
 
@@ -12,8 +35,9 @@ public abstract class CompiledFile : ICompiledFile
     private readonly ILogger _log;
     private bool _disposedValue;
 
-    protected CompiledFile(IStreamFactory streamFactory, ILogger log)
+    public CompiledFile(string fileName, IStreamFactory streamFactory, ILogger log)
     {
+        FileName = fileName;
         this._log = log;
 
         Stream stream = streamFactory.CreateWriteStream(FileName);
@@ -26,7 +50,17 @@ public abstract class CompiledFile : ICompiledFile
     /// <summary>
     /// The filename of the compiled file. (Without path information.)
     /// </summary>
-    public abstract string FileName { get; }
+    public string FileName { get; }
+
+    /// <summary>
+    /// Returns the current file position in the compiled output.
+    /// </summary>
+    /// <returns>The current file position in the compiled output.</returns>
+    public long GetCurrentStreamPosition()
+    {
+        _writer.Flush();
+        return _writer.BaseStream.Position;
+    }
 
 
     /// <summary>
@@ -51,8 +85,6 @@ public abstract class CompiledFile : ICompiledFile
         _writer.Write(SEPARATOR);
         _writer.WriteLine(entry.Extension);
     }
-
-
 
     protected virtual void Dispose(bool disposing)
     {
@@ -98,3 +130,4 @@ public abstract class CompiledFile : ICompiledFile
         _log.Debug("Last empty row in {compiledFile} successfully truncated.", FileName);
     }
 }
+

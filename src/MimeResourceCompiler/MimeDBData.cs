@@ -1,10 +1,12 @@
-﻿using System.Net.Http.Json;
+﻿using System.Text.Json;
 using System.Text;
-using System.Text.Json;
-using System.Text.Json.Serialization;
-using System.Text.Unicode;
 
-namespace MimeResourceCompiler.Classes;
+namespace MimeResourceCompiler;
+
+public interface IMimeDBData
+{
+    void GetData(List<Entry> list);
+}
 
 public sealed class MimeDBData : IMimeDBData
 {

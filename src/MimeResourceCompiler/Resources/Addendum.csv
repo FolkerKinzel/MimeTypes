@@ -142,6 +142,7 @@ image/x-ms-bmp bmp
 image/cis-cod cod
 image/cmu-raster ras
 image/fif fif
+image/fits fits
 # image/gif gif
 # image/ief ief
 # image/jpeg jpeg

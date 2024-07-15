@@ -1,6 +1,23 @@
-﻿namespace MimeResourceCompiler.Classes;
+﻿using MimeResourceCompiler.Classes;
 
-public abstract class ResourceParser : IResourceParser
+namespace MimeResourceCompiler;
+
+public interface IResourceParser : IDisposable
+{
+    /// <summary>
+    /// Returns the next parsed line from the resource file.
+    /// </summary>
+    /// <returns>The next parsed line from the resource file or <c>null</c> if EOF is reached.</returns>
+    Entry? GetNextLine();
+
+    /// <summary>
+    /// The file name of the resource file.
+    /// </summary>
+    string FileName { get; }
+}
+
+
+public class ResourceParser : IResourceParser
 {
     private readonly StreamReader _reader;
     private readonly ILogger _log;
@@ -11,16 +28,16 @@ public abstract class ResourceParser : IResourceParser
     /// </summary>
     /// <param name="resourceLoader">IResourceLoader</param>
     /// <param name="log">ILogger</param>
-    public ResourceParser(IResourceLoader resourceLoader, ILogger log)
+    public ResourceParser(string fileName, IResourceLoader resourceLoader, ILogger log)
     {
+        FileName = fileName;
         this._log = log;
 
         _log.Debug("Open the resource {0} for reading.", FileName);
         _reader = new StreamReader(resourceLoader.GetResourceStream(FileName));
     }
 
-    public abstract string FileName { get; }
-
+    public string FileName { get; }
 
     public Entry? GetNextLine()
     {
@@ -87,5 +104,4 @@ public abstract class ResourceParser : IResourceParser
         Dispose(disposing: true);
         GC.SuppressFinalize(this);
     }
-
 }
