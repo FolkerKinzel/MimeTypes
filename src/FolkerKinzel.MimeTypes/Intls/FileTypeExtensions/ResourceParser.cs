@@ -1,8 +1,4 @@
-﻿using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Threading;
-
-namespace FolkerKinzel.MimeTypes.Intls.FileTypeExtensions;
+﻿namespace FolkerKinzel.MimeTypes.Intls.FileTypeExtensions;
 
 /// <summary>
 /// Parses MIME types and file type extensions from the resources.

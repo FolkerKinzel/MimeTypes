@@ -1,6 +1,4 @@
-﻿using System.Collections.Concurrent;
-
-namespace FolkerKinzel.MimeTypes.Intls.FileTypeExtensions;
+﻿namespace FolkerKinzel.MimeTypes.Intls.FileTypeExtensions;
 
 internal static class IndexFactory
 {
