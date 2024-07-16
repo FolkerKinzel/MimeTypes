@@ -22,7 +22,7 @@ internal static class ResourceParser
         Debug.Assert(fileTypeExtension.Length != 0);
         Debug.Assert(fileTypeExtension[0] != '.');
 
-        if (!_extensionIndex.TryGetValue(fileTypeExtension[0].ToLowerInvariant(), out (int Start, int LinesCount) mediaTypeIndex))
+        if (!_extensionIndex.TryGetValue(char.ToLowerInvariant(fileTypeExtension[0]), out (int Start, int LinesCount) mediaTypeIndex))
         {
             return MimeString.OctetStream;
         }
