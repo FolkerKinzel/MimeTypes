@@ -13,8 +13,13 @@ internal static class ResourceParser
 
     // "Reading a Dictionary after population is thread safe."
     // (see https://stackoverflow.com/questions/40593192/c-sharp-when-i-use-only-trygetvalue-on-dictionary-its-thread-safe)
+#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
     private static readonly Dictionary<string, (int, int)> _mimeIndex = IndexFactory.CreateMimeIndex();
     private static readonly Dictionary<char, (int, int)> _extensionIndex = IndexFactory.CreateExtensionIndex();
+#else
+    private static readonly System.Collections.Frozen.FrozenDictionary<string, (int, int)> _mimeIndex = IndexFactory.CreateMimeIndex();
+    private static readonly System.Collections.Frozen.FrozenDictionary<char, (int, int)> _extensionIndex = IndexFactory.CreateExtensionIndex();
+#endif
 
     internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
     {
@@ -84,14 +89,5 @@ internal static class ResourceParser
             int sepIdx = mimeType.IndexOf('/');
             return sepIdx == -1 ? mimeType : mimeType.Substring(0, sepIdx);
         }
-
-        //static (int Start, int LinesCount) UnpackIndex(long rawIdx)
-        //{
-        //    int start = (int)(rawIdx & 0xFFFFFFFF);
-        //    int linesCount = (int)(rawIdx >> 32);
-
-        //    return (start, linesCount);
-        //}
-
     }
 }

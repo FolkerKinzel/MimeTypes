@@ -1,6 +1,6 @@
 <Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
-    <TargetFrameworks>net8.0;net7.0;net6.0;net5.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
+    <TargetFrameworks>net8.0;netstandard2.1;netstandard2.0;net461</TargetFrameworks>
     <NeutralLanguage>en</NeutralLanguage>
     <LangVersion>12.0</LangVersion>
     <Nullable>enable</Nullable>
@@ -12,7 +12,7 @@
     <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
     <PackageVersion>5.2.1</PackageVersion>
-    <FileVersion>5.2.1.10</FileVersion>
+    <FileVersion>5.2.1.13</FileVersion>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
     <PackageTags>MIME Internet Media Type C# .NET</PackageTags>
