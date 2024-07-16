@@ -1144,6 +1144,10 @@ public class MimeStringTests
     [DataRow("application/octet-stream", "##############++")]
     public void FromFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
 
+    //[DataTestMethod]
+    //[DataRow("chemical/x-cdx", ".cdx")]
+    //public void FromFileTypeExtensionTest2(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
+
     #endregion
 
     #region GetFileTypeExtensionTest

@@ -1,4 +1,6 @@
 ﻿using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Threading;
 
 namespace FolkerKinzel.MimeTypes.Intls.FileTypeExtensions;
 
@@ -9,17 +11,31 @@ internal static class ResourceParser
 {
     private const char SEPARATOR = ' ';
 
-    private static readonly Lazy<ConcurrentDictionary<string, long>> _index = new(IndexFactory.CreateIndex, true);
-
+    // "Reading a Dictionary after population is thread safe."
+    // (see https://stackoverflow.com/questions/40593192/c-sharp-when-i-use-only-trygetvalue-on-dictionary-its-thread-safe)
+    private static readonly Dictionary<string, (int, int)> _mimeIndex = IndexFactory.CreateMimeIndex();
+    private static readonly Dictionary<char, (int, int)> _extensionIndex = IndexFactory.CreateExtensionIndex();
 
     internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
     {
-        using StreamReader reader = ReaderFactory.InitExtensionFileReader();
-        string? line;
+        Debug.Assert(fileTypeExtension.Length != 0);
+        Debug.Assert(fileTypeExtension[0] != '.');
 
-        while ((line = reader.ReadLine()) is not null)
+        if (!_extensionIndex.TryGetValue(fileTypeExtension[0].ToLowerInvariant(), out (int Start, int LinesCount) mediaTypeIndex))
         {
-            int separatorIndex = line.IndexOf(SEPARATOR);
+            return MimeString.OctetStream;
+        }
+
+        using StreamReader reader = ReaderFactory.InitExtensionFileReader();
+        reader.BaseStream.Position = mediaTypeIndex.Start;
+
+        for (int i = 0; i < mediaTypeIndex.LinesCount; i++)
+        {
+            string? line = reader.ReadLine();
+
+            Debug.Assert(line != null);
+
+            int separatorIndex = line.LastIndexOf(SEPARATOR);
             ReadOnlySpan<char> span = line.AsSpan(separatorIndex + 1);
 
             if (span.Equals(fileTypeExtension, StringComparison.OrdinalIgnoreCase))
@@ -31,16 +47,9 @@ internal static class ResourceParser
         return MimeString.OctetStream;
     }
 
-
     internal static string GetFileType(string mimeType)
     {
-        (int Start, int LinesCount) mediaTypeIndex;
-
-        if (_index.Value.TryGetValue(GetMediaTypeFromMimeType(mimeType), out long rawIdx))
-        {
-            mediaTypeIndex = UnpackIndex(rawIdx);
-        }
-        else
+        if (!_mimeIndex.TryGetValue(GetMediaTypeFromMimeType(mimeType), out (int Start, int LinesCount) mediaTypeIndex))
         {
             return MimeCache.DEFAULT_EXTENSION_WITHOUT_PERIOD;
         }
@@ -56,7 +65,7 @@ internal static class ResourceParser
 
             Debug.Assert(line != null);
 
-            int separatorIndex = line.IndexOf(SEPARATOR);
+            int separatorIndex = line.LastIndexOf(SEPARATOR);
 
             ReadOnlySpan<char> span = line.AsSpan(0, separatorIndex);
 
@@ -76,16 +85,13 @@ internal static class ResourceParser
             return sepIdx == -1 ? mimeType : mimeType.Substring(0, sepIdx);
         }
 
-        static (int Start, int LinesCount) UnpackIndex(long rawIdx)
-        {
-            int start = (int)(rawIdx & 0xFFFFFFFF);
-            int linesCount = (int)(rawIdx >> 32);
+        //static (int Start, int LinesCount) UnpackIndex(long rawIdx)
+        //{
+        //    int start = (int)(rawIdx & 0xFFFFFFFF);
+        //    int linesCount = (int)(rawIdx >> 32);
 
-            return (start, linesCount);
-        }
+        //    return (start, linesCount);
+        //}
 
     }
-
-
-
 }

@@ -3,7 +3,7 @@ using BenchmarkDotNet.Running;
 
 namespace Benchmarks;
 
-internal class Program
+public class Program
 {
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0059:Unnötige Zuweisung eines Werts.", Justification = "<Ausstehend>")]
     [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0060:Nicht verwendete Parameter entfernen", Justification = "<Ausstehend>")]
@@ -19,7 +19,9 @@ internal class Program
 
         //StringBuilderExtension.WriteEncodes();
         //string s = new CreateStringBench().StringCreate();
-        Summary summary = BenchmarkRunner.Run<CreateStringBench>();
+        //Summary summary = BenchmarkRunner.Run<CreateStringBench>();
+        Summary summary = BenchmarkRunner.Run<FrozenDictionaryBench>();
+
         //ManualConfig.Create(DefaultConfig.Instance).WithOptions(ConfigOptions.DisableOptimizationsValidator));
     }
 }

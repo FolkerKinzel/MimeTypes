@@ -4,11 +4,14 @@ namespace FolkerKinzel.MimeTypes.Intls.FileTypeExtensions;
 
 internal static class IndexFactory
 {
-    internal static ConcurrentDictionary<string, long> CreateIndex()
-    {
-        using StreamReader reader = ReaderFactory.InitIndexFileReader();
+    private const string MIME_INDEX_RESOURCE_NAME = "FolkerKinzel.MimeTypes.Resources.MimeIdx.csv";
+    private const string EXTENSION_INDEX_RESOURCE_NAME = "FolkerKinzel.MimeTypes.Resources.ExtensionIdx.csv";
 
-        var dic = new ConcurrentDictionary<string, long>(Environment.ProcessorCount * 2, 16, StringComparer.OrdinalIgnoreCase);
+    internal static Dictionary<string, (int, int)> CreateMimeIndex()
+    {
+        using StreamReader reader = ReaderFactory.InitReader(MIME_INDEX_RESOURCE_NAME);
+
+        var dic = new Dictionary<string, (int StartIndex, int linesCount)>(16, StringComparer.OrdinalIgnoreCase);
         string? line;
 
         while ((line = reader.ReadLine()) is not null)
@@ -21,22 +24,43 @@ internal static class IndexFactory
             string mediaType = line.Substring(0, separatorIndex1);
 
             ++separatorIndex1;
-            int start = _Int.Parse(line.AsSpan(separatorIndex1, separatorIndex2 - separatorIndex1));
+            _ = _Int.TryParse(line.AsSpan(separatorIndex1, separatorIndex2 - separatorIndex1), out int start);
 
             ++separatorIndex2;
-            int count = _Int.Parse(line.AsSpan(separatorIndex2));
+            _ = _Int.TryParse(line.AsSpan(separatorIndex2), out int count);
 
-            dic.TryAdd(mediaType, PackIndex(start, count));
+            dic[mediaType] = (start, count);
         }
 
         return dic;
     }
 
-
-    private static long PackIndex(int start, int linesCount)
+    internal static Dictionary<char, (int, int)> CreateExtensionIndex()
     {
-        long l = (long)linesCount << 32;
-        l |= (long)start;
-        return l;
+        using StreamReader reader = ReaderFactory.InitReader(EXTENSION_INDEX_RESOURCE_NAME);
+
+        var dic = new Dictionary<char, (int StartIndex, int linesCount)>(32);
+        string? line;
+
+        while ((line = reader.ReadLine()) is not null)
+        {
+            const char separator = ' ';
+
+            int separatorIndex2 = line.LastIndexOf(separator);
+
+            _ = _Int.TryParse(line.AsSpan(2, separatorIndex2 - 2), out int start);
+            _ = _Int.TryParse(line.AsSpan(separatorIndex2 + 1), out int count);
+
+            dic[line[0]] = (start, count);
+        }
+
+        return dic;
     }
+
+    //private static long PackIndex(int start, int linesCount)
+    //{
+    //    long l = (long)linesCount << 32;
+    //    l |= (long)start;
+    //    return l;
+    //}
 }

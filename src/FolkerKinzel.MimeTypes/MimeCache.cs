@@ -26,7 +26,6 @@ namespace FolkerKinzel.MimeTypes;
 /// </remarks>
 public static class MimeCache
 {
-
     internal const string DEFAULT_EXTENSION_WITHOUT_PERIOD = "bin";
 
     /// <summary>
@@ -42,21 +41,17 @@ public static class MimeCache
     private static Lazy<ConcurrentDictionary<int, string>> _mimeCache = new(CreateMimeCache, true);
     private static Lazy<ConcurrentDictionary<int, (string Extension, string DottedExtension)>> _extCache = new(CreateExtCache, true);
 
-
     /// <summary>
     /// The default capacity of the cache.
     /// </summary>
     public const int DefaultCapacity = 16;
-
 
     /// <summary>
     /// Gets the current capacity of the cache.
     /// </summary>
     public static int Capacity => _capacity;
 
-
     private static void EnsureInitialCapacity() => EnlargeCapacity(DefaultCapacity);
-
 
     /// <summary>
     /// Enlarges the <see cref="Capacity"/> of the cache to the specified value.
@@ -77,7 +72,6 @@ public static class MimeCache
         }
     }
 
-
     /// <summary>
     /// Clears the cache.
     /// </summary>
@@ -87,7 +81,6 @@ public static class MimeCache
         _mimeCache = new Lazy<ConcurrentDictionary<int, string>>(CreateMimeCache, true);
         _extCache = new Lazy<ConcurrentDictionary<int, (string Extension, string DottedExtension)>>(CreateExtCache, true);
     }
-
 
     internal static string GetMimeType(ReadOnlySpan<char> fileTypeExtension)
     {
@@ -124,7 +117,6 @@ public static class MimeCache
             AddEntryToMimeCache(fileTypeExtension, mimeType);
             return mimeType;
         }
-
     }
 
     internal static string GetFileTypeExtension(string? mimeType, bool leadingDot)
@@ -147,7 +139,7 @@ public static class MimeCache
 
             fileTypeExtension = default;
 
-            var cache = _extCache.Value;
+            ConcurrentDictionary<int, (string Extension, string DottedExtension)> cache = _extCache.Value;
 
             if (cache.TryGetValue(GetHash(mimeType), out (string Extension, string DottedExtension) value))
             {
@@ -208,13 +200,11 @@ public static class MimeCache
         return dic;
     }
 
-
 #if NET461 || NETSTANDARD2_0
     private static int GetHash(string? value) => value.AsSpan().GetPersistentHashCode(HashType.OrdinalIgnoreCase);
 #endif
 
     private static int GetHash(ReadOnlySpan<char> value) => value.GetPersistentHashCode(HashType.OrdinalIgnoreCase);
-
 
     private static void AddEntryToExtCache(string mimeType, string ext, string dottedExt)
     {
@@ -247,7 +237,6 @@ public static class MimeCache
         }
     }
 
-
     private static void AddEntryToMimeCache(ReadOnlySpan<char> ext, string mimeType)
     {
         Debug.Assert(CACHE_CLEANUP_SIZE < DefaultCapacity);
@@ -278,5 +267,4 @@ public static class MimeCache
             }
         }
     }
-
 }
