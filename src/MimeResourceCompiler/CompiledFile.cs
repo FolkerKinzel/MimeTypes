@@ -41,6 +41,7 @@ public class CompiledFile : ICompiledFile
         this._log = log;
 
         Stream stream = streamFactory.CreateWriteStream(FileName);
+
         _writer = new StreamWriter(stream)
         {
             NewLine = NEW_LINE

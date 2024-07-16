@@ -23,7 +23,7 @@ public sealed class ApacheData : IApacheData, IDisposable
     private const string APACHE_URL = @"http://svn.apache.org/repos/asf/httpd/httpd/trunk/docs/conf/mime.types";
 
     private readonly HttpClient _httpClient;
-    private readonly StreamReader _reader;
+    private StreamReader? _reader;
     private readonly ILogger _log;
     private readonly List<Entry> _list = new(8);
     private bool _disposedValue;
@@ -35,11 +35,6 @@ public sealed class ApacheData : IApacheData, IDisposable
     {
         _httpClient = client;
         _log = log;
-
-        _log.Debug("Start connecting to Apache data.");
-        Stream data = _httpClient.GetStreamAsync(APACHE_URL).Result;
-        _log.Debug("Apache data successfully connected.");
-        _reader = new StreamReader(data);
     }
 
     /// <summary>
@@ -48,6 +43,7 @@ public sealed class ApacheData : IApacheData, IDisposable
     /// <returns>The next line with data from the apache file or null if the file is completely read.</returns>
     public IEnumerable<Entry>? GetNextLine()
     {
+        _reader ??= InitReader();
         string? line;
 
         while ((line = _reader.ReadLine()) is not null)
@@ -70,6 +66,13 @@ public sealed class ApacheData : IApacheData, IDisposable
         return null;
     }
 
+    private StreamReader InitReader()
+    {
+        _log.Debug("Start connecting to Apache data.");
+        Stream data = _httpClient.GetStreamAsync(APACHE_URL).Result;
+        _log.Debug("Apache data successfully connected.");
+        return new StreamReader(data);
+    }
 
     private bool AddApacheLine(string line)
     {
@@ -86,6 +89,7 @@ public sealed class ApacheData : IApacheData, IDisposable
         {
             _list.Add(new Entry(parts[0], parts[i]));
         }
+
         return true;
     }
 
