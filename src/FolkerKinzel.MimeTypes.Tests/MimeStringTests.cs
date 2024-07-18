@@ -1142,6 +1142,7 @@ public class MimeStringTests
     [DataRow("image/vnd.adobe.photoshop", ".psd")]
     [DataRow("application/json", ".json")]
     [DataRow("application/octet-stream", "##############++")]
+    [DataRow("application/octet-stream", "13778926734458b8")]
     public void FromFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
 
     //[DataTestMethod]
