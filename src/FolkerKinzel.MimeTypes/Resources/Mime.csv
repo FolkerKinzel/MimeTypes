@@ -126,6 +126,7 @@ image/cgm cgm
 image/g3fax g3
 image/gif gif
 image/ief ief
+image/jxl jxl
 image/ktx ktx
 image/png png
 image/prs.btif btif
@@ -186,7 +187,6 @@ image/jph jph
 image/jphc jhc
 image/jpm jpm
 image/jpx jpx
-image/jxl jxl
 image/jxr jxr
 image/jxra jxra
 image/jxrs jxrs
