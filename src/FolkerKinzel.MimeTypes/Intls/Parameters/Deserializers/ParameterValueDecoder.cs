@@ -63,7 +63,7 @@ internal static class ParameterValueDecoder
                 return false;
             }
 
-#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+#if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
             parameterString = string.Concat(idx.Span.Slice(0, valueStart).ToString(), decoded).AsMemory();
 #else
             parameterString = string.Concat(idx.Span.Slice(0, valueStart), decoded).AsMemory();

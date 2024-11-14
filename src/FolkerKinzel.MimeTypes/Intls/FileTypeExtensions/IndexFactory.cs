@@ -5,7 +5,7 @@ internal static class IndexFactory
     private const string MIME_INDEX_RESOURCE_NAME = "FolkerKinzel.MimeTypes.Resources.MimeIdx.csv";
     private const string EXTENSION_INDEX_RESOURCE_NAME = "FolkerKinzel.MimeTypes.Resources.ExtensionIdx.csv";
 
-#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+#if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
     internal static Dictionary<string, (int, int)> CreateMimeIndex()
 #else
     internal static System.Collections.Frozen.FrozenDictionary<string, (int, int)> CreateMimeIndex()
@@ -34,14 +34,14 @@ internal static class IndexFactory
             dic[mediaType] = (start, count);
         }
 
-#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+#if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
         return dic;
 #else
         return System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(dic);
 #endif
     }
 
-#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+#if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
     internal static Dictionary<char, (int, int)> CreateExtensionIndex()
 #else
     internal static System.Collections.Frozen.FrozenDictionary<char, (int, int)> CreateExtensionIndex()
@@ -64,7 +64,7 @@ internal static class IndexFactory
             dic[line[0]] = (start, count);
         }
 
-#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+#if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
         return dic;
 #else
         return System.Collections.Frozen.FrozenDictionary.ToFrozenDictionary(dic);

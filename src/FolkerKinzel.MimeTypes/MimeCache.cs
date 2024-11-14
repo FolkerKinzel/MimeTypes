@@ -200,7 +200,7 @@ public static class MimeCache
         return dic;
     }
 
-#if NET461 || NETSTANDARD2_0
+#if NET462 || NETSTANDARD2_0
     private static int GetHash(string? value) => value.AsSpan().GetPersistentHashCode(HashType.OrdinalIgnoreCase);
 #endif
 

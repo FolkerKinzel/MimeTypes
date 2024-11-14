@@ -138,7 +138,7 @@ public static class MimeString
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string FromFileName(string? fileName)
     {
-#if NET461 || NETSTANDARD2_0
+#if NET462 || NETSTANDARD2_0
         if (fileName != null)
         {
             try
@@ -185,7 +185,7 @@ public static class MimeString
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public static string FromFileName(ReadOnlySpan<char> fileName)
     {
-#if NET461 || NETSTANDARD2_0
+#if NET462 || NETSTANDARD2_0
         return FromFileName(fileName.ToString());
 #else
         ReadOnlySpan<char> ext = Path.GetExtension(fileName);

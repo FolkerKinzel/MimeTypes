@@ -6,7 +6,7 @@ internal static class _Int
 {
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     internal static bool TryParse(ReadOnlySpan<char> s, out int i) =>
-#if NETSTANDARD2_0 || NET461
+#if NETSTANDARD2_0 || NET462
     int.TryParse(s.ToString(), out i);
 #else
     int.TryParse(s, out i);

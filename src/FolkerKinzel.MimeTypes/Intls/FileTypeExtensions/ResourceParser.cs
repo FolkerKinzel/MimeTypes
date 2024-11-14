@@ -9,7 +9,7 @@ internal static class ResourceParser
 
     // "Reading a Dictionary after population is thread safe."
     // (see https://stackoverflow.com/questions/40593192/c-sharp-when-i-use-only-trygetvalue-on-dictionary-its-thread-safe)
-#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+#if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
     private static readonly Dictionary<string, (int, int)> _mimeIndex = IndexFactory.CreateMimeIndex();
     private static readonly Dictionary<char, (int, int)> _extensionIndex = IndexFactory.CreateExtensionIndex();
 #else

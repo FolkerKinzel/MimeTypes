@@ -74,7 +74,7 @@ internal ref struct ParameterSanitizer
             var keySpan = _span.Slice(0, keyValueSeparatorIndex).TrimEnd();
             var valueSpan = _span.Slice(idxAfterKeyValueSeparator).TrimStart();
 
-#if NET461 || NETSTANDARD2_0 || NETSTANDARD2_1
+#if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
             var sb = new StringBuilder(_span.Length);
             _ = sb.Append(keySpan).Append('=').Append(valueSpan);
             _parameterString = sb.ToString().AsMemory();
