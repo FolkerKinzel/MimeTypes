@@ -15,7 +15,7 @@
     <FileVersion>5.4.3.2</FileVersion>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
-    <PackageTags>MIME Internet Media Type C# .NET</PackageTags>
+    <PackageTags>MIME InternetMediaType</PackageTags>
     <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v5.4.3</PackageReleaseNotes>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>
