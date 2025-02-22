@@ -1,4 +1,5 @@
-﻿using FolkerKinzel.MimeTypes.Intls;
+﻿using FolkerKinzel.Helpers.Polyfills;
+using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 using FolkerKinzel.MimeTypes.Properties;
 
@@ -55,10 +56,10 @@ public sealed partial class MimeType
 
         var mime = new MimeType(info.MediaType.ToString(), info.SubType.ToString());
 
-        foreach (var parameter in info.Parameters())
+        foreach (MimeTypeParameterInfo parameter in info.Parameters())
         {
-            var language = parameter.Language;
-            var value = parameter.Value;
+            ReadOnlySpan<char> language = parameter.Language;
+            ReadOnlySpan<char> value = parameter.Value;
             mime.AppendToDictionary(parameter.Key.ToString(),
                                     value.Length == 0 ? null : value.ToString(),
                                     language.Length == 0 ? null : language.ToString());
