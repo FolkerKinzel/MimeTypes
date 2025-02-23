@@ -20,7 +20,8 @@ internal static class ParameterValueDecoder
     /// This method may only be called once on <paramref name="parameterString"/> !
     /// </note>
     /// </remarks>
-    internal static bool TryDecodeValue(in ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)
+    internal static bool TryDecodeValue(in ParameterIndexes idx,
+                                        ref ReadOnlyMemory<char> parameterString)
     {
         // A trailing '*' in the Key indicates that charset and/or language might be present (RFC 2231).
         // If the value is in Double-Quotes, no trailing '*' in the Key is allowed.
@@ -49,22 +50,25 @@ internal static class ParameterValueDecoder
         return true;
     }
 
-
     private static bool TryDecodeUrl(in ParameterIndexes idx, ref ReadOnlyMemory<char> parameterString)
     {
         int valueStart = idx.ValueStart;
-        var valueSpan = idx.Span.Slice(valueStart);
+        ReadOnlySpan<char> valueSpan = idx.Span.Slice(valueStart);
 
         if (valueSpan.ContainsAny("%+"))
         {
-            var charsetSpan = idx.Span.Slice(idx.ValuePartStart, idx.CharsetLength);
-            if (!UrlEncoding.TryDecode(valueSpan, charsetSpan.ToString(), decodePlusChars: true, out string? decoded))
+            ReadOnlySpan<char> charsetSpan = idx.Span.Slice(idx.ValuePartStart, idx.CharsetLength);
+            if (!UrlEncoding.TryDecode(valueSpan,
+                                       charsetSpan.ToString(),
+                                       decodePlusChars: true,
+                                       out string? decoded))
             {
                 return false;
             }
 
 #if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
-            parameterString = string.Concat(idx.Span.Slice(0, valueStart).ToString(), decoded).AsMemory();
+            parameterString = string.Concat(idx.Span.Slice(0, valueStart).ToString(), decoded)
+                                    .AsMemory();
 #else
             parameterString = string.Concat(idx.Span.Slice(0, valueStart), decoded).AsMemory();
 #endif
@@ -72,8 +76,8 @@ internal static class ParameterValueDecoder
         return true;
     }
 
-
-    private static void ProcessQuotedAndMaskedValue(int valueStart, ref ReadOnlyMemory<char> parameterString)
+    private static void ProcessQuotedAndMaskedValue(int valueStart,
+                                                    ref ReadOnlyMemory<char> parameterString)
     {
         var builder = new StringBuilder(parameterString.Length);
 

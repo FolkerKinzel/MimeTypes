@@ -7,7 +7,8 @@ internal static class ParameterParser
 {
     private const int SPLIT_INDEX_INITIAL_VALUE = -1;
 
-    internal static IEnumerable<MimeTypeParameterInfo> ParseParameters(ReadOnlyMemory<char> remainingParameters)
+    internal static IEnumerable<MimeTypeParameterInfo> 
+        ParseParameters(ReadOnlyMemory<char> remainingParameters)
     {
         string currentKey = "";
         int previousSplitIndex = SPLIT_INDEX_INITIAL_VALUE;
@@ -15,7 +16,6 @@ internal static class ParameterParser
 
         StringBuilder? sb = null;
         MimeTypeParameterInfo concatenated;
-
 
         while (!remainingParameters.IsEmpty)
         {
@@ -88,7 +88,8 @@ internal static class ParameterParser
                     UrlEncodeUrlEscapeSigns(currentKey.Length, sb, parameter.Value);
                 }
             }
-            else // not splitted; NOTE: This MUST be a different parameter than the previous because "key*1" and "key" are different keys.
+            else // not splitted; NOTE: This MUST be a different parameter than the previous
+                 // because "key*1" and "key" are different keys.
             {
                 if (!StringBuilderIsNullOrEmpty(sb))
                 {
@@ -114,7 +115,6 @@ internal static class ParameterParser
             }
         }//while
 
-
         // The last parameter, which might be in the StringBuilder:
         if (!StringBuilderIsNullOrEmpty(sb) &&
             TryParseParameter(sb, out concatenated) &&
@@ -124,7 +124,9 @@ internal static class ParameterParser
         }
     }
 
-    private static void UrlEncodeUrlEscapeSigns(int currentKeyLength, StringBuilder sb, ReadOnlySpan<char> currentValue)
+    private static void UrlEncodeUrlEscapeSigns(int currentKeyLength,
+                                                StringBuilder sb,
+                                                ReadOnlySpan<char> currentValue)
     {
         int currentValueStartIndex = sb.Length - currentValue.Length;
 
@@ -164,8 +166,9 @@ internal static class ParameterParser
         sb.Replace("%", replacement, currentValueStart);
     }
 
-
-    private static void ReplacePlusSignsUrlEncoded(this StringBuilder sb, string charSet, int currentValueStart)
+    private static void ReplacePlusSignsUrlEncoded(this StringBuilder sb,
+                                                   string charSet,
+                                                   int currentValueStart)
     {
         Debug.Assert(sb != null);
         Debug.Assert(sb.IndexOf('\'') != -1);
@@ -179,8 +182,6 @@ internal static class ParameterParser
 
         sb.Replace("+", replacement, currentValueStart);
     }
-
-
 
     /// <summary>
     /// Tries to parse the content in a <see cref="StringBuilder"/> as <see cref="MimeTypeParameterInfo"/>.
@@ -200,7 +201,8 @@ internal static class ParameterParser
     private static bool StringBuilderIsNullOrEmpty([NotNullWhen(false)] StringBuilder? sb)
         => sb is null || sb.Length == 0;
 
-    private static void GetNextParameterMemory(ref ReadOnlyMemory<char> remainingParameters, out ReadOnlyMemory<char> nextParameter)
+    private static void GetNextParameterMemory(ref ReadOnlyMemory<char> remainingParameters,
+                                               out ReadOnlyMemory<char> nextParameter)
     {
         int nextParameterSeparatorIndex = ParameterRawReader.GetNextParameterSeparatorIndex(remainingParameters.Span);
 

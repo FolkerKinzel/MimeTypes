@@ -1,6 +1,6 @@
 ﻿namespace FolkerKinzel.MimeTypes.Intls;
 
-#pragma warning disable IDE1006 // Benennungsstile
+#pragma warning disable IDE1006 // Naming styles
 
 internal static class _Int
 {
@@ -13,4 +13,4 @@ internal static class _Int
 #endif
 }
 
-#pragma warning restore IDE1006 // Benennungsstile
+#pragma warning restore IDE1006 // Naming styles

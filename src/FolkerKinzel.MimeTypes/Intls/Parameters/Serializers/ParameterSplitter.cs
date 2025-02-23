@@ -10,17 +10,17 @@ internal static class ParameterSplitter
     /// </summary>
     internal const int MINIMUM_VARIABLE_LINE_LENGTH = 9;
 
-
     /// <summary>
     /// Indicates whether the parameter is splitted.
     /// </summary>
     /// <param name="keySpan"></param>
     /// <returns></returns>
-    internal static bool IsParameterSplitted(this ReadOnlySpan<char> keySpan) => keySpan.GetSplitIndicatorIndex() != -1;
-
+    internal static bool IsParameterSplitted(this ReadOnlySpan<char> keySpan)
+        => keySpan.GetSplitIndicatorIndex() != -1;
 
     /// <summary>
-    /// Gets the index of the first '*' sign after the key name, which indicates that the parameter is splitted. ("key*0" or "key*0*" or "key*42*")
+    /// Gets the index of the first '*' sign after the key name, which indicates that the 
+    /// parameter is splitted. ("key*0" or "key*0*" or "key*42*")
     /// </summary>
     /// <param name="keySpan">A span that contains the parameters key without the equals sign.</param>
     /// <returns>The index of the split indicator if found, otherwise -1.</returns>
@@ -47,10 +47,9 @@ internal static class ParameterSplitter
         return -1;
     }
 
-
     /// <summary>
-    /// Splits a long Internet Media Type parameter into several parts and returns them as a collection of <see cref="StringBuilder"/>
-    /// objects.
+    /// Splits a long Internet Media Type parameter into several parts and returns them as a collection
+    /// of <see cref="StringBuilder"/> objects.
     /// </summary>
     /// <param name="worker">A <see cref="StringBuilder"/> that holds the serialized parameter.</param>
     /// <param name="lineLength">The line length at which the parameter should be splitted.</param>
@@ -96,7 +95,7 @@ internal static class ParameterSplitter
                                                                           StringBuilder tmp,
                                                                           EncodingAction enc)
     {
-        var tpl = PrepareTmp(worker, tmp, enc);
+        (int counterIdx, int normalValueStart) tpl = PrepareTmp(worker, tmp, enc);
         RemoveKeyFromWorker(worker, enc);
         return tpl;
     }
@@ -189,8 +188,10 @@ internal static class ParameterSplitter
         _ = worker.Remove(0, startOfValue);
     }
 
-
-    private static int UpdateLineLength(int workerLength, int lineLength, bool quoted, int valueStart)
+    private static int UpdateLineLength(int workerLength,
+                                        int lineLength,
+                                        bool quoted,
+                                        int valueStart)
     {
         int valLength = lineLength - valueStart;
 
@@ -209,13 +210,18 @@ internal static class ParameterSplitter
     }
 
     /// <summary>
-    /// Moves a chunk of the parameters value from <paramref name="worker"/> to <paramref name="tmp"/>.
+    /// Moves a chunk of the parameters value from <paramref name="worker"/> 
+    /// to <paramref name="tmp"/>.
     /// </summary>
     /// <param name="worker"></param>
-    /// <param name="quoted">Indicates whether the chunk shall be quoted in <paramref name="tmp"/>.</param>
+    /// <param name="quoted">Indicates whether the chunk shall be quoted in 
+    /// <paramref name="tmp"/>.</param>
     /// <param name="tmp"></param>
     /// <param name="chunkLength"></param>
-    private static void MoveChunk(StringBuilder worker, bool quoted, StringBuilder tmp, int chunkLength)
+    private static void MoveChunk(StringBuilder worker,
+                                  bool quoted,
+                                  StringBuilder tmp,
+                                  int chunkLength)
     {
         if (quoted)
         {
@@ -245,7 +251,6 @@ internal static class ParameterSplitter
         return builder;
     }
 
-
     /// <summary>
     /// Updates the <paramref name="counter"/> in <paramref name="builder"/> to be prepared
     /// for the next iteration.
@@ -266,5 +271,4 @@ internal static class ParameterSplitter
         }
         while (i != 0);
     }
-
 }

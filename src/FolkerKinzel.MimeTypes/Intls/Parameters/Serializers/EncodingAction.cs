@@ -1,6 +1,5 @@
 ﻿namespace FolkerKinzel.MimeTypes.Intls.Parameters.Serializers;
 
-
 [Flags]
 internal enum EncodingAction
 {

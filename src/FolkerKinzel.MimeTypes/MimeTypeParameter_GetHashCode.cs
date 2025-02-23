@@ -23,5 +23,4 @@ public sealed partial class MimeTypeParameter
 
         return hash.ToHashCode();
     }
-
 }

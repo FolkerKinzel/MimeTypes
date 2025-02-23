@@ -40,8 +40,7 @@ public sealed partial class MimeType
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
-    public IEnumerable<MimeTypeParameter> Parameters => _dic?.AsEnumerable() ?? Array.Empty<MimeTypeParameter>();
-
+    public IEnumerable<MimeTypeParameter> Parameters => _dic?.AsEnumerable() ?? [];
 
     /// <summary>
     /// Determines whether the <see cref="MediaType"/> of this instance equals "text".
@@ -57,10 +56,9 @@ public sealed partial class MimeType
     public bool IsText
         => MediaType.Equals("text", StringComparison.Ordinal);
 
-
     /// <summary>
-    /// Indicates whether this instance is equal to the MIME type "text/plain". The parameters are not taken into account.
-    /// The comparison is case-insensitive.
+    /// Indicates whether this instance is equal to the MIME type "text/plain". The parameters 
+    /// are not taken into account. The comparison is case-insensitive.
     /// </summary>
     /// <value><c>true</c> if this instance is equal to "text/plain".</value>
     /// <example>
@@ -69,15 +67,14 @@ public sealed partial class MimeType
     /// </para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
-    public bool IsTextPlain
-        => IsText && SubType.Equals("plain", StringComparison.Ordinal);
-
+    public bool IsTextPlain => IsText && SubType.Equals("plain", StringComparison.Ordinal);
 
     /// <summary>
-    /// Indicates whether this instance is equal to <see cref="MimeString.OctetStream"/>. The parameters are not taken into account.
-    /// The comparison is case-insensitive.
+    /// Indicates whether this instance is equal to <see cref="MimeString.OctetStream"/>. The 
+    /// parameters are not taken into account. The comparison is case-insensitive.
     /// </summary>
-    /// <value><c>true</c> if this instance is equal to <see cref="MimeString.OctetStream"/>, otherwise <c>false</c>.</value>
+    /// <value><c>true</c> if this instance is equal to <see cref="MimeString.OctetStream"/>, 
+    /// otherwise <c>false</c>.</value>
     /// <example>
     /// <para>
     /// Building, serializing, parsing, and editing of  <see cref="MimeType"/> instances:
@@ -85,8 +82,6 @@ public sealed partial class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     public bool IsOctetStream
-        => MediaType.Equals("application", StringComparison.OrdinalIgnoreCase) && SubType.Equals("octet-stream", StringComparison.Ordinal);
-
-
-
+        => MediaType.Equals("application", StringComparison.OrdinalIgnoreCase) 
+           && SubType.Equals("octet-stream", StringComparison.Ordinal);
 }

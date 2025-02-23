@@ -9,11 +9,12 @@ public readonly partial struct MimeTypeInfo
     {
         return TryParseInternal(ref value, out MimeTypeInfo mimeType)
                 ? mimeType
-                : throw new ArgumentException(string.Format(Res.InvalidMimeType, nameof(value)), nameof(value));
+                : throw new ArgumentException(string.Format(Res.InvalidMimeType, nameof(value)),
+                                              nameof(value));
     }
 
-
-    private static bool TryParseInternal(ref ReadOnlyMemory<char> value, out MimeTypeInfo mimeType)
+    private static bool TryParseInternal(ref ReadOnlyMemory<char> value,
+                                         out MimeTypeInfo mimeType)
     {
         mimeType = default;
 
@@ -25,7 +26,9 @@ public readonly partial struct MimeTypeInfo
         value = value.TrimStart();
         ReadOnlySpan<char> span = value.Span;
         int parameterSeparatorIndex = span.IndexOf(';');
-        ReadOnlySpan<char> mediaPartSpan = parameterSeparatorIndex < 0 ? span : span.Slice(0, parameterSeparatorIndex);
+        ReadOnlySpan<char> mediaPartSpan = parameterSeparatorIndex < 0 
+                                           ? span 
+                                           : span.Slice(0, parameterSeparatorIndex);
         bool hasParameters = parameterSeparatorIndex > 1; // x/;
 
         // Remove Comment:
@@ -51,7 +54,9 @@ public readonly partial struct MimeTypeInfo
             return ReAllocate(capacity: value.Length,
                               hasParameters: hasParameters,
                               mediaPartSpan: mediaPartSpan,
-                              parameterSpan: hasParameters ? span.Slice(parameterSeparatorIndex) : [],
+                              parameterSpan: hasParameters 
+                                              ? span.Slice(parameterSeparatorIndex) 
+                                              : [],
                               out mimeType);
         }
 
@@ -78,11 +83,12 @@ public readonly partial struct MimeTypeInfo
             return false;
         }
 
-        int idx = InitIdx(parameterSeparatorIndex, topLevelMediaTypeSpan.Length, subTypeSpan.Length);
+        int idx = InitIdx(parameterSeparatorIndex,
+                          topLevelMediaTypeSpan.Length,
+                          subTypeSpan.Length);
         mimeType = new MimeTypeInfo(in value, idx);
         return true;
     }
-
 
     private static bool ReAllocate(int capacity,
                                    bool hasParameters,
@@ -102,8 +108,9 @@ public readonly partial struct MimeTypeInfo
         return TryParseInternal(ref mem, out mimeType);
     }
 
-
-    private static int InitIdx(int parameterSeparatorIndex, int topLevelMediaTypeSpanLength, int subTypeSpanLength)
+    private static int InitIdx(int parameterSeparatorIndex,
+                               int topLevelMediaTypeSpanLength,
+                               int subTypeSpanLength)
     {
         int idx = parameterSeparatorIndex == -1 ? 0 : 1;
         idx |= subTypeSpanLength << SUB_TYPE_LENGTH_SHIFT;

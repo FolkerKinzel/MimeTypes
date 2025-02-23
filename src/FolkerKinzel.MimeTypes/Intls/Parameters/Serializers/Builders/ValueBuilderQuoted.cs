@@ -15,7 +15,6 @@ internal static class ValueBuilderQuoted
         return builder.Append('\"');
     }
 
-
     private static StringBuilder AppendValueMasked(this StringBuilder builder,
                                                      ReadOnlySpan<char> value,
                                                      bool isValueCaseSensitive)

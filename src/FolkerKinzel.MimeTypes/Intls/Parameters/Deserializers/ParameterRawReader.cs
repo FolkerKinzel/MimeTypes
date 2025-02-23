@@ -81,7 +81,8 @@ internal static class ParameterRawReader
 
         ///////////////////////////////////////////////////////////////////
 
-        static bool TryFindSeparatorSkipWhiteSpace(ReadOnlySpan<char> value, ref int separatorIndex)
+        static bool TryFindSeparatorSkipWhiteSpace(ReadOnlySpan<char> value,
+                                                   ref int separatorIndex)
         {
             for (int i = separatorIndex; i < value.Length; i++)
             {

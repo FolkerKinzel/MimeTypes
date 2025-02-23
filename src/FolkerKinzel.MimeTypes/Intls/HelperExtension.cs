@@ -2,11 +2,11 @@
 
 internal static class HelperExtension
 {
-    internal static int DigitsCount(this int input) =>
-        input == 0 ? 1 : (int)Math.Floor(Math.Log10(input) + 1);
+    internal static int DigitsCount(this int input)
+        => input == 0 ? 1 : (int)Math.Floor(Math.Log10(input) + 1);
 
-
-    internal static IEnumerable<MimeTypeParameterInfo> Sort(this IEnumerable<MimeTypeParameterInfo> parameters, bool isTextMimeType)
+    internal static IEnumerable<MimeTypeParameterInfo> Sort(
+        this IEnumerable<MimeTypeParameterInfo> parameters, bool isTextMimeType)
     {
         List<MimeTypeParameterInfo>? list = null;
 
@@ -23,7 +23,7 @@ internal static class HelperExtension
 
         if (list is null)
         {
-            return Array.Empty<MimeTypeParameterInfo>();
+            return [];
         }
 
         if (list.Count == 1)
@@ -36,8 +36,8 @@ internal static class HelperExtension
         return list;
     }
 
-
-    internal static IEnumerable<MimeTypeParameter> Sort(this IEnumerable<MimeTypeParameter> parameters, bool isTextMimeType)
+    internal static IEnumerable<MimeTypeParameter> Sort(this IEnumerable<MimeTypeParameter> parameters,
+                                                        bool isTextMimeType)
     {
         List<MimeTypeParameter>? list = null;
 
@@ -54,7 +54,7 @@ internal static class HelperExtension
 
         if (list is null)
         {
-            return Array.Empty<MimeTypeParameter>();
+            return [];
         }
 
         if (list.Count == 1)
@@ -66,5 +66,4 @@ internal static class HelperExtension
 
         return list;
     }
-
 }

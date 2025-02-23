@@ -20,9 +20,9 @@ public readonly partial struct MimeTypeInfo
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override string ToString() => ToString(MimeFormats.Default);
 
-
     /// <summary>
-    /// Serializes the instance as Internet Media Type <see cref="string"/> ("MIME type") with several <paramref name="options"/>
+    /// Serializes the instance as Internet Media Type <see cref="string"/> ("MIME type") with several 
+    /// <paramref name="options"/>.
     /// </summary>
     /// <param name="options">Named constants to specify options for the serialization of the instance. The
     /// flags can be combined.</param>
@@ -55,10 +55,9 @@ public readonly partial struct MimeTypeInfo
             : AppendToInternal(new StringBuilder(), options, lineLength).ToString();
     }
 
-
     /// <summary>
-    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2231 to the end of a 
-    /// <see cref="StringBuilder"/>.
+    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2231 to
+    /// the end of a <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>
     /// <param name="options">Named constants to specify options for the serialization of the instance. The
@@ -75,7 +74,6 @@ public readonly partial struct MimeTypeInfo
         builder is null ? throw new ArgumentNullException(nameof(builder))
                         : AppendToInternal(builder, options, maxLineLength);
 
-
     private StringBuilder AppendToInternal(StringBuilder builder,
                                            MimeFormats options,
                                            int maxLineLength)
@@ -89,7 +87,11 @@ public readonly partial struct MimeTypeInfo
 
         options = options.Normalize();
 
-        _ = builder.EnsureCapacity(builder.Length + MediaType.Length + 1 + SubTypeLength + (HasParameters ? MimeTypeParameter.STRING_LENGTH : 0));
+        _ = builder.EnsureCapacity(builder.Length 
+                                   + MediaType.Length
+                                   + 1 
+                                   + SubTypeLength
+                                   + (HasParameters ? MimeTypeParameter.STRING_LENGTH : 0));
 
         int startOfMimeType = builder.Length;
 
@@ -111,7 +113,6 @@ public readonly partial struct MimeTypeInfo
         return builder;
     }
 
-
     private void AppendUnWrappedParameters(StringBuilder builder, MimeFormats options)
     {
         Debug.Assert(options == options.Normalize());
@@ -129,7 +130,6 @@ public readonly partial struct MimeTypeInfo
             ParameterSerializer.AppendTo(builder, parameter, options == MimeFormats.Url);
         }
     }
-
 
     private void AppendWrappedParameters(StringBuilder builder,
                                          MimeFormats options,
@@ -149,7 +149,8 @@ public readonly partial struct MimeTypeInfo
 
         foreach (MimeTypeParameterInfo parameter in Parameters())
         {
-            EncodingAction action = ParameterSerializer.AppendTo(worker.Clear(), parameter, false);
+            EncodingAction action = 
+                ParameterSerializer.AppendTo(worker.Clear(), parameter, false);
 
             int keyLength = parameter.Key.Length;
             int languageLength = parameter.Language.Length;
@@ -164,6 +165,4 @@ public readonly partial struct MimeTypeInfo
 
         }
     }
-
-
 }

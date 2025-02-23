@@ -6,21 +6,22 @@ namespace FolkerKinzel.MimeTypes;
 public sealed partial class MimeType
 {
     /// <summary>
-    /// Serializes the instance as Internet Media Type <see cref="string"/> ("MIME type") using the 
-    /// <see cref="MimeFormats.Default"/> format.
+    /// Serializes the instance as Internet Media Type <see cref="string"/> ("MIME type") using 
+    /// the <see cref="MimeFormats.Default"/> format.
     /// </summary>
     /// <returns>A <see cref="string"/> representation of the instance 
     /// according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Formatting a <see cref="MimeType"/> instance into a standards-compliant <see cref="string"/> using several options:</para>
+    /// <para>Formatting a <see cref="MimeType"/> instance into a standards-compliant 
+    /// <see cref="string"/> using several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
     public override string ToString() => ToString(MimeFormats.Default);
 
-
     /// <summary>
-    /// Serializes the instance as Internet Media Type <see cref="string"/> ("MIME type") with several <paramref name="options"/>
+    /// Serializes the instance as Internet Media Type <see cref="string"/> ("MIME type") with several 
+    /// <paramref name="options"/>.
     /// </summary>
     /// <param name="options">Named constants to specify options for the serialization of the instance. The
     /// flags can be combined.</param>
@@ -30,7 +31,8 @@ public sealed partial class MimeType
     /// <see cref="MimeType.MinLineLength"/> is taken instead.</param>
     /// <returns>A <see cref="string"/> representation of the instance according to RFC 2045 and RFC 2231.</returns>
     /// <example>
-    /// <para>Formatting a <see cref="MimeType"/> instance into a standards-compliant <see cref="string"/> using several options:</para>
+    /// <para>Formatting a <see cref="MimeType"/> instance into a standards-compliant <see cref="string"/> using 
+    /// several options:</para>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
     /// </example>
     public string ToString(MimeFormats options, int lineLength = MimeType.MinLineLength)
@@ -38,10 +40,9 @@ public sealed partial class MimeType
             ? MediaType + '/' + SubType
             : AppendToInternal(new StringBuilder(), options, lineLength).ToString();
 
-
     /// <summary>
-    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2231 to the end of a 
-    /// <see cref="StringBuilder"/>.
+    /// Appends a <see cref="string"/> representation of this instance according to RFC 2045 and RFC 2231 to the 
+    /// end of a <see cref="StringBuilder"/>.
     /// </summary>
     /// <param name="builder">The <see cref="StringBuilder"/>.</param>
     /// <param name="options">Named constants to specify options for the serialization of the instance. The
@@ -57,7 +58,6 @@ public sealed partial class MimeType
                                   int maxLineLength = MimeType.MinLineLength) =>
         builder is null ? throw new ArgumentNullException(nameof(builder))
                         : AppendToInternal(builder, options, maxLineLength);
-
 
     private StringBuilder AppendToInternal(StringBuilder builder,
                                            MimeFormats options,
@@ -76,7 +76,6 @@ public sealed partial class MimeType
                                    (HasParameters ? _dic.Count : 0) * MimeTypeParameter.STRING_LENGTH);
         _ = builder.Append(MediaType).Append('/').Append(SubType);
 
-
         if (options != MimeFormats.IgnoreParameters)
         {
             if (options.HasFlag(MimeFormats.LineWrapping))
@@ -91,7 +90,6 @@ public sealed partial class MimeType
 
         return builder;
     }
-
 
     private void AppendUnWrappedParameters(StringBuilder builder, MimeFormats options)
     {
@@ -111,7 +109,6 @@ public sealed partial class MimeType
         }
     }
 
-
     private void AppendWrappedParameters(StringBuilder builder,
                                          MimeFormats options,
                                          int maxLineLength,
@@ -126,7 +123,6 @@ public sealed partial class MimeType
 
         var worker = new StringBuilder(maxLineLength * 3);
         int currentLineLength = builder.Length - startOfCurrentLine;
-
 
         foreach (MimeTypeParameter parameter in Parameters)
         {
@@ -145,5 +141,4 @@ public sealed partial class MimeType
                                                                    currentLineLength);
         }
     }
-
 }

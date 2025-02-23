@@ -10,7 +10,6 @@ internal static class ParameterSerializer
 {
     internal const string UTF_8 = "utf-8";
 
-
     /// <summary>
     /// Appends a RFC 2231 serialized <see cref="MimeTypeParameter"/>
     /// to a <see cref="StringBuilder"/>.
@@ -20,8 +19,8 @@ internal static class ParameterSerializer
     /// <param name="urlFormat"></param>
     internal static EncodingAction AppendTo(StringBuilder builder, MimeTypeParameter parameter, bool urlFormat)
     {
-        var value = parameter.Value.AsSpan();
-        var language = parameter.Language.AsSpan();
+        ReadOnlySpan<char> value = parameter.Value.AsSpan();
+        ReadOnlySpan<char> language = parameter.Language.AsSpan();
 
         PrepareBuilder(builder, parameter.Key.Length, value.Length, language.Length);
 
@@ -32,7 +31,6 @@ internal static class ParameterSerializer
                              true);
     }
 
-
     /// <summary>
     /// Appends a RFC 2231 serialized <see cref="MimeTypeParameterInfo"/>
     /// to a <see cref="StringBuilder"/>.
@@ -40,13 +38,15 @@ internal static class ParameterSerializer
     /// <param name="builder"></param>
     /// <param name="parameter"></param>
     /// <param name="urlFormat"></param>
-    internal static EncodingAction AppendTo(StringBuilder builder, MimeTypeParameterInfo parameter, bool urlFormat)
+    internal static EncodingAction AppendTo(StringBuilder builder,
+                                            MimeTypeParameterInfo parameter,
+                                            bool urlFormat)
     {
         Debug.Assert(!parameter.IsEmpty);
 
-        var key = parameter.Key;
-        var value = parameter.Value;
-        var language = parameter.Language;
+        ReadOnlySpan<char> key = parameter.Key;
+        ReadOnlySpan<char> value = parameter.Value;
+        ReadOnlySpan<char> language = parameter.Language;
 
         PrepareBuilder(builder, key.Length, value.Length, language.Length);
 
@@ -59,7 +59,6 @@ internal static class ParameterSerializer
                              urlFormat,
                              parameter.IsValueCaseSensitive);
     }
-
 
     private static EncodingAction AppendValueTo(StringBuilder builder,
                                          ReadOnlySpan<char> value,
@@ -102,7 +101,6 @@ internal static class ParameterSerializer
                                       keyLength +
                                       languageLength +
                                       valueLength);
-
 
     internal static int SplitParameter(StringBuilder builder,
                                        StringBuilder worker,
@@ -157,7 +155,6 @@ internal static class ParameterSerializer
         return currentLineLength;
     }
 
-
     /// <summary>
     /// Computes the minimum length that is needed for a line. (Depends on key, charset,
     /// language and the <see cref="EncodingAction"/>.)
@@ -166,7 +163,9 @@ internal static class ParameterSerializer
     /// <param name="desiredLineLength"></param>
     /// <param name="enc"></param>
     /// <returns>The minimum length that is needed for a line.</returns>
-    private static int ComputeMinimumLineLength(int givenLength, int desiredLineLength, EncodingAction enc)
+    private static int ComputeMinimumLineLength(int givenLength,
+                                                int desiredLineLength,
+                                                EncodingAction enc)
     {
         int minimumLength = givenLength + ParameterSplitter.MINIMUM_VARIABLE_LINE_LENGTH;
 
@@ -186,5 +185,4 @@ internal static class ParameterSerializer
 
         return desiredLineLength;
     }
-
 }

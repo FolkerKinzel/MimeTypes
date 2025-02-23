@@ -7,7 +7,5 @@ public sealed partial class MimeType
     /// </summary>
     public const int MinLineLength = 64;
 
-
     internal const string NEW_LINE = "\r\n";
-
 }

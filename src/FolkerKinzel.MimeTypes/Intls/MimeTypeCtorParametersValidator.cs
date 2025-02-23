@@ -7,11 +7,11 @@ internal static class MimeTypeCtorParametersValidator
     private const int MEDIA_TYPE_LENGTH_MAX_VALUE = MimeTypeInfo.MEDIA_TYPE_LENGTH_MAX_VALUE;
     private const int SUB_TYPE_LENGTH_MAX_VALUE = MimeTypeInfo.SUB_TYPE_LENGTH_MAX_VALUE;
 
-
     /// <summary>Validates <paramref name="mediaType"/> and <paramref name="subType"/>.</summary>
     /// <param name="mediaType"></param>
     /// <param name="subType"></param>
-    /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> or <paramref name="subType"/> is <c>null</c>.</exception>
+    /// <exception cref="ArgumentNullException"><paramref name="mediaType"/> or 
+    /// <paramref name="subType"/> is <c>null</c>.</exception>
     /// <exception cref="ArgumentException">
     /// <paramref name="mediaType"/> or <paramref name="subType"/> is <see cref="string.Empty"/> or is
     /// a <see cref="string"/> that is longer than <see cref="short.MaxValue"/> or contains characters,
@@ -40,6 +40,4 @@ internal static class MimeTypeCtorParametersValidator
             throw new ArgumentException(Res.StringTooLong, nameof(subType));
         }
     }
-
-
 }

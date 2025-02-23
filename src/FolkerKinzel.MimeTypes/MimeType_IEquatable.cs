@@ -5,11 +5,13 @@ namespace FolkerKinzel.MimeTypes;
 public sealed partial class MimeType : IEquatable<MimeType>
 {
     /// <summary>
-    /// Determines whether the value of this instance is equal to the value of <paramref name="other"/>. The <see cref="Parameters"/>
-    /// are taken into account.
+    /// Determines whether the value of this instance is equal to the value of 
+    /// <paramref name="other"/>. The <see cref="Parameters"/> are taken into account.
     /// </summary>
-    /// <param name="other">The <see cref="MimeType"/> instance to compare with or <c>null</c>.</param>
-    /// <returns><c>true</c> if this the value of this instance is equal to that of <paramref name="other"/>; <c>false</c>, otherwise.</returns>
+    /// <param name="other">The <see cref="MimeType"/> instance to compare with or 
+    /// <c>null</c>.</param>
+    /// <returns><c>true</c> if this the value of this instance is equal to that of 
+    /// <paramref name="other"/>; <c>false</c>, otherwise.</returns>
     /// 
     /// <example>
     /// <para>
@@ -19,7 +21,6 @@ public sealed partial class MimeType : IEquatable<MimeType>
     /// </example>
     [CLSCompliant(false)]
     public bool Equals(MimeType? other) => Equals(other, false);
-
 
     /// <summary>
     /// Determines whether this instance is equal to <paramref name="other"/> and allows to specify
@@ -56,7 +57,6 @@ public sealed partial class MimeType : IEquatable<MimeType>
         return this.Parameters.Sort(isText).SequenceEqual(other.Parameters.Sort(isText));
     }
 
-
     /// <summary>
     /// Determines whether <paramref name="obj"/> is a <see cref="MimeType"/> object
     /// whose
@@ -73,5 +73,4 @@ public sealed partial class MimeType : IEquatable<MimeType>
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/EqualityExample.cs"/>
     /// </example>
     public override bool Equals(object? obj) => obj is MimeType type && Equals(type, false);
-
 }

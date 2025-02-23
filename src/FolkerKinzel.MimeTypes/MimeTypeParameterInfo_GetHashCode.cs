@@ -35,5 +35,4 @@ public readonly partial struct MimeTypeParameterInfo
 
         return hash.ToHashCode();
     }
-
 }

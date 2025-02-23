@@ -30,9 +30,8 @@ internal static class MimeTypeSerializer
         }
     }
 
-
     [MethodImpl(MethodImplOptions.AggressiveInlining)]
-    private static int GetCurrentLineStartIndex(StringBuilder builder, int startOfMimeType) => builder.LastIndexOf('\n', startOfMimeType) + 1;
-
+    private static int GetCurrentLineStartIndex(StringBuilder builder, int startOfMimeType)
+        => builder.LastIndexOf('\n', startOfMimeType) + 1;
 }
 

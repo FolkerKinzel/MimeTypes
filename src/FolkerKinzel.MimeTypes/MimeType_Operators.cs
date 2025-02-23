@@ -20,7 +20,6 @@ public sealed partial class MimeType
     public static bool operator ==(MimeType? mimeType1, MimeType? mimeType2) =>
         mimeType1?.Equals(mimeType2, false) ?? mimeType2?.Equals(mimeType1, false) ?? true;
 
-
     /// <summary>
     /// Returns a value that indicates whether two specified <see cref="MimeType"/> instances are not equal.
     /// The <see cref="Parameters"/> are taken into account.
@@ -38,6 +37,4 @@ public sealed partial class MimeType
     /// <seealso cref="Equals(MimeType?)"/>
     public static bool operator !=(MimeType? mimeType1, MimeType? mimeType2) =>
         !(mimeType1 == mimeType2);
-
-
 }

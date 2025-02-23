@@ -13,7 +13,8 @@
 /// </remarks>
 internal static class HttpQuotedString
 {
-    internal static StringBuilder AppendMasked(this StringBuilder sb, ReadOnlySpan<char> value)
+    internal static StringBuilder AppendMasked(this StringBuilder sb,
+                                               ReadOnlySpan<char> value)
     {
         sb.EnsureCapacity(sb.Length + (int)(value.Length * 1.5));
 
@@ -30,7 +31,6 @@ internal static class HttpQuotedString
         return sb;
     }
 
-
     internal static void UnMask(this StringBuilder builder, int startOfValue)
     {
         // See https://fetch.spec.whatwg.org/#collect-an-http-quoted-string
@@ -45,6 +45,4 @@ internal static class HttpQuotedString
             }
         }
     }
-
-
 }

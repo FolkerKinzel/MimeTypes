@@ -71,8 +71,8 @@ internal ref struct ParameterSanitizer
         if (_span[idxBeforeKeyValueSeparator].IsWhiteSpace() ||
            (_span.Length > idxAfterKeyValueSeparator && _span[idxAfterKeyValueSeparator].IsWhiteSpace()))
         {
-            var keySpan = _span.Slice(0, keyValueSeparatorIndex).TrimEnd();
-            var valueSpan = _span.Slice(idxAfterKeyValueSeparator).TrimStart();
+            ReadOnlySpan<char> keySpan = _span.Slice(0, keyValueSeparatorIndex).TrimEnd();
+            ReadOnlySpan<char> valueSpan = _span.Slice(idxAfterKeyValueSeparator).TrimStart();
 
 #if NET462 || NETSTANDARD2_0 || NETSTANDARD2_1
             var sb = new StringBuilder(_span.Length);
@@ -86,7 +86,6 @@ internal ref struct ParameterSanitizer
         }
         return keyValueSeparatorIndex;
     }
-
 
     private int RemoveCommentAtStart()
     {
@@ -122,7 +121,6 @@ internal ref struct ParameterSanitizer
             return span.Length;
         }
     }
-
 
     /// <summary>
     /// Removes a comment at the end.

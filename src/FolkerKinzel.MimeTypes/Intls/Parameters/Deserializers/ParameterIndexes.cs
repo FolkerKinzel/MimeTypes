@@ -3,7 +3,7 @@ using System.Runtime.InteropServices;
 
 namespace FolkerKinzel.MimeTypes.Intls.Parameters.Deserializers;
 
-[SuppressMessage("Style", "IDE1006:Benennungsstile", Justification = "<Ausstehend>")]
+[SuppressMessage("Style", "IDE1006:Naming styles", Justification = "<Pending>")]
 [StructLayout(LayoutKind.Auto)]
 internal readonly ref struct ParameterIndexes
 {
@@ -32,7 +32,7 @@ internal readonly ref struct ParameterIndexes
         KeyValueOffset = Starred || IsValueQuoted ? 1 : 0;
         ValuePartStart = KeyLength + KeyValueOffset + SEPARATOR_LENGTH;
 
-        var idx = GetLanguageIdx();
+        (int LanguageStart, int LanguageLength) idx = GetLanguageIdx();
         LanguageStart = idx.LanguageStart;
         LanguageLength = idx.LanguageLength;
 
@@ -159,7 +159,8 @@ internal readonly ref struct ParameterIndexes
     /// Returns <c>true</c> if <see cref="KeyLength"/> is valid.
     /// </summary>
     /// <returns><c>true</c> if <see cref="KeyLength"/> is valid, otherwise <c>false</c>.</returns>
-    private static bool VerifyKeyLength(int length) => length is not (< 1 or > MimeTypeParameterInfo.KEY_LENGTH_MAX_VALUE);
+    private static bool VerifyKeyLength(int length)
+        => length is not (< 1 or > MimeTypeParameterInfo.KEY_LENGTH_MAX_VALUE);
 
     private readonly (int LanguageStart, int LanguageLength) GetLanguageIdx()
     {
@@ -195,5 +196,4 @@ internal readonly ref struct ParameterIndexes
 
         return (languageStart, languageLength);
     }
-
 }

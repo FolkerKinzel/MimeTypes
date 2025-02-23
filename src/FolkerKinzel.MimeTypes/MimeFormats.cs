@@ -1,10 +1,12 @@
 ﻿namespace FolkerKinzel.MimeTypes;
 
 /// <summary>
-/// Named constants to specify options to format <see cref="MimeType"/> objects as <see cref="string"/>. The flags can be combined.
+/// Named constants to specify options to format <see cref="MimeType"/> objects as <see cref="string"/>.
+/// The flags can be combined.
 /// </summary>
 /// <example>
-/// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several options:</para>
+/// <para>Format a <see cref="MimeType"/> instance into a standards-compliant string using several 
+/// options:</para>
 /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/FormattingOptionsExample.cs"/>
 /// </example>
 [Flags]
