@@ -1,5 +1,4 @@
-﻿using FolkerKinzel.Helpers.Polyfills;
-using FolkerKinzel.MimeTypes.Intls;
+﻿using FolkerKinzel.MimeTypes.Intls;
 using FolkerKinzel.MimeTypes.Intls.Parameters.Creations;
 using FolkerKinzel.MimeTypes.Properties;
 
