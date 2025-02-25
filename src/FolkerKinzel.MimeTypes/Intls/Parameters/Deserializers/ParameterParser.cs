@@ -7,7 +7,7 @@ internal static class ParameterParser
 {
     private const int SPLIT_INDEX_INITIAL_VALUE = -1;
 
-    internal static IEnumerable<MimeTypeParameterInfo> 
+    internal static IEnumerable<MimeTypeParameterInfo>
         ParseParameters(ReadOnlyMemory<char> remainingParameters)
     {
         string currentKey = "";

@@ -11,7 +11,7 @@ public readonly partial struct MimeTypeInfo
     /// <returns><c>true</c> if <paramref name="info1"/> and <paramref name="info2"/> are 
     /// equal; otherwise, <c>false</c>.</returns>
     /// <seealso cref="Equals(in MimeTypeInfo)"/>
-    public static bool operator ==(MimeTypeInfo info1, MimeTypeInfo info2) 
+    public static bool operator ==(MimeTypeInfo info1, MimeTypeInfo info2)
         => info1.Equals(in info2, false);
 
     /// <summary>
@@ -23,6 +23,6 @@ public readonly partial struct MimeTypeInfo
     /// <returns><c>true</c> if <paramref name="info1"/> and <paramref name="info2"/> are
     /// not equal; otherwise, <c>false</c>.</returns>
     /// <seealso cref="Equals(in MimeTypeInfo)"/>
-    public static bool operator !=(MimeTypeInfo info1, MimeTypeInfo info2) 
+    public static bool operator !=(MimeTypeInfo info1, MimeTypeInfo info2)
         => !info1.Equals(in info2, false);
 }

@@ -121,7 +121,7 @@ public sealed class Compiler : IDisposable
     private void CollectResourceFile(List<Entry> list, IResourceParser parser)
     {
         _log.Debug("Start parsing the resource {0}.", parser.FileName);
-        
+
         int initialCount = list.Count;
         Entry? entry;
         while ((entry = parser.GetNextLine()) is not null)

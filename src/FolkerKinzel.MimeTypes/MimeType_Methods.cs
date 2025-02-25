@@ -143,7 +143,7 @@ public sealed partial class MimeType
                 return;
             }
 
-            if (language.Length > MimeTypeParameterInfo.LANGUAGE_LENGTH_MAX_VALUE 
+            if (language.Length > MimeTypeParameterInfo.LANGUAGE_LENGTH_MAX_VALUE
                 || !IetfLanguageTag.Validate(language.AsSpan()))
             {
                 throw new ArgumentException(string.Format(Res.InvalidIetfLanguageTag, paraName), paraName);

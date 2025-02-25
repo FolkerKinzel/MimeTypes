@@ -13,7 +13,7 @@ internal static class IndexFactory
     {
         using StreamReader reader = ReaderFactory.InitReader(MIME_INDEX_RESOURCE_NAME);
 
-        var dic = 
+        var dic =
             new Dictionary<string, (int StartIndex, int linesCount)>(16, StringComparer.OrdinalIgnoreCase);
         string? line;
 

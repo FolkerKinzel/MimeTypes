@@ -26,8 +26,8 @@ public readonly partial struct MimeTypeInfo
         value = value.TrimStart();
         ReadOnlySpan<char> span = value.Span;
         int parameterSeparatorIndex = span.IndexOf(';');
-        ReadOnlySpan<char> mediaPartSpan = parameterSeparatorIndex < 0 
-                                           ? span 
+        ReadOnlySpan<char> mediaPartSpan = parameterSeparatorIndex < 0
+                                           ? span
                                            : span.Slice(0, parameterSeparatorIndex);
         bool hasParameters = parameterSeparatorIndex > 1; // x/;
 
@@ -54,8 +54,8 @@ public readonly partial struct MimeTypeInfo
             return ReAllocate(capacity: value.Length,
                               hasParameters: hasParameters,
                               mediaPartSpan: mediaPartSpan,
-                              parameterSpan: hasParameters 
-                                              ? span.Slice(parameterSeparatorIndex) 
+                              parameterSpan: hasParameters
+                                              ? span.Slice(parameterSeparatorIndex)
                                               : [],
                               out mimeType);
         }

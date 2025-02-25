@@ -30,7 +30,7 @@ public readonly partial struct MimeTypeParameterInfo
     // The Offset for the '='-Sign is not stored:    *  or   ""                 1                          =
     private int KeyValueOffset
         => IsEmpty
-            ? 0 
+            ? 0
             : ((_idx >> KEY_VALUE_OFFSET_SHIFT) & KEY_VALUE_OFFSET_MAX_VALUE) + EQUALS_SIGN_LENGTH;
 
     private int KeyLength => _idx & KEY_LENGTH_MAX_VALUE;
@@ -45,7 +45,7 @@ public readonly partial struct MimeTypeParameterInfo
 
     private int LanguageLength => (_idx >> LANGUAGE_LENGTH_SHIFT) & LANGUAGE_LENGTH_MAX_VALUE;
 
-    private int ValueStart 
+    private int ValueStart
         => ContainsLanguageAndCharset
              ? KeyLength + KeyValueOffset + CharSetLength + LanguageLength + SINGLE_QUOTES_COUNT
              : KeyLength + KeyValueOffset;

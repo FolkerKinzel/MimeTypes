@@ -82,6 +82,6 @@ public sealed partial class MimeType
     /// <code language="c#" source="./../../../FolkerKinzel.MimeTypes/src/Examples/BuildAndParseExample.cs"/>
     /// </example>
     public bool IsOctetStream
-        => MediaType.Equals("application", StringComparison.OrdinalIgnoreCase) 
+        => MediaType.Equals("application", StringComparison.OrdinalIgnoreCase)
            && SubType.Equals("octet-stream", StringComparison.Ordinal);
 }

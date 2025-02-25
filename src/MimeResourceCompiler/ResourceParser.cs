@@ -67,7 +67,8 @@ public class ResourceParser : IResourceParser
                 {
                     throw new InvalidDataException(
                         string.Format("The resource {0} contains invalid data: {1}", FileName, line), e);
-                };
+                }
+                ;
             }
         }
 

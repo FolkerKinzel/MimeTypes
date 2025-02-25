@@ -1,5 +1,4 @@
 ﻿using CommandLine;
-using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 
@@ -70,7 +69,7 @@ internal class Program
             outDir = CreateOutputDirectory(options.OutputPath, options.CreateWrapper);
             logFilePath = Path.Combine(outDir, LOG_FILE_NAME);
         }
-        catch (Exception e) 
+        catch (Exception e)
         {
             Console.Error.WriteLine(e);
             Environment.ExitCode = -1;

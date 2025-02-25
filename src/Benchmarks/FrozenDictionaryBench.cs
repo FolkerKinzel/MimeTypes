@@ -1,18 +1,14 @@
 ﻿using BenchmarkDotNet.Attributes;
-using Iced.Intel;
-using System;
 using System.Collections.Frozen;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Benchmarks;
 
 [MemoryDiagnoser]
 public class FrozenDictionaryBench
 {
-    private static readonly FrozenDictionary<char, (int, int)> _frozenChar = new (char Key, int ItemA, int ItemB)[] 
+    private static readonly FrozenDictionary<char, (int, int)> _frozenChar = new (char Key, int ItemA, int ItemB)[]
     {
     ('a', 0,0),
     ('b', 0,0),

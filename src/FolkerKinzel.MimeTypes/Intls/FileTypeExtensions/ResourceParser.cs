@@ -13,7 +13,7 @@ internal static class ResourceParser
     private static readonly Dictionary<string, (int, int)> _mimeIndex = IndexFactory.CreateMimeIndex();
     private static readonly Dictionary<char, (int, int)> _extensionIndex = IndexFactory.CreateExtensionIndex();
 #else
-    private static readonly System.Collections.Frozen.FrozenDictionary<string, (int, int)> _mimeIndex 
+    private static readonly System.Collections.Frozen.FrozenDictionary<string, (int, int)> _mimeIndex
         = IndexFactory.CreateMimeIndex();
     private static readonly System.Collections.Frozen.FrozenDictionary<char, (int, int)> _extensionIndex
         = IndexFactory.CreateExtensionIndex();
@@ -24,7 +24,7 @@ internal static class ResourceParser
         Debug.Assert(fileTypeExtension.Length != 0);
         Debug.Assert(fileTypeExtension[0] != '.');
 
-        if (!_extensionIndex.TryGetValue(char.ToLowerInvariant(fileTypeExtension[0]), 
+        if (!_extensionIndex.TryGetValue(char.ToLowerInvariant(fileTypeExtension[0]),
                                          out (int Start, int LinesCount) mediaTypeIndex))
         {
             return MimeString.OctetStream;
@@ -53,7 +53,7 @@ internal static class ResourceParser
 
     internal static string GetFileType(string mimeType)
     {
-        if (!_mimeIndex.TryGetValue(GetMediaTypeFromMimeType(mimeType), 
+        if (!_mimeIndex.TryGetValue(GetMediaTypeFromMimeType(mimeType),
                                     out (int Start, int LinesCount) mediaTypeIndex))
         {
             return MimeCache.DEFAULT_EXTENSION_WITHOUT_PERIOD;

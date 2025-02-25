@@ -87,9 +87,9 @@ public readonly partial struct MimeTypeInfo
 
         options = options.Normalize();
 
-        _ = builder.EnsureCapacity(builder.Length 
+        _ = builder.EnsureCapacity(builder.Length
                                    + MediaType.Length
-                                   + 1 
+                                   + 1
                                    + SubTypeLength
                                    + (HasParameters ? MimeTypeParameter.STRING_LENGTH : 0));
 
@@ -149,7 +149,7 @@ public readonly partial struct MimeTypeInfo
 
         foreach (MimeTypeParameterInfo parameter in Parameters())
         {
-            EncodingAction action = 
+            EncodingAction action =
                 ParameterSerializer.AppendTo(worker.Clear(), parameter, false);
 
             int keyLength = parameter.Key.Length;

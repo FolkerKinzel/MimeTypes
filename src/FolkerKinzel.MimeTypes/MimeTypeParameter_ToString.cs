@@ -52,7 +52,7 @@ public sealed partial class MimeTypeParameter
     public StringBuilder AppendTo(StringBuilder builder, bool urlFormat = false)
     {
         _ArgumentNullException.ThrowIfNull(builder, nameof(builder));
-        
+
         _ = ParameterSerializer.AppendTo(builder, this, urlFormat);
         return builder;
     }

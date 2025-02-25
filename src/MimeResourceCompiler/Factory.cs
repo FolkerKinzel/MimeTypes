@@ -1,8 +1,4 @@
-﻿using MimeResourceCompiler.Classes;
-using Serilog.Core;
-using Serilog.Events;
-
-namespace MimeResourceCompiler;
+﻿namespace MimeResourceCompiler;
 
 /// <summary>
 /// Builds the objects used in the program and takes care to release their resources.

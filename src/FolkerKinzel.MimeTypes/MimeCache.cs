@@ -47,7 +47,7 @@ public static class MimeCache
 #endif
 
     private static Lazy<ConcurrentDictionary<int, string>> _mimeCache = new(CreateMimeCache, true);
-    private static Lazy<ConcurrentDictionary<int, (string Extension, string DottedExtension)>> _extCache 
+    private static Lazy<ConcurrentDictionary<int, (string Extension, string DottedExtension)>> _extCache
         = new(CreateExtCache, true);
 
     /// <summary>
@@ -216,11 +216,11 @@ public static class MimeCache
     }
 
 #if NET462 || NETSTANDARD2_0
-    private static int GetHash(string? value) 
+    private static int GetHash(string? value)
         => value.AsSpan().GetPersistentHashCode(HashType.OrdinalIgnoreCase);
 #endif
 
-    private static int GetHash(ReadOnlySpan<char> value) 
+    private static int GetHash(ReadOnlySpan<char> value)
         => value.GetPersistentHashCode(HashType.OrdinalIgnoreCase);
 
     private static void AddEntryToExtCache(string mimeType, string ext, string dottedExt)

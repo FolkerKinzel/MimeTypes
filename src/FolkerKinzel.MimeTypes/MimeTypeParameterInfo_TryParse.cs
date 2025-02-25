@@ -54,7 +54,7 @@ public readonly partial struct MimeTypeParameterInfo
             return false;
         }
 
-        if (idx.LanguageLength != 0 
+        if (idx.LanguageLength != 0
             && !IetfLanguageTag.Validate(idx.Span.Slice(idx.LanguageStart, idx.LanguageLength)))
         {
             return false;
