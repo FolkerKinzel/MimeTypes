@@ -45,10 +45,6 @@ public class MimeStringTests
     [TestMethod]
     public void FromFileNameTest4() => Assert.AreEqual(MimeString.OctetStream, MimeString.FromFileName((string?)null));
 
-
-    
-
-
     #region FromFileNameTests
 
     [DataTestMethod]
@@ -1135,43 +1131,6 @@ public class MimeStringTests
     [DataRow("application/json", ".json")]
     [DataRow("application/octet-stream", "##############++")]
     [DataRow("application/octet-stream", "13778926734458b8")]
-
-    // mime-db 1.54.0
-    //[DataRow("image/pjpeg", ".jfif")]
-    //[DataRow("message/rfc822", ".mht")]
-    //[DataRow("message/rfc822", ".mhtml")]
-    //[DataRow("application/onenote", ".one")]
-    //[DataRow("application/onenote", ".onea")]
-    //[DataRow("application/vnd.visio", ".vtx")]
-    //[DataRow("application/vnd.visio", ".vsdx")]
-    //[DataRow("application/vnd.ms-visio.viewer", ".vdx")]
-    //[DataRow("application/zip+dotlottie", ".lottie")]
-    //[DataRow("x-compressed", ".rar")]
-    //[DataRow("x-zip-compressed", ".zip")]
-    //[DataRow("audio/mp4", ".m4b")]
-    //[DataRow("model/step", ".step")]
-    //[DataRow("model/step", ".stp")]
-    //[DataRow("model/step", ".stpnc")]
-    //[DataRow("model/step", ".p21")]
-    //[DataRow("model/step", ".210")]
-    //[DataRow("application/vnd.procreate.dream", ".drm")]
-    //[DataRow("application/vnd.procreate.brushset", ".brushset")]
-    //[DataRow("application/vnd.procreate.brush", ".brush")]
-    //[DataRow("image/x-adobe-dng", ".dng")]
-    //[DataRow("application/vnd.autodesk.fbx", ".fbx")]
-    //[DataRow("application/x-blender", ".blend")]
-    //[DataRow("application/x-blender", ".blend1")]
-    //[DataRow("application/x-blender", ".blend2")]
-    //[DataRow("application/vnd.google-apps.drawing", ".gdraw")]
-    //[DataRow("application/vnd.google-apps.form", ".gform")]
-    //[DataRow("application/vnd.google-apps.jam", ".gjam")]
-    //[DataRow("application/vnd.google-apps.map", ".gmap")]
-    //[DataRow("application/vnd.google-apps.presentation", ".gslides")]
-    //[DataRow("application/vnd.google-apps.script", ".gscript")]
-    //[DataRow("application/vnd.google-apps.site", ".gsite")]
-    //[DataRow("application/x-ipynb+json", ".ipynb")]
-    //[DataRow("application/x-zip-compressed", ".zip")]
-    //[DataRow("application/dicom", ".dcm")]
     public void FromFileTypeExtensionTest1(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
 
     // mime-db 1.54.0
@@ -1213,7 +1172,6 @@ public class MimeStringTests
     [DataRow("application/x-ipynb+json", ".ipynb")]
     [DataRow("application/dicom", ".dcm")]
     public void FromFileTypeExtensionTest2(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
-
 
     #endregion
 
@@ -2186,6 +2144,4 @@ public class MimeStringTests
     //{
     //    UnitTestGenerator.GenerateTests();
     //}
-
-
 }

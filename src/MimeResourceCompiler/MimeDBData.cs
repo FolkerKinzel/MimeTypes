@@ -8,20 +8,14 @@ public interface IMimeDBData
     void GetData(List<Entry> list);
 }
 
-public sealed class MimeDBData : IMimeDBData
+/// <summary>
+/// ctor
+/// </summary>
+public sealed class MimeDBData(HttpClient client, ILogger log) : IMimeDBData
 {
     private const string MIME_DB_URL = @"https://cdn.jsdelivr.net/gh/jshttp/mime-db@master/db.json";
-    private readonly HttpClient _httpClient;
-    private readonly ILogger _log;
-
-    /// <summary>
-    /// ctor
-    /// </summary>
-    public MimeDBData(HttpClient client, ILogger log)
-    {
-        _httpClient = client;
-        _log = log;
-    }
+    private readonly HttpClient _httpClient = client;
+    private readonly ILogger _log = log;
 
     public void GetData(List<Entry> list)
     {
