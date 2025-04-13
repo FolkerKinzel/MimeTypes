@@ -14,3 +14,9 @@ text/javascript js
 video/quicktime mov
 image/jpeg jpg
 text/vnd.dvb.subtitle sub
+
+application/onenote one
+application/vnd.visio vsdx
+
+# Fixes a bug in mime-db 1.54.0
+application/vnd.procreate.brushset brushset

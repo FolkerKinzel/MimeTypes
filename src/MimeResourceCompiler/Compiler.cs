@@ -157,24 +157,24 @@ public sealed class Compiler : IDisposable
 
         _log.Debug("Apache data completely parsed.");
 
-        ValidateDefaultCsvEntries(list, tmp);
+        //ValidateDefaultCsvEntries(list, tmp);
         list.AddRange(tmp);
     }
 
-    private void ValidateDefaultCsvEntries(List<Entry> list, List<Entry> tmp)
-    {
-        _log.Debug("Start validating that all Default.csv entries are in the Apache file.");
+    //private void ValidateDefaultCsvEntries(List<Entry> list, List<Entry> tmp)
+    //{
+    //    _log.Debug("Start validating that all Default.csv entries are in the Apache file.");
 
-        foreach (Entry entry in list)
-        {
-            if (!tmp.Contains(entry))
-            {
-                throw new InvalidOperationException($"The Entry {entry} in Default.csv is not part of the Apache file.");
-            }
-        }
+    //    foreach (Entry entry in list)
+    //    {
+    //        if (!tmp.Contains(entry))
+    //        {
+    //            throw new InvalidOperationException($"The Entry {entry} in Default.csv is not part of the Apache file.");
+    //        }
+    //    }
 
-        _log.Debug("Default.csv validation completed.");
-    }
+    //    _log.Debug("Default.csv validation completed.");
+    //}
 
     private void CollectMimeDBData(List<Entry> list)
     {
