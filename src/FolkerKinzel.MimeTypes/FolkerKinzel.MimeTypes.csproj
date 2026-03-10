@@ -11,12 +11,12 @@
     <PackageRequireLicenseAcceptance>true</PackageRequireLicenseAcceptance>
     <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
-    <PackageVersion>5.5.1</PackageVersion>
-    <FileVersion>5.5.1.8</FileVersion>
+    <PackageVersion>5.5.2</PackageVersion>
+    <FileVersion>5.5.2.2</FileVersion>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
     <PackageTags>MIME InternetMediaType</PackageTags>
-    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v5.5.1</PackageReleaseNotes>
+    <PackageReleaseNotes>https://github.com/FolkerKinzel/MimeTypes/releases/tag/v5.5.2</PackageReleaseNotes>
     <PackageIconUrl />
     <PackageProjectUrl>https://github.com/FolkerKinzel/MimeTypes</PackageProjectUrl>
     <RepositoryUrl>https://github.com/FolkerKinzel/MimeTypes.git</RepositoryUrl>
@@ -81,7 +81,7 @@
     <EmbeddedResource Include="Resources\MimeIdx.csv" />
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="8.0.0">
+    <PackageReference Include="Microsoft.SourceLink.GitHub" Version="10.0.200">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
@@ -89,11 +89,11 @@
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
-    <PackageReference Include="FolkerKinzel.Strings" Version="9.4.2" />
+    <PackageReference Include="FolkerKinzel.Strings" Version="9.4.3" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'net462'">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
-    <PackageReference Include="System.ValueTuple" Version="4.6.1" />
+    <PackageReference Include="System.ValueTuple" Version="4.6.2" />
   </ItemGroup>
   <ItemGroup Condition="'$(TargetFramework)' == 'netstandard2.0'">
     <PackageReference Include="Microsoft.Bcl.HashCode" Version="6.0.0" />
