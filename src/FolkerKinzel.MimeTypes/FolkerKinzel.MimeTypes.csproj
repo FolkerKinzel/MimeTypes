@@ -12,7 +12,7 @@
     <PackageIcon>Logo.png</PackageIcon>
     <PackageReadmeFile>NugetReadme.md</PackageReadmeFile>
     <PackageVersion>5.5.2</PackageVersion>
-    <FileVersion>5.5.2.2</FileVersion>
+    <FileVersion>5.5.2.4</FileVersion>
     <AssemblyVersion>5.0.0.0</AssemblyVersion>
     <Description>.NET Library that supports working with Internet Media Types ("MIME Types")</Description>
     <PackageTags>MIME InternetMediaType</PackageTags>
@@ -65,7 +65,7 @@
     <None Remove="Resources\ExtensionIdx.csv" />
     <None Remove="Resources\Mime.csv" />
     <None Remove="Resources\MimeIdx.csv" />
-    <None Include="..\..\..\..\Nuget-Logo\Logo.png">
+    <None Include="..\Logo.png">
       <Pack>True</Pack>
       <PackagePath></PackagePath>
     </None>
