@@ -1,4 +1,6 @@
-﻿namespace FolkerKinzel.MimeTypes.Tests;
+﻿using static System.Net.Mime.MediaTypeNames;
+
+namespace FolkerKinzel.MimeTypes.Tests;
 
 [TestClass]
 public class MimeStringTests
@@ -1173,6 +1175,18 @@ public class MimeStringTests
     [DataRow("application/dicom", ".dcm")]
     public void FromFileTypeExtensionTest2(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
 
+    [DataTestMethod]
+    // Apache 1929706
+    [DataRow("application/vnd.sqlite3", "sqlite")]
+    [DataRow("application/vnd.sqlite3", "sqlite3")]
+
+    // Apache 1930012
+    [DataRow("image/heic", ".heic")]
+    [DataRow("image/heic-sequence", ".heics")]
+    [DataRow("image/heif", ".heif")]
+    [DataRow("image/heif-sequence", ". heifs")]
+    public void FromFileTypeExtensionTest3(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
+
     #endregion
 
     #region GetFileTypeExtensionTest
@@ -2137,6 +2151,18 @@ public class MimeStringTests
     [DataRow("application/dicom", ".dcm")]
     public void GetFileTypeExtensionTest4(string mimeType, string extension) => Assert.AreEqual(extension, MimeString.ToFileTypeExtension(mimeType));
 
+
+    [DataTestMethod]
+    // Apache 1929706
+    [DataRow("application/vnd.sqlite3", "sqlite")]
+    //[DataRow("application/vnd.sqlite3", "sqlite3")]
+
+    // Apache 1930012
+    [DataRow("image/heic", ".heic")]
+    [DataRow("image/heic-sequence", ".heics")]
+    [DataRow("image/heif", ".heif")]
+    [DataRow("image/heif-sequence", ". heifs")]
+    public void GetFileTypeExtensionTest5(string mimeType, string extension) => Assert.AreEqual(extension, MimeString.ToFileTypeExtension(mimeType));
     #endregion
 
     //[TestMethod]
