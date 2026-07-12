@@ -11,6 +11,10 @@ application/vnd.yamaha.hv-script hvs
 application/vnd.yamaha.hv-voice hvp
 application/winhlp hlp
 application/x-hdf hdf
+image/heic heic
+image/heic-sequence heics
+image/heif heif
+image/heif-sequence heifs
 text/html html
 text/x-c h
 text/x-c hh
@@ -20,10 +24,6 @@ video/h264 h264
 application/atsc-held+xml held
 application/hjson hjson
 application/x-virtualbox-hdd hdd
-image/heic heic
-image/heic-sequence heics
-image/heif heif
-image/heif-sequence heifs
 image/hej2k hej2
 text/x-component htc
 text/x-handlebars-template hbs
@@ -244,6 +244,8 @@ application/vnd.semf semf
 application/vnd.solent.sdkm+xml sdkm
 application/vnd.solent.sdkm+xml sdkd
 application/vnd.spotfire.sfs sfs
+application/vnd.sqlite3 sqlite
+application/vnd.sqlite3 sqlite3
 application/vnd.stardivision.calc sdc
 application/vnd.stardivision.draw sda
 application/vnd.stardivision.impress sdd
@@ -307,6 +309,7 @@ application/sensml+xml sensmlx
 application/sieve siv
 application/sieve sieve
 application/swid+xml swidtag
+application/vnd.pp.systemverify+xml systemverify
 application/x-sea sea
 model/step step
 model/step stp
@@ -399,6 +402,7 @@ text/x-vcalendar vcs
 text/x-vcard vcf
 video/vnd.vivo viv
 video/x-ms-vob vob
+application/vec+xml vec
 application/vnd.ms-visio.viewer vdx
 application/vnd.visio vtx
 application/x-virtualbox-vbox vbox
@@ -834,6 +838,7 @@ text/x-pascal p
 text/x-pascal pas
 video/vnd.ms-playready.media.pyv pyv
 application/provenance+xml provx
+application/vnd.apache.parquet parquet
 application/vnd.apple.pages pages
 application/vnd.apple.pkpass pkpass
 application/x-httpd-php php
@@ -1121,6 +1126,7 @@ application/fdt+xml fdt
 application/vnd.autodesk.fbx fbx
 application/vnd.software602.filler.form+xml fo
 image/fits fits
+image/vnd.blockfact.facti facti
 image/fif fif
 image/fits fts
 image/fits fit
@@ -1242,6 +1248,7 @@ application/vnd.kinar kne
 application/vnd.kinar knp
 audio/midi kar
 image/ktx ktx
+application/kbl+xml kbl
 application/vnd.apple.keynote key
 application/x-keepass2 kdbx
 image/ktx2 ktx2

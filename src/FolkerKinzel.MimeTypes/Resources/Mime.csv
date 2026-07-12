@@ -59,6 +59,7 @@ text/x-handlebars-template hbs
 text/x-lua lua
 text/x-markdown mkd
 text/x-org org
+text/x-php php
 text/x-processing pde
 text/x-sass sass
 text/x-scss scss
@@ -119,12 +120,18 @@ video/x-msvideo avi
 video/x-sgi-movie movie
 video/x-smv smv
 video/iso.segment m4s
+video/matroska mkv
+video/matroska-3d mk3d
 image/jpeg jpg
 image/avif avif
 image/bmp bmp
 image/cgm cgm
 image/g3fax g3
 image/gif gif
+image/heic heic
+image/heic-sequence heics
+image/heif heif
+image/heif-sequence heifs
 image/ief ief
 image/jxl jxl
 image/ktx ktx
@@ -175,10 +182,6 @@ image/dicom-rle drle
 image/dpx dpx
 image/emf emf
 image/fits fits
-image/heic heic
-image/heic-sequence heics
-image/heif heif
-image/heif-sequence heifs
 image/hej2k hej2
 image/jaii jaii
 image/jais jais
@@ -201,6 +204,7 @@ image/prs.pti pti
 image/t38 t38
 image/tiff-fx tfx
 image/vnd.airzip.accelerator.azv azv
+image/vnd.blockfact.facti facti
 image/vnd.microsoft.icon ico
 image/vnd.ms-dds dds
 image/vnd.pco.b16 b16
@@ -633,6 +637,7 @@ application/vnd.smart.teacher teacher
 application/vnd.solent.sdkm+xml sdkm
 application/vnd.spotfire.dxp dxp
 application/vnd.spotfire.sfs sfs
+application/vnd.sqlite3 sqlite
 application/vnd.stardivision.calc sdc
 application/vnd.stardivision.draw sda
 application/vnd.stardivision.impress sdd
@@ -839,6 +844,7 @@ application/hjson hjson
 application/its+xml its
 application/javascript js
 application/json5 json5
+application/kbl+xml kbl
 application/ld+json jsonld
 application/lgr+xml lgr
 application/manifest+json webmanifest
@@ -869,8 +875,10 @@ application/ttml+xml ttml
 application/ubjson ubj
 application/urc-ressheet+xml rsheet
 application/urc-targetdesc+xml td
+application/vec+xml vec
 application/vnd.1000minds.decision-model+xml 1km
 application/vnd.age age
+application/vnd.apache.parquet parquet
 application/vnd.apple.keynote key
 application/vnd.apple.numbers numbers
 application/vnd.apple.pages pages
@@ -897,7 +905,7 @@ application/vnd.nato.bindingdataobject+xml bdo
 application/vnd.nokia.n-gage.ac+xml ac
 application/vnd.openblox.game+xml obgx
 application/vnd.openstreetmap.data+xml osm
-application/vnd.procrate.brushset brushset
+application/vnd.pp.systemverify+xml systemverify
 application/vnd.procreate.brush brush
 application/vnd.procreate.dream drm
 application/vnd.pwg-xhtml-print+xml xhtm
@@ -1024,6 +1032,7 @@ audio/xm xm
 audio/3gpp 3gpp
 audio/aac adts
 audio/amr amr
+audio/matroska mka
 audio/mobile-xmf mxmf
 audio/mp3 mp3
 audio/wav wav

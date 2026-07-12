@@ -1177,14 +1177,14 @@ public class MimeStringTests
 
     [DataTestMethod]
     // Apache 1929706
-    [DataRow("application/vnd.sqlite3", "sqlite")]
-    [DataRow("application/vnd.sqlite3", "sqlite3")]
+    [DataRow("application/vnd.sqlite3", ".sqlite")]
+    [DataRow("application/vnd.sqlite3", ".sqlite3")]
 
     // Apache 1930012
     [DataRow("image/heic", ".heic")]
     [DataRow("image/heic-sequence", ".heics")]
     [DataRow("image/heif", ".heif")]
-    [DataRow("image/heif-sequence", ". heifs")]
+    [DataRow("image/heif-sequence", ".heifs")]
     public void FromFileTypeExtensionTest3(string mimeType, string extension) => Assert.AreEqual(mimeType, MimeString.FromFileName(extension));
 
     #endregion
@@ -2154,14 +2154,14 @@ public class MimeStringTests
 
     [DataTestMethod]
     // Apache 1929706
-    [DataRow("application/vnd.sqlite3", "sqlite")]
+    [DataRow("application/vnd.sqlite3", ".sqlite")]
     //[DataRow("application/vnd.sqlite3", "sqlite3")]
 
     // Apache 1930012
     [DataRow("image/heic", ".heic")]
     [DataRow("image/heic-sequence", ".heics")]
     [DataRow("image/heif", ".heif")]
-    [DataRow("image/heif-sequence", ". heifs")]
+    [DataRow("image/heif-sequence", ".heifs")]
     public void GetFileTypeExtensionTest5(string mimeType, string extension) => Assert.AreEqual(extension, MimeString.ToFileTypeExtension(mimeType));
     #endregion
 
