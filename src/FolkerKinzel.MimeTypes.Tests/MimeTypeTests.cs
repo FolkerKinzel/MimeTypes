@@ -35,7 +35,7 @@ public class MimeTypeTests
         Assert.IsTrue(MimeTypeInfo.TryParse(input, out MimeTypeInfo mimeTypeInfo));
 
         var mime = MimeType.Create(in mimeTypeInfo);
-        Assert.AreEqual(0, mime.Parameters.Count());
+        Assert.IsEmpty(mime.Parameters);
     }
 
 
@@ -97,12 +97,10 @@ public class MimeTypeTests
         => _ = Assert.ThrowsExactly<ArgumentException>(
             () => MimeType.Create("image", "png").AppendParameter("key", "something", input));
 
-
     [TestMethod]
     public void AppendParameterTest6()
         => _ = Assert.ThrowsExactly<ArgumentException>(
             () => MimeType.Create("image", "png").AppendParameter("key", "something", new string('a', 256)));
-
 
     [TestMethod()]
     public void ClearParametersTest1()
@@ -112,10 +110,10 @@ public class MimeTypeTests
                    .AppendParameter("charset", "UTF-8");
 
         MimeTypeInfo mime = builder.AsInfo();
-        Assert.AreEqual(1, mime.Parameters().Count());
+        Assert.HasCount(1, mime.Parameters());
         builder.ClearParameters();
         mime = builder.AsInfo();
-        Assert.AreEqual(0, mime.Parameters().Count());
+        Assert.IsEmpty(mime.Parameters());
     }
 
     [TestMethod()]
@@ -142,8 +140,8 @@ public class MimeTypeTests
             .RemoveParameter("key1")
             .AsInfo();
 
-        MimeTypeParameterInfo[] paras = mime.Parameters().ToArray();
-        Assert.AreEqual(1, paras.Length);
+        MimeTypeParameterInfo[] paras = [.. mime.Parameters()];
+        Assert.HasCount(1, paras);
         Assert.AreEqual("key2", paras[0].Key.ToString());
     }
 
@@ -158,22 +156,22 @@ public class MimeTypeTests
                        .AppendParameter("a", "b")
                        .AppendTo(new StringBuilder(), MimeFormats.LineWrapping, -42);
 
-
     [TestMethod]
     public void AppendToTest3()
     {
-        var mime = MimeType.Create("application", "x-veeeeeeeeeeeeryyyyyyyyyyyyyyveryyyyyyyyyyyyyyyyyylooooooooong");
+        var mime = MimeType.Create("application", 
+                                   "x-veeeeeeeeeeeeryyyyyyyyyyyyyyveryyyyyyyyyyyyyyyyyylooooooooong");
         var builder = new StringBuilder("Content-type: ");
         string result = mime.AppendTo(builder, options: MimeFormats.LineWrapping).ToString();
         Assert.AreEqual(2, result.GetLinesCount());
     }
 
-
     [TestMethod]
     public void ToStringTest1()
     {
         MimeType mime = MimeType.Create("application", "x-stuff")
-            .AppendParameter("keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", "valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
+            .AppendParameter("keyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyyy", 
+                             "valueeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee");
 
         string s = mime.ToString(options: MimeFormats.LineWrapping, lineLength: 10);
         Assert.AreNotEqual(0, s.Length);
@@ -189,10 +187,8 @@ public class MimeTypeTests
         string result = MimeType.Create("application", "x-stuff")
                                 .AppendParameter("mypara", "UPPERCASE")
                                 .ToString();
-        StringAssert.Contains(result, "UPPERCASE", StringComparison.Ordinal);
+        Assert.Contains("UPPERCASE", result, StringComparison.Ordinal);
     }
-
-
 
     [TestMethod]
     public void EqualsTest1()
@@ -413,14 +409,14 @@ public class MimeTypeTests
     public void AsInfoTest1()
     {
         MimeTypeInfo info = MimeType.Create("application", "x-stuff").AppendParameter("key", "value").ClearParameters().AsInfo();
-        Assert.AreEqual(0, info.Parameters().Count());
+        Assert.IsEmpty(info.Parameters());
     }
 
     [TestMethod]
     public void AsInfoTest2()
     {
         MimeTypeInfo info = MimeType.Create("application", "x-stuff").AsInfo();
-        Assert.AreEqual(0, info.Parameters().Count());
+        Assert.IsEmpty(info.Parameters());
     }
 
     [TestMethod]
@@ -429,7 +425,7 @@ public class MimeTypeTests
         var mime = MimeType.FromFileName("test.jpg");
         Assert.AreEqual("image", mime.MediaType);
         Assert.AreEqual("jpeg", mime.SubType);
-        Assert.AreEqual(0, mime.Parameters.Count());
+        Assert.IsEmpty(mime.Parameters);
     }
 
     [TestMethod]
@@ -438,6 +434,6 @@ public class MimeTypeTests
         var mime = MimeType.FromFileName("test.jpg".AsSpan());
         Assert.AreEqual("image", mime.MediaType);
         Assert.AreEqual("jpeg", mime.SubType);
-        Assert.AreEqual(0, mime.Parameters.Count());
+        Assert.IsEmpty(mime.Parameters);
     }
 }

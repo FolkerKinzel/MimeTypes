@@ -17,20 +17,20 @@ public class MimeFormatsNormalizerTests
     public void MimeFormatNormalizerTest2()
     {
         MimeFormats fm = MimeFormats.IgnoreParameters | MimeFormats.LineWrapping;
-        Assert.AreNotEqual(fm, MimeFormats.IgnoreParameters);
-        Assert.AreNotEqual(fm, MimeFormats.LineWrapping);
+        Assert.AreNotEqual(MimeFormats.IgnoreParameters, fm);
+        Assert.AreNotEqual(MimeFormats.LineWrapping, fm);
         fm = fm.Normalize();
-        Assert.AreEqual(fm, MimeFormats.IgnoreParameters);
+        Assert.AreEqual(MimeFormats.IgnoreParameters, fm);
     }
 
     [TestMethod]
     public void MimeFormatNormalizerTest3()
     {
         MimeFormats fm = MimeFormats.Url | MimeFormats.LineWrapping;
-        Assert.AreNotEqual(fm, MimeFormats.Url);
-        Assert.AreNotEqual(fm, MimeFormats.LineWrapping);
+        Assert.AreNotEqual(MimeFormats.Url, fm);
+        Assert.AreNotEqual(MimeFormats.LineWrapping, fm);
         fm = fm.Normalize();
-        Assert.AreEqual(fm, MimeFormats.Url);
+        Assert.AreEqual(MimeFormats.Url, fm);
     }
 
 
@@ -38,10 +38,10 @@ public class MimeFormatsNormalizerTests
     public void MimeFormatNormalizerTest4()
     {
         MimeFormats fm = MimeFormats.Url & ~MimeFormats.AvoidSpace;
-        Assert.AreNotEqual(fm, MimeFormats.Url);
-        Assert.AreNotEqual(fm, MimeFormats.Default);
+        Assert.AreNotEqual(MimeFormats.Url, fm);
+        Assert.AreNotEqual(MimeFormats.Default, fm);
         fm = fm.Normalize();
-        Assert.AreEqual(fm, MimeFormats.Default);
+        Assert.AreEqual(MimeFormats.Default, fm);
     }
 
 
