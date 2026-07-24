@@ -7,10 +7,10 @@ public class MimeFormatsNormalizerTests
     public void MimeFormatNormalizerTest1()
     {
         MimeFormats fm = MimeFormats.IgnoreParameters | MimeFormats.Url;
-        Assert.AreNotEqual(fm, MimeFormats.IgnoreParameters);
-        Assert.AreNotEqual(fm, MimeFormats.Url);
+        Assert.AreNotEqual(MimeFormats.IgnoreParameters, fm);
+        Assert.AreNotEqual(MimeFormats.Url, fm);
         fm = fm.Normalize();
-        Assert.AreEqual(fm, MimeFormats.IgnoreParameters);
+        Assert.AreEqual(MimeFormats.IgnoreParameters, fm);
     }
 
     [TestMethod]

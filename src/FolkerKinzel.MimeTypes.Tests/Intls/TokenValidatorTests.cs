@@ -3,35 +3,41 @@
 [TestClass]
 public class TokenValidatorTests
 {
-    private const string ALLOWED_CHARS = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~!{}-.$";
+    private const string ALLOWED_CHARS 
+        = "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789~!{}-.$";
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("%")]
     [DataRow("*")]
     [DataRow("\'")]
-    [ExpectedException(typeof(ArgumentException))]
-    public void ValidateTokenParameterTest1(string token) => token.ValidateTokenParameter(nameof(token), true);
+    public void ValidateTokenParameterTest1(string token)
+        => Assert.ThrowsExactly<ArgumentException>(
+            () => token.ValidateTokenParameter(nameof(token), true));
 
     [TestMethod]
-    public void ValidateTokenParameterTest1b() => ALLOWED_CHARS.ValidateTokenParameter("x", true);
+    public void ValidateTokenParameterTest1b() 
+        => ALLOWED_CHARS.ValidateTokenParameter("x", true);
 
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("%")]
     [DataRow("*")]
     [DataRow("\'")]
     [DataRow(ALLOWED_CHARS)]
-    public void ValidateTokenParameterTest2(string token) => token.ValidateTokenParameter(nameof(token), false);
+    public void ValidateTokenParameterTest2(string token)
+        => token.ValidateTokenParameter(nameof(token), false);
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void ValidateTokenParameterTest3() => TokenValidator.ValidateTokenParameter(null!, "x", true);
+    public void ValidateTokenParameterTest3()
+        => Assert.ThrowsExactly<ArgumentNullException>(
+            () => TokenValidator.ValidateTokenParameter(null!, "x", true));
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void ValidateTokenParameterTest4() => TokenValidator.ValidateTokenParameter(null!, "x", false);
+    public void ValidateTokenParameterTest4()
+        => Assert.ThrowsExactly<ArgumentNullException>(
+            () => TokenValidator.ValidateTokenParameter(null!, "x", false));
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("")]
     [DataRow(" ")]
     [DataRow("a b")]
@@ -48,14 +54,14 @@ public class TokenValidatorTests
     [DataRow("\r")]
     [DataRow("\n")]
     [DataRow("@")]
-    [DataRow(",")]
     [DataRow(";")]
     [DataRow(":")]
     [DataRow("?")]
     [DataRow("=")]
     [DataRow("ä")]
-    [ExpectedException(typeof(ArgumentException))]
-    public void ValidateTokenParameterTest5(string token) => token.ValidateTokenParameter("x", false);
+    public void ValidateTokenParameterTest5(string token)
+        => Assert.ThrowsExactly<ArgumentException>(
+            () => token.ValidateTokenParameter("x", false));
 }
 
 

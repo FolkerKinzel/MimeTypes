@@ -8,12 +8,14 @@ namespace FolkerKinzel.MimeTypes.Tests;
 public class MimeTypeInfoTests
 {
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeInfoTest3() => _ = MimeType.Create("", "subtype");
+    public void MimeTypeInfoTest3()
+         => Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create("", "subtype"));
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeInfoTest4() => _ = MimeType.Create("type", "");
+    public void MimeTypeInfoTest4()
+         => Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create("type", ""));
 
     [DataTestMethod]
     [DataRow("?")]
@@ -22,13 +24,15 @@ public class MimeTypeInfoTests
     [DataRow(" ")]
     [DataRow("ö")]
     [DataRow("\0")]
-    [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeInfoTest5(string type) => _ = MimeType.Create(type, "");
+    public void MimeTypeInfoTest5(string type)
+        => Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create(type, ""));
 
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void MimeTypeInfoTest6() => _ = MimeType.Create(new string('a', short.MaxValue + 1), "subtype");
+    public void MimeTypeInfoTest6()
+         => Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create(new string('a', short.MaxValue + 1), "subtype"));
 
 
     [TestMethod]
@@ -40,13 +44,14 @@ public class MimeTypeInfoTests
     }
 
     [TestMethod()]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void ParseTest1()
-        => _ = MimeTypeInfo.Parse((string?)null!);
+         => Assert.ThrowsExactly<ArgumentNullException>(
+            () => MimeTypeInfo.Parse((string?)null!));
 
     [TestMethod()]
-    [ExpectedException(typeof(ArgumentException))]
-    public void ParseTest2() => _ = MimeTypeInfo.Parse(" \t \r\n");
+    public void ParseTest2()
+         => Assert.ThrowsExactly<ArgumentException>(
+            () => MimeTypeInfo.Parse(" \t \r\n"));
 
     [TestMethod]
     public void ParseTest3()
@@ -82,28 +87,30 @@ public class MimeTypeInfoTests
     }
 
     [TestMethod()]
-    [ExpectedException(typeof(ArgumentException))]
-    public void ParseTest6() => _ = MimeTypeInfo.Parse("ääääääää/jpeg");
+    public void ParseTest6()
+         => Assert.ThrowsExactly<ArgumentException>(
+            () => MimeTypeInfo.Parse("ääääääää/jpeg"));
 
 
     [TestMethod()]
-    [ExpectedException(typeof(ArgumentException))]
-    public void ParseTest7() => _ = MimeTypeInfo.Parse("image/ääääääää");
+    public void ParseTest7()
+         => Assert.ThrowsExactly<ArgumentException>(
+            () => MimeTypeInfo.Parse("image/ääääääää"));
 
     [TestMethod()]
-    [ExpectedException(typeof(ArgumentException))]
     public void ParseTest8()
     {
         string veryLong = new('a', short.MaxValue + 1);
-        _ = MimeTypeInfo.Parse($"image/{veryLong}");
+        Assert.ThrowsExactly<ArgumentException>(
+            () => MimeTypeInfo.Parse($"image/{veryLong}"));
     }
 
     [TestMethod()]
-    [ExpectedException(typeof(ArgumentException))]
     public void ParseTest9()
     {
         string veryLong = new('a', short.MaxValue + 1);
-        _ = MimeTypeInfo.Parse($"{veryLong}/jpeg");
+        Assert.ThrowsExactly<ArgumentException>(
+            () => MimeTypeInfo.Parse($"{veryLong}/jpeg"));
     }
 
     [TestMethod]
@@ -545,11 +552,11 @@ public class MimeTypeInfoTests
 
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void AppendToTest1()
     {
         Assert.IsTrue(MimeTypeInfo.TryParse("TEXT/PLAIN ; CHARSET=ISO-8859-1", out MimeTypeInfo inetMedia));
-        inetMedia.AppendTo(null!);
+        Assert.ThrowsExactly<ArgumentNullException>(
+            () => inetMedia.AppendTo(null!));
     }
 
     [TestMethod]

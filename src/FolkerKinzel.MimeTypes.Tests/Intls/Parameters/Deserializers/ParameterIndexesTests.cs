@@ -3,7 +3,7 @@
 [TestClass]
 public class ParameterIndexesTests
 {
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("*=utf-8'de'", 1)]
     public void IndexesTest1(string input, int keyValueOffset)
     {

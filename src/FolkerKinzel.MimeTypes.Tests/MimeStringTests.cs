@@ -49,7 +49,7 @@ public class MimeStringTests
 
     #region FromFileNameTests
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("text/html", ".htm")]
     [DataRow("text/javascript", ".js")]
     [DataRow("text/cache-manifest", ".appcache")]

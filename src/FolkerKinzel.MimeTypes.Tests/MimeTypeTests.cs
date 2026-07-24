@@ -1,25 +1,14 @@
-﻿
-/* Unmerged change from project 'FolkerKinzel.MimeTypes.Tests (net48)'
-Before:
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using FolkerKinzel.MimeTypes;
-using System;
-After:
-using FolkerKinzel.MimeTypes;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
-using System;
-*/
-namespace FolkerKinzel.MimeTypes.Tests;
+﻿namespace FolkerKinzel.MimeTypes.Tests;
 
 [TestClass()]
 public class MimeTypeTests
 {
-    [DataTestMethod()]
+    [TestMethod()]
     [DataRow(null, "sub")]
     [DataRow("media", null)]
     [DataRow(null, null)]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void CreateTest1(string? media, string? sub) => _ = MimeType.Create(media!, sub!);
+    public void CreateTest1(string? media, string? sub) 
+        => _ = Assert.ThrowsExactly<ArgumentNullException>(() => MimeType.Create(media!, sub!));
 
     [TestMethod]
     public void CreateTest2()
@@ -35,8 +24,8 @@ public class MimeTypeTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void CreateTest3() => _ = MimeType.Create(new MimeTypeInfo());
+    public void CreateTest3() 
+        => _ = Assert.ThrowsExactly<ArgumentException>(() => MimeType.Create(new MimeTypeInfo()));
 
     [TestMethod]
     public void CreateTest4()
@@ -81,32 +70,38 @@ public class MimeTypeTests
     public void TryParseTest2() => Assert.IsFalse(MimeType.TryParse(null, out _));
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void AppendParameterTest1() => _ = MimeType.Create("image", "png").AppendParameter(null!, "something", null);
+    public void AppendParameterTest1()
+        => _ = Assert.ThrowsExactly<ArgumentNullException>(
+            () => MimeType.Create("image", "png").AppendParameter(null!, "something", null));
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void AppendParameterTest2() => _ = MimeType.Create("image", "png").AppendParameter("", "something", null);
+    public void AppendParameterTest2() 
+        => _ = Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create("image", "png").AppendParameter("", "something", null));
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void AppendParameterTest3() => _ = MimeType.Create("image", "png").AppendParameter("äöü%@:", "something", null);
+    public void AppendParameterTest3()
+        => _ = Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create("image", "png").AppendParameter("äöü%@:", "something", null));
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void AppendParameterTest4() => _ = MimeType.Create("image", "png").AppendParameter(new string('a', 5000), "something", null);
+    public void AppendParameterTest4()
+        => _ = Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create("image", "png").AppendParameter(new string('a', 5000), "something", null));
 
 
-    [DataTestMethod]
+    [TestMethod]
     [DataRow("äü")]
     [DataRow("{!")]
-    [ExpectedException(typeof(ArgumentException))]
-    public void AppendParameterTest5(string input) => _ = MimeType.Create("image", "png").AppendParameter("key", "something", input);
+    public void AppendParameterTest5(string input)
+        => _ = Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create("image", "png").AppendParameter("key", "something", input));
 
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void AppendParameterTest6() => _ = MimeType.Create("image", "png").AppendParameter("key", "something", new string('a', 256));
+    public void AppendParameterTest6()
+        => _ = Assert.ThrowsExactly<ArgumentException>(
+            () => MimeType.Create("image", "png").AppendParameter("key", "something", new string('a', 256)));
 
 
     [TestMethod()]
@@ -131,8 +126,9 @@ public class MimeTypeTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void RemoveParametersTest1() => MimeType.Create("x", "y").RemoveParameter(null!);
+    public void RemoveParametersTest1()
+        => _ = Assert.ThrowsExactly<ArgumentNullException>(
+            () => MimeType.Create("x", "y").RemoveParameter(null!));
 
     [TestMethod]
     public void RemoveParametersTest2() => MimeType.Create("x", "y").RemoveParameter("nichda").RemoveParameter("");
@@ -152,12 +148,15 @@ public class MimeTypeTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void AppendToTest1() => _ = MimeType.Create("x", "y").AppendTo(null!);
+    public void AppendToTest1()
+        => _ = Assert.ThrowsExactly<ArgumentNullException>(() => MimeType.Create("x", "y").AppendTo(null!));
 
 
     [TestMethod]
-    public void AppendToTest2() => _ = MimeType.Create("x", "y").AppendParameter("a", "b").AppendTo(new StringBuilder(), MimeFormats.LineWrapping, -42);
+    public void AppendToTest2()
+        => _ = MimeType.Create("x", "y")
+                       .AppendParameter("a", "b")
+                       .AppendTo(new StringBuilder(), MimeFormats.LineWrapping, -42);
 
 
     [TestMethod]

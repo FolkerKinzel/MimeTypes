@@ -4,9 +4,9 @@
 public class MimeTypesCtorParametersValidatorTests
 {
     [TestMethod]
-    [ExpectedException(typeof(ArgumentException))]
-    public void ValidateSubTypeTest1() =>
-        MimeTypeCtorParametersValidator.Validate("image", new string('a', short.MaxValue + 1));
+    public void ValidateSubTypeTest1()
+        => Assert.ThrowsExactly<ArgumentException>(
+            () => MimeTypeCtorParametersValidator.Validate("image", new string('a', short.MaxValue + 1)));
 }
 
 

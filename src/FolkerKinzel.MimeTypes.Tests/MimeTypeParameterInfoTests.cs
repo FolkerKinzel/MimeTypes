@@ -96,8 +96,9 @@ public class MimeTypeParameterInfoTests
 
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
-    public void AppendToTest1() => new MimeTypeParameter("k", null, null).AppendTo(null!);
+    public void AppendToTest1()
+        => Assert.ThrowsExactly<ArgumentNullException>(
+            () => new MimeTypeParameter("k", null, null).AppendTo(null!));
 
 
     [TestMethod]
@@ -148,11 +149,11 @@ public class MimeTypeParameterInfoTests
     }
 
     [TestMethod]
-    [ExpectedException(typeof(ArgumentNullException))]
     public void AppendToTest7()
     {
         StringBuilder? sb = null;
-        _ = MimeTypeParameterInfo.Empty.AppendTo(sb!);
+        _ = Assert.ThrowsExactly<ArgumentNullException>(
+            () => MimeTypeParameterInfo.Empty.AppendTo(sb!));
     }
 
     [TestMethod]
